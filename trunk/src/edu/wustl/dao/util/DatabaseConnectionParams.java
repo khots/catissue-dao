@@ -32,7 +32,7 @@ public class DatabaseConnectionParams
 		catch (SQLException sqlExp)
 		{
 			
-			logger.fatal("Problem Occured while creating database connection parameters", sqlExp);
+			logger.fatal(DAOConstants.DB_PARAM_INIT_ERROR , sqlExp);
 		}
 		return statement;
 		
@@ -48,7 +48,7 @@ public class DatabaseConnectionParams
 		catch (SQLException sqlExp)
 		{
 			
-			logger.fatal("Problem Occured while creating database connection parameters", sqlExp);
+			logger.fatal(DAOConstants.DB_PARAM_INIT_ERROR, sqlExp);
 		}
 		return resultSet;
 	}
@@ -67,7 +67,7 @@ public class DatabaseConnectionParams
 		catch (SQLException sqlExp)
 		{
 			
-			logger.fatal("Problem Occured while creating database connection parameters", sqlExp);
+			logger.fatal(DAOConstants.DB_PARAM_INIT_ERROR, sqlExp);
 		}
 		
 		return metaData;
@@ -112,7 +112,7 @@ public class DatabaseConnectionParams
 		catch (SQLException sqlExp)
 		{
 			
-			logger.fatal("Problem Occured while creating database connection parameters", sqlExp);
+			logger.fatal(DAOConstants.DB_PARAM_INIT_ERROR, sqlExp);
 		}
 		return preparedStatement;
 	}
