@@ -22,6 +22,7 @@ import org.hibernate.Transaction;
 
 import edu.wustl.common.audit.AuditManager;
 import edu.wustl.common.audit.Auditable;
+import edu.wustl.common.beans.QueryResultObjectDataBean;
 import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.domain.AbstractDomainObject;
 import edu.wustl.common.exception.AuditException;
@@ -600,7 +601,7 @@ public class HibernateDAOImpl implements HibernateDAO
 	 * @throws DAOException generic DAOException.
 	 */
 	public List<Object> executeQuery(String query, SessionDataBean sessionDataBean,
-			boolean isSecureExecute, Map queryResultObjectDataMap) throws ClassNotFoundException,
+			boolean isSecureExecute, Map<Object,QueryResultObjectDataBean> queryResultObjectDataMap) throws ClassNotFoundException,
 			DAOException
 	{ 
 		List < Object > returner;

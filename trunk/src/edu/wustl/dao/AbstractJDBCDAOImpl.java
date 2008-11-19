@@ -26,6 +26,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import edu.wustl.common.audit.AuditManager;
+import edu.wustl.common.beans.QueryResultObjectDataBean;
 import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.dao.queryExecutor.PagenatedResultData;
 import edu.wustl.common.domain.AbstractDomainObject;
@@ -417,7 +418,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	 * @throws SQLException
 	 */
 	public List<Object> executeQuery(String query, SessionDataBean sessionDataBean,
-			boolean isSecureExecute, Map queryResultObjectDataMap) throws ClassNotFoundException,
+			boolean isSecureExecute, Map<Object,QueryResultObjectDataBean> queryResultObjectDataMap) throws ClassNotFoundException,
 			DAOException
 	{
 		

@@ -10,6 +10,7 @@ package edu.wustl.dao;
 import java.util.List;
 import java.util.Map;
 
+import edu.wustl.common.beans.QueryResultObjectDataBean;
 import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.domain.AbstractDomainObject;
 import edu.wustl.common.security.exceptions.UserNotAuthorizedException;
@@ -150,7 +151,7 @@ public interface DAO
 	 * @throws DAOException generic DAOException.
 	 */
 	List<Object> executeQuery(String query, SessionDataBean sessionDataBean,
-			boolean isSecureExecute, Map queryResultObjectDataMap) throws ClassNotFoundException,
+			boolean isSecureExecute, Map<Object,QueryResultObjectDataBean> queryResultObjectDataMap) throws ClassNotFoundException,
 			DAOException;
 
 	
