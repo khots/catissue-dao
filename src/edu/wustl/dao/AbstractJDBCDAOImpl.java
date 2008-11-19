@@ -19,6 +19,7 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -28,6 +29,7 @@ import edu.wustl.common.audit.AuditManager;
 import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.dao.queryExecutor.PagenatedResultData;
 import edu.wustl.common.domain.AbstractDomainObject;
+import edu.wustl.common.security.exceptions.UserNotAuthorizedException;
 import edu.wustl.common.util.QueryParams;
 import edu.wustl.common.util.Utility;
 import edu.wustl.common.util.dbmanager.DAOException;
@@ -465,6 +467,60 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	
 	
 
+	/**
+	 * @param tableName
+	 * @param columnValues
+	 * @param columnNames
+	 * @throws DAOException
+	 * @throws SQLException
+	 */
+	public void insert(String tableName, List<Object> columnValues, List<String>... columnNames) throws DAOException, SQLException
+	{
+		List<Integer>dateColumns = new ArrayList<Integer>();
+		List<Integer>numberColumns = new ArrayList<Integer>();
+		List<Integer>tinyIntColumns = new ArrayList<Integer>();
+		List<String>columnNames_t = new ArrayList<String>();
+		ResultSetMetaData metaData;
+		DatabaseConnectionParams databaseConnectionParams = new DatabaseConnectionParams();
+		databaseConnectionParams.setConnection(getConnection());
+		PreparedStatement stmt = null;
+		try
+		{
+			if(columnNames != null && columnNames.length > 0)
+			{
+				metaData = getMetaData(tableName, columnNames[0]);
+			}
+			else
+			{
+				metaData = getMetaDataAndUpdateColumns(tableName,columnNames_t);
+			}
+			updateColumns(metaData, dateColumns,numberColumns, tinyIntColumns);
+			String insertQuery = createInsertQuery(tableName,columnNames_t,columnValues);
+			stmt = databaseConnectionParams.getPreparedStatement(insertQuery);
+			
+			for (int i = 0; i < columnValues.size(); i++)
+			{
+				Object obj = columnValues.get(i);
+				setDateColumns(stmt, i,obj, dateColumns);
+				setTinyIntColumns(stmt, i, obj,tinyIntColumns);
+				setTimeStampColumn(stmt, i, obj);
+				setNumberColumns(numberColumns, stmt, i, obj);
+			}
+			stmt.executeUpdate();
+		}
+		catch (SQLException sqlExp)
+		{
+			logger.error(sqlExp.getMessage(),sqlExp);
+			throw new DAOException(sqlExp.getMessage(), sqlExp);
+		}
+		finally
+		{
+			databaseConnectionParams.closeConnectionParams();
+		}
+	}
+	
+	
+
 	
 	/* (non-Javadoc)
 	 * @see edu.wustl.common.dao.DAO#retrieveAttribute(java.lang.Class, java.lang.Long, java.lang.String)
@@ -775,6 +831,54 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	{
 		return connection;
 	}
+	
+	public String getActivityStatus(String sourceObjectName, Long indetifier) throws DAOException
+	{
+		throw new DAOException(DAOConstants.METHOD_WITHOUT_IMPLEMENTATION);
+	}
+
+	public void audit(Object obj, Object oldObj, SessionDataBean sessionDataBean, boolean isAuditable) throws DAOException
+	{
+		throw new DAOException(DAOConstants.METHOD_WITHOUT_IMPLEMENTATION);
+		
+	}
+
+	public void delete(Object obj) throws DAOException
+	{
+		throw new DAOException(DAOConstants.METHOD_WITHOUT_IMPLEMENTATION);
+		
+	}
+
+	public void disableRelatedObjects(String tableName, String whereColumnName, Long[] whereColumnValues) throws DAOException
+	{
+		throw new DAOException(DAOConstants.METHOD_WITHOUT_IMPLEMENTATION);
+		
+	}
+
+	public void insert(Object obj, SessionDataBean sessionDataBean, boolean isAuditable, boolean isSecureInsert) throws DAOException, UserNotAuthorizedException
+	{
+		throw new DAOException(DAOConstants.METHOD_WITHOUT_IMPLEMENTATION);
+		
+	}
+
+	public Object retrieveAttribute(String sourceObjectName, Long identifier, String attributeName) throws DAOException
+	{
+		throw new DAOException(DAOConstants.METHOD_WITHOUT_IMPLEMENTATION);
+	}
+
+	public void update(Object obj, SessionDataBean sessionDataBean, boolean isAuditable, boolean isSecureUpdate) throws DAOException, UserNotAuthorizedException
+	{
+		throw new DAOException(DAOConstants.METHOD_WITHOUT_IMPLEMENTATION);		
+	}
+
+
+	public Object retrieve(String sourceObjectName, Long identifier)
+			throws DAOException
+	{
+		throw new DAOException(DAOConstants.METHOD_WITHOUT_IMPLEMENTATION);
+	}
+	
+	
 	
 
 }

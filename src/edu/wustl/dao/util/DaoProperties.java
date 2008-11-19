@@ -1,15 +1,8 @@
 package edu.wustl.dao.util;
-
-import java.sql.Connection;
 import java.util.ResourceBundle;
 
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-
-import edu.wustl.common.exception.BizLogicException;
 import edu.wustl.common.util.global.TextConstants;
 import edu.wustl.common.util.logger.Logger;
-import edu.wustl.dao.connectionmanager.IConnectionManager;
 
 
 public class DaoProperties
@@ -22,7 +15,7 @@ public class DaoProperties
 	 */
 	private static org.apache.log4j.Logger logger = Logger.getLogger(DaoProperties.class);
 
-	static ResourceBundle bundle;
+	private static ResourceBundle bundle;
 	static
 	{
 		try
@@ -36,16 +29,16 @@ public class DaoProperties
 		}
 	}
 	
-	public DaoProperties()
+	/*public DaoProperties()
 	{
 		// TODO Auto-generated constructor stub
 	}
 	
 	DaoProperties (IConnectionManager icon)
 	{
-		System.out.println(" DaoProperties :  >>>"+icon);
+//		System.out.println(" DaoProperties :  >>>"+icon);
 		//System.out.println("-----" +icon.getGenericInterfaces());
-	}
+	}*/
 
 
 	/**
@@ -70,64 +63,9 @@ public class DaoProperties
 	
 	public static void main (String[] argv)
 	{
-		
-//		String defaultDao = daoProperties.getValue("defaultDao");
-		
-		try
-		{
+		//text
+	}
+
+
 	
-		}
-		catch (Exception e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-	
-		
-		
-		
-	}
-
-
-	public void closeConnection() throws HibernateException
-	{
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	public void closeSession() throws HibernateException
-	{
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	public Session currentSession() throws HibernateException
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	public Session getCleanSession() throws BizLogicException
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	public Connection getConnection() throws HibernateException
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	public Object loadCleanObj(Class objectClass, Long identifier) throws HibernateException
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

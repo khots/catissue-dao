@@ -9,5 +9,8 @@ public class DAOConstants
 	public static final String ROLLBACK_ERROR = "Problem occurred while rollback :";
 	public static final String CONNECTIONS_CLOSING_ISSUE = "Problem Occurred while closing database connections";
 	public static final String EXECUTE_UPDATE_ERROR = "Problem Occurred while executing static SQL query";
+	public static final String DB_PARAM_INIT_ERROR = "Problem Occured while creating database connection parameters";
+	public static final String METHOD_WITHOUT_IMPLEMENTATION = "There is no implementation for this method : " +
+			"Check again before calling this method.";
 	
 }

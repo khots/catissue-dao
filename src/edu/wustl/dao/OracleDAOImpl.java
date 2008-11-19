@@ -1,22 +1,15 @@
 package edu.wustl.dao;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 
-import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.dao.queryExecutor.PagenatedResultData;
 import edu.wustl.common.exceptionformatter.ConstraintViolationFormatter;
-import edu.wustl.common.security.exceptions.UserNotAuthorizedException;
 import edu.wustl.common.util.QueryParams;
 import edu.wustl.common.util.dbmanager.DAOException;
 import edu.wustl.common.util.global.Constants;
 import edu.wustl.common.util.logger.Logger;
-
 import edu.wustl.dao.util.DAOConstants;
 import edu.wustl.dao.util.DatabaseConnectionParams;
 import edu.wustl.query.executor.OracleQueryExecutor;
@@ -116,72 +109,14 @@ public class OracleDAOImpl extends AbstractJDBCDAOImpl
 		return "TO_DATE";
 	}
 	
-	
-	/* (non-Javadoc)
-	 * @see edu.wustl.common.dao.JDBCDAO#insert(java.lang.String, java.util.List)
+	/** 
+	 * This method is called to insert data.
+	 * @see edu.wustl.dao.JDBCDAO#insert(java.lang.String, java.util.List)
 	 */
 	public void insert(String tableName, List<Object> columnValues) throws DAOException, SQLException
 	{
 		insert(tableName, columnValues, null);
 	}
-	
-	/**
-	 * @param tableName
-	 * @param columnValues
-	 * @param columnNames
-	 * @throws DAOException
-	 * @throws SQLException
-	 */
-	public void insert(String tableName, List<Object> columnValues, List<String>... columnNames) throws DAOException, SQLException
-	{
-		List<Integer> dateColumns = new ArrayList<Integer>();
-		List<Integer> numberColumns = new ArrayList<Integer>();
-		List<Integer> tinyIntColumns = new ArrayList<Integer>();
-		List<String> columnNames_t = new ArrayList<String>();
-		
-		ResultSetMetaData metaData;
-		if(columnNames != null && columnNames.length > 0)
-		{
-			metaData = getMetaData(tableName, columnNames[0]);
-		} 
-		else
-		{
-			metaData = getMetaDataAndUpdateColumns(tableName,columnNames_t);
-		}
-		
-		updateColumns(metaData, dateColumns,numberColumns, tinyIntColumns);
-		String insertQuery = createInsertQuery(tableName,columnNames_t,columnValues);
-		
-		DatabaseConnectionParams databaseConnectionParams = new DatabaseConnectionParams();
-		databaseConnectionParams.setConnection(getConnection());
-		
-		PreparedStatement stmt = null;
-		try
-		{
-			stmt = databaseConnectionParams.getPreparedStatement(insertQuery);
-			for (int i = 0; i < columnValues.size(); i++)
-			{
-				Object obj = columnValues.get(i);
-				setDateColumns(stmt, i,obj, dateColumns);
-				setTinyIntColumns(stmt, i, obj,tinyIntColumns);
-				setTimeStampColumn(stmt, i, obj);
-				setNumberColumns(numberColumns, stmt, i, obj);
-			}
-			stmt.executeUpdate();
-		}
-		catch (SQLException sqlExp)
-		{
-			
-			logger.error(sqlExp.getMessage(),sqlExp);
-			throw new DAOException(sqlExp.getMessage(), sqlExp);
-			
-		}
-		finally
-		{
-			databaseConnectionParams.closeConnectionParams();
-		}
-	}
-	
 	
 	public String formatMessage(Exception excp, Object[] args)
 	{
@@ -218,55 +153,5 @@ public class OracleDAOImpl extends AbstractJDBCDAOImpl
 
 	}
 
-	public String getActivityStatus(String sourceObjectName, Long indetifier) throws DAOException
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public void audit(Object obj, Object oldObj, SessionDataBean sessionDataBean, boolean isAuditable) throws DAOException
-	{
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void delete(Object obj) throws DAOException
-	{
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void disableRelatedObjects(String tableName, String whereColumnName, Long[] whereColumnValues) throws DAOException
-	{
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void insert(Object obj, SessionDataBean sessionDataBean, boolean isAuditable, boolean isSecureInsert) throws DAOException, UserNotAuthorizedException
-	{
-		// TODO Auto-generated method stub
-		
-	}
-
-	public Object retrieveAttribute(String sourceObjectName, Long identifier, String attributeName) throws DAOException
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public void update(Object obj, SessionDataBean sessionDataBean, boolean isAuditable, boolean isSecureUpdate) throws DAOException, UserNotAuthorizedException
-	{
-		// TODO Auto-generated method stub
-		
-	}
-
-
-
-	public Object retrieve(String sourceObjectName, Long identifier)
-			throws DAOException
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
 	
 }
