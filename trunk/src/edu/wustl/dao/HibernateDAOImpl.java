@@ -236,27 +236,11 @@ public class HibernateDAOImpl implements HibernateDAO
 	public void insert(Object obj, SessionDataBean sessionDataBean, boolean isAuditable,
 			boolean isSecureInsert) throws DAOException, UserNotAuthorizedException
 	{ 
-		boolean isAuthorized = true;
-
 		try
 		{ 
-			/**
-			* Now, Authorizations on Objects will be done in corresponding biz logic
-			* for the Object through DefaultBizLogic's 'isAuthorized' method
-			* For this version, each Project will have to provide its implementation
-			* for objects which require secured access
-			* By Default :: we return as 'true' i.e. user authorized
-			*/
-			if (isAuthorized)
-			{ 
-				session.save(obj);
-				isObjectAuditable(obj, isAuditable);
-				updated = true;
-			}
-			else
-			{ 
-				throw new UserNotAuthorizedException("Not Authorized to insert");
-			}
+			session.save(obj);
+			isObjectAuditable(obj, isAuditable);
+			updated = true;
 		} 
 		catch (HibernateException hibExp)
 		{ 
@@ -266,10 +250,7 @@ public class HibernateDAOImpl implements HibernateDAO
 		{ 
 			throw handleError("", hibExp);
 		}
-		catch (SMException smex) 
-		{ 
-			throw handleError("", smex);
-		}
+		
 
 	}
 
@@ -343,40 +324,19 @@ public class HibernateDAOImpl implements HibernateDAO
 	 * @throws DAOException generic DAOException.
 	 * @throws UserNotAuthorizedException User Not Authorized Exception.
 	 */
-	public void update(Object obj, SessionDataBean sessionDataBean, boolean isAuditable,
-			boolean isSecureUpdate) throws DAOException,
-			UserNotAuthorizedException 
+	public void update(Object obj) throws DAOException
 	{ 
-		boolean isAuthorized = true;
 		try
 		{ 
-			/**
-			* Now, Authorizations on Objects will be done in corresponding biz logic
-			* for the Object through DefaultBizLogic's 'isAuthorized' method
-			* For this version, each Project will have to provide its implementation
-			* for objects which require secured access
-			* By Default :: we return as 'true' i.e. user authorized
-			*/
-
-			if (isAuthorized) 
-			{ 
-				session.update(obj);
-				updated = true;
-			}
-			else
-			{
-				throw new UserNotAuthorizedException("Not Authorized to update");
-			}
+			session.update(obj);
+			updated = true;
+		
 		}
 		catch (HibernateException hibExp)
 		{ 
 			throw handleError("", hibExp);
 		}
-		catch (SMException smex) 
-		{ 
-			throw handleError("", smex);
-		}
-
+		
 	}
 
 	/**

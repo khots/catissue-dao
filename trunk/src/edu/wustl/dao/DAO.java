@@ -48,9 +48,8 @@ public interface DAO
 	 * @throws DAOException generic DAOException.
 	 * @throws UserNotAuthorizedException TODO
 	 */
-	void update(Object obj, SessionDataBean sessionDataBean, boolean isAuditable,
-			boolean isSecureUpdate) throws DAOException,
-			UserNotAuthorizedException;
+	void update(Object obj) throws DAOException;
+			
 
 	/**
 	 * Deletes the persistent object from the database.
