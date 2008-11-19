@@ -867,7 +867,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		throw new DAOException(DAOConstants.METHOD_WITHOUT_IMPLEMENTATION);
 	}
 
-	public void update(Object obj, SessionDataBean sessionDataBean, boolean isAuditable, boolean isSecureUpdate) throws DAOException, UserNotAuthorizedException
+	public void update(Object obj) throws DAOException
 	{
 		throw new DAOException(DAOConstants.METHOD_WITHOUT_IMPLEMENTATION);		
 	}
