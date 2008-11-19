@@ -3,6 +3,7 @@ package edu.wustl.dao.util;
 import java.sql.Connection;
 import java.util.Map;
 
+import edu.wustl.common.beans.QueryResultObjectDataBean;
 import edu.wustl.common.beans.SessionDataBean;
 
 public class QueryParams
@@ -13,7 +14,7 @@ public class QueryParams
 	private	SessionDataBean sessionDataBean;
 	private boolean secureToExecute;
 	private boolean hasConditionOnIdentifiedField;
-	private Map queryResultObjectDataMap;
+	private Map<Object,QueryResultObjectDataBean> queryResultObjectDataMap;
 	private int startIndex;
 	private int noOfRecords;
 	
@@ -58,11 +59,11 @@ public class QueryParams
 	{
 		this.hasConditionOnIdentifiedField = hasConditionOnIdentifiedField;
  	}
-	public Map getQueryResultObjectDataMap()
+	public Map<Object,QueryResultObjectDataBean> getQueryResultObjectDataMap()
 	{
 		return queryResultObjectDataMap;
 	}
-	public void setQueryResultObjectDataMap(Map queryResultObjectDataMap)
+	public void setQueryResultObjectDataMap(Map<Object,QueryResultObjectDataBean> queryResultObjectDataMap)
 	{
 		this.queryResultObjectDataMap = queryResultObjectDataMap;
 	}

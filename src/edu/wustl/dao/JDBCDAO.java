@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import edu.wustl.common.beans.QueryResultObjectDataBean;
 import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.dao.queryExecutor.PagenatedResultData;
 import edu.wustl.common.util.QueryParams;
@@ -62,7 +63,7 @@ public interface JDBCDAO extends DAO
 	   * @throws DAOException generic DAOException.
 	   */
 	List<Object> executeQuery(String query, SessionDataBean sessionDataBean, boolean isSecureExecute,
-			Map queryResultObjectDataMap) throws ClassNotFoundException, DAOException;
+			Map<Object,QueryResultObjectDataBean> queryResultObjectDataMap) throws ClassNotFoundException, DAOException;
 
 	/**
 	 * Description: Query performance issue. Instead of saving complete query results in session, resultd will be fetched for each result page navigation.
