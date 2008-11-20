@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="DAOJunits" default="compileDaoTestCases" >
+	
+	<property name="base.path" value="${basedir}"> </property>
+	<property name="base.dir" value="."/>
+	<property name="lib.dir" value="lib"/>
+	<property name="target.dir" value="./classes"/>
+	<property name="test.classes.dir" value="${base.dir}/classes"/>
+	<property name="test.src.dir" value="${base.dir}/src"/>
+	<property name="report.dir" value="."/>
+	<!--property name="cobertura.dir" value="${target.dir}/reports/coverage" /-->	
+	
+	<target name="compileDaoTestCases">
+		<javac destdir="${test.classes.dir}" includes="**/*.java" includeantruntime="true">
+			<src path="${test.src.dir}"/>
+			<classpath>
+				<fileset dir="${lib.dir}">
+    				<include name="**/*.jar"/>
+    			</fileset>
+			</classpath>
+		</javac>
+		
+		<copy todir="${test.classes.dir}">
+			<fileset dir="${test.src.dir}">
+				<include name="**/*.properties" />
+				<include name="**/*.xml" />
+				<include name="**/*.hbm.xml" />
+			</fileset>
+		</copy>
+		
+	</target>
+	
+	<target name="runDAOTestCases" depends="compileDaoTestCases">
+		<mkdir dir="${report.dir}/daoTestReports"/>
+		<mkdir dir="${report.dir}/daoTestReports/HtmlReports"/>
+		
+		<junit printsummary="yes" fork="yes" haltonfailure="no">
+			<formatter type="xml"/>
+			
+			<classpath>
+				<fileset dir="./lib">
+					<include name="*.jar"/>
+				</fileset>
+			</classpath>
+		
+			<classpath>
+				<pathelement path="${test.src.dir}" />
+				<pathelement path= "${test.classes.dir}" />
+			</classpath>
+			
+			<batchtest todir="${report.dir}/daoTestReports">
+				<fileset dir="${test.src.dir}">
+					<include name="**/DAOTestSuite.java" />
+				</fileset>	
+			</batchtest>	
+		</junit>
+
+	</target>
+	
+		
+	 <target name="runJunitTestCases" depends="runDAOTestCases">
+		<junitreport todir="${report.dir}/daoTestReports">
+			<fileset dir="${report.dir}/daoTestReports">
+				<include name="TEST-*.xml" />
+			</fileset>
+			<report todir="${report.dir}/daoTestReports/HtmlReports" />
+		</junitreport>
+	</target>
+	
+	
+</project>
+
