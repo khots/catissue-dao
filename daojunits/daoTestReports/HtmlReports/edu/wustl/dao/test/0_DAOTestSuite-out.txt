@@ -1,0 +1,82 @@
+ INFO 19:25:16,380 (Environment) - Hibernate 3.1.3
+ INFO 19:25:16,396 (Environment) - loaded properties from resource hibernate.properties: {hibernate.statement_cache.size=25, hibernate.cglib.use_reflection_optimizer=true, hibernate.connection.pool_size=1, hibernate.use_outer_join=true, hibernate.show_sql=true}
+ INFO 19:25:16,396 (Environment) - using CGLIB reflection optimizer
+ INFO 19:25:16,396 (Environment) - using JDK 1.4 java.sql.Timestamp handling
+ INFO 19:25:16,849 (Configuration) - configuring from XML document
+ INFO 19:25:16,849 (Configuration) - Reading mappings from resource: testhbm/User.hbm.xml
+ INFO 19:25:17,083 (HbmBinder) - Mapping class: test.User -&gt; XYZ_USER
+ INFO 19:25:17,130 (Configuration) - Configured SessionFactory: null
+ INFO 19:25:17,286 (DriverManagerConnectionProvider) - Using Hibernate built-in connection pool (not for production use!)
+ INFO 19:25:17,286 (DriverManagerConnectionProvider) - Hibernate connection pool size: 1
+ INFO 19:25:17,286 (DriverManagerConnectionProvider) - autocommit mode: false
+ INFO 19:25:17,302 (DriverManagerConnectionProvider) - using driver: com.mysql.jdbc.Driver at URL: jdbc:mysql://localhost:3306/catissuecore
+ INFO 19:25:17,302 (DriverManagerConnectionProvider) - connection properties: {user=root, password=****}
+ INFO 19:25:17,692 (SettingsFactory) - RDBMS: MySQL, version: 5.0.45-community-nt
+ INFO 19:25:17,692 (SettingsFactory) - JDBC driver: MySQL-AB JDBC Driver, version: mysql-connector-java-5.0.8 ( Revision: ${svn.Revision} )
+ INFO 19:25:17,755 (Dialect) - Using dialect: org.hibernate.dialect.MySQLDialect
+ INFO 19:25:17,771 (TransactionFactoryFactory) - Using default transaction strategy (direct JDBC transactions)
+ INFO 19:25:17,786 (TransactionManagerLookupFactory) - No TransactionManagerLookup configured (in JTA environment, use of read-write or transactional second-level cache is not recommended)
+ INFO 19:25:17,786 (SettingsFactory) - Automatic flush during beforeCompletion(): disabled
+ INFO 19:25:17,786 (SettingsFactory) - Automatic session close at end of transaction: disabled
+ INFO 19:25:17,786 (SettingsFactory) - JDBC batch size: 15
+ INFO 19:25:17,786 (SettingsFactory) - JDBC batch updates for versioned data: disabled
+ INFO 19:25:17,786 (SettingsFactory) - Scrollable result sets: enabled
+ INFO 19:25:17,786 (SettingsFactory) - JDBC3 getGeneratedKeys(): enabled
+ INFO 19:25:17,802 (SettingsFactory) - Connection release mode: auto
+ INFO 19:25:17,802 (SettingsFactory) - Maximum outer join fetch depth: 2
+ INFO 19:25:17,802 (SettingsFactory) - Default batch fetch size: 1
+ INFO 19:25:17,802 (SettingsFactory) - Generate SQL with comments: disabled
+ INFO 19:25:17,802 (SettingsFactory) - Order SQL updates by primary key: disabled
+ INFO 19:25:17,802 (SettingsFactory) - Query translator: org.hibernate.hql.ast.ASTQueryTranslatorFactory
+ INFO 19:25:17,817 (ASTQueryTranslatorFactory) - Using ASTQueryTranslatorFactory
+ INFO 19:25:17,817 (SettingsFactory) - Query language substitutions: {}
+ INFO 19:25:17,817 (SettingsFactory) - Second-level cache: enabled
+ INFO 19:25:17,817 (SettingsFactory) - Query cache: disabled
+ INFO 19:25:17,817 (SettingsFactory) - Cache provider: org.hibernate.cache.EhCacheProvider
+ INFO 19:25:17,817 (SettingsFactory) - Optimize cache for minimal puts: disabled
+ INFO 19:25:17,817 (SettingsFactory) - Structured second-level cache entries: disabled
+ INFO 19:25:17,849 (SettingsFactory) - Statistics: disabled
+ INFO 19:25:17,849 (SettingsFactory) - Deleted entity synthetic identifier rollback: disabled
+ INFO 19:25:17,849 (SettingsFactory) - Default entity-mode: pojo
+ INFO 19:25:17,911 (SessionFactoryImpl) - building session factory
+ WARN 19:25:18,005 (EhCacheProvider) - Could not find configuration [test.User]; using defaults.
+ INFO 19:25:18,599 (SessionFactoryObjectFactory) - Not binding factory to JNDI, no JNDI name configured
+ INFO 19:25:18,630 (Configuration) - configuring from XML document
+ INFO 19:25:18,630 (Configuration) - Reading mappings from resource: testhbm/User.hbm.xml
+ INFO 19:25:18,677 (HbmBinder) - Mapping class: test.User -&gt; XYZ_USER
+ INFO 19:25:18,693 (Configuration) - Configured SessionFactory: null
+ INFO 19:25:18,693 (DriverManagerConnectionProvider) - Using Hibernate built-in connection pool (not for production use!)
+ INFO 19:25:18,693 (DriverManagerConnectionProvider) - Hibernate connection pool size: 1
+ INFO 19:25:18,693 (DriverManagerConnectionProvider) - autocommit mode: false
+ INFO 19:25:18,693 (DriverManagerConnectionProvider) - using driver: com.mysql.jdbc.Driver at URL: jdbc:mysql://localhost:3306/catissuecore
+ INFO 19:25:18,693 (DriverManagerConnectionProvider) - connection properties: {user=root, password=****}
+ INFO 19:25:18,708 (SettingsFactory) - RDBMS: MySQL, version: 5.0.45-community-nt
+ INFO 19:25:18,708 (SettingsFactory) - JDBC driver: MySQL-AB JDBC Driver, version: mysql-connector-java-5.0.8 ( Revision: ${svn.Revision} )
+ INFO 19:25:18,708 (Dialect) - Using dialect: org.hibernate.dialect.MySQLDialect
+ INFO 19:25:18,708 (TransactionFactoryFactory) - Using default transaction strategy (direct JDBC transactions)
+ INFO 19:25:18,708 (TransactionManagerLookupFactory) - No TransactionManagerLookup configured (in JTA environment, use of read-write or transactional second-level cache is not recommended)
+ INFO 19:25:18,708 (SettingsFactory) - Automatic flush during beforeCompletion(): disabled
+ INFO 19:25:18,708 (SettingsFactory) - Automatic session close at end of transaction: disabled
+ INFO 19:25:18,708 (SettingsFactory) - JDBC batch size: 15
+ INFO 19:25:18,708 (SettingsFactory) - JDBC batch updates for versioned data: disabled
+ INFO 19:25:18,708 (SettingsFactory) - Scrollable result sets: enabled
+ INFO 19:25:18,724 (SettingsFactory) - JDBC3 getGeneratedKeys(): enabled
+ INFO 19:25:18,724 (SettingsFactory) - Connection release mode: auto
+ INFO 19:25:18,724 (SettingsFactory) - Maximum outer join fetch depth: 2
+ INFO 19:25:18,724 (SettingsFactory) - Default batch fetch size: 1
+ INFO 19:25:18,724 (SettingsFactory) - Generate SQL with comments: disabled
+ INFO 19:25:18,724 (SettingsFactory) - Order SQL updates by primary key: disabled
+ INFO 19:25:18,724 (SettingsFactory) - Query translator: org.hibernate.hql.ast.ASTQueryTranslatorFactory
+ INFO 19:25:18,724 (ASTQueryTranslatorFactory) - Using ASTQueryTranslatorFactory
+ INFO 19:25:18,724 (SettingsFactory) - Query language substitutions: {}
+ INFO 19:25:18,724 (SettingsFactory) - Second-level cache: enabled
+ INFO 19:25:18,724 (SettingsFactory) - Query cache: disabled
+ INFO 19:25:18,724 (SettingsFactory) - Cache provider: org.hibernate.cache.EhCacheProvider
+ INFO 19:25:18,724 (SettingsFactory) - Optimize cache for minimal puts: disabled
+ INFO 19:25:18,724 (SettingsFactory) - Structured second-level cache entries: disabled
+ INFO 19:25:18,724 (SettingsFactory) - Statistics: disabled
+ INFO 19:25:18,724 (SettingsFactory) - Deleted entity synthetic identifier rollback: disabled
+ INFO 19:25:18,724 (SettingsFactory) - Default entity-mode: pojo
+ INFO 19:25:18,739 (SessionFactoryImpl) - building session factory
+ INFO 19:25:18,755 (SessionFactoryObjectFactory) - Not binding factory to JNDI, no JNDI name configured
+---------Hello abc ---------------------------
