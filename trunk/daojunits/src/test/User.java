@@ -7,7 +7,16 @@ public class User
     protected String lastName;
     protected String firstName;
     protected String emailAddress;
-    public Long getId()
+    protected String activityStatus;
+    public String getActivityStatus() {
+		return activityStatus;
+	}
+
+	public void setActivityStatus(String activityStatus) {
+		this.activityStatus = activityStatus;
+	}
+
+	public Long getId()
     {
         return id;
     }
