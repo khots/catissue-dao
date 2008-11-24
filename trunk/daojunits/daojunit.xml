@@ -65,19 +65,21 @@
 			
 			<classpath location="${test.instrumented.dir}" />
 			<classpath location="${proj.classes}" />
-			
+						
 			<classpath>
-					<fileset dir="./lib">
-							<include name="*.jar"/>
-					</fileset>
+				<fileset dir="./lib">
+					<exclude name="DAO.jar"/>
+					<include name="*.jar"/>
+				</fileset>
 			</classpath>
-					
+							
 			<classpath>
 				<pathelement path="${test.src.dir}" />
 				<pathelement path= "${test.classes.dir}" />
 			</classpath>
-			
+						
 			<classpath refid="cobertura.classpath" />
+			
 			
 			<batchtest todir="${report.dir}/daoTestReports">
 				<fileset dir="${test.src.dir}">
@@ -116,7 +118,8 @@
 							<include name="*.jar" />
 						</fileset>
 					</classpath>
-				</javac>
+			<classpath refid="cobertura.classpath" />
+		</javac>
 		<copy todir="${proj.classes}">
 					<fileset dir="${proj.src}">
 						<include name="**/*.properties" />
