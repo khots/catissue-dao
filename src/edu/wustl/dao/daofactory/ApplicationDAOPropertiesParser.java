@@ -98,12 +98,14 @@ public class ApplicationDAOPropertiesParser
 
 	/**
 	 * This method parse the document.
+	 * @param daoFactoryMap this will hold the factory object as per the application.
 	 * @throws InstantiationException Instantiation Exception
 	 * @throws IllegalAccessException Illegal Access Exception
 	 * @throws ClassNotFoundException Class Not Found Exception
-	 * @throws DAOException 
+	 * @throws DAOException :generic DAOException.
 	 */
-	private void parseDocument(Map<String, IDAOFactory> daoFactoryMap) throws InstantiationException, IllegalAccessException,
+	private void parseDocument(Map<String, IDAOFactory> daoFactoryMap)
+	throws InstantiationException, IllegalAccessException,
 			ClassNotFoundException, DAOException
 	{
 		//get the root elememt
