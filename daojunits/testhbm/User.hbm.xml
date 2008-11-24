@@ -54,6 +54,16 @@
             column="LAST_NAME"
             length="255"
       />
+      
+       <property
+            name="activityStatus"
+            type="string"
+            update="true"
+            insert="true"
+            column="ACTIVITY_STATUS"
+            length="255"
+      />
+  
   
     </class>
 
