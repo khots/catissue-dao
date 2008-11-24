@@ -12,15 +12,22 @@ import edu.wustl.common.util.logger.Logger;
 import edu.wustl.query.executor.MysqlQueryExecutor;
 
 
+/**
+ * @author kalpana_thakur
+ *
+ */
 public class MySQLDAOImpl extends AbstractJDBCDAOImpl
 {
-	
-	private static org.apache.log4j.Logger logger = Logger.getLogger(MySQLDAOImpl.class);
-		
+
 	/**
-	 * Deletes the specified table
-	 * @param tableName
-	 * @throws DAOException
+	 * Logger.
+	 */
+	private static org.apache.log4j.Logger logger = Logger.getLogger(MySQLDAOImpl.class);
+
+	/**
+	 * Deletes the specified table.
+	 * @param tableName : Table name
+	 * @throws DAOException : DAOException
 	 */
 	public void delete(String tableName) throws DAOException
 	{
@@ -28,51 +35,79 @@ public class MySQLDAOImpl extends AbstractJDBCDAOImpl
 		query = new StringBuffer("DROP TABLE IF EXISTS ").append(tableName);
 			executeUpdate(query.toString());
 	}
-		
+
+	/**
+	 * @return :This will return the Date Pattern.
+	 */
 	public String getDatePattern()
 	{
 		return "%m-%d-%Y";
 	}
-	
+
+	/**
+	 * @return :This will return the Time Pattern.
+	 */
 	public String getTimePattern()
 	{
 		return "%H:%i:%s";
 	}
+	/**
+	 * @return :This will return the Date Format Function.
+	 */
 	public String getDateFormatFunction()
 	{
 		return "DATE_FORMAT";
 	}
+	/**
+	 * @return :This will return the Time Format Function.
+	 */
 	public String getTimeFormatFunction()
 	{
 		return "TIME_FORMAT";
 	}
-	
+
+	/**
+	 * @return :This will return the Date to string function
+	 */
 	public String getDateTostrFunction()
 	{
 		return "TO_CHAR";
 	}
-	
+	/**
+	 * @return :This will return the string to Date function
+	 */
 	public String getStrTodateFunction()
 	{
-		
+
 		return "STR_TO_DATE";
 	}
-	
-	
+
+
 	/* (non-Javadoc)
 	 * @see edu.wustl.common.dao.JDBCDAO#insert(java.lang.String, java.util.List)
+	 */
+	/**
+	 * @param tableName : Name of the table.
+	 * @param columnValues : Column values of table.
+	 * @throws SQLException : SQLException
+	 * @throws DAOException : DAOException
 	 */
 	public void insert(String tableName, List<Object> columnValues) throws DAOException, SQLException
 	{
 		insert(tableName, columnValues, null);
 	}
-	
-	
+
+
+	/**
+	 * @param excp : Exception Object.
+	 * @param args : TODO
+	 * @return : It will return the formated messages.
+	 */
 	public String formatMessage(Exception excp, Object[] args)
 	{
 		logger.debug(excp.getClass().getName());
 		Exception objExcp = excp;
-		String tableName = null; // stores Table_Name for which column name to be found 
+		String tableName = null; // stores Table_Name for which column name to be found
 		String formattedErrMsg = null; // Formatted Error Message return by this method
 		try
 		{
@@ -82,7 +117,8 @@ public class MySQLDAOImpl extends AbstractJDBCDAOImpl
 				logger.debug(objExcp);
 			}
 			tableName = ConstraintViolationFormatter.getTableName(args);
-			formattedErrMsg = (String) ConstraintViolationFormatter.getFormattedErrorMessage(args, objExcp, tableName);
+			formattedErrMsg = (String) ConstraintViolationFormatter.getFormattedErrorMessage(args,
+					objExcp, tableName);
 		}
 		catch (Exception e)
 		{
@@ -95,33 +131,22 @@ public class MySQLDAOImpl extends AbstractJDBCDAOImpl
 
 	/**
 	 * This method executed query, parses the result and returns List of rows after doing security checks
-	 * for user's right to view a record/field
-	 * @param query
-	 * @param sessionDataBean
-	 * @param isSecureExecute
-	 * @param hasConditionOnIdentifiedField
-	 * @param queryResultObjectDataMap
-	 * @param startIndex The offset value, from which the result will be returned. 
-	 * 		This will be used for pagination purpose, 
-	 * @param noOfRecords
-	 * @return
-	 * @throws DAOException
-	 * 
-	 * 
-	 * -- TODO have to look into this 
+	 * for user's right to view a record/field.
+	 * @param queryParams : TODO
+	 * @return This will return the PagenatedResultData.
+	 * @throws DAOException :DAOException
 	 */
 	public PagenatedResultData getQueryResultList(QueryParams queryParams) throws DAOException
 	{
 		PagenatedResultData pagenatedResultData = null;
-				
 		queryParams.setConnection(getConnectionManager().getConnection());
 		MysqlQueryExecutor mysqlQueryExecutor = new MysqlQueryExecutor();
 		pagenatedResultData = mysqlQueryExecutor.getQueryResultList(queryParams);
-		
+
 		return pagenatedResultData;
 
 	}
-	
-	
-		
+
+
+
 }
