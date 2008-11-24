@@ -781,7 +781,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	}
 
 	/**
-	 * This method used to set Date values
+	 * This method used to set Date values.
 	 * to prepared statement
 	 * @param stmt :TODO
 	 * @param index :
@@ -888,41 +888,87 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		throw new DAOException(DAOConstants.METHOD_WITHOUT_IMPLEMENTATION);
 	}
 
-	public void audit(Object obj, Object oldObj, SessionDataBean sessionDataBean, boolean isAuditable) throws DAOException
+	/**
+	 * @param obj :
+	 * @param oldObj :
+	 * @param sessionDataBean :
+	 * @param isAuditable :
+	 * @throws DAOException :
+	 */
+	public void audit(Object obj, Object oldObj, SessionDataBean sessionDataBean,
+			boolean isAuditable) throws DAOException
 	{
 		throw new DAOException(DAOConstants.METHOD_WITHOUT_IMPLEMENTATION);
 
 	}
 
+	/**
+	 * @param obj :
+	 * @throws DAOException :
+	 */
 	public void delete(Object obj) throws DAOException
 	{
 		throw new DAOException(DAOConstants.METHOD_WITHOUT_IMPLEMENTATION);
 
 	}
 
-	public void disableRelatedObjects(String tableName, String whereColumnName, Long[] whereColumnValues) throws DAOException
+	/**
+	 * @param tableName :
+	 * @param whereColumnName :
+	 * @param whereColumnValues :
+	 * @throws DAOException :
+	 */
+	public void disableRelatedObjects(String tableName, String whereColumnName,
+			Long[] whereColumnValues) throws DAOException
 	{
 		throw new DAOException(DAOConstants.METHOD_WITHOUT_IMPLEMENTATION);
 
 	}
 
-	public void insert(Object obj, SessionDataBean sessionDataBean, boolean isAuditable, boolean isSecureInsert) throws DAOException, UserNotAuthorizedException
+	/**
+	 * @param obj :
+	 * @param sessionDataBean :
+	 * @param isAuditable :
+	 * @param isSecureInsert :
+	 * @throws DAOException :
+	 * @throws UserNotAuthorizedException :
+	 */
+	public void insert(Object obj, SessionDataBean sessionDataBean,
+			boolean isAuditable, boolean isSecureInsert)
+			throws DAOException, UserNotAuthorizedException
 	{
 		throw new DAOException(DAOConstants.METHOD_WITHOUT_IMPLEMENTATION);
 
 	}
 
-	public Object retrieveAttribute(String sourceObjectName, Long identifier, String attributeName) throws DAOException
+	/**
+	 * @param sourceObjectName :
+	 * @param identifier :
+	 * @param attributeName :
+	 * @return Object :
+	 * @throws DAOException :
+	 */
+	public Object retrieveAttribute(String sourceObjectName,
+			Long identifier, String attributeName) throws DAOException
 	{
 		throw new DAOException(DAOConstants.METHOD_WITHOUT_IMPLEMENTATION);
 	}
 
+	/**
+	 * @param obj :
+	 * @throws DAOException :
+	 */
 	public void update(Object obj) throws DAOException
 	{
 		throw new DAOException(DAOConstants.METHOD_WITHOUT_IMPLEMENTATION);
 	}
 
-
+	/**
+	 * @param sourceObjectName :
+	 * @param identifier :
+	 * @return Object :
+	 * @throws DAOException :
+	 */
 	public Object retrieve(String sourceObjectName, Long identifier)
 			throws DAOException
 	{

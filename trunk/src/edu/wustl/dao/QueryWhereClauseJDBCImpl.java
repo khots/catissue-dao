@@ -2,12 +2,20 @@ package edu.wustl.dao;
 
 import edu.wustl.common.util.global.Constants;
 
+/**
+ * @author kalpana_thakur
+ *
+ */
 public class QueryWhereClauseJDBCImpl extends QueryWhereClauseImpl
 {
 
+	/**
+	 * This will check query Conditions.
+	 * @return true if query Conditions will be satisfied
+	 */
 	public boolean isConditionSatisfied()
 	{
-				
+
 		boolean isConditionSatisfied = false;
 		if ((isWhereColumnName())
                 && (isWhereColumnCondition())
@@ -15,27 +23,33 @@ public class QueryWhereClauseJDBCImpl extends QueryWhereClauseImpl
         {
 			isConditionSatisfied = true;
         }
-		
+
 		return isConditionSatisfied;
 	}
 
-	private boolean isWhereColumnValue() 
+	/**
+	 * This will check WhereColumnValue array.
+	 * @return true if whereColumnName is not null.
+	 */
+	private boolean isWhereColumnValue()
 	{
-		
+
 		return whereColumnValue != null && whereColumnName.length == whereColumnValue.length;
 	}
-	
-	
+
+
+	/**
+	 * @param sourceObjectName :Object Name
+	 * @return query where clause.
+	 */
 	public String jdbcQueryWhereClause(String sourceObjectName)
 	{
-		
 		StringBuffer queryStrBuff = new StringBuffer();
-		
 		if (joinCondition == null)
 		{
 			joinCondition = Constants.AND_JOIN_CONDITION;
 		}
-	
+
 		queryStrBuff.append(" WHERE ");
 		int index;
 		for (index = 0; index < (whereColumnName.length - 1); index++)
@@ -46,8 +60,7 @@ public class QueryWhereClauseJDBCImpl extends QueryWhereClauseImpl
 		}
 		queryStrBuff.append(sourceObjectName + "." + whereColumnName[index] + " "
 				+ whereColumnCondition[index] + " " + whereColumnValue[index]);
-	
-	        
+
 		return queryStrBuff.toString();
 	}
 }

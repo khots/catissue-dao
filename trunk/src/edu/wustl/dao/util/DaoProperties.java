@@ -5,16 +5,21 @@ import edu.wustl.common.util.global.TextConstants;
 import edu.wustl.common.util.logger.Logger;
 
 
+/**
+ * @author kalpana_thakur
+ *
+ */
 public class DaoProperties
 {
 
-	
-	
 	/**
 	 * logger Logger - Generic logger.
 	 */
 	private static org.apache.log4j.Logger logger = Logger.getLogger(DaoProperties.class);
 
+	/**
+	 * ResourceBundle.
+	 */
 	private static ResourceBundle bundle;
 	static
 	{
@@ -28,12 +33,12 @@ public class DaoProperties
 			logger.error(e.getMessage() + " " + e);
 		}
 	}
-	
+
 	/*public DaoProperties()
 	{
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	DaoProperties (IConnectionManager icon)
 	{
 //		System.out.println(" DaoProperties :  >>>"+icon);
@@ -58,14 +63,7 @@ public class DaoProperties
 		}
 		return val;
 	}
-	
-	
-	
-	public static void main (String[] argv)
-	{
-		//text
-	}
 
 
-	
+
 }
