@@ -236,9 +236,9 @@ public class HibernateTestCase extends BaseTestCase
 			String[] whereColumnCondition = new String[]{"is not null",
 					"is not null","is not null","is not null"};
 			Object [] colValues = {};
+			String joinCondition = Constants.OR_JOIN_CONDITION;
 			Object[] whereColumnValues =  {colValues};
 			String[] selectColumnName = null;
-			String joinCondition = Constants.OR_JOIN_CONDITION;
 
 			QueryWhereClauseImpl queryWhereClause = new QueryWhereClauseImpl();
 			queryWhereClause.setWhereClause(whereColumnNames, whereColumnCondition,
