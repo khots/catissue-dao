@@ -15,10 +15,7 @@ import edu.wustl.common.util.logger.Logger;
  * @author kalpana_thakur
  *
  */
-/**
- * @author kalpana_thakur
- *
- */
+
 public class DatabaseConnectionParams
 {
 
