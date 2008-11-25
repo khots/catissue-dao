@@ -39,9 +39,9 @@ public class HibernateTestCase extends BaseTestCase
 
 	}
 
-	/**
+/*	*//**
 	 * This test will assert that Object updated successfully.
-	 */
+	 *//*
 	@Test
 	public void testCaseUpdateObject()
 	{
@@ -67,9 +67,9 @@ public class HibernateTestCase extends BaseTestCase
 
 	  }
 
-	/**
+	*//**
 	 * This test will assert that all the objects are retrieved successfully.
-	 */
+	 *//*
 	@Test
 	public void testCaseRetriveAllObjects()
 	{
@@ -88,10 +88,10 @@ public class HibernateTestCase extends BaseTestCase
 	  }
 	}
 
-	/**
+	*//**
 	 * This test will assert that the object with requested
 	 * column will be retrieved successfully.
-	 */
+	 *//*
 	@Test
 	public void testCaseRetriveObject()
 	{
@@ -109,10 +109,10 @@ public class HibernateTestCase extends BaseTestCase
 	  }
 	}
 
-	/**
+	*//**
 	 * This test will assert that requested columns of the objects are
 	 * retrieved successfully.
-	 */
+	 *//*
 	@Test
 	public void testCaseRetrieveObjectColumns()
 	{
@@ -132,10 +132,10 @@ public class HibernateTestCase extends BaseTestCase
 	  }
 	}
 
-	/**
+	*//**
 	 * This test will assert that object will given identifier
 	 * retrieved successfully.
-	 */
+	 *//*
 	@Test
 	public void testCaseRetrieveObjectAsPerID()
 	{
@@ -154,10 +154,10 @@ public class HibernateTestCase extends BaseTestCase
 
 	}
 
-	/**
+	*//**
 	 * This test will assert that object will given identifier
 	 * retrieved successfully.
-	 */
+	 *//*
 	@Test
 	public void testCaseLoadCleanObject()
 	{
@@ -179,10 +179,10 @@ public class HibernateTestCase extends BaseTestCase
 	}
 
 
-	/**
+	*//**
 	 * This test will assert that objects retrieved successfully
 	 * when where clause holds in condition.
-	 */
+	 *//*
 	@Test
 	public void testRetriveInCondition()
 	{
@@ -206,13 +206,13 @@ public class HibernateTestCase extends BaseTestCase
 			assertNotNull("No object retrieved ::",list);
 			assertTrue("No object retrieved ::",list.size() >= 1);
 
-			/*Iterator<Object> itr = list.iterator();
+			Iterator<Object> itr = list.iterator();
 			while(itr.hasNext())
 	  		{
 	  			User user = (User)itr.next();
 	  			System.out.println("--User Email Id  ::"+user.getEmailAddress());
 
-	  		}*/
+	  		}
 		}
 		catch(Exception exp)
 		{
@@ -221,10 +221,10 @@ public class HibernateTestCase extends BaseTestCase
 	}
 
 
-	/**
+	*//**
 	 * This test will assert that objects retrieved successfully
 	 * when where clause holds not null condition.
-	 */
+	 *//*
 	@Test
 	public void testRetriveIsNotNullCondition()
 	{
@@ -251,12 +251,12 @@ public class HibernateTestCase extends BaseTestCase
 			assertNotNull(list);
 			assertTrue("No object retrieved ::",list.size() >= 1);
 
-			/*Iterator<Object> itr = list.iterator();
+			Iterator<Object> itr = list.iterator();
 			while(itr.hasNext())
 	  		{
 	  			User user = (User)itr.next();
 	  			System.out.println("--User Email Id  ::"+user.getEmailAddress());
-	  		}*/
+	  		}
 
 		}
 		catch(Exception exp)
@@ -265,10 +265,10 @@ public class HibernateTestCase extends BaseTestCase
 		}
 	}
 
-	/**
+	*//**
 	 * This test will assert that objects retrieved successfully
 	 * when where clause holds is null condition.
-	 */
+	 *//*
 	@Test
 	public void testRetriveIsNullCondition()
 	{
@@ -292,13 +292,13 @@ public class HibernateTestCase extends BaseTestCase
 			assertNotNull(list);
 			assertTrue("No object retrieved ::",list.size() >= 1);
 
-			/*Iterator<Object> itr = list.iterator();
+			Iterator<Object> itr = list.iterator();
 			while(itr.hasNext())
 	  		{
 	  			User user = (User)itr.next();
 	  			System.out.println("--User Email Id  ::"+user.getEmailAddress());
 
-	  		}*/
+	  		}
 
 		}
 		catch(Exception exp)
@@ -308,9 +308,9 @@ public class HibernateTestCase extends BaseTestCase
 
 	}
 
-	/**
+	*//**
 	 * This test will assert that query will be executed successfully.
-	 */
+	 *//*
 	@Test
 	public void testCaseExecuteQuery()
 	{
@@ -331,9 +331,9 @@ public class HibernateTestCase extends BaseTestCase
 	}
 
 
-	/**
+	*//**
 	 * This test will assert that requested objects disabled successfully.
-	 */
+	 *//*
 	@Test
 	public void testDisableRelatedObjects()
 	{
@@ -354,9 +354,9 @@ public class HibernateTestCase extends BaseTestCase
 		}
 	}
 
-	/**
+	*//**
 	 * This test will assert that requested objects deleted successfully.
-	 */
+	 *//*
 	@Test
 	public void testCaseDeleteObject()
 	{
@@ -378,7 +378,7 @@ public class HibernateTestCase extends BaseTestCase
 	}
 
 
-	/**
+	*//**
 	 * This method will be called to create user object.
 	 * @return : It will returns the user object.
 	 */

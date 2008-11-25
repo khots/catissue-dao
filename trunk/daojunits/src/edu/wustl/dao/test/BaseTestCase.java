@@ -5,6 +5,7 @@ import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Test;
 
+import edu.wustl.common.util.dbmanager.DAOException;
 import edu.wustl.dao.DAO;
 import edu.wustl.dao.daofactory.DAOConfigFactory;
 import edu.wustl.dao.daofactory.IDAOFactory;
@@ -46,9 +47,18 @@ public class BaseTestCase extends TestCase
 	@Before
 	public void setUp()
 	{
-
+		try
+		{
 		IDAOFactory daoFactory = DAOConfigFactory.getInstance().getDAOFactory("caTissuecore");
-		dao = daoFactory.getDAO();
+
+			dao = daoFactory.getDAO();
+
+		}
+		catch (DAOException e)
+		{
+			assertFalse("Problem in retrieving DAO object", true);
+			e.printStackTrace();
+		}
 	}
 
 	/**
