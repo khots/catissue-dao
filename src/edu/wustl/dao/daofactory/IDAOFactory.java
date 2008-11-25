@@ -25,8 +25,8 @@ public interface IDAOFactory
 	void setConfigurationFile(String configurationFile);
 	String getConfigurationFile();
 	
-	DAO getDAO();
+	DAO getDAO()throws DAOException;
 	
-	JDBCDAO getJDBCDAO();
+	JDBCDAO getJDBCDAO()throws DAOException;
 
 }

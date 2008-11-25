@@ -37,83 +37,148 @@ import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.connectionmanager.IConnectionManager;
 
 
+/**
+ * @author kalpana_thakur
+ */
 public class DAOFactory implements IConnectionManager,IDAOFactory
 {
+	/**
+	 * This member will store the Connection Manager name.
+	 */
 	private String connectionManagerName;
+
+	/**
+	 * This member will store the Default DAO class name.
+	 * TODO
+	 */
 	private String defaultDAOClassName;
+	/**
+	 * This member will store the JDBC DAO class name.
+	 * TODO
+	 */
 	private String jdbcDAOClassName;
+	/**
+	 * This member will store the name of the application.
+	 */
 	private String applicationName;
+	/**
+	 * This member will store the hibernate configuration file name.
+	 */
 	private String configurationFile;
-	private static final EntityResolver entityResolver = XMLHelper.DEFAULT_DTD_RESOLVER;
+	/**
+	 * This member will store the EntityResolver.
+	 */
+	private static final EntityResolver entityResolver =
+		XMLHelper.DEFAULT_DTD_RESOLVER;
+	/**
+	 * This member will store the configuration instance.
+	 */
 	private Configuration configuration;
+	/**
+	 * This member will store the sessionFactory instance.
+	 */
 	private SessionFactory sessionFactory;
+	/**
+	 * This member will store the connectionManager instance.
+	 */
 	private IConnectionManager connectionManager;
-	
-	// ThreadLocal to hold the Session for the current executing thread.
-    private static final ThreadLocal<Map<String, Session>> threadLocal = new ThreadLocal<Map<String, Session>>();
+
+	/**
+	 * ThreadLocal to hold the Session for the current executing thread.
+	 */
+	private static final ThreadLocal<Map<String, Session>> threadLocal
+	= new ThreadLocal<Map<String, Session>>();
+
+	/**
+	 * Class logger.
+	 */
 	private static org.apache.log4j.Logger logger = Logger.getLogger(DAOFactory.class);
-	
+
+	/**
+	 * This block will instantiate applicationSessionMap.
+	 * This map holds the session object associated to the application.
+	 * Map will stored in threadLocal,whenever new session will be created ,
+	 * threadLocal will be checked first to obtain the session associated to application.
+	 */
 	static
 	{
-		
 		Map<String, Session> applicationSessionMap = new HashMap<String, Session>();
 		threadLocal.set(applicationSessionMap);
 	}
-	
+
 	/**
-	 * @return
+	 * This method will be called to retrieved default DAO instance.
+	 * @return return the DAO instance.
+	 * @throws DAOException :Generic DAOException.
 	 */
-	public DAO getDAO()
+	public DAO getDAO()throws DAOException
 	{
 		DAO dao = null;
-		
-		try 
+
+		try
 		{
 		   dao = (DAO)Class.forName(defaultDAOClassName).newInstance();
-		   dao.setConnectionManager(getConnectionManager());			
-		  		
+		   dao.setConnectionManager(getConnectionManager());
+
 		}
 		catch (Exception inExcp )
 		{
-			logger.error(inExcp.getMessage() + "Class not be instantiated,it may be Interface or Abstract class " + inExcp);
-		}	
-	
+			logger.error(inExcp.getMessage() + "Problem while retrieving the default DAO" + inExcp);
+			throw new DAOException("Problem while retrieving the default DAO ",inExcp);
+		}
+
 		return dao;
 	}
-	
+
 	/**
-	 * @return
+	 * This method will be called to retrieved the JDBC DAO instance.
+	 * @return the JDBCDAO instance
+	 * @throws DAOException :Generic DAOException.
 	 */
-	public JDBCDAO getJDBCDAO()
+	public JDBCDAO getJDBCDAO()throws DAOException
 	{
 		JDBCDAO dao = null;
-		
+
 		try
 		{
 			   dao = (JDBCDAO) Class.forName(jdbcDAOClassName).newInstance();
-			   dao.setConnectionManager(getConnectionManager());							
-        
+			   dao.setConnectionManager(getConnectionManager());
 		}
 		catch (Exception inExcp )
 		{
-			logger.error(inExcp.getMessage() + "Class not be instantiated,it may be Interface or Abstract class " + inExcp);
-		} 
+			logger.error(inExcp.getMessage() + "Problem while retrieving the JDBC DAO" + inExcp);
+			throw new DAOException("Problem while retrieving the JDBC DAO ",inExcp);
+		}
 		return dao;
 	}
-	
-	public Connection getConnection() throws HibernateException
+
+
+	/**
+	 *This method will be called to retrieved the current connection object.
+	 *@return Connection object
+	 *@throws DAOException :Generic DAOException.
+	 */
+	public Connection getConnection() throws DAOException
 	{
 		return currentSession().connection();
 	}
 
-
-	public void closeConnection() throws HibernateException
+	/**
+	 *This method will be called to close current connection.
+	 *@throws DAOException :Generic DAOException.
+	 */
+	public void closeConnection() throws DAOException
 	{
 		closeSession();
-		
 	}
 
-	public void closeSession() throws HibernateException
+	/**
+	 * This method will be called to close the session.
+	 * It will check the session for the running application in applicationSessionMap,
+	 * if present it will remove it from the Map.
+	 *@throws DAOException :Generic DAOException.
+	 */
+	public void closeSession() throws DAOException
 	{
 		Map<String, Session> applicationSessionMap = (Map<String, Session>) threadLocal.get();
 		if(applicationSessionMap.containsKey(applicationName))
@@ -126,24 +191,35 @@ public class DAOFactory implements IConnectionManager,IDAOFactory
 			applicationSessionMap.remove(applicationName);
 		}
 	}
-	
 
-	public Session currentSession() throws HibernateException
+	/**
+	 * This method will be called to retrieve the current session.
+	 * It will check the session for the running application in applicationSessionMap.
+	 * If present, retrieved the session from the Map otherwise create the
+	 * new session and store it into the Map.
+	 * @return session object.
+	 *@throws DAOException :Generic DAOException.
+	 */
+	public Session currentSession() throws DAOException
 	{
 
 		Map<String, Session> applicationSessionMap = (Map<String, Session>)threadLocal.get();
 	    // Open a new Session, if this Thread has none yet
-    
 		if (!(applicationSessionMap.containsKey(applicationName)) )
 		{
         	Session session = newSession();
         	applicationSessionMap.put(applicationName, session);
         }
         return (Session)applicationSessionMap.get(applicationName);
-    
+
 	}
-	
-	public Session newSession() throws HibernateException
+
+	/**
+	 * This method will be called to create new session.
+	 * @return session object.
+	 *@throws DAOException :Generic DAOException.
+	 */
+	public Session newSession() throws DAOException
 	{
 		Session session = sessionFactory.openSession();
         session.setFlushMode(FlushMode.COMMIT);
@@ -153,12 +229,17 @@ public class DAOFactory implements IConnectionManager,IDAOFactory
         }
         catch (SQLException ex)
         {
-            throw new HibernateException(ex.getMessage(), ex);
+            throw new DAOException("Problem in creating new session", ex);
         }
         return session;
-			
+
 	}
 
+	/**
+	 * This method will be called to obtain clean session.
+	 * @return session object.
+	 *@throws DAOException :Generic DAOException.
+	 */
 	public Session getCleanSession() throws DAOException
 	{
 		Session session = null;
@@ -169,56 +250,78 @@ public class DAOFactory implements IConnectionManager,IDAOFactory
 		}
 		catch (HibernateException exp)
 		{
-			throw new DAOException("Problem in Clossing the session :"+exp);
+			throw new DAOException("Problem in creating new session:"+exp);
 		}
-	
+
 	}
-	
+
+	/**
+	 *This method will be called to build the session factory.
+	 *It reads the configuration file ,build the sessionFactory and configuration object
+	 *and set the connection manager.
+	 *@throws DAOException :Generic DAOException.
+	 */
 	public void buildSessionFactory() throws DAOException
-	{		
+	{
 		try
 		{
 			Configuration configuration = setConfiguration(configurationFile);
 			SessionFactory sessionFactory = configuration.buildSessionFactory();
 			setConnectionManager(sessionFactory,configuration);
-			 
 		}
 		catch (Exception exp)
 		{
 			logger.error(exp.getMessage(),exp);
 			throw new DAOException("Problem in building Sessoin Factory :"+exp);
-			
+
 		}
-		
-		  
 	}
 
-	private void setConnectionManager(SessionFactory sessionFactory,Configuration configuration) throws InstantiationException, IllegalAccessException, ClassNotFoundException
+	/**
+	 * This method instantiate the Connection Manager.
+	 * @param sessionFactory session factory object
+	 * @param configuration configuration
+	 *@throws DAOException :Generic DAOException.
+	 */
+	private void setConnectionManager(SessionFactory sessionFactory,Configuration configuration)
+	throws DAOException
 	{
 		/*
 		 * Is writing this is valid here ...confirm !!!
 		 */
-		IConnectionManager connectionManager = (IConnectionManager)Class.forName(connectionManagerName).newInstance();
+		try
+		{
+		IConnectionManager connectionManager = (IConnectionManager)Class.forName(connectionManagerName)
+		.newInstance();
 		connectionManager.setApplicationName(applicationName);
 		connectionManager.setSessionFactory(sessionFactory);
 		connectionManager.setConfiguration(configuration);
 		setConnectionManager(connectionManager);
+		}
+		catch (Exception exp)
+		{
+			logger.error(exp.getMessage(),exp);
+			throw new DAOException("Problem while instantiating connection manager:"+exp);
+
+		}
 	}
-	
-	
+
+
 	 /**
      * This method adds configuration file to Hibernate Configuration.
      * @param configurationfile name of the file that needs to be added
-     * @param config Configuration to which this file is added.
-	 * @throws DAOException 
+     * @return Configuration :Configuration object.
+	 * @throws DAOException :Generic DAOException.
      */
-    private Configuration setConfiguration(String configurationfile) throws DAOException {
+    private Configuration setConfiguration(String configurationfile) throws DAOException
+    {
         try
         {
-        	
+
         	Configuration configuration = new Configuration();
             //InputStream inputStream = DAOFactory.class.getClassLoader().getResourceAsStream(configurationfile);
-        	InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(configurationfile);
+        	InputStream inputStream = Thread.currentThread().getContextClassLoader().
+        	getResourceAsStream(configurationfile);
             List<Object> errors = new ArrayList<Object>();
             // hibernate api to read configuration file and convert it to
             // Document(dom4j) object.
@@ -230,69 +333,105 @@ public class DAOFactory implements IConnectionManager,IDAOFactory
             org.w3c.dom.Document doc = writer.write(document);
             // configure
             configuration.configure(doc);
-            
             return configuration;
         }
         catch (DocumentException e)
         {
-            throw new DAOException(e);
+            throw new DAOException("Problem while parsing configuration file",e);
         }
         catch (HibernateException e)
         {
-            throw new DAOException(e);
+            throw new DAOException("Problem while adding configuration file ",e);
         }
-        
-       
     }
-	
 
+
+	/**
+	 * This method will be called to set Connection Manager name.
+	 * @param connectionManagerName : Connection Manager.
+	 */
 	public void setConnectionManagerName(String connectionManagerName)
 	{
 		this.connectionManagerName = connectionManagerName;
-		
 	}
 
+	/**
+	 * This method will be called to set defaultDAOClassName.
+	 * @param defaultDAOClassName : defaultDAOClassName.
+	 */
 	public void setDefaultDAOClassName(String defaultDAOClassName)
 	{
 		this.defaultDAOClassName = defaultDAOClassName;
 	}
 
+	/**
+	 * This method will be called to set jdbcDAOClassName.
+	 * @param jdbcDAOClassName : jdbcDAOClassName.
+	 */
 	public void setJdbcDAOClassName(String jdbcDAOClassName)
 	{
 		this.jdbcDAOClassName = jdbcDAOClassName;
 	}
 
+	/**
+	 * This method will be called to set applicationName.
+	 * @param applicationName : Name of the application.
+	 */
 	public void setApplicationName(String applicationName)
 	{
 		this.applicationName = applicationName;
 	}
 
+	/**
+	 * This method will be called to retrieved the application Name.
+	 * @return application name.
+	 */
 	public String getApplicationName()
 	{
 		return applicationName;
 	}
 
+	/**
+	 * This method will be called to retrieved the connectionManagerName.
+	 * @return connectionManagerName.
+	 */
 	public String getConnectionManagerName()
 	{
 		return connectionManagerName;
 	}
 
+	/**
+	 * This method will be called to retrieved the defaultDAOClassName.
+	 * @return defaultDAOClassName.
+	 */
 	public String getDefaultDAOClassName()
 	{
 		return defaultDAOClassName;
 	}
 
+	/**
+	 * This method will be called to retrieved the jdbcDAOClassName.
+	 * @return jdbcDAOClassName.
+	 */
 	public String getJdbcDAOClassName()
 	{
 		return jdbcDAOClassName;
 	}
 
+	/**
+	 * This method will be called to retrieved the configurationFile name.
+	 * @return configurationFile.
+	 */
 	public String getConfigurationFile()
 	{
 		return configurationFile;
 	}
 
-	public void setConfigurationFile(String configurationFile)
+	/**
+	 *This method will be called to set the configuration file name.
+	 *@param configurationFile : Name of configuration file.
+	 */
+	 public void setConfigurationFile(String configurationFile)
 	{
 		this.configurationFile = configurationFile;
 	}
@@ -305,11 +444,10 @@ public class DAOFactory implements IConnectionManager,IDAOFactory
 	 * @param objectClass class of the object
 	 * @param identifier id of the object
 	 * @return object
-	 * @throws HibernateException exception of Hibernate.
-	 * 
+	 * @throws DAOException generic DAOException.
 	 * Have to remove this method::::
 	 */
-	public Object loadCleanObj(Class objectClass, Long identifier) throws HibernateException
+	public Object loadCleanObj(Class objectClass, Long identifier) throws DAOException
 	{
 		Session session = null;
 		try
@@ -323,31 +461,56 @@ public class DAOFactory implements IConnectionManager,IDAOFactory
 		}
 	}
 
+
+	/**
+	 * This will called to retrieve session factory object.
+	 * @return sessionFactory
+	 */
 	public SessionFactory getSessionFactory()
 	{
 		return sessionFactory;
 	}
 
+	/**
+	 * This will called to set session factory object.
+	 * @param sessionFactory : session factory.
+	 */
 	public void setSessionFactory(SessionFactory sessionFactory)
 	{
 		this.sessionFactory = sessionFactory;
 	}
 
+	/**
+	 * This will called to retrieve configuration object.
+	 * @return configuration
+	 */
 	public Configuration getConfiguration()
 	{
 		return configuration;
 	}
 
+	/**
+	 * This will called to set the configuration object.
+	 * @param cfg configuration
+	 */
 	public void setConfiguration(Configuration cfg)
 	{
 		this.configuration = cfg;
 	}
-	
+
+	/**
+	 * This will called to retrieve connectionManager object.
+	 * @return connectionManager
+	 */
 	private IConnectionManager getConnectionManager()
 	{
 		return connectionManager;
 	}
 
+	/**
+	 * This will called to set connectionManager object.
+	 * @param connectionManager :connectionManager
+	 */
 	private void setConnectionManager(IConnectionManager connectionManager)
 	{
 		this.connectionManager = connectionManager;
