@@ -9,7 +9,7 @@ import edu.wustl.common.util.dbmanager.DAOException;
 
 /**
  * @author kalpana_thakur
- *
+ *TODO
  */
 public interface IConnectionManager
 {
@@ -18,20 +18,17 @@ public interface IConnectionManager
 	/**
 	 * @return :
 	 * @throws DAOException :
-	 * TODO
 	 */
 	Connection getConnection() throws DAOException;
 
 	/**
 	 * @throws DAOException :
-	 * TODO
 	 */
 	void closeConnection() throws DAOException;
 
 	/**
 	 * @return :
 	 * @throws DAOException :
-	 * TODO
 	 */
 	Session newSession() throws DAOException;
 
@@ -44,14 +41,12 @@ public interface IConnectionManager
 	/**
 	 * @return :
 	 * @throws DAOException :
-	 * TODO
 	 */
 	Session currentSession() throws DAOException;
 
 	/**
 	 * @return :
 	 * @throws DAOException :
-	 * TODO
 	 */
 	Session getCleanSession() throws DAOException;
 
@@ -63,31 +58,26 @@ public interface IConnectionManager
 
 	/**
 	 * @return This will return the application name.
-	 * TODO
 	 */
 	String getApplicationName();
 
 	/**
-	 * @param sessionFactory
-	 * TODO
+	 * @param sessionFactory :
 	 */
 	void setSessionFactory(SessionFactory sessionFactory);
 
 	/**
 	 * @return SessionFactory
-	 * TODO
 	 */
 	SessionFactory getSessionFactory();
 
 	/**
 	 * @param cfg : Configuration
-	 * TODO
 	 */
 	void setConfiguration(Configuration cfg);
 
 	/**
 	 * @return Configuration.
-	 * TODO
 	 */
 	Configuration getConfiguration();
 

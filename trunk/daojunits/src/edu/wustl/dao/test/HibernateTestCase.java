@@ -6,19 +6,20 @@ import org.junit.Test;
 
 import test.User;
 import edu.wustl.common.util.global.Constants;
+import edu.wustl.dao.HibernateDAO;
 import edu.wustl.dao.HibernateDAOImpl;
-import edu.wustl.dao.QueryWhereClauseImpl;
+import edu.wustl.dao.QueryWhereClause;
 
 /**
  * @author kalpana_thakur
  *
  */
 public class HibernateTestCase extends BaseTestCase
-{
+{/*
 
-	/**
+	*//**
 	 * This test will assert that Object inserted successfully.
-	 */
+	 *//*
 	@Test
 	public void testCaseInsertObject()
 	{
@@ -39,7 +40,7 @@ public class HibernateTestCase extends BaseTestCase
 
 	}
 
-/*	*//**
+	*//**
 	 * This test will assert that Object updated successfully.
 	 *//*
 	@Test
@@ -49,7 +50,7 @@ public class HibernateTestCase extends BaseTestCase
 		{
 
 		  User user = new User();
-		  user.setId(Long.valueOf(6));
+		  user.setIdentifier(Long.valueOf(6));
 		  user.setFirstName("Srikanth");
 		  user.setLastName("Adiga");
 		  user.setEmailAddress("sri.adiga@persistent.co.in");
@@ -80,7 +81,7 @@ public class HibernateTestCase extends BaseTestCase
 	  	  dao.closeSession();
 
 	  	  assertNotNull("No objects retrieved :",list);
-	  	  assertTrue("No object retrieved ::", list.size() >= 1);
+	  	  assertTrue("No object retrieved ::", list.size()> 0);
 	   }
 	  catch(Exception exp)
 	  {
@@ -98,10 +99,10 @@ public class HibernateTestCase extends BaseTestCase
 	  try
 	  {
 	    dao.openSession(null);
-	    List<Object> list = dao.retrieve("test.User","id" , Long.valueOf(2));
+	    List<Object> list = dao.retrieve("test.User","identifier" , Long.valueOf(2));
 	  	dao.closeSession();
 	  	assertNotNull("No objects retrieved",list);
-		assertTrue("No object retrieved ::",list.size() >= 1);
+		assertTrue("No object retrieved ::",list.size() > 0);
 	  }
 	  catch(Exception exp)
 	  {
@@ -118,13 +119,13 @@ public class HibernateTestCase extends BaseTestCase
 	{
 	  try
 	  {
-		String[] selectColumnName = {"id","firstName","lastName","emailAddress"};
+		String[] selectColumnName = {"identifier","firstName","lastName","emailAddress"};
 		dao.openSession(null);
 	    List<Object> list = dao.retrieve("test.User", selectColumnName);
 	    dao.closeSession();
 
 	    assertNotNull("No object retrieved ::",list);
-		assertTrue("No object retrieved ::",list.size() >= 1);
+		assertTrue("No object retrieved ::",list.size() > 0);
 	  }
 	  catch(Exception exp)
 	  {
@@ -189,13 +190,13 @@ public class HibernateTestCase extends BaseTestCase
 		try
 		{
 			String sourceObjectName = "test.User";
-			String [] whereColumnNames =  {"id"};
+			String [] whereColumnNames =  {"identifier"};
 			String [] colConditions =  { "in"};
 			Object [] colValues = {Long.valueOf(2),Long.valueOf(4)};
 			Object [] whereColumnValues =  {colValues};
 			String[] selectColumnName = null;
 
-			QueryWhereClauseImpl queryWhereClause = new QueryWhereClauseImpl();
+			QueryWhereClause queryWhereClause = new QueryWhereClause();
 			queryWhereClause.setWhereClause(whereColumnNames, colConditions,
 					whereColumnValues, Constants.AND_JOIN_CONDITION);
 
@@ -204,15 +205,7 @@ public class HibernateTestCase extends BaseTestCase
 			dao.closeSession();
 
 			assertNotNull("No object retrieved ::",list);
-			assertTrue("No object retrieved ::",list.size() >= 1);
-
-			Iterator<Object> itr = list.iterator();
-			while(itr.hasNext())
-	  		{
-	  			User user = (User)itr.next();
-	  			System.out.println("--User Email Id  ::"+user.getEmailAddress());
-
-	  		}
+			assertTrue("No object retrieved ::",list.size() > 0);
 		}
 		catch(Exception exp)
 		{
@@ -232,7 +225,7 @@ public class HibernateTestCase extends BaseTestCase
 		{
 			String sourceObjectName = "test.User";
 
-			String[] whereColumnNames = {"id","lastName","firstName","emailAddress"};
+			String[] whereColumnNames = {"identifier","lastName","firstName","emailAddress"};
 			String[] whereColumnCondition = new String[]{"is not null",
 					"is not null","is not null","is not null"};
 			Object [] colValues = {};
@@ -240,7 +233,7 @@ public class HibernateTestCase extends BaseTestCase
 			Object[] whereColumnValues =  {colValues};
 			String[] selectColumnName = null;
 
-			QueryWhereClauseImpl queryWhereClause = new QueryWhereClauseImpl();
+			QueryWhereClause queryWhereClause = new QueryWhereClause();
 			queryWhereClause.setWhereClause(whereColumnNames, whereColumnCondition,
 					whereColumnValues, joinCondition);
 
@@ -249,14 +242,7 @@ public class HibernateTestCase extends BaseTestCase
 			dao.closeSession();
 
 			assertNotNull(list);
-			assertTrue("No object retrieved ::",list.size() >= 1);
-
-			Iterator<Object> itr = list.iterator();
-			while(itr.hasNext())
-	  		{
-	  			User user = (User)itr.next();
-	  			System.out.println("--User Email Id  ::"+user.getEmailAddress());
-	  		}
+			assertTrue("No object retrieved ::",list.size() > 0);
 
 		}
 		catch(Exception exp)
@@ -282,7 +268,7 @@ public class HibernateTestCase extends BaseTestCase
 			String[] selectColumnName = null;
 			String joinCondition = Constants.OR_JOIN_CONDITION;
 
-			QueryWhereClauseImpl queryWhereClause = new QueryWhereClauseImpl();
+			QueryWhereClause queryWhereClause = new QueryWhereClause();
 			queryWhereClause.setWhereClause(whereColumnNames, whereColumnCondition,
 					whereColumnValues, joinCondition);
 			dao.openSession(null);
@@ -290,15 +276,7 @@ public class HibernateTestCase extends BaseTestCase
 			dao.closeSession();
 
 			assertNotNull(list);
-			assertTrue("No object retrieved ::",list.size() >= 1);
-
-			Iterator<Object> itr = list.iterator();
-			while(itr.hasNext())
-	  		{
-	  			User user = (User)itr.next();
-	  			System.out.println("--User Email Id  ::"+user.getEmailAddress());
-
-	  		}
+			assertTrue("No object retrieved ::",list.size() > 0);
 
 		}
 		catch(Exception exp)
@@ -321,7 +299,7 @@ public class HibernateTestCase extends BaseTestCase
 			List<Object> list = dao.executeQuery(sql, null, false, null);
 			dao.closeSession();
 			assertNotNull(list);
-			assertTrue("No object retrieved ::",list.size() >= 1);
+			assertTrue("No object retrieved ::",list.size()> 0);
 
 		}
 		catch(Exception exp)
@@ -354,6 +332,52 @@ public class HibernateTestCase extends BaseTestCase
 		}
 	}
 
+
+	*//**
+	 * This test will assert that attribute retrieved successfully.
+	 *//*
+	@Test
+	public void testRetrieveAttribute()
+	{
+		try
+		{
+			dao.openSession(null);
+			Object obj = (Object)dao.retrieveAttribute(User.class,
+					Long.valueOf(2),"emailAddress","identifier");
+			dao.closeSession();
+
+			assertNotNull("Object retrieved is null",obj);
+			List<String> list = (List<String>)obj;
+			assertTrue("Problem in retrieving attribute :", !list.isEmpty());
+		}
+		catch(Exception exp)
+		{
+			assertFalse("Problem in retrieving attribute ::", true);
+		}
+	}
+
+	*//**
+	 * This method will use session.load to retrieve the object with the given identifier.
+	 *//*
+	@Test
+	public void testLoadCleanObjects()
+	{
+		try
+		{
+			HibernateDAO hibernateDAO = (HibernateDAO)dao;
+			hibernateDAO.openSession(null);
+
+			Object obj = (Object)hibernateDAO.loadCleanObj(User.class,
+					Long.valueOf(2));
+			dao.closeSession();
+			assertNotNull("Object retrieved is null",obj);
+		}
+		catch(Exception exp)
+		{
+			assertFalse("Problem in retrieving attribute ::", true);
+		}
+	}
+
 	*//**
 	 * This test will assert that requested objects deleted successfully.
 	 *//*
@@ -363,7 +387,7 @@ public class HibernateTestCase extends BaseTestCase
 	  try
 	  {
 		  User user = new User();
-		  user.setId(Long.valueOf(7));
+		  user.setIdentifier(Long.valueOf(12));
 		  dao.openSession(null);
 	  	  dao.delete(user);
 	  	  dao.commit();
@@ -381,7 +405,7 @@ public class HibernateTestCase extends BaseTestCase
 	*//**
 	 * This method will be called to create user object.
 	 * @return : It will returns the user object.
-	 */
+	 *//*
 	User createUserObject()
 	{
 	  User user = new User();
@@ -393,4 +417,4 @@ public class HibernateTestCase extends BaseTestCase
 
 
 
-}
+*/}

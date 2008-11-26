@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import edu.wustl.common.util.dbmanager.DAOException;
 import edu.wustl.dao.DAO;
+import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.daofactory.DAOConfigFactory;
 import edu.wustl.dao.daofactory.IDAOFactory;
 
@@ -22,6 +23,27 @@ public class BaseTestCase extends TestCase
 	 * DAO instance.
 	 */
 	protected DAO dao;
+
+	/**
+	 * JDBCDAO instance.
+	 */
+	protected JDBCDAO jdbcDAO;
+
+	/**
+	 * @return :It will return the JDBCDAO object
+	 */
+	protected JDBCDAO getJdbcDAO()
+	{
+		return jdbcDAO;
+	}
+
+	/**
+	 * @param jdbcDAO :This method will be called to set the JDBCDAO object
+	 */
+	protected void setJdbcDAO(JDBCDAO jdbcDAO)
+	{
+		this.jdbcDAO = jdbcDAO;
+	}
 
 	/**
 	 * @return :It will return the DAO object
@@ -52,6 +74,7 @@ public class BaseTestCase extends TestCase
 		IDAOFactory daoFactory = DAOConfigFactory.getInstance().getDAOFactory("caTissuecore");
 
 			dao = daoFactory.getDAO();
+			jdbcDAO = daoFactory.getJDBCDAO();
 
 		}
 		catch (DAOException e)

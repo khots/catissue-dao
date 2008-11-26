@@ -12,7 +12,7 @@ import edu.wustl.common.util.global.Constants;
  * @author kalpana_thakur
  *
  */
-public class QueryWhereClauseImpl
+public class QueryWhereClause
 {
 
 	/**

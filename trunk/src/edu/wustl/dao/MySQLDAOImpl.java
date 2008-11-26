@@ -142,7 +142,6 @@ public class MySQLDAOImpl extends AbstractJDBCDAOImpl
 		queryParams.setConnection(getConnectionManager().getConnection());
 		MysqlQueryExecutor mysqlQueryExecutor = new MysqlQueryExecutor();
 		pagenatedResultData = mysqlQueryExecutor.getQueryResultList(queryParams);
-
 		return pagenatedResultData;
 
 	}

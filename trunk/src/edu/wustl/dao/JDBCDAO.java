@@ -51,7 +51,7 @@ public interface JDBCDAO extends DAO
 	   * @throws DAOException generic DAOException.
 	   */
 	List<Object> retrieve(String sourceObjectName,
-			String[] selectColumnName, QueryWhereClauseImpl queryWhereClauseImpl,
+			String[] selectColumnName, QueryWhereClause queryWhereClauseImpl,
 			boolean onlyDistinctRows) throws DAOException;
 
 	/**
