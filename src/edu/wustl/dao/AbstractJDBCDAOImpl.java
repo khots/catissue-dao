@@ -56,7 +56,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	 */
 	protected AuditManager auditManager;
 	/**
-	 * Logger.
+	 * Class Logger.
 	 */
 	private static org.apache.log4j.Logger logger = Logger.getLogger(AbstractJDBCDAOImpl.class);
 	/**
@@ -179,27 +179,6 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	}
 
 	/**
-	 * This method will be called to return Database Statement Object.
-	 * @return : Database Statement Object
-	 * @throws SQLException : It will throw SQLException.
-	 */
-	protected Statement getConnectionStmt() throws SQLException
-	{
-		return (Statement)connection.createStatement();
-	}
-
-	/**
-	 * This method will be called to return Database PreparedStatement Object.
-	 * @param query Holds the query string.
-	 * @return Database PreparedStatement Object
-	 * @throws SQLException It will throw SQLException.
-	 */
-	protected PreparedStatement getPreparedStatement(String query) throws SQLException
-	{
-		return connection.prepareStatement(query);
-	}
-
-	/**
 	 * @see edu.wustl.common.dao.JDBCDAO#createTable(java.lang.String, java.lang.String[])
 	 * This method will Create and execute a table with the name and columns specified
 	 * @param tableName : Table Name
@@ -249,14 +228,15 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	 * @param sourceObjectName The table name.
 	 * @return The ResultSet containing all the rows in the table represented in sourceObjectName.
 	 * @throws ClassNotFoundException
-	 * @throws SQLException
+	 * @throws DAOException generic DAOException
 	 */
 	public List<Object> retrieve(String sourceObjectName) throws DAOException
 	{
-		QueryWhereClauseImpl queryWhereClauseImpl = new QueryWhereClauseImpl();
-		queryWhereClauseImpl.setWhereClause(null, null,
+		logger.debug("Inside retrieve method");
+		QueryWhereClauseJDBC queryWhereClause = new QueryWhereClauseJDBC();
+		queryWhereClause.setWhereClause(null, null,
 				null,null);
-		return retrieve(sourceObjectName, null, queryWhereClauseImpl,false);
+		return retrieve(sourceObjectName, null, queryWhereClause,false);
 	}
 
 	/**
@@ -270,10 +250,10 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	*/
 	public List<Object> retrieve(String sourceObjectName, String[] selectColumnName) throws DAOException
 	{
-		QueryWhereClauseImpl queryWhereClauseImpl = new QueryWhereClauseImpl();
-		queryWhereClauseImpl.setWhereClause(null, null,
+		QueryWhereClauseJDBC queryWhereClause = new QueryWhereClauseJDBC();
+		queryWhereClause.setWhereClause(null, null,
 				null,null);
-		return retrieve(sourceObjectName, selectColumnName,queryWhereClauseImpl,false);
+		return retrieve(sourceObjectName, selectColumnName,queryWhereClause,false);
 	}
 
 	/**
@@ -289,11 +269,11 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	public List<Object> retrieve(String sourceObjectName, String[] selectColumnName,
 			boolean onlyDistinctRows) throws DAOException
 	{
-		QueryWhereClauseImpl queryWhereClauseImpl = new QueryWhereClauseImpl();
-		queryWhereClauseImpl.setWhereClause(null, null,
+		QueryWhereClauseJDBC queryWhereClause = new QueryWhereClauseJDBC();
+		queryWhereClause.setWhereClause(null, null,
 				null,null);
 
-		return retrieve(sourceObjectName, selectColumnName,queryWhereClauseImpl,
+		return retrieve(sourceObjectName, selectColumnName,queryWhereClause,
 				onlyDistinctRows);
 	}
 
@@ -302,17 +282,17 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	 * from the table represented in sourceObjectName as per the where clause.
 	 * @param sourceObjectName The table name.
 	 * @param selectColumnName The column names in select clause.
-	 * @param queryWhereClauseImpl The where condition clause which holds the where column name,
+	 * @param queryWhereClause The where condition clause which holds the where column name,
 	 * value and conditions applied
 	 * @return The ResultSet containing all the rows according to the columns specified
 	 * from the table represented in sourceObjectName which satisfies the where condition
 	 * @throws DAOException : DAOException
 	 */
 	public List<Object> retrieve(String sourceObjectName,
-			String[] selectColumnName, QueryWhereClauseImpl queryWhereClauseImpl)
+			String[] selectColumnName, QueryWhereClause queryWhereClause)
 			throws DAOException
 	{
-		return retrieve(sourceObjectName, selectColumnName,queryWhereClauseImpl,false);
+		return retrieve(sourceObjectName, selectColumnName,queryWhereClause,false);
 	}
 
 	/**
@@ -334,11 +314,11 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		Object[] whereColumnValues = {whereColumnValue};
 		String[] selectColumnName = null;
 
-		QueryWhereClauseImpl queryWhereClauseImpl = new QueryWhereClauseImpl();
-		queryWhereClauseImpl.setWhereClause(whereColumnNames, whereColumnConditions,
+		QueryWhereClauseJDBC queryWhereClause = new QueryWhereClauseJDBC();
+		queryWhereClause.setWhereClause(whereColumnNames, whereColumnConditions,
 				whereColumnValues,  Constants.AND_JOIN_CONDITION);
 
-		return retrieve(sourceObjectName, selectColumnName,queryWhereClauseImpl,false);
+		return retrieve(sourceObjectName, selectColumnName,queryWhereClause,false);
 	}
 
 
@@ -347,31 +327,32 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	 * field values passed in the passed session.
 	 * @param sourceObjectName This will holds the object name.
 	 * @param selectColumnName An array of field names in select clause.
-	 * @param queryWhereClauseImpl This will hold the where clause.It holds following:
-	 * whereColumnName : An array of field names in where clause.
-	 * whereColumnCondition : The comparison condition for the field values.
-	 * whereColumnValue : An array of field values.
-	 * joinCondition : The join condition.
+	 * @param queryWhereClause This will hold the where clause.It holds following:
+	 * 1.whereColumnName : An array of field names in where clause.
+	 * 2.whereColumnCondition : The comparison condition for the field values.
+	 * 3.whereColumnValue : An array of field values.
+	 * 4.joinCondition : The join condition.
 	 * @param onlyDistinctRows True if only distinct rows should be selected
 	 * @return The ResultSet containing all the rows from the table represented
 	 * in sourceObjectName which satisfies the where condition
 	 * @throws DAOException : DAOException
 	 */
 	public List<Object> retrieve(String sourceObjectName, String[] selectColumnName,
-			QueryWhereClauseImpl queryWhereClauseImpl,
+			QueryWhereClause queryWhereClause,
 			 boolean onlyDistinctRows) throws DAOException
 	{
+
 		List<Object> list = null;
-		QueryWhereClauseJDBCImpl queryWhereClauseJDBCImpl = (QueryWhereClauseJDBCImpl)queryWhereClauseImpl;
+		QueryWhereClauseJDBC queryWhereClauseJDBC = (QueryWhereClauseJDBC)queryWhereClause;
 
 		try
 		{
 			StringBuffer queryStrBuff = getSelectPartOfQuery(selectColumnName, onlyDistinctRows);
 			getFromPartOfQuery(sourceObjectName, queryStrBuff);
 
-			if(queryWhereClauseJDBCImpl.isConditionSatisfied())
+			if(queryWhereClauseJDBC.isConditionSatisfied())
 			{
-				queryStrBuff.append(queryWhereClauseJDBCImpl.
+				queryStrBuff.append(queryWhereClauseJDBC.
 						jdbcQueryWhereClause(sourceObjectName));
 			}
 
@@ -442,6 +423,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 			DAOException
 	{
 
+		logger.debug("Inside executeQuery method");
 		QueryParams queryParams = new QueryParams();
 		queryParams.setQuery(query);
 		queryParams.setSessionDataBean(sessionDataBean);
@@ -532,24 +514,6 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		{
 			databaseConnectionParams.closeConnectionParams();
 		}
-	}
-
-
-
-	/* (non-Javadoc)
-	 * @see edu.wustl.common.dao.DAO#retrieveAttribute(java.lang.Class, java.lang.Long, java.lang.String)
-	 */
-	/**
-	 * @param objClass : Class name
-	 * @param identifier : Identifier of object
-	 * @param attributeName : Attribute Name to be fetched
-	 * @return It will return the Attribute of the object having given identifier
-	 * @throws DAOException : DAOException
-	 */
-	public Object retrieveAttribute(Class<AbstractDomainObject> objClass, Long identifier,
-			String attributeName) throws DAOException
-	{
-		return retrieveAttribute(objClass.getName(), identifier, attributeName);
 	}
 
 	/**
@@ -843,8 +807,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		return timestamp;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.wustl.dao.DAO#setConnectionManager(edu.wustl.dao.connectionmanager.IConnectionManager)
+	/* @see edu.wustl.dao.DAO#setConnectionManager(edu.wustl.dao.connectionmanager.IConnectionManager)
 	 */
 
 	/**
@@ -875,8 +838,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	}
 
 
-	/**(non-Javadoc).
-	 * @see edu.wustl.dao.JDBCDAO#getActivityStatus(java.lang.String, java.lang.Long)
+	/**@see edu.wustl.dao.JDBCDAO#getActivityStatus(java.lang.String, java.lang.Long)
 	 * @param sourceObjectName :
 	 * @param indetifier :
 	 * @throws DAOException :
@@ -942,17 +904,20 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	}
 
 	/**
-	 * @param sourceObjectName :
-	 * @param identifier :
-	 * @param attributeName :
-	 * @return Object :
-	 * @throws DAOException :
+	 * @see edu.wustl.common.dao.DAO#retrieveAttribute(java.lang.Class, java.lang.Long, java.lang.String)
+	 * @param objClass : Class name
+	 * @param identifier : Identifier of object
+	 * @param attributeName : Attribute Name to be fetched
+	 * @param columnName : where clause column field.
+	 * @return It will return the Attribute of the object having given identifier
+	 * @throws DAOException : DAOException
 	 */
-	public Object retrieveAttribute(String sourceObjectName,
-			Long identifier, String attributeName) throws DAOException
+	public Object retrieveAttribute(Class objClass, Long identifier,
+			String attributeName,String columnName) throws DAOException
 	{
 		throw new DAOException(DAOConstants.METHOD_WITHOUT_IMPLEMENTATION);
 	}
+
 
 	/**
 	 * @param obj :

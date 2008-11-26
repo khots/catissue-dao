@@ -80,6 +80,7 @@ public class DAOConfigFactory
 	{
 		try
 		{
+			System.out.println("");
 			ApplicationDAOPropertiesParser applicationPropertiesParser =
 				new ApplicationDAOPropertiesParser();
 			daoFactoryMap = applicationPropertiesParser.getDaoFactoryMap();

@@ -33,6 +33,7 @@ public class DAOTestSuite
 	{
 		TestSuite daoSuite = new TestSuite("Test for DAO Layer");
 		daoSuite.addTestSuite(HibernateTestCase.class);
+		daoSuite.addTestSuite(JDBCTestCases.class);
 		//return new junit.framework.JUnit4TestAdapter(HibernateInsertTestCase.class);
 		return daoSuite;
 	}

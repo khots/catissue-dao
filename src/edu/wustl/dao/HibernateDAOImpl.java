@@ -10,6 +10,7 @@
 
 package edu.wustl.dao;
 
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -28,12 +29,12 @@ import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.domain.AbstractDomainObject;
 import edu.wustl.common.exception.AuditException;
 import edu.wustl.common.security.exceptions.UserNotAuthorizedException;
-import edu.wustl.common.util.Utility;
 import edu.wustl.common.util.dbmanager.DAOException;
 import edu.wustl.common.util.dbmanager.HibernateMetaData;
 import edu.wustl.common.util.global.Constants;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.connectionmanager.IConnectionManager;
+import edu.wustl.dao.util.DAOUtility;
 import edu.wustl.dao.util.DatabaseConnectionParams;
 
 
@@ -405,7 +406,7 @@ public class HibernateDAOImpl implements HibernateDAO
 	{
 		String[] selectColumnName = null;
 
-		QueryWhereClauseImpl queryWhereClause = new QueryWhereClauseImpl();
+		QueryWhereClause queryWhereClause = new QueryWhereClause();
 		queryWhereClause.setWhereClause(null, null, null, null);
 
 		return retrieve(sourceObjectName, selectColumnName, queryWhereClause);
@@ -427,7 +428,7 @@ public class HibernateDAOImpl implements HibernateDAO
 		Object [] whereColumnValues =  {whereColumnValue};
 		String[] selectColumnName = null;
 
-		QueryWhereClauseImpl queryWhereClause = new QueryWhereClauseImpl();
+		QueryWhereClause queryWhereClause = new QueryWhereClause();
         queryWhereClause.setWhereClause(whereColumnNames,
 				colConditions, whereColumnValues, Constants.AND_JOIN_CONDITION);
 
@@ -435,8 +436,6 @@ public class HibernateDAOImpl implements HibernateDAO
 	}
 
 	/**
-	 * (non-Javadoc).
-	 * @see edu.wustl.common.dao.AbstractDAO#retrieve(java.lang.String, java.lang.String[])
 	 * @param sourceObjectName Contains the class Name whose records are to be retrieved.
 	 * @param selectColumnName select Column Name.
 	 * @return List.
@@ -446,10 +445,10 @@ public class HibernateDAOImpl implements HibernateDAO
 	throws DAOException
 	{
 
-		QueryWhereClauseImpl queryWhereClauseImpl = new QueryWhereClauseImpl();
-		queryWhereClauseImpl.setWhereClause(null, null, null, null);
+		QueryWhereClause queryWhereClause = new QueryWhereClause();
+		queryWhereClause.setWhereClause(null, null, null, null);
 
-		return retrieve(sourceObjectName, selectColumnName,queryWhereClauseImpl);
+		return retrieve(sourceObjectName, selectColumnName,queryWhereClause);
 	}
 
 	/**
@@ -457,28 +456,28 @@ public class HibernateDAOImpl implements HibernateDAO
 	 * to field values passed in the passed session.
 	 * @param sourceObjectName source Object Name.
 	 * @param selectColumnName select Column Name.
-	 * @param queryWhereClauseImpl where column conditions
+	 * @param queryWhereClause where column conditions
 	 * @return List.
 	 * @throws DAOException generic DAOException.
 	 */
 	public List<Object> retrieve(String sourceObjectName,String[] selectColumnName,
-			QueryWhereClauseImpl queryWhereClauseImpl) throws DAOException
+			QueryWhereClause queryWhereClause) throws DAOException
 			{
 		List<Object> list;
 		try
 		{
 			StringBuffer sqlBuff = new StringBuffer();
-			String className = Utility.parseClassName(sourceObjectName);
+			String className = DAOUtility.parseClassName(sourceObjectName);
 			Query query;
 
 			generateSelectPartOfQuery(selectColumnName, sqlBuff, className);
 			generateFromPartOfQuery(sourceObjectName, sqlBuff, className);
 
-			if (queryWhereClauseImpl.isConditionSatisfied())
+			if (queryWhereClause.isConditionSatisfied())
             {
-				sqlBuff.append(queryWhereClauseImpl.toString(className));
+				sqlBuff.append(queryWhereClause.toString(className));
 				query = session.createQuery(sqlBuff.toString());
-				queryWhereClauseImpl.setParametersToQuery(query);
+				queryWhereClause.setParametersToQuery(query);
 			}
 			else
 			{
@@ -593,23 +592,24 @@ public class HibernateDAOImpl implements HibernateDAO
 	 * @param objClass object.
 	 * @param identifier identifier.
 	 * @param attributeName attribute Name.
+	 * @param columnName Name of the column.
 	 * @return Object.
 	 * @throws DAOException generic DAOException.
 	 */
-	public Object retrieveAttribute(Class<AbstractDomainObject> objClass, Long identifier,
-			String attributeName) throws DAOException
+	public Object retrieveAttribute(Class objClass, Long identifier,
+			String attributeName,String columnName) throws DAOException
 	 {
 		try
 		{
 			String objClassName = objClass.getName();
 			String simpleName = objClass.getSimpleName();
-			String nameOfAttribute = Utility.createAttributeNameForHQL(simpleName, attributeName);
+			String nameOfAttribute = DAOUtility.createAttributeNameForHQL(simpleName, attributeName);
 			StringBuffer queryStringBuffer = new StringBuffer();
 
-			queryStringBuffer.append("Select ").append(simpleName).append(".").append(nameOfAttribute)
-				.append(" from ").append(objClassName).append("    ").append(simpleName).append(
-						" where ").append(simpleName).append(".").append(
-						Constants.SYSTEM_IDENTIFIER).append("=  ").append(identifier);
+			queryStringBuffer.append("Select ").append(nameOfAttribute).
+			append(" from ").append(objClassName).append("    ").append(simpleName).
+			append(" where ").append(simpleName).append(".").append(columnName).
+			append("=  ").append(identifier);
 
 			return session.createQuery(queryStringBuffer.toString()).list();
 		}
@@ -620,61 +620,9 @@ public class HibernateDAOImpl implements HibernateDAO
 	}
 
 	/**
-	 * To retrieve the attribute value for the given source object name & Id.
-	 * @param sourceObjectName Source object in the Database.
-	 * @param identifier Id of the object.
-	 * @param attributeName attribute name to be retrieved.
-	 * @return The Attribute value corresponding to the SourceObjectName & id.
-	 * @throws DAOException
-	 * @see edu.wustl.dao.DAO#retrieveAttribute(java.lang.String, java.lang.Long, java.lang.String)
-	 * @deprecated This function is deprecated use retrieveAttribute
-	 * (Class className,Long id, String attributeName)
-	 * @throws DAOException generic DAOException.
-	 */
-	public Object retrieveAttribute(String sourceObjectName, Long identifier, String attributeName)
-			throws DAOException
-	 {
-		String[] selectColumnNames =  {attributeName};
-		String[] whereColumnName =  {Constants.SYSTEM_IDENTIFIER};
-		String[] whereColumnCondition =  {"="};
-		Object[] whereColumnValue =  {identifier};
-
-		QueryWhereClauseImpl queryWhereClauseImpl = new QueryWhereClauseImpl();
-		queryWhereClauseImpl.setWhereClause(whereColumnName, whereColumnCondition, whereColumnValue, null);
-
-		List<Object> result = retrieve(sourceObjectName, selectColumnNames, queryWhereClauseImpl);
-		Object attribute = null;
-
-		/*
-		 * if the attribute is of type collection, then it needs to be returned as Collection(HashSet)
-		 */
-		if (Utility.isColumnNameContainsElements(attributeName))
-		 {
-			Collection<Object> collection = new HashSet<Object>();
-			attribute = collection;
-			for (int i = 0; i < result.size(); i++)
-			{
-				collection.add(HibernateMetaData.getProxyObjectImpl(result.get(i)));
-			}
-		}
-		else
-		 {
-			if (!result.isEmpty())
-			 {
-				/**
-				 * * Calling HibernateMetaData.getProxyObject() because it could be proxy object.
-				 */
-				attribute = HibernateMetaData.getProxyObjectImpl(result.get(0));
-			}
-		}
-
-		return attribute;
-	}
-
-	/**
 	 * Generate Select Block.
 	 * @param selectColumnName select Column Name.
-	 * @param sqlBuff sql Buff
+	 * @param sqlBuff sqlBuff
 	 * @param className class Name.
 	 */
 	private void generateSelectPartOfQuery(String[] selectColumnName, StringBuffer sqlBuff, String className)
@@ -684,7 +632,7 @@ public class HibernateDAOImpl implements HibernateDAO
 		    sqlBuff.append("Select ");
 		    for (int i = 0; i < selectColumnName.length; i++)
 		     {
-		        sqlBuff.append(Utility.createAttributeNameForHQL(className, selectColumnName[i]));
+		        sqlBuff.append(DAOUtility.createAttributeNameForHQL(className, selectColumnName[i]));
 		        if (i != selectColumnName.length - 1)
 		        {
 		            sqlBuff.append(", ");
@@ -723,7 +671,7 @@ public class HibernateDAOImpl implements HibernateDAO
 	 * @return object
 	 * Have to remove this method::::
 	 */
-	public Object loadCleanObj(Class<Object> objectClass, Long identifier)
+	public Object loadCleanObj(Class objectClass, Long identifier)
 	 {
 		Session session = null;
 		try

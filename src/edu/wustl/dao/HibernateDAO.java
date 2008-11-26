@@ -31,6 +31,6 @@ public interface HibernateDAO extends DAO
 	 * @return : It will return the Object
 	 * @throws DAOException : Generic DAOException
 	 */
-	Object loadCleanObj(Class<Object> objectClass, Long identifier) throws DAOException;
+	Object loadCleanObj(Class objectClass, Long identifier) throws DAOException;
 
 }

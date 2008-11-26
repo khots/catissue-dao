@@ -80,7 +80,7 @@ public interface DAO
 	 */
 
 	List<Object> retrieve(String sourceObjectName,
-			String[] selectColumnName,QueryWhereClauseImpl queryWhereClauseImpl) throws DAOException;
+			String[] selectColumnName,QueryWhereClause queryWhereClauseImpl) throws DAOException;
 
 	/*List<Object> retrieve(String sourceObjectName, String[] selectColumnName,
 			String[] whereColumnName, String[] whereColumnCondition, Object[] whereColumnValue,
@@ -152,26 +152,16 @@ public interface DAO
 
 
 	/**
-	 * To retrieve the attribute value for the given source object name & Id.
-	 * @param sourceObjectName Source object in the Database.
-	 * @param identifier Id of the object.
-	 * @param attributeName attribute name to be retrieved.
-	 * @return The Attribute value corresponding to the SourceObjectName & id.
-	 * @throws DAOException generic DAOException.
-	 */
-	Object retrieveAttribute(String sourceObjectName, Long identifier, String attributeName)
-			throws DAOException;
-
-	/**
 	 * Retrieves attribute value for given class name and identifier.
 	 * @param objClass source Class object
 	 * @param identifier identifier of the source object
 	 * @param attributeName attribute to be retrieved
+	 * @param columnName : where clause column field.
 	 * @return Object.
 	 * @throws DAOException generic DAOException.
 	 */
-	Object retrieveAttribute(Class<AbstractDomainObject> objClass, Long identifier,
-			String attributeName) throws DAOException;
+	Object retrieveAttribute(Class objClass, Long identifier,
+			String attributeName,String columnName) throws DAOException;
 	/**
 	 * This method will be used to establish the session with the database.
 	 * @param sessionDataBean : This will hold the session related information.
