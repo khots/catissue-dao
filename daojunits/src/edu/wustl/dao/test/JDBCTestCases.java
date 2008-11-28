@@ -1,5 +1,21 @@
 package edu.wustl.dao.test;
 
+import java.util.List;
+
+import org.junit.Test;
+
+import edu.wustl.common.dao.queryExecutor.PagenatedResultData;
+import edu.wustl.common.util.QueryParams;
+import edu.wustl.common.util.dbmanager.DAOException;
+import edu.wustl.common.util.global.Constants;
+import edu.wustl.dao.JDBCDAO;
+import edu.wustl.dao.QueryWhereClause;
+import edu.wustl.dao.condition.EqualClause;
+import edu.wustl.dao.condition.INClause;
+import edu.wustl.dao.condition.IsNullClause;
+import edu.wustl.dao.condition.NotNullClause;
+import edu.wustl.dao.daofactory.IDAOFactory;
+import edu.wustl.dao.util.DAOConstants;
 
 /**
  * @author kalpana_thakur
@@ -468,6 +484,129 @@ public class JDBCTestCases extends BaseTestCase
 			assertFalse("Problem occurred while retrieving object:", true);
 		}
 	}
+
+	*//**
+	 * This test will assert the audit method implementation.
+	 *//*
+	@Test
+	public void testAuditJDBC()
+	{
+		try
+		{
+			jdbcDAO.audit(null, null, null, false);
+		}
+		catch(Exception exp)
+		{
+			assertEquals(DAOConstants.METHOD_WITHOUT_IMPLEMENTATION,exp.getMessage());
+		}
+
+	}
+
+
+	*//**
+	 * This test will delete method implementation.
+	 *//*
+	@Test
+	public void testDeleteJDBC()
+	{
+		try
+		{
+			jdbcDAO.delete(new Object());
+		}
+		catch(Exception exp)
+		{
+			assertEquals(DAOConstants.METHOD_WITHOUT_IMPLEMENTATION,exp.getMessage());
+		}
+
+	}
+
+
+	*//**
+	 * This test will DisableRelatedObjects method implementation.
+	 *//*
+	@Test
+	public void testDisableRelatedObjectsJDBC()
+	{
+		try
+		{
+			jdbcDAO.disableRelatedObjects(null, null, null);
+		}
+		catch(Exception exp)
+		{
+			assertEquals(DAOConstants.METHOD_WITHOUT_IMPLEMENTATION,exp.getMessage());
+		}
+
+	}
+
+	*//**
+	 * This test will insert method implementation.
+	 *//*
+	@Test
+	public void testInsertJDBC()
+	{
+		try
+		{
+			jdbcDAO.insert(null, null, false, false);
+		}
+		catch(Exception exp)
+		{
+			assertEquals(DAOConstants.METHOD_WITHOUT_IMPLEMENTATION,exp.getMessage());
+		}
+
+	}
+
+	*//**
+	 * This test will retrieveAttribute() method implementation.
+	 *//*
+	@Test
+	public void testRetrieveAttributeJDBC()
+	{
+		try
+		{
+			jdbcDAO.retrieveAttribute(null, null, null, null);
+		}
+		catch(Exception exp)
+		{
+			assertEquals(DAOConstants.METHOD_WITHOUT_IMPLEMENTATION,exp.getMessage());
+		}
+
+	}
+
+
+	*//**
+	 * This test will Update() method implementation.
+	 *//*
+	@Test
+	public void testUpdateJDBC()
+	{
+		try
+		{
+			jdbcDAO.update(null);
+		}
+		catch(Exception exp)
+		{
+			assertEquals(DAOConstants.METHOD_WITHOUT_IMPLEMENTATION,exp.getMessage());
+		}
+
+	}
+
+	*//**
+	 * This test will retrieve() method implementation.
+	 *//*
+	@Test
+	public void testRetrieveJDBC()
+	{
+		try
+		{
+			jdbcDAO.retrieve(null, Long.valueOf(0));
+		}
+		catch(Exception exp)
+		{
+			assertEquals(DAOConstants.METHOD_WITHOUT_IMPLEMENTATION,exp.getMessage());
+		}
+
+	}
+
 
 
 */}
