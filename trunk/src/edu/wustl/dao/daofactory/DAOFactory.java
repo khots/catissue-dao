@@ -29,7 +29,6 @@ import org.hibernate.util.XMLHelper;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 
-import edu.wustl.common.hibernate.HibernateUtil;
 import edu.wustl.common.util.dbmanager.DAOException;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.DAO;
@@ -62,7 +61,7 @@ public class DAOFactory implements IConnectionManager,IDAOFactory
 	 */
 	private String applicationName;
 	/**
-	 * This member will store the hibernate configuration file name.
+	 * This member will store the configuration file name.
 	 */
 	private String configurationFile;
 	/**
@@ -435,32 +434,6 @@ public class DAOFactory implements IConnectionManager,IDAOFactory
 	{
 		this.configurationFile = configurationFile;
 	}
-
-	/**
-	 * This method opens a new session, loads an object with given class and Id,
-	 * and closes the session. This method should be used only when an object is
-	 * to be opened in separate session.
-	 *
-	 * @param objectClass class of the object
-	 * @param identifier id of the object
-	 * @return object
-	 * @throws DAOException generic DAOException.
-	 * Have to remove this method::::
-	 */
-	public Object loadCleanObj(Class objectClass, Long identifier) throws DAOException
-	{
-		Session session = null;
-		try
-		{
-			session = HibernateUtil.getSessionFactory().openSession();
-			return session.load(objectClass, identifier);
-		}
-		finally
-		{
-			session.close();
-		}
-	}
-
 
 	/**
 	 * This will called to retrieve session factory object.

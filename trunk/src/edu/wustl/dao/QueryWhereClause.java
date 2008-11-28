@@ -1,48 +1,96 @@
 package edu.wustl.dao;
 
-import org.hibernate.Query;
-
-import edu.wustl.common.util.global.Constants;
+import edu.wustl.dao.condition.Condition;
+import edu.wustl.dao.util.DAOConstants;
 
 /**
  * @author kalpana_thakur
  *
  */
-/**
- * @author kalpana_thakur
- *
- */
+
 public class QueryWhereClause
 {
-
 	/**
 	 * TODO.
 	 */
+	private final StringBuffer whereClauseBuff;
+
+	/**
+	 * Default Cons.
+	 */
+	public QueryWhereClause()
+	{
+		whereClauseBuff = new StringBuffer();
+		whereClauseBuff.append(" WHERE ");
+	}
+
+
+	/**
+	 * @return :
+	 */
+	public String toWhereClause()
+	{
+		return whereClauseBuff.toString();
+	}
+
+
+	/**
+	 * @return :
+	 */
+	public String operatorAnd()
+	{
+		return whereClauseBuff.append(DAOConstants.AND_JOIN_CONDITION).toString();
+	}
+
+	/**
+	 * @return :
+	 */
+	public String operatorOr()
+	{
+		return whereClauseBuff.append(DAOConstants.OR_JOIN_CONDITION).toString();
+	}
+
+
+
+	/**
+	 * @param condition :
+	 */
+	public void addCondition(Condition condition)
+	{
+		whereClauseBuff.append(condition.toString());
+	}
+
+/*
+
+
+	*//**
+	 * TODO.
+	 *//*
 	protected String[] whereColumnName;
 
-	/**
+	*//**
 	 * TODO.
-	 */
+	 *//*
 	protected String[] whereColumnCondition;
 
-	/**
+	*//**
 	 * TODO.
-	 */
+	 *//*
 	protected Object[] whereColumnValue;
 
-	/**
+	*//**
 	 * TODO.
-	 */
+	 *//*
 	protected String joinCondition;
 
-	/**
+	*//**
 	 * This will be called to set where clause parameters.
 	 * @param whereColumnName :
 	 * @param whereColumnCondition :
 	 * @param whereColumnValue :
 	 * @param joinCondition :
 	 * TODO
-	 */
+	 *//*
 	public void setWhereClause(String[] whereColumnName,String[] whereColumnCondition,
 			Object[] whereColumnValue,String joinCondition)
 	{
@@ -52,11 +100,11 @@ public class QueryWhereClause
 		this.whereColumnValue = whereColumnValue;
 	}
 
-	/**
+	*//**
 	 * This method will return the string representing where clause.
 	 * @param className : Name of class
 	 * @return String :Where clause.
-	 */
+	 *//*
 	protected String queryWhereClause(String className)
 	{
 		StringBuffer sqlBuff = new StringBuffer();
@@ -84,12 +132,12 @@ public class QueryWhereClause
 
 
 
-	/**
+	*//**
 	 * This will set various condition clause of where clause.
 	 * @param className Name of the class.
 	 * @param sqlBuff where clause string.
 	 * @param index index to the wherecolumnCondition Array.
-	 */
+	 *//*
 	protected void setClausesOfWherePart(String className,
 			StringBuffer sqlBuff, int index)
 	{
@@ -115,13 +163,13 @@ public class QueryWhereClause
 		}
 	}
 
-	/**
+	*//**
 	 * This will set the in clause of where clause.
 	 * @param whereColumnCondition : Array of where column conditions
 	 * @param whereColumnValue : Array of where column value
 	 * @param sqlBuff : Where clause
 	 * @param index index to the whereColumnValue Array.
-	 */
+	 *//*
 	protected void inClauseOfWhereQuery(String[] whereColumnCondition,
 			Object[] whereColumnValue, StringBuffer sqlBuff, int index)
 	{
@@ -140,20 +188,20 @@ public class QueryWhereClause
 		sqlBuff.append(") ");
 	}
 
-	/**
+	*//**
 	 * This method will be called to get where clause string.
 	 * @param className : Name of class
 	 * @return : where clause.
-	 */
+	 *//*
 	public String toString(String className)
 	{
 		return queryWhereClause(className);
 	}
 
-	/**
+	*//**
 	 * This will check query Conditions.
 	 * @return true if query Conditions will be satisfied
-	 */
+	 *//*
 	public boolean isConditionSatisfied()
 	{
 		boolean isConditionSatisfied = false;
@@ -166,29 +214,29 @@ public class QueryWhereClause
 		return isConditionSatisfied;
 	}
 
-	/**
+	*//**
 	 * This will check where Column conditions.
 	 * @return true if whereColumnCondition is not null and
 	 * length of whereColumnCondition array will be equal to whereColumnName array.
-	 */
+	 *//*
 	protected boolean isWhereColumnCondition()
 	{
 		return whereColumnCondition != null && whereColumnCondition.length == whereColumnName.length;
 	}
 
-	/**
+	*//**
 	 * This will check WhereColumnName .
 	 * @return true if whereColumnName is not null.
-	 */
+	 *//*
 	protected boolean isWhereColumnName()
 	{
 		return whereColumnName != null && whereColumnName.length > 0;
 	}
 
-	/**
+	*//**
 	 * This method will set the query parameters.
 	 * @param query Query Object
-	 */
+	 *//*
 	public void setParametersToQuery(Query query)
 	{
 		int index = 0;
@@ -213,13 +261,13 @@ public class QueryWhereClause
 		}
 	}
 
-	/**
+	*//**
 	 * This method will set the query parameters.
 	 * @param query Query Object
 	 * @param indexVal index
 	 * @param obj Array Object having query parameters.
 	 * @return updated index.
-	 */
+	 *//*
 	protected int setParametersForArray(Query query, int indexVal, Object obj)
 	{
 		int index = indexVal;
@@ -231,5 +279,5 @@ public class QueryWhereClause
 		}
 		return index;
 	}
-
+*/
 }
