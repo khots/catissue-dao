@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <testsuites>
-  <testsuite errors="0" failures="1" id="0" name="DAOTestSuite" package="edu.wustl.dao.test" tests="14" time="6.001">
+  <testsuite errors="0" failures="0" id="0" name="DAOTestSuite" package="edu.wustl.dao.test" tests="43" time="1.281">
       <properties>
           <property name="java.vendor" value="Sun Microsystems Inc." />
 
@@ -154,23 +154,25 @@
 
       </properties>
 
-      <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testCaseInsertObject" time="4.891" />
+      <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testDAOInstance" time="0.0" />
 
-      <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testCaseUpdateObject" time="0.062" />
+      <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testCaseInsertObject" time="0.266" />
 
-      <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testCaseRetriveAllObjects" time="0.438" />
+      <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testCaseUpdateObject" time="0.078" />
 
-      <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testCaseRetriveObject" time="0.015" />
+      <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testCaseRetriveAllObjects" time="0.359" />
 
-      <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testCaseRetrieveObjectColumns" time="0.016" />
+      <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testCaseRetriveObject" time="0.016" />
+
+      <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testCaseRetrieveObjectColumns" time="0.0" />
 
       <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testCaseRetrieveObjectAsPerID" time="0.047" />
 
       <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testCaseLoadCleanObject" time="0.0" />
 
-      <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testRetriveInCondition" time="0.016" />
+      <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testRetriveInCondition" time="0.015" />
 
-      <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testRetriveIsNotNullCondition" time="0.015" />
+      <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testRetriveIsNotNullCondition" time="0.016" />
 
       <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testRetriveIsNullCondition" time="0.0" />
 
@@ -178,215 +180,147 @@
 
       <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testDisableRelatedObjects" time="0.031" />
 
-      <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testCaseDeleteObject" time="0.063">
-          <failure message="Failed while deleting object :" type="junit.framework.AssertionFailedError">junit.framework.AssertionFailedError: Failed while deleting object :
-	at edu.wustl.dao.test.HibernateTestCase.testCaseDeleteObject(Unknown Source)
-	at org.eclipse.ant.internal.ui.antsupport.EclipseDefaultExecutor.executeTargets(EclipseDefaultExecutor.java:32)
-	at org.eclipse.ant.internal.ui.antsupport.InternalAntRunner.run(InternalAntRunner.java:423)
-	at org.eclipse.ant.internal.ui.antsupport.InternalAntRunner.main(InternalAntRunner.java:137)
-</failure>
+      <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testRetrieveAttribute" time="0.0" />
 
-      </testcase>
+      <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testLoadCleanObjects" time="0.0" />
 
-      <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testDAOInstance" time="0.0" />
+      <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testCaseDeleteObject" time="0.031" />
 
-      <system-out><![CDATA[WARN   buildCache, Could not find configuration [test.User]; using defaults.
-ERROR  doExecuteBatch, Exception executing batch: 
-org.hibernate.StaleStateException: Batch update returned unexpected row count from update: 0 actual row count: 0 expected: 1
-	at org.hibernate.jdbc.BatchingBatcher.checkRowCount(BatchingBatcher.java:93)
-	at org.hibernate.jdbc.BatchingBatcher.checkRowCounts(BatchingBatcher.java:79)
-	at org.hibernate.jdbc.BatchingBatcher.doExecuteBatch(BatchingBatcher.java:58)
-	at org.hibernate.jdbc.AbstractBatcher.executeBatch(AbstractBatcher.java:195)
-	at org.hibernate.engine.ActionQueue.executeActions(ActionQueue.java:235)
-	at org.hibernate.engine.ActionQueue.executeActions(ActionQueue.java:144)
-	at org.hibernate.event.def.AbstractFlushingEventListener.performExecutions(AbstractFlushingEventListener.java:297)
-	at org.hibernate.event.def.DefaultFlushEventListener.onFlush(DefaultFlushEventListener.java:27)
-	at org.hibernate.impl.SessionImpl.flush(SessionImpl.java:985)
-	at org.hibernate.impl.SessionImpl.managedFlush(SessionImpl.java:333)
-	at org.hibernate.transaction.JDBCTransaction.commit(JDBCTransaction.java:106)
-	at edu.wustl.dao.HibernateDAOImpl.commit(HibernateDAOImpl.java:144)
-	at edu.wustl.dao.test.HibernateTestCase.testCaseDeleteObject(Unknown Source)
-	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
-	at java.lang.reflect.Method.invoke(Method.java:585)
-	at junit.framework.TestCase.runTest(TestCase.java:154)
-	at junit.framework.TestCase.runBare(TestCase.java:127)
-	at junit.framework.TestResult$1.protect(TestResult.java:106)
-	at junit.framework.TestResult.runProtected(TestResult.java:124)
-	at junit.framework.TestResult.run(TestResult.java:109)
-	at junit.framework.TestCase.run(TestCase.java:118)
-	at junit.framework.TestSuite.runTest(TestSuite.java:208)
-	at junit.framework.TestSuite.run(TestSuite.java:203)
-	at junit.framework.TestSuite.runTest(TestSuite.java:208)
-	at junit.framework.TestSuite.run(TestSuite.java:203)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:297)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1072)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:682)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1434)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:632)
-	at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:288)
-	at sun.reflect.GeneratedMethodAccessor1.invoke(Unknown Source)
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
-	at java.lang.reflect.Method.invoke(Method.java:585)
-	at org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:105)
-	at org.apache.tools.ant.Task.perform(Task.java:348)
-	at org.apache.tools.ant.Target.execute(Target.java:357)
-	at org.apache.tools.ant.Target.performTasks(Target.java:385)
-	at org.apache.tools.ant.Project.executeSortedTargets(Project.java:1329)
-	at org.apache.tools.ant.Project.executeTarget(Project.java:1298)
-	at org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)
-	at org.eclipse.ant.internal.ui.antsupport.EclipseDefaultExecutor.executeTargets(EclipseDefaultExecutor.java:32)
-	at org.apache.tools.ant.Project.executeTargets(Project.java:1181)
-	at org.eclipse.ant.internal.ui.antsupport.InternalAntRunner.run(InternalAntRunner.java:423)
-	at org.eclipse.ant.internal.ui.antsupport.InternalAntRunner.main(InternalAntRunner.java:137)
-ERROR  performExecutions, Could not synchronize database state with session
-org.hibernate.StaleStateException: Batch update returned unexpected row count from update: 0 actual row count: 0 expected: 1
-	at org.hibernate.jdbc.BatchingBatcher.checkRowCount(BatchingBatcher.java:93)
-	at org.hibernate.jdbc.BatchingBatcher.checkRowCounts(BatchingBatcher.java:79)
-	at org.hibernate.jdbc.BatchingBatcher.doExecuteBatch(BatchingBatcher.java:58)
-	at org.hibernate.jdbc.AbstractBatcher.executeBatch(AbstractBatcher.java:195)
-	at org.hibernate.engine.ActionQueue.executeActions(ActionQueue.java:235)
-	at org.hibernate.engine.ActionQueue.executeActions(ActionQueue.java:144)
-	at org.hibernate.event.def.AbstractFlushingEventListener.performExecutions(AbstractFlushingEventListener.java:297)
-	at org.hibernate.event.def.DefaultFlushEventListener.onFlush(DefaultFlushEventListener.java:27)
-	at org.hibernate.impl.SessionImpl.flush(SessionImpl.java:985)
-	at org.hibernate.impl.SessionImpl.managedFlush(SessionImpl.java:333)
-	at org.hibernate.transaction.JDBCTransaction.commit(JDBCTransaction.java:106)
-	at edu.wustl.dao.HibernateDAOImpl.commit(HibernateDAOImpl.java:144)
-	at edu.wustl.dao.test.HibernateTestCase.testCaseDeleteObject(Unknown Source)
-	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
-	at java.lang.reflect.Method.invoke(Method.java:585)
-	at junit.framework.TestCase.runTest(TestCase.java:154)
-	at junit.framework.TestCase.runBare(TestCase.java:127)
-	at junit.framework.TestResult$1.protect(TestResult.java:106)
-	at junit.framework.TestResult.runProtected(TestResult.java:124)
-	at junit.framework.TestResult.run(TestResult.java:109)
-	at junit.framework.TestCase.run(TestCase.java:118)
-	at junit.framework.TestSuite.runTest(TestSuite.java:208)
-	at junit.framework.TestSuite.run(TestSuite.java:203)
-	at junit.framework.TestSuite.runTest(TestSuite.java:208)
-	at junit.framework.TestSuite.run(TestSuite.java:203)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:297)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1072)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:682)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1434)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:632)
-	at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:288)
-	at sun.reflect.GeneratedMethodAccessor1.invoke(Unknown Source)
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
-	at java.lang.reflect.Method.invoke(Method.java:585)
-	at org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:105)
-	at org.apache.tools.ant.Task.perform(Task.java:348)
-	at org.apache.tools.ant.Target.execute(Target.java:357)
-	at org.apache.tools.ant.Target.performTasks(Target.java:385)
-	at org.apache.tools.ant.Project.executeSortedTargets(Project.java:1329)
-	at org.apache.tools.ant.Project.executeTarget(Project.java:1298)
-	at org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)
-	at org.eclipse.ant.internal.ui.antsupport.EclipseDefaultExecutor.executeTargets(EclipseDefaultExecutor.java:32)
-	at org.apache.tools.ant.Project.executeTargets(Project.java:1181)
-	at org.eclipse.ant.internal.ui.antsupport.InternalAntRunner.run(InternalAntRunner.java:423)
-	at org.eclipse.ant.internal.ui.antsupport.InternalAntRunner.main(InternalAntRunner.java:137)
-ERROR  commit, Batch update returned unexpected row count from update: 0 actual row count: 0 expected: 1
-org.hibernate.StaleStateException: Batch update returned unexpected row count from update: 0 actual row count: 0 expected: 1
-	at org.hibernate.jdbc.BatchingBatcher.checkRowCount(BatchingBatcher.java:93)
-	at org.hibernate.jdbc.BatchingBatcher.checkRowCounts(BatchingBatcher.java:79)
-	at org.hibernate.jdbc.BatchingBatcher.doExecuteBatch(BatchingBatcher.java:58)
-	at org.hibernate.jdbc.AbstractBatcher.executeBatch(AbstractBatcher.java:195)
-	at org.hibernate.engine.ActionQueue.executeActions(ActionQueue.java:235)
-	at org.hibernate.engine.ActionQueue.executeActions(ActionQueue.java:144)
-	at org.hibernate.event.def.AbstractFlushingEventListener.performExecutions(AbstractFlushingEventListener.java:297)
-	at org.hibernate.event.def.DefaultFlushEventListener.onFlush(DefaultFlushEventListener.java:27)
-	at org.hibernate.impl.SessionImpl.flush(SessionImpl.java:985)
-	at org.hibernate.impl.SessionImpl.managedFlush(SessionImpl.java:333)
-	at org.hibernate.transaction.JDBCTransaction.commit(JDBCTransaction.java:106)
-	at edu.wustl.dao.HibernateDAOImpl.commit(HibernateDAOImpl.java:144)
-	at edu.wustl.dao.test.HibernateTestCase.testCaseDeleteObject(Unknown Source)
-	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
-	at java.lang.reflect.Method.invoke(Method.java:585)
-	at junit.framework.TestCase.runTest(TestCase.java:154)
-	at junit.framework.TestCase.runBare(TestCase.java:127)
-	at junit.framework.TestResult$1.protect(TestResult.java:106)
-	at junit.framework.TestResult.runProtected(TestResult.java:124)
-	at junit.framework.TestResult.run(TestResult.java:109)
-	at junit.framework.TestCase.run(TestCase.java:118)
-	at junit.framework.TestSuite.runTest(TestSuite.java:208)
-	at junit.framework.TestSuite.run(TestSuite.java:203)
-	at junit.framework.TestSuite.runTest(TestSuite.java:208)
-	at junit.framework.TestSuite.run(TestSuite.java:203)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:297)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1072)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:682)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1434)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:632)
-	at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:288)
-	at sun.reflect.GeneratedMethodAccessor1.invoke(Unknown Source)
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
-	at java.lang.reflect.Method.invoke(Method.java:585)
-	at org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:105)
-	at org.apache.tools.ant.Task.perform(Task.java:348)
-	at org.apache.tools.ant.Target.execute(Target.java:357)
-	at org.apache.tools.ant.Target.performTasks(Target.java:385)
-	at org.apache.tools.ant.Project.executeSortedTargets(Project.java:1329)
-	at org.apache.tools.ant.Project.executeTarget(Project.java:1298)
-	at org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)
-	at org.eclipse.ant.internal.ui.antsupport.EclipseDefaultExecutor.executeTargets(EclipseDefaultExecutor.java:32)
-	at org.apache.tools.ant.Project.executeTargets(Project.java:1181)
-	at org.eclipse.ant.internal.ui.antsupport.InternalAntRunner.run(InternalAntRunner.java:423)
-	at org.eclipse.ant.internal.ui.antsupport.InternalAntRunner.main(InternalAntRunner.java:137)
-ERROR  handleError, Batch update returned unexpected row count from update: 0 actual row count: 0 expected: 1
-org.hibernate.StaleStateException: Batch update returned unexpected row count from update: 0 actual row count: 0 expected: 1
-	at org.hibernate.jdbc.BatchingBatcher.checkRowCount(BatchingBatcher.java:93)
-	at org.hibernate.jdbc.BatchingBatcher.checkRowCounts(BatchingBatcher.java:79)
-	at org.hibernate.jdbc.BatchingBatcher.doExecuteBatch(BatchingBatcher.java:58)
-	at org.hibernate.jdbc.AbstractBatcher.executeBatch(AbstractBatcher.java:195)
-	at org.hibernate.engine.ActionQueue.executeActions(ActionQueue.java:235)
-	at org.hibernate.engine.ActionQueue.executeActions(ActionQueue.java:144)
-	at org.hibernate.event.def.AbstractFlushingEventListener.performExecutions(AbstractFlushingEventListener.java:297)
-	at org.hibernate.event.def.DefaultFlushEventListener.onFlush(DefaultFlushEventListener.java:27)
-	at org.hibernate.impl.SessionImpl.flush(SessionImpl.java:985)
-	at org.hibernate.impl.SessionImpl.managedFlush(SessionImpl.java:333)
-	at org.hibernate.transaction.JDBCTransaction.commit(JDBCTransaction.java:106)
-	at edu.wustl.dao.HibernateDAOImpl.commit(HibernateDAOImpl.java:144)
-	at edu.wustl.dao.test.HibernateTestCase.testCaseDeleteObject(Unknown Source)
-	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
-	at java.lang.reflect.Method.invoke(Method.java:585)
-	at junit.framework.TestCase.runTest(TestCase.java:154)
-	at junit.framework.TestCase.runBare(TestCase.java:127)
-	at junit.framework.TestResult$1.protect(TestResult.java:106)
-	at junit.framework.TestResult.runProtected(TestResult.java:124)
-	at junit.framework.TestResult.run(TestResult.java:109)
-	at junit.framework.TestCase.run(TestCase.java:118)
-	at junit.framework.TestSuite.runTest(TestSuite.java:208)
-	at junit.framework.TestSuite.run(TestSuite.java:203)
-	at junit.framework.TestSuite.runTest(TestSuite.java:208)
-	at junit.framework.TestSuite.run(TestSuite.java:203)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:297)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1072)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:682)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1434)
-	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:632)
-	at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:288)
-	at sun.reflect.GeneratedMethodAccessor1.invoke(Unknown Source)
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
-	at java.lang.reflect.Method.invoke(Method.java:585)
-	at org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:105)
-	at org.apache.tools.ant.Task.perform(Task.java:348)
-	at org.apache.tools.ant.Target.execute(Target.java:357)
-	at org.apache.tools.ant.Target.performTasks(Target.java:385)
-	at org.apache.tools.ant.Project.executeSortedTargets(Project.java:1329)
-	at org.apache.tools.ant.Project.executeTarget(Project.java:1298)
-	at org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)
-	at org.eclipse.ant.internal.ui.antsupport.EclipseDefaultExecutor.executeTargets(EclipseDefaultExecutor.java:32)
-	at org.apache.tools.ant.Project.executeTargets(Project.java:1181)
-	at org.eclipse.ant.internal.ui.antsupport.InternalAntRunner.run(InternalAntRunner.java:423)
-	at org.eclipse.ant.internal.ui.antsupport.InternalAntRunner.main(InternalAntRunner.java:137)
+      <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testCleanSession" time="0.0" />
+
+      <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testCleanSessionWithinaSession" time="0.094" />
+
+      <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testMultAppInsertPointngRespectiveDBSameDBType" time="0.078" />
+
+      <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testRetriveComplexQuery" time="0.0" />
+
+      <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testDAOConfigFactory" time="0.0" />
+
+      <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testJDBCDAOInstance" time="0.0" />
+
+      <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testExecuteUpdateJDBC" time="0.016" />
+
+      <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testCaseRetriveAllObjectsJDBC" time="0.015" />
+
+      <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testCaseRetriveObjectJDBC" time="0.0" />
+
+      <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testCaseRetrieveObjectColumnsJDBC" time="0.0" />
+
+      <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testCaseRetrieveOnlyDistinctRowsJDBC" time="0.016" />
+
+      <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testRetriveInConditionJDBC" time="0.0" />
+
+      <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testRetriveIsNotNullConditionJDBC" time="0.0" />
+
+      <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testRetriveIsNullConditionJDBC" time="0.0" />
+
+      <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testRetriveEqualConditionJDBC" time="0.0" />
+
+      <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testCreateTableJDBC" time="0.062" />
+
+      <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testCreateTableQueryJDBC" time="0.063" />
+
+      <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testDropTableJDBC" time="0.062" />
+
+      <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testDatePatternJDBC" time="0.0" />
+
+      <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testTimePatternJDBC" time="0.0" />
+
+      <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testDateFormatFunctionJDBC" time="0.0" />
+
+      <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testTimeFormatFunctionJDBC" time="0.0" />
+
+      <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testDateTostrFunctionJDBC" time="0.0" />
+
+      <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testStrTodateFunctionJDBC" time="0.0" />
+
+      <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testExecuteQueryJDBC" time="0.0" />
+
+      <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testRetriveComplexQueryJDBC" time="0.0" />
+
+      <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testDAOConfigFactory" time="0.0" />
+
+      <system-out><![CDATA[INFO  [org.hibernate.cfg.Environment] 	Hibernate 3.1.3
+INFO  [org.hibernate.cfg.Environment] 	loaded properties from resource hibernate.properties: {hibernate.statement_cache.size=25, hibernate.cglib.use_reflection_optimizer=true, hibernate.connection.pool_size=1, hibernate.use_outer_join=true, hibernate.show_sql=true}
+INFO  [org.hibernate.cfg.Environment] 	using CGLIB reflection optimizer
+INFO  [org.hibernate.cfg.Environment] 	using JDK 1.4 java.sql.Timestamp handling
+INFO  [org.hibernate.cfg.Configuration] 	configuring from XML document
+INFO  [org.hibernate.cfg.Configuration] 	Reading mappings from resource: testhbm/User.hbm.xml
+INFO  [org.hibernate.cfg.HbmBinder] 	Mapping class: test.User -> XYZ_USER
+INFO  [org.hibernate.cfg.Configuration] 	Configured SessionFactory: null
+INFO  [org.hibernate.connection.DriverManagerConnectionProvider] 	Using Hibernate built-in connection pool (not for production use!)
+INFO  [org.hibernate.connection.DriverManagerConnectionProvider] 	Hibernate connection pool size: 1
+INFO  [org.hibernate.connection.DriverManagerConnectionProvider] 	autocommit mode: false
+INFO  [org.hibernate.connection.DriverManagerConnectionProvider] 	using driver: com.mysql.jdbc.Driver at URL: jdbc:mysql://localhost:3306/catissuecore
+INFO  [org.hibernate.connection.DriverManagerConnectionProvider] 	connection properties: {user=root, password=****}
+INFO  [org.hibernate.cfg.SettingsFactory] 	RDBMS: MySQL, version: 5.0.45-community-nt
+INFO  [org.hibernate.cfg.SettingsFactory] 	JDBC driver: MySQL-AB JDBC Driver, version: mysql-connector-java-5.0.8 ( Revision: ${svn.Revision} )
+INFO  [org.hibernate.dialect.Dialect] 	Using dialect: org.hibernate.dialect.MySQLDialect
+INFO  [org.hibernate.transaction.TransactionFactoryFactory] 	Using default transaction strategy (direct JDBC transactions)
+INFO  [org.hibernate.transaction.TransactionManagerLookupFactory] 	No TransactionManagerLookup configured (in JTA environment, use of read-write or transactional second-level cache is not recommended)
+INFO  [org.hibernate.cfg.SettingsFactory] 	Automatic flush during beforeCompletion(): disabled
+INFO  [org.hibernate.cfg.SettingsFactory] 	Automatic session close at end of transaction: disabled
+INFO  [org.hibernate.cfg.SettingsFactory] 	JDBC batch size: 15
+INFO  [org.hibernate.cfg.SettingsFactory] 	JDBC batch updates for versioned data: disabled
+INFO  [org.hibernate.cfg.SettingsFactory] 	Scrollable result sets: enabled
+INFO  [org.hibernate.cfg.SettingsFactory] 	JDBC3 getGeneratedKeys(): enabled
+INFO  [org.hibernate.cfg.SettingsFactory] 	Connection release mode: auto
+INFO  [org.hibernate.cfg.SettingsFactory] 	Maximum outer join fetch depth: 2
+INFO  [org.hibernate.cfg.SettingsFactory] 	Default batch fetch size: 1
+INFO  [org.hibernate.cfg.SettingsFactory] 	Generate SQL with comments: disabled
+INFO  [org.hibernate.cfg.SettingsFactory] 	Order SQL updates by primary key: disabled
+INFO  [org.hibernate.cfg.SettingsFactory] 	Query translator: org.hibernate.hql.ast.ASTQueryTranslatorFactory
+INFO  [org.hibernate.hql.ast.ASTQueryTranslatorFactory] 	Using ASTQueryTranslatorFactory
+INFO  [org.hibernate.cfg.SettingsFactory] 	Query language substitutions: {}
+INFO  [org.hibernate.cfg.SettingsFactory] 	Second-level cache: enabled
+INFO  [org.hibernate.cfg.SettingsFactory] 	Query cache: disabled
+INFO  [org.hibernate.cfg.SettingsFactory] 	Cache provider: org.hibernate.cache.EhCacheProvider
+INFO  [org.hibernate.cfg.SettingsFactory] 	Optimize cache for minimal puts: disabled
+INFO  [org.hibernate.cfg.SettingsFactory] 	Structured second-level cache entries: disabled
+INFO  [org.hibernate.cfg.SettingsFactory] 	Statistics: disabled
+INFO  [org.hibernate.cfg.SettingsFactory] 	Deleted entity synthetic identifier rollback: disabled
+INFO  [org.hibernate.cfg.SettingsFactory] 	Default entity-mode: pojo
+INFO  [org.hibernate.impl.SessionFactoryImpl] 	building session factory
+WARN  [org.hibernate.cache.EhCacheProvider] 	Could not find configuration [test.User]; using defaults.
+INFO  [org.hibernate.impl.SessionFactoryObjectFactory] 	Not binding factory to JNDI, no JNDI name configured
+INFO  [org.hibernate.cfg.Configuration] 	configuring from XML document
+INFO  [org.hibernate.cfg.Configuration] 	Reading mappings from resource: testhbm/DEUser.hbm.xml
+INFO  [org.hibernate.cfg.HbmBinder] 	Mapping class: test.User -> user_new
+INFO  [org.hibernate.cfg.Configuration] 	Configured SessionFactory: null
+INFO  [org.hibernate.connection.DriverManagerConnectionProvider] 	Using Hibernate built-in connection pool (not for production use!)
+INFO  [org.hibernate.connection.DriverManagerConnectionProvider] 	Hibernate connection pool size: 1
+INFO  [org.hibernate.connection.DriverManagerConnectionProvider] 	autocommit mode: false
+INFO  [org.hibernate.connection.DriverManagerConnectionProvider] 	using driver: com.mysql.jdbc.Driver at URL: jdbc:mysql://localhost:3306/daodb
+INFO  [org.hibernate.connection.DriverManagerConnectionProvider] 	connection properties: {user=root, password=****}
+INFO  [org.hibernate.cfg.SettingsFactory] 	RDBMS: MySQL, version: 5.0.45-community-nt
+INFO  [org.hibernate.cfg.SettingsFactory] 	JDBC driver: MySQL-AB JDBC Driver, version: mysql-connector-java-5.0.8 ( Revision: ${svn.Revision} )
+INFO  [org.hibernate.dialect.Dialect] 	Using dialect: org.hibernate.dialect.MySQLDialect
+INFO  [org.hibernate.transaction.TransactionFactoryFactory] 	Using default transaction strategy (direct JDBC transactions)
+INFO  [org.hibernate.transaction.TransactionManagerLookupFactory] 	No TransactionManagerLookup configured (in JTA environment, use of read-write or transactional second-level cache is not recommended)
+INFO  [org.hibernate.cfg.SettingsFactory] 	Automatic flush during beforeCompletion(): disabled
+INFO  [org.hibernate.cfg.SettingsFactory] 	Automatic session close at end of transaction: disabled
+INFO  [org.hibernate.cfg.SettingsFactory] 	JDBC batch size: 15
+INFO  [org.hibernate.cfg.SettingsFactory] 	JDBC batch updates for versioned data: disabled
+INFO  [org.hibernate.cfg.SettingsFactory] 	Scrollable result sets: enabled
+INFO  [org.hibernate.cfg.SettingsFactory] 	JDBC3 getGeneratedKeys(): enabled
+INFO  [org.hibernate.cfg.SettingsFactory] 	Connection release mode: auto
+INFO  [org.hibernate.cfg.SettingsFactory] 	Maximum outer join fetch depth: 2
+INFO  [org.hibernate.cfg.SettingsFactory] 	Default batch fetch size: 1
+INFO  [org.hibernate.cfg.SettingsFactory] 	Generate SQL with comments: disabled
+INFO  [org.hibernate.cfg.SettingsFactory] 	Order SQL updates by primary key: disabled
+INFO  [org.hibernate.cfg.SettingsFactory] 	Query translator: org.hibernate.hql.ast.ASTQueryTranslatorFactory
+INFO  [org.hibernate.hql.ast.ASTQueryTranslatorFactory] 	Using ASTQueryTranslatorFactory
+INFO  [org.hibernate.cfg.SettingsFactory] 	Query language substitutions: {}
+INFO  [org.hibernate.cfg.SettingsFactory] 	Second-level cache: enabled
+INFO  [org.hibernate.cfg.SettingsFactory] 	Query cache: disabled
+INFO  [org.hibernate.cfg.SettingsFactory] 	Cache provider: org.hibernate.cache.EhCacheProvider
+INFO  [org.hibernate.cfg.SettingsFactory] 	Optimize cache for minimal puts: disabled
+INFO  [org.hibernate.cfg.SettingsFactory] 	Structured second-level cache entries: disabled
+INFO  [org.hibernate.cfg.SettingsFactory] 	Statistics: disabled
+INFO  [org.hibernate.cfg.SettingsFactory] 	Deleted entity synthetic identifier rollback: disabled
+INFO  [org.hibernate.cfg.SettingsFactory] 	Default entity-mode: pojo
+INFO  [org.hibernate.impl.SessionFactoryImpl] 	building session factory
+INFO  [org.hibernate.impl.SessionFactoryObjectFactory] 	Not binding factory to JNDI, no JNDI name configured
 ]]></system-out>
 
       <system-err />

@@ -10,14 +10,14 @@
 		</DAOFactory>
 		<ConnectionManager name= "edu.wustl.dao.daofactory.DAOFactory"/>
 	 </Application>
-	 <Application name = "Dynamic Extensions">
+	 <Application name = "DynamicExtensions">
 		<DAOFactory name="edu.wustl.dao.daofactory.DAOFactory">
 			<DefaultDAO>
 				<Class-name name = "edu.wustl.dao.HibernateDAOImpl"/>
-				<Config-file name = "hibernate.cfg.xml"/>
+				<Config-file name = "deHibernate.cfg.xml"/>
 			</DefaultDAO>
 			<jdbcDAO name = "edu.wustl.dao.MySQLDAOImpl"/>
 		</DAOFactory>
 		<ConnectionManager name= "edu.wustl.dao.daofactory.DAOFactory"/>
-	 </Application>
+	</Application>
 </Applications>
