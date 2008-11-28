@@ -6,7 +6,7 @@
 <hibernate-mapping>
     <class
         name="test.User"
-        table="XYZ_USER"
+        table="user_new"
         lazy="true"
     >
      <cache usage="read-write" />
