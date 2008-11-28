@@ -12,7 +12,6 @@ import java.util.Map;
 
 import edu.wustl.common.beans.QueryResultObjectDataBean;
 import edu.wustl.common.beans.SessionDataBean;
-import edu.wustl.common.domain.AbstractDomainObject;
 import edu.wustl.common.security.exceptions.UserNotAuthorizedException;
 import edu.wustl.common.util.dbmanager.DAOException;
 import edu.wustl.dao.connectionmanager.IConnectionManager;
@@ -69,7 +68,7 @@ public interface DAO
 	 * for given conditions on a various columns.
 	 * @param sourceObjectName Source object's name to be retrieved from database.
 	 * @param selectColumnName Column names in SELECT clause of the query.
-	 * @param queryWhereClauseImpl : This will hold following:
+	 * @param queryWhereClause : This will hold following:
 	 * 1.whereColumnName Array of column name to be included in where clause.
 	 * 2.whereColumnCondition condition to be satisfy between column and its value.
 	 * e.g. "=", "<", ">", "=<", ">=" etc
@@ -80,7 +79,7 @@ public interface DAO
 	 */
 
 	List<Object> retrieve(String sourceObjectName,
-			String[] selectColumnName,QueryWhereClause queryWhereClauseImpl) throws DAOException;
+			String[] selectColumnName,QueryWhereClause queryWhereClause) throws DAOException;
 
 	/*List<Object> retrieve(String sourceObjectName, String[] selectColumnName,
 			String[] whereColumnName, String[] whereColumnCondition, Object[] whereColumnValue,

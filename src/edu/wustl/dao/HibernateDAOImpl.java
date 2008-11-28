@@ -12,7 +12,6 @@ package edu.wustl.dao;
 
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -26,14 +25,14 @@ import edu.wustl.common.audit.AuditManager;
 import edu.wustl.common.audit.Auditable;
 import edu.wustl.common.beans.QueryResultObjectDataBean;
 import edu.wustl.common.beans.SessionDataBean;
-import edu.wustl.common.domain.AbstractDomainObject;
 import edu.wustl.common.exception.AuditException;
 import edu.wustl.common.security.exceptions.UserNotAuthorizedException;
 import edu.wustl.common.util.dbmanager.DAOException;
-import edu.wustl.common.util.dbmanager.HibernateMetaData;
 import edu.wustl.common.util.global.Constants;
 import edu.wustl.common.util.logger.Logger;
+import edu.wustl.dao.condition.EqualClause;
 import edu.wustl.dao.connectionmanager.IConnectionManager;
+import edu.wustl.dao.util.DAOConstants;
 import edu.wustl.dao.util.DAOUtility;
 import edu.wustl.dao.util.DatabaseConnectionParams;
 
@@ -54,15 +53,15 @@ public class HibernateDAOImpl implements HibernateDAO
    /**
 	 * specify Session instance.
 	 */
-	protected Session session = null;
+      private Session session = null;
 		/**
 	 * specify Transaction instance.
 	 */
-	protected Transaction transaction = null;
+      private Transaction transaction = null;
 	/**
 	 * specify AuditManager instance.
 	 */
-	protected AuditManager auditManager;
+      private AuditManager auditManager;
 	/**
 	 * specify isUpdated.
 	 */
@@ -162,7 +161,7 @@ public class HibernateDAOImpl implements HibernateDAO
 		/**
 		 * the isUpdated==true is removed because if there is cascade save-update
 		 * and the association collection objects
-		 * is violating constaring then in insert() method session.save() is throwing exception
+		 * is violating then in insert() method session.save() is throwing exception
 		 * and isUpdated is not getting set to true.
 		 * Because of this roll back is not happening on parent object.
 		 *
@@ -405,11 +404,7 @@ public class HibernateDAOImpl implements HibernateDAO
 	public List<Object> retrieve(String sourceObjectName) throws DAOException
 	{
 		String[] selectColumnName = null;
-
-		QueryWhereClause queryWhereClause = new QueryWhereClause();
-		queryWhereClause.setWhereClause(null, null, null, null);
-
-		return retrieve(sourceObjectName, selectColumnName, queryWhereClause);
+		return retrieve(sourceObjectName, selectColumnName, null);
 	}
 
 	/**
@@ -423,14 +418,10 @@ public class HibernateDAOImpl implements HibernateDAO
 	public List<Object> retrieve(String sourceObjectName, String whereColumnName, Object whereColumnValue)
 			throws DAOException
 	{
-		String [] whereColumnNames =  {whereColumnName};
-		String [] colConditions =  {"="};
-		Object [] whereColumnValues =  {whereColumnValue};
 		String[] selectColumnName = null;
 
 		QueryWhereClause queryWhereClause = new QueryWhereClause();
-        queryWhereClause.setWhereClause(whereColumnNames,
-				colConditions, whereColumnValues, Constants.AND_JOIN_CONDITION);
+		queryWhereClause.addCondition(new EqualClause(whereColumnName,whereColumnValue,sourceObjectName));
 
 		return retrieve(sourceObjectName, selectColumnName,queryWhereClause);
 	}
@@ -445,10 +436,7 @@ public class HibernateDAOImpl implements HibernateDAO
 	throws DAOException
 	{
 
-		QueryWhereClause queryWhereClause = new QueryWhereClause();
-		queryWhereClause.setWhereClause(null, null, null, null);
-
-		return retrieve(sourceObjectName, selectColumnName,queryWhereClause);
+		return retrieve(sourceObjectName, selectColumnName,null);
 	}
 
 	/**
@@ -462,27 +450,22 @@ public class HibernateDAOImpl implements HibernateDAO
 	 */
 	public List<Object> retrieve(String sourceObjectName,String[] selectColumnName,
 			QueryWhereClause queryWhereClause) throws DAOException
-			{
+	{
 		List<Object> list;
 		try
 		{
-			StringBuffer sqlBuff = new StringBuffer();
+			StringBuffer queryStrBuff = new StringBuffer();
 			String className = DAOUtility.parseClassName(sourceObjectName);
 			Query query;
 
-			generateSelectPartOfQuery(selectColumnName, sqlBuff, className);
-			generateFromPartOfQuery(sourceObjectName, sqlBuff, className);
+			generateSelectPartOfQuery(selectColumnName, queryStrBuff, className);
+			generateFromPartOfQuery(sourceObjectName, queryStrBuff, className);
 
-			if (queryWhereClause.isConditionSatisfied())
-            {
-				sqlBuff.append(queryWhereClause.toString(className));
-				query = session.createQuery(sqlBuff.toString());
-				queryWhereClause.setParametersToQuery(query);
-			}
-			else
+			if(queryWhereClause != null)
 			{
-				query = session.createQuery(sqlBuff.toString());
+				queryStrBuff.append(queryWhereClause.toWhereClause());
 			}
+			query = session.createQuery(queryStrBuff.toString());
 
 			list = query.list();
 
@@ -604,7 +587,7 @@ public class HibernateDAOImpl implements HibernateDAO
 			String objClassName = objClass.getName();
 			String simpleName = objClass.getSimpleName();
 			String nameOfAttribute = DAOUtility.createAttributeNameForHQL(simpleName, attributeName);
-			StringBuffer queryStringBuffer = new StringBuffer();
+			StringBuffer queryStringBuffer = new StringBuffer(DAOConstants.TAILING_SPACES);
 
 			queryStringBuffer.append("Select ").append(nameOfAttribute).
 			append(" from ").append(objClassName).append("    ").append(simpleName).
@@ -687,5 +670,6 @@ public class HibernateDAOImpl implements HibernateDAO
 			}
 		}
 	}
+
 
 }

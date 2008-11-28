@@ -14,7 +14,6 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -29,13 +28,13 @@ import edu.wustl.common.audit.AuditManager;
 import edu.wustl.common.beans.QueryResultObjectDataBean;
 import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.dao.queryExecutor.PagenatedResultData;
-import edu.wustl.common.domain.AbstractDomainObject;
 import edu.wustl.common.security.exceptions.UserNotAuthorizedException;
 import edu.wustl.common.util.QueryParams;
 import edu.wustl.common.util.Utility;
 import edu.wustl.common.util.dbmanager.DAOException;
 import edu.wustl.common.util.global.Constants;
 import edu.wustl.common.util.logger.Logger;
+import edu.wustl.dao.condition.EqualClause;
 import edu.wustl.dao.connectionmanager.IConnectionManager;
 import edu.wustl.dao.util.DAOConstants;
 import edu.wustl.dao.util.DatabaseConnectionParams;
@@ -54,7 +53,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	/**
 	 * Audit Manager.
 	 */
-	protected AuditManager auditManager;
+	private AuditManager auditManager;
 	/**
 	 * Class Logger.
 	 */
@@ -233,10 +232,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	public List<Object> retrieve(String sourceObjectName) throws DAOException
 	{
 		logger.debug("Inside retrieve method");
-		QueryWhereClauseJDBC queryWhereClause = new QueryWhereClauseJDBC();
-		queryWhereClause.setWhereClause(null, null,
-				null,null);
-		return retrieve(sourceObjectName, null, queryWhereClause,false);
+		return retrieve(sourceObjectName, null, null,false);
 	}
 
 	/**
@@ -250,10 +246,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	*/
 	public List<Object> retrieve(String sourceObjectName, String[] selectColumnName) throws DAOException
 	{
-		QueryWhereClauseJDBC queryWhereClause = new QueryWhereClauseJDBC();
-		queryWhereClause.setWhereClause(null, null,
-				null,null);
-		return retrieve(sourceObjectName, selectColumnName,queryWhereClause,false);
+		return retrieve(sourceObjectName, selectColumnName,null,false);
 	}
 
 	/**
@@ -269,11 +262,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	public List<Object> retrieve(String sourceObjectName, String[] selectColumnName,
 			boolean onlyDistinctRows) throws DAOException
 	{
-		QueryWhereClauseJDBC queryWhereClause = new QueryWhereClauseJDBC();
-		queryWhereClause.setWhereClause(null, null,
-				null,null);
-
-		return retrieve(sourceObjectName, selectColumnName,queryWhereClause,
+		return retrieve(sourceObjectName, selectColumnName,null,
 				onlyDistinctRows);
 	}
 
@@ -309,14 +298,10 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	public List<Object> retrieve(String sourceObjectName, String whereColumnName, Object whereColumnValue)
 			throws DAOException
 	{
-		String[] whereColumnNames = {whereColumnName};
-		String[] whereColumnConditions = {"="};
-		Object[] whereColumnValues = {whereColumnValue};
 		String[] selectColumnName = null;
 
-		QueryWhereClauseJDBC queryWhereClause = new QueryWhereClauseJDBC();
-		queryWhereClause.setWhereClause(whereColumnNames, whereColumnConditions,
-				whereColumnValues,  Constants.AND_JOIN_CONDITION);
+		QueryWhereClause queryWhereClause = new QueryWhereClause();
+		queryWhereClause.addCondition(new EqualClause(whereColumnName,whereColumnValue,sourceObjectName));
 
 		return retrieve(sourceObjectName, selectColumnName,queryWhereClause,false);
 	}
@@ -343,17 +328,14 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	{
 
 		List<Object> list = null;
-		QueryWhereClauseJDBC queryWhereClauseJDBC = (QueryWhereClauseJDBC)queryWhereClause;
-
 		try
 		{
 			StringBuffer queryStrBuff = getSelectPartOfQuery(selectColumnName, onlyDistinctRows);
 			getFromPartOfQuery(sourceObjectName, queryStrBuff);
 
-			if(queryWhereClauseJDBC.isConditionSatisfied())
+			if(queryWhereClause != null)
 			{
-				queryStrBuff.append(queryWhereClauseJDBC.
-						jdbcQueryWhereClause(sourceObjectName));
+				queryStrBuff.append(queryWhereClause.toWhereClause());
 			}
 
 			logger.debug("JDBC Query " + queryStrBuff);
@@ -558,7 +540,8 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		DatabaseConnectionParams databaseConnectionParams = new DatabaseConnectionParams();
 
 		ResultSetMetaData metaData;
-		StringBuffer sqlBuff = new StringBuffer("Select ");
+		StringBuffer sqlBuff = new StringBuffer(DAOConstants.TAILING_SPACES);
+		sqlBuff.append("Select").append(DAOConstants.TAILING_SPACES);
 		try
 		{
 
@@ -602,7 +585,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		{
 
 			databaseConnectionParams.setConnection(connection);
-			StringBuffer sqlBuff = new StringBuffer();
+			StringBuffer sqlBuff = new StringBuffer(DAOConstants.TAILING_SPACES);
 			sqlBuff.append("Select * from " ).append(tableName).append(" where 1!=1");
 			metaData = databaseConnectionParams.getMetaData(sqlBuff.toString());
 
