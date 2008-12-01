@@ -5,11 +5,11 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-
 import com.mysql.jdbc.PreparedStatement;
 
-import edu.wustl.common.util.dbmanager.DAOException;
+import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.logger.Logger;
+import edu.wustl.dao.exception.DAOException;
 
 
 /**
@@ -51,13 +51,14 @@ public class DatabaseConnectionParams
 	{
 		try
 		{
-		statement = connection.createStatement();
-
+			statement = connection.createStatement();
 		}
 		catch (SQLException sqlExp)
 		{
-			logger.fatal(DAOConstants.DB_PARAM_INIT_ERROR , sqlExp);
-			throw new DAOException(DAOConstants.DB_PARAM_INIT_ERROR, sqlExp);
+			logger.fatal(sqlExp);
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.conn.para.creation.error");
+			throw new DAOException(errorKey,sqlExp,"DatabaseConnectionParams.java :"+
+					DAOConstants.STMT_CREATION_ERROR);
 		}
 		return statement;
 
@@ -77,8 +78,10 @@ public class DatabaseConnectionParams
 		}
 		catch (SQLException sqlExp)
 		{
-			logger.fatal(DAOConstants.DB_PARAM_INIT_ERROR, sqlExp);
-			throw new DAOException(DAOConstants.DB_PARAM_INIT_ERROR, sqlExp);
+			logger.fatal(sqlExp);
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.conn.para.creation.error");
+			throw new DAOException(errorKey,sqlExp,"DatabaseConnectionParams.java"+
+					DAOConstants.RESULTSET_CREATION_ERROR);
 		}
 		return resultSet;
 	}
@@ -102,8 +105,10 @@ public class DatabaseConnectionParams
 		}
 		catch (SQLException sqlExp)
 		{
-			logger.fatal(DAOConstants.DB_PARAM_INIT_ERROR, sqlExp);
-			throw new DAOException(DAOConstants.DB_PARAM_INIT_ERROR, sqlExp);
+			logger.fatal(sqlExp);
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.conn.para.creation.error");
+			throw new DAOException(errorKey,sqlExp,"DatabaseConnectionParams.java"+
+					DAOConstants.RS_METADATA_ERROR);
 		}
 
 		return metaData;
@@ -137,8 +142,9 @@ public class DatabaseConnectionParams
 		}
 		catch(SQLException sqlExp)
 		{
-			logger.fatal(DAOConstants.CONNECTIONS_CLOSING_ISSUE, sqlExp);
-			throw new DAOException(DAOConstants.DB_PARAM_INIT_ERROR, sqlExp);
+			logger.fatal(sqlExp);
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.close.conn.error");
+			throw new DAOException(errorKey,sqlExp,"DatabaseConnectionParams.java");
 		}
 	}
 
@@ -156,8 +162,10 @@ public class DatabaseConnectionParams
 		}
 		catch (SQLException sqlExp)
 		{
-			logger.fatal(DAOConstants.DB_PARAM_INIT_ERROR, sqlExp);
-			throw new DAOException(DAOConstants.DB_PARAM_INIT_ERROR, sqlExp);
+			logger.fatal(sqlExp);
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.conn.para.creation.error");
+			throw new DAOException(errorKey,sqlExp,"DatabaseConnectionParams.java"+
+					DAOConstants.PRPD_STMT_ERROR);
 		}
 		return preparedStatement;
 	}
@@ -177,8 +185,10 @@ public class DatabaseConnectionParams
 		}
 		catch (SQLException sqlExp)
 		{
-			logger.error(DAOConstants.EXECUTE_UPDATE_ERROR, sqlExp);
-			throw new DAOException(DAOConstants.EXECUTE_UPDATE_ERROR, sqlExp);
+			logger.fatal(sqlExp);
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
+			throw new DAOException(errorKey,sqlExp,"DatabaseConnectionParams.java"
+					+DAOConstants.EXECUTE_QUERY_ERROR);
 		}
 		finally
 		{
@@ -201,6 +211,31 @@ public class DatabaseConnectionParams
 	public void setConnection(Connection connection)
 	{
 			this.connection = connection;
+	}
+
+	/**
+	 * Checks result set.
+	 * @return :true if result set exists.
+	 * @throws DAOException : DAOException
+	 */
+	public boolean isResultSetExists()throws DAOException
+	{
+		boolean isResultSetExists = false;
+		try
+		{
+
+			if(resultSet.next())
+			{
+				isResultSetExists = true;
+			}
+
+		}
+		catch(Exception exp)
+		{
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
+			throw new DAOException(errorKey,exp,"DatabaseConnectionParams.java");
+		}
+		return isResultSetExists;
 	}
 
 }

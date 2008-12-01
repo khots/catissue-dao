@@ -1,8 +1,8 @@
 package edu.wustl.dao.daofactory;
 
-import edu.wustl.common.util.dbmanager.DAOException;
 import edu.wustl.dao.DAO;
 import edu.wustl.dao.JDBCDAO;
+import edu.wustl.dao.exception.DAOException;
 
 
 

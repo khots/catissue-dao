@@ -2,12 +2,33 @@ package edu.wustl.dao.util;
 
 import edu.wustl.common.util.logger.Logger;
 
+
 /**
  * @author kalpana_thakur
  *
  */
-public class DAOUtility
+public final class DAOUtility
 {
+
+	/**
+	 * creates a single obj.
+	 */
+	private static DAOUtility daoUtil = new DAOUtility();;
+	/**
+	 * Private constructor.
+	 */
+	private DAOUtility()
+	{
+
+	}
+	/**
+	 * returns the single obj.
+	 * @return Utility obj
+	 */
+	public static DAOUtility getInstance()
+	{
+		return daoUtil;
+	}
 
 	/**
      * logger Logger - Generic logger.
@@ -29,7 +50,7 @@ public class DAOUtility
      * either in format "elements(attributeName)" or "AttributeName"
      * @return The Select column name for the HQL.
      */
-    public static String createAttributeNameForHQL(String className, String selectColumnName)
+    public String createAttributeNameForHQL(String className, String selectColumnName)
     {
 		String attribute;
 		// Check whether the select Column start with "elements" & ends with ")" or not
@@ -51,7 +72,7 @@ public class DAOUtility
 	 * @param nameOfColumn The columnName
 	 * @return true if the select Column start with "elements" & ends with ")" or not
 	 */
-	public static boolean isColumnNameContainsElements(String nameOfColumn)
+	public boolean isColumnNameContainsElements(String nameOfColumn)
 	{
 		String columnName = nameOfColumn;
 		columnName = columnName.toLowerCase().trim();
@@ -63,7 +84,7 @@ public class DAOUtility
      * @param fullyQualifiedName The fully qualified class Name.
      * @return The className.
      */
-    public static String parseClassName(String fullyQualifiedName)
+    public String parseClassName(String fullyQualifiedName)
     {
     	String qualifiedName = fullyQualifiedName;
         try

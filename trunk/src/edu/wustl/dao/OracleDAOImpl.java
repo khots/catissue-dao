@@ -1,15 +1,15 @@
 package edu.wustl.dao;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
 import edu.wustl.common.dao.queryExecutor.PagenatedResultData;
+import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.exceptionformatter.ConstraintViolationFormatter;
 import edu.wustl.common.util.QueryParams;
-import edu.wustl.common.util.dbmanager.DAOException;
 import edu.wustl.common.util.global.Constants;
 import edu.wustl.common.util.logger.Logger;
+import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.DAOConstants;
 import edu.wustl.dao.util.DatabaseConnectionParams;
 import edu.wustl.query.executor.OracleQueryExecutor;
@@ -35,7 +35,6 @@ public class OracleDAOImpl extends AbstractJDBCDAOImpl
 	public void delete(String tableName) throws DAOException
 	{
 		DatabaseConnectionParams databaseConnectionParams = new DatabaseConnectionParams();
-		ResultSet resultSet = null;
 		try
 		{
 
@@ -43,8 +42,7 @@ public class OracleDAOImpl extends AbstractJDBCDAOImpl
 
 			StringBuffer query = new StringBuffer("select tname from tab where tname='"
 					+ tableName + "'");
-			resultSet = databaseConnectionParams.getResultSet(query.toString());
-			boolean isTableExists = resultSet.next();
+			boolean isTableExists = databaseConnectionParams.isResultSetExists();
 
 			logger.debug("ORACLE :" + query.toString() + isTableExists);
 
@@ -57,28 +55,17 @@ public class OracleDAOImpl extends AbstractJDBCDAOImpl
 			}
 
 		}
-		catch (Exception sqlExp)
+		catch(Exception sqlExp)
 		{
 
 			logger.error(sqlExp.getMessage(), sqlExp);
-			throw new DAOException(Constants.GENERIC_DATABASE_ERROR, sqlExp);
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
+			throw new DAOException(errorKey,sqlExp,"OracleDAOImpl.java"+DAOConstants.DELETE_OBJ_ERROR);
 
 		}
 		finally
 		{
-			try
-			{
-				if (resultSet != null)
-				{
-					resultSet.close();
-				}
-				databaseConnectionParams.closeConnectionParams();
-
-			}
-			catch(SQLException sqlExp)
-			{
-				logger.fatal(DAOConstants.CONNECTIONS_CLOSING_ISSUE, sqlExp);
-			}
+			databaseConnectionParams.closeConnectionParams();
 		}
 	}
 
@@ -183,10 +170,17 @@ public class OracleDAOImpl extends AbstractJDBCDAOImpl
 	public PagenatedResultData getQueryResultList(QueryParams queryParams) throws DAOException
 	{
 		PagenatedResultData pagenatedResultData = null;
-
-		queryParams.setConnection(getConnectionManager().getConnection());
-		OracleQueryExecutor oracleQueryExecutor = new OracleQueryExecutor();
-		pagenatedResultData = oracleQueryExecutor.getQueryResultList(queryParams);
+		try
+		{
+			queryParams.setConnection(getConnectionManager().getConnection());
+			OracleQueryExecutor oracleQueryExecutor = new OracleQueryExecutor();
+			pagenatedResultData = oracleQueryExecutor.getQueryResultList(queryParams);
+		}
+		catch(Exception exp)
+		{
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
+			throw new DAOException(errorKey,exp,"OracleDAOImpl.java");
+		}
 
 		return pagenatedResultData;
 

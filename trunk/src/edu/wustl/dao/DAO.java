@@ -13,8 +13,8 @@ import java.util.Map;
 import edu.wustl.common.beans.QueryResultObjectDataBean;
 import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.security.exceptions.UserNotAuthorizedException;
-import edu.wustl.common.util.dbmanager.DAOException;
 import edu.wustl.dao.connectionmanager.IConnectionManager;
+import edu.wustl.dao.exception.DAOException;
 
 
 /**
@@ -32,10 +32,9 @@ public interface DAO
 	 * @param isAuditable is Auditable.
 	 * @param isSecureInsert is Secure Insert
 	 * @throws DAOException generic DAOException
-	 * @throws UserNotAuthorizedException User Not Authorized Exception.
 	 */
 	void insert(Object obj, SessionDataBean sessionDataBean, boolean isAuditable,
-			boolean isSecureInsert) throws DAOException, UserNotAuthorizedException;
+			boolean isSecureInsert) throws DAOException;
 
 	/**
 	 * updates the persisted object in the database.

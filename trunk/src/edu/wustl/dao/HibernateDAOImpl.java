@@ -26,12 +26,13 @@ import edu.wustl.common.audit.Auditable;
 import edu.wustl.common.beans.QueryResultObjectDataBean;
 import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.exception.AuditException;
+import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.security.exceptions.UserNotAuthorizedException;
-import edu.wustl.common.util.dbmanager.DAOException;
 import edu.wustl.common.util.global.Constants;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.condition.EqualClause;
 import edu.wustl.dao.connectionmanager.IConnectionManager;
+import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.DAOConstants;
 import edu.wustl.dao.util.DAOUtility;
 import edu.wustl.dao.util.DatabaseConnectionParams;
@@ -103,7 +104,9 @@ public class HibernateDAOImpl implements HibernateDAO
 		catch (HibernateException dbex)
 		{
 			logger.error(dbex.getMessage(), dbex);
-			throw handleError(Constants.GENERIC_DATABASE_ERROR, dbex);
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
+			throw new DAOException(errorKey,dbex,"HibernateDAOImpl.java :"+
+					DAOConstants.OPEN_SESSION_ERROR);
 		}
 	}
 
@@ -118,10 +121,12 @@ public class HibernateDAOImpl implements HibernateDAO
 		{
 			getConnectionManager().closeSession();
 		}
-		catch (HibernateException dx)
+		catch (HibernateException dbex)
 		{
-			logger.error(dx.getMessage(), dx);
-			throw handleError(Constants.GENERIC_DATABASE_ERROR, dx);
+			logger.error(dbex.getMessage(), dbex);
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
+			throw new DAOException(errorKey,dbex,"HibernateDAOImpl.java :"+
+					DAOConstants.CLOSE_SESSION_ERROR);
 		}
 		session = null;
 		transaction = null;
@@ -147,7 +152,15 @@ public class HibernateDAOImpl implements HibernateDAO
 		catch (HibernateException dbex)
 		{
 			logger.error(dbex.getMessage() , dbex);
-			throw handleError("Error in commit: " , dbex) ;
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
+			throw new DAOException(errorKey,dbex,"HibernateDAOImpl.java :"+
+					DAOConstants.COMMIT_DATA_ERROR);
+		}
+		catch (Exception exp)
+		{
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.audit.error");
+			throw new DAOException(errorKey,exp,"HibernateDAOImpl.java :"+
+					DAOConstants.COMMIT_DATA_ERROR);
 		}
 	}
 
@@ -178,7 +191,9 @@ public class HibernateDAOImpl implements HibernateDAO
 			catch (HibernateException dbex)
 			{
 				logger.error(dbex.getMessage(), dbex);
-				throw handleError("Error in rollback: ", dbex);
+				ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
+				throw new DAOException(errorKey,dbex,"HibernateDAOImpl.java :"+
+						DAOConstants.ROLLBACK_ERROR);
 			}
 		}
 	}
@@ -189,7 +204,6 @@ public class HibernateDAOImpl implements HibernateDAO
 	 * @param whereColumnName Column name to be included in where clause.
 	 * @param whereColumnValues Value of the Column name that included in where clause.
 	 * @throws DAOException generic DAOException.
-	 * --have to check this
 	 */
 	public void disableRelatedObjects(String tableName, String whereColumnName,
 			Long[] whereColumnValues) throws DAOException
@@ -219,7 +233,9 @@ public class HibernateDAOImpl implements HibernateDAO
 		catch (HibernateException dbex)
 		{
 			logger.error(dbex.getMessage(), dbex);
-			throw handleError("Error in JDBC connection: ", dbex);
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
+			throw new DAOException(errorKey,dbex,"HibernateDAOImpl.java :"+
+					DAOConstants.DISABLE_RELATED_OBJ);
 		}
 		finally
 		{
@@ -235,10 +251,9 @@ public class HibernateDAOImpl implements HibernateDAO
 	 * @param isAuditable is Auditable.
 	 * @param isSecureInsert is Secure Insert.
 	 * @throws DAOException generic DAOException.
-	 * @throws UserNotAuthorizedException User Not Authorized Exception.
 	 */
 	public void insert(Object obj, SessionDataBean sessionDataBean, boolean isAuditable,
-			boolean isSecureInsert) throws DAOException, UserNotAuthorizedException
+			boolean isSecureInsert) throws DAOException
 	{
 		try
 		{
@@ -248,11 +263,14 @@ public class HibernateDAOImpl implements HibernateDAO
 		}
 		catch (HibernateException hibExp)
 		{
-			throw handleError("", hibExp);
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
+			throw new DAOException(errorKey,hibExp,"HibernateDAOImpl.java :"+
+					DAOConstants.INSERT_OBJ_ERROR);
 		}
-		catch (AuditException hibExp)
+		catch (AuditException exp)
 		{
-			throw handleError("", hibExp);
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.audit.error");
+			throw new DAOException(errorKey,exp,"HibernateDAOImpl.java :");
 		}
 
 
@@ -273,55 +291,6 @@ public class HibernateDAOImpl implements HibernateDAO
 		}
 	}
 
-	/**
-	 * Handles Error.
-	 * @param message message
-	 * @param hibExp Exception
-	 * @return DAOException
-	 */
-	private DAOException handleError(String message, Exception hibExp)
-	{
-		logger.error(hibExp.getMessage(), hibExp);
-		String msg = generateErrorMessage(message, hibExp);
-		return new DAOException(msg, hibExp);
-	}
-
-	/**
-	 * Generates Error Message.
-	 * @param messageToAdd message To Add.
-	 * @param exception Exception
-	 * @return message.
-	 */
-	private String generateErrorMessage(String messageToAdd, Exception exception)
-	{
-		String returnMessage;
-		if (exception instanceof HibernateException)
-		{
-			HibernateException hibernateException = (HibernateException) exception;
-			StringBuffer message = new StringBuffer(messageToAdd);
-			String [] str = hibernateException.getMessages();
-
-			//TODO have to look for this message won't be null ever .
-			if (message != null)
-			{
-				for (int i = 0; i < str.length; i++)
-				{
-					message.append(str[i]).append("   ");
-				}
-				returnMessage = message.toString();
-			}
-			else
-			{
-				returnMessage = "Unknown Error";
-			}
-
-		}
-		else
-		{
-			returnMessage = exception.getMessage();
-		}
-		return returnMessage;
-	}
 
 	/**
 	 * Updates the persistent object in the database.
@@ -338,7 +307,9 @@ public class HibernateDAOImpl implements HibernateDAO
 		}
 		catch (HibernateException hibExp)
 		{
-			throw handleError("", hibExp);
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
+			throw new DAOException(errorKey,hibExp,"HibernateDAOImpl.java :"+
+					DAOConstants.UPDATE_OBJ_ERROR);
 		}
 	}
 
@@ -361,9 +332,10 @@ public class HibernateDAOImpl implements HibernateDAO
 			}
 
 		}
-		catch (AuditException hibExp)
+		catch (AuditException auditExp)
 		{
-			throw handleError("", hibExp);
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.audit.error");
+			throw new DAOException(errorKey,auditExp,"HibernateDAOImpl.java :");
 		}
 	}
 
@@ -391,7 +363,8 @@ public class HibernateDAOImpl implements HibernateDAO
 		catch (HibernateException hibExp)
 		{
 			logger.error(hibExp.getMessage() , hibExp);
-			throw new DAOException("Error in delete" , hibExp);
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.delete.obj");
+			throw new DAOException(errorKey,hibExp,"HibernateDAOImpl.java");
 		}
 	}
 
@@ -455,7 +428,7 @@ public class HibernateDAOImpl implements HibernateDAO
 		try
 		{
 			StringBuffer queryStrBuff = new StringBuffer();
-			String className = DAOUtility.parseClassName(sourceObjectName);
+			String className = DAOUtility.getInstance().parseClassName(sourceObjectName);
 			Query query;
 
 			generateSelectPartOfQuery(selectColumnName, queryStrBuff, className);
@@ -470,15 +443,11 @@ public class HibernateDAOImpl implements HibernateDAO
 			list = query.list();
 
 		}
-		catch (HibernateException hibExp)
-		{
-			logger.error(hibExp.getMessage(), hibExp);
-			throw new DAOException("Error in retrieve " + hibExp.getMessage(), hibExp);
-		}
 		catch (Exception exp)
 		{
 			logger.error(exp.getMessage(), exp);
-			throw new DAOException("Logical Erroe in retrieve method " + exp.getMessage(), exp);
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.retrieve.obj");
+			throw new DAOException(errorKey, exp,"HibernateDAOImpl.java");
 		}
 		return list;
 	}
@@ -513,16 +482,13 @@ public class HibernateDAOImpl implements HibernateDAO
 			return (Object)hibernatProxy.getHibernateLazyInitializer().getImplementation();
 			//return HibernateMetaData.getProxyObjectImpl(object);
 		}
-		catch (ClassNotFoundException cnFoundExp)
+		catch (Exception exp)
 		{
-			logger.error(cnFoundExp.getMessage(), cnFoundExp);
-			throw new DAOException("Error in retrieve " + cnFoundExp.getMessage(), cnFoundExp);
+			logger.error(exp.getMessage(), exp);
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.retrieve.obj");
+			throw new DAOException(errorKey, exp,"HibernateDAOImpl.java");
 		}
-		catch (HibernateException hibExp)
-		{
-			logger.error(hibExp.getMessage(), hibExp);
-			throw new DAOException("Error in retrieve " + hibExp.getMessage(), hibExp);
-		}
+
 	}
 
 	/**
@@ -562,9 +528,10 @@ public class HibernateDAOImpl implements HibernateDAO
 			returner = hibernateQuery.list();
 
 		}
-		catch (HibernateException e)
+		catch (Exception exp)
 		{
-			throw (new DAOException(e));
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.hiber.query.create.err");
+			throw new DAOException(errorKey,exp,"HibernateDAOImpl.java");
 		}
 
 		return returner;
@@ -586,19 +553,25 @@ public class HibernateDAOImpl implements HibernateDAO
 		{
 			String objClassName = objClass.getName();
 			String simpleName = objClass.getSimpleName();
-			String nameOfAttribute = DAOUtility.createAttributeNameForHQL(simpleName, attributeName);
+			String nameOfAttribute = DAOUtility.getInstance().
+			createAttributeNameForHQL(simpleName, attributeName);
 			StringBuffer queryStringBuffer = new StringBuffer(DAOConstants.TAILING_SPACES);
 
-			queryStringBuffer.append("Select ").append(nameOfAttribute).
-			append(" from ").append(objClassName).append("    ").append(simpleName).
-			append(" where ").append(simpleName).append(".").append(columnName).
-			append("=  ").append(identifier);
+			queryStringBuffer.append("Select").append(DAOConstants.TAILING_SPACES).
+			append(nameOfAttribute).append(DAOConstants.TAILING_SPACES).
+			append("from").append(DAOConstants.TAILING_SPACES).
+			append(objClassName).append(DAOConstants.TAILING_SPACES).
+			append(simpleName).append(DAOConstants.TAILING_SPACES).
+			append("where").append(DAOConstants.TAILING_SPACES).
+			append(simpleName).append(".").append(columnName).
+			append("=").append(DAOConstants.TAILING_SPACES).append(identifier);
 
 			return session.createQuery(queryStringBuffer.toString()).list();
 		}
 		catch (HibernateException exception)
 		{
-			throw new DAOException(exception.getMessage(), exception);
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.retrieve.attribute");
+			throw new DAOException(errorKey, exception,"HibernateDAOImpl.java");
 		}
 	}
 
@@ -615,7 +588,8 @@ public class HibernateDAOImpl implements HibernateDAO
 		    sqlBuff.append("Select ");
 		    for (int i = 0; i < selectColumnName.length; i++)
 		     {
-		        sqlBuff.append(DAOUtility.createAttributeNameForHQL(className, selectColumnName[i]));
+		        sqlBuff.append(DAOUtility.getInstance().
+		        		createAttributeNameForHQL(className, selectColumnName[i]));
 		        if (i != selectColumnName.length - 1)
 		        {
 		            sqlBuff.append(", ");

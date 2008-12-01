@@ -18,9 +18,8 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-
-import edu.wustl.common.util.dbmanager.DAOException;
 import edu.wustl.common.util.logger.Logger;
+import edu.wustl.dao.exception.DAOException;
 
 /**
  * @author prashant_bandal
@@ -108,7 +107,7 @@ public class ApplicationDAOPropertiesParser
 	throws InstantiationException, IllegalAccessException,
 			ClassNotFoundException, DAOException
 	{
-		//get the root elememt
+		//get the root element
 		Element root = dom.getDocumentElement();
 		NodeList rootChildren = root.getElementsByTagName("Application");
 		for (int i = 0; i < rootChildren.getLength(); i++)

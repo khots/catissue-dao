@@ -7,39 +7,117 @@ package edu.wustl.dao.util;
 public class DAOConstants
 {
 	/**
+	 * NEW_SESSION_ERROR.
+	 */
+	public static final String NEW_SESSION_ERROR = "Problem in creating new session";
+
+	/**
 	 * OPEN_SESSION_ERROR.
 	 */
-	public static final String OPEN_SESSION_ERROR = "Problem occurred while opening session :";
+	public static final String OPEN_SESSION_ERROR = "Open Hibernate session error:";
+
+	/**
+	 * CLOSE_SESSION_ERROR.
+	 */
+	public static final String CLOSE_SESSION_ERROR = "Close Hibernate session error:";
+
+	/**
+	 * COMMIT_DATA_ERROR.
+	 */
+	public static final String COMMIT_DATA_ERROR = "Data commit error:";
+	/**
+	 * ROLLBACK_ERROR.
+	 */
+	public static final String ROLLBACK_ERROR = "Data Rollback error:";
+
+	/**
+	 * Disabling objects.
+	 */
+	public static final String DISABLE_RELATED_OBJ = "Object disabling error:";
+
+
+	/**
+	 * insert objects.
+	 */
+	public static final String INSERT_OBJ_ERROR = "Object insert error:";
+
+
+	/**
+	 * update object.
+	 */
+	public static final String UPDATE_OBJ_ERROR = "Object update error:";
+
+
+	/**
+	 * delete object.
+	 */
+	public static final String DELETE_OBJ_ERROR = " Delete object error:";
+
+
+	/**
+	 * Default DAO.
+	 */
+	public static final String DEFAULT_DAO_INSTANTIATION_ERROR = "Problem while retrieving the default DAO";
+
+	/**
+	 * Default JDBCDAO.
+	 */
+	public static final String JDBCDAO_INSTANTIATION_ERROR = "Problem while retrieving the JDBC DAO";
+
+
+	/**
+	 * Error while building session factory.
+	 */
+	public static final String BUILD_SESSION_FACTORY_ERROR = "Problem while building Sessoin Factory :";
+
+	/**
+	 * Error while instantiating connection manager.
+	 */
+	public static final String CONN_MANAGER_INSTANTIATION_ERROR =
+		"Problem while instantiating connection manager:";
+
+
+	/**
+	 * Error while instantiating connection manager.
+	 */
+	public static final String CONFIG_FILE_PARSE_ERROR =
+		"Problem while configuring or parsing configuration file:";
+
+
+	/**
+	 * Database Statement creation error.
+	 */
+	public static final String STMT_CREATION_ERROR = "Problem Occurred while obtaining database statement.";
+	/**
+	 * Database ResultSet creation Error.
+	 */
+	public static final String RESULTSET_CREATION_ERROR =
+		"Problem Occurred while obtaining database resultSet.";
+	/**
+	 * Database RS meta data creation error.
+	 */
+	public static final String RS_METADATA_ERROR =
+		"Problem Occurred while obtaining database ResultSetMetaData.";
+	/**
+	 * Database prepared statement creation error.
+	 */
+	public static final String PRPD_STMT_ERROR =
+		"Problem Occurred while obtaining database PreparedStatement.";
+
+
 	/**
 	 * NO_CONNECTION_TO_DB.
 	 */
 	public static final String NO_CONNECTION_TO_DB ="Problem occurred during a database operation:" +
 			" No connection to the database :";
 
-	/**
-	 * COMMIT_DATA_ERROR.
-	 */
-	public static final String COMMIT_DATA_ERROR = "Problem occurred while Commiting " +
-			"changes to the database :";
-	/**
-	 * ROLLBACK_ERROR.
-	 */
-	public static final String ROLLBACK_ERROR = "Problem occurred while rollback :";
-	/**
-	 * CONNECTIONS_CLOSING_ISSUE.
-	 */
-	public static final String CONNECTIONS_CLOSING_ISSUE = "Problem Occurred while" +
-			" closing database connections";
+
 	/**
 	 * EXECUTE_UPDATE_ERROR.
 	 */
-	public static final String EXECUTE_UPDATE_ERROR = "Problem Occurred while " +
+	public static final String EXECUTE_QUERY_ERROR = "Problem Occurred while " +
 			"executing static SQL query";
-	/**
-	 * DB_PARAM_INIT_ERROR.
-	 */
-	public static final String DB_PARAM_INIT_ERROR = "Problem Occured while creating " +
-			"database connection parameters";
+
 	/**
 	 * METHOD_WITHOUT_IMPLEMENTATION.
 	 */
