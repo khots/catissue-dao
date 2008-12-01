@@ -4,11 +4,12 @@ import java.sql.SQLException;
 import java.util.List;
 
 import edu.wustl.common.dao.queryExecutor.PagenatedResultData;
+import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.exceptionformatter.ConstraintViolationFormatter;
 import edu.wustl.common.util.QueryParams;
-import edu.wustl.common.util.dbmanager.DAOException;
 import edu.wustl.common.util.global.Constants;
 import edu.wustl.common.util.logger.Logger;
+import edu.wustl.dao.exception.DAOException;
 import edu.wustl.query.executor.MysqlQueryExecutor;
 
 
@@ -139,11 +140,19 @@ public class MySQLDAOImpl extends AbstractJDBCDAOImpl
 	public PagenatedResultData getQueryResultList(QueryParams queryParams) throws DAOException
 	{
 		PagenatedResultData pagenatedResultData = null;
-		queryParams.setConnection(getConnectionManager().getConnection());
-		MysqlQueryExecutor mysqlQueryExecutor = new MysqlQueryExecutor();
-		pagenatedResultData = mysqlQueryExecutor.getQueryResultList(queryParams);
-		return pagenatedResultData;
+		try
+		{
+			queryParams.setConnection(getConnectionManager().getConnection());
+			MysqlQueryExecutor mysqlQueryExecutor = new MysqlQueryExecutor();
+			pagenatedResultData = mysqlQueryExecutor.getQueryResultList(queryParams);
 
+		}
+		catch(Exception exp)
+		{
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
+			throw new DAOException(errorKey,exp,"MySQLDAOImpl.java");
+		}
+		return pagenatedResultData;
 	}
 
 

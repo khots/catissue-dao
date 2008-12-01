@@ -9,7 +9,7 @@ import edu.wustl.common.beans.QueryResultObjectDataBean;
 import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.dao.queryExecutor.PagenatedResultData;
 import edu.wustl.common.util.QueryParams;
-import edu.wustl.common.util.dbmanager.DAOException;
+import edu.wustl.dao.exception.DAOException;
 
 /** This interface defines methods which are specific to JDBC operations.*/
 public interface JDBCDAO extends DAO
@@ -123,8 +123,8 @@ public interface JDBCDAO extends DAO
 	 * @param identifier identifier
 	 * @return Activity Status.
 	 * @throws DAOException generic DAOException.
-	 */
-	String getActivityStatus(String sourceObjectName, Long identifier) throws DAOException;
+	 *//*
+	String getActivityStatus(String sourceObjectName, Long identifier) throws DAOException;*/
 
 	/**
 	 * Update the database.

@@ -29,11 +29,13 @@ import org.hibernate.util.XMLHelper;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 
-import edu.wustl.common.util.dbmanager.DAOException;
+import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.DAO;
 import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.connectionmanager.IConnectionManager;
+import edu.wustl.dao.exception.DAOException;
+import edu.wustl.dao.util.DAOConstants;
 
 
 /**
@@ -120,10 +122,12 @@ public class DAOFactory implements IConnectionManager,IDAOFactory
 		   dao.setConnectionManager(getConnectionManager());
 
 		}
-		catch (Exception inExcp )
+		catch (Exception excp )
 		{
-			logger.error(inExcp.getMessage() + "Problem while retrieving the default DAO" + inExcp);
-			throw new DAOException("Problem while retrieving the default DAO ",inExcp);
+			logger.error(excp.getMessage() + DAOConstants.DEFAULT_DAO_INSTANTIATION_ERROR + excp);
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
+			throw new DAOException(errorKey,excp,"DAOFactory.java"+
+					DAOConstants.DEFAULT_DAO_INSTANTIATION_ERROR);
 		}
 
 		return dao;
@@ -143,10 +147,12 @@ public class DAOFactory implements IConnectionManager,IDAOFactory
 			   dao = (JDBCDAO) Class.forName(jdbcDAOClassName).newInstance();
 			   dao.setConnectionManager(getConnectionManager());
 		}
-		catch (Exception inExcp )
+		catch (Exception excp )
 		{
-			logger.error(inExcp.getMessage() + "Problem while retrieving the JDBC DAO" + inExcp);
-			throw new DAOException("Problem while retrieving the JDBC DAO ",inExcp);
+			logger.error(excp.getMessage() + DAOConstants.JDBCDAO_INSTANTIATION_ERROR + excp);
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
+			throw new DAOException(errorKey,excp,"DAOFactory.java"+
+					DAOConstants.JDBCDAO_INSTANTIATION_ERROR);
 		}
 		return dao;
 	}
@@ -220,15 +226,18 @@ public class DAOFactory implements IConnectionManager,IDAOFactory
 	 */
 	public Session newSession() throws DAOException
 	{
-		Session session = sessionFactory.openSession();
-        session.setFlushMode(FlushMode.COMMIT);
-        try
+		Session session = null;
+		try
         {
+			session = sessionFactory.openSession();
+			session.setFlushMode(FlushMode.COMMIT);
             session.connection().setAutoCommit(false);
         }
-        catch (SQLException ex)
+        catch (Exception excp)
         {
-            throw new DAOException("Problem in creating new session", ex);
+        	ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
+			throw new DAOException(errorKey,excp,"DAOFactory.java"+
+					DAOConstants.NEW_SESSION_ERROR);
         }
         return session;
 
@@ -249,7 +258,9 @@ public class DAOFactory implements IConnectionManager,IDAOFactory
 		}
 		catch (HibernateException exp)
 		{
-			throw new DAOException("Problem in creating new session:"+exp);
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
+			throw new DAOException(errorKey,exp,"DAOFactory.java"+
+					DAOConstants.NEW_SESSION_ERROR);
 		}
 
 	}
@@ -271,7 +282,9 @@ public class DAOFactory implements IConnectionManager,IDAOFactory
 		catch (Exception exp)
 		{
 			logger.error(exp.getMessage(),exp);
-			throw new DAOException("Problem in building Sessoin Factory :"+exp);
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
+			throw new DAOException(errorKey,exp,"DAOFactory.java"+
+					DAOConstants.BUILD_SESSION_FACTORY_ERROR);
 
 		}
 	}
@@ -290,17 +303,19 @@ public class DAOFactory implements IConnectionManager,IDAOFactory
 		 */
 		try
 		{
-		IConnectionManager connectionManager = (IConnectionManager)Class.forName(connectionManagerName)
-		.newInstance();
-		connectionManager.setApplicationName(applicationName);
-		connectionManager.setSessionFactory(sessionFactory);
-		connectionManager.setConfiguration(configuration);
-		setConnectionManager(connectionManager);
+			IConnectionManager connectionManager =
+				(IConnectionManager)Class.forName(connectionManagerName).newInstance();
+			connectionManager.setApplicationName(applicationName);
+			connectionManager.setSessionFactory(sessionFactory);
+			connectionManager.setConfiguration(configuration);
+			setConnectionManager(connectionManager);
 		}
 		catch (Exception exp)
 		{
 			logger.error(exp.getMessage(),exp);
-			throw new DAOException("Problem while instantiating connection manager:"+exp);
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
+			throw new DAOException(errorKey,exp,"DAOFactory.java"+
+					DAOConstants.CONN_MANAGER_INSTANTIATION_ERROR);
 
 		}
 	}
@@ -334,14 +349,13 @@ public class DAOFactory implements IConnectionManager,IDAOFactory
             configuration.configure(doc);
             return configuration;
         }
-        catch (DocumentException e)
+        catch (Exception exp)
         {
-            throw new DAOException("Problem while parsing configuration file",e);
+        	ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
+			throw new DAOException(errorKey,exp,"DAOFactory.java"+
+					DAOConstants.CONFIG_FILE_PARSE_ERROR);
         }
-        catch (HibernateException e)
-        {
-            throw new DAOException("Problem while adding configuration file ",e);
-        }
+
     }
 
 

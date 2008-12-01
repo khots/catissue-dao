@@ -5,7 +5,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
-import edu.wustl.common.util.dbmanager.DAOException;
+import edu.wustl.dao.exception.DAOException;
+
 
 /**
  * @author kalpana_thakur

@@ -23,7 +23,7 @@ public class IsNullClause implements Condition
 	{
 		strBuff = new StringBuffer(DAOConstants.TAILING_SPACES);
 
-		String sourceObject = DAOUtility.parseClassName(sourceObjectName);
+		String sourceObject = DAOUtility.getInstance().parseClassName(sourceObjectName);
 
 		strBuff.append(sourceObject).append(DAOConstants.DOT_OPERATORS).
 		append(columnName).append(DAOConstants.TAILING_SPACES).append(DAOConstants.NULL_OPERATOR).

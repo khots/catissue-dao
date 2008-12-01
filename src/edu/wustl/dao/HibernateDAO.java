@@ -3,7 +3,8 @@ package edu.wustl.dao;
 
 import java.util.Collection;
 
-import edu.wustl.common.util.dbmanager.DAOException;
+import edu.wustl.dao.exception.DAOException;
+
 
 /** This interface defines methods which are specific to Hibernate operations .*/
 
