@@ -1,6 +1,7 @@
 
 package edu.wustl.dao;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
@@ -132,10 +133,8 @@ public interface JDBCDAO extends DAO
 	 * @throws DAOException generic DAOException.
 	 */
 	void executeUpdate(String sql) throws DAOException;
-
 	/**
-	 *
-	 * @return :This will return the Date Pattern.
+	 *@return :This will return the Date Pattern.
 	 */
 	String getDatePattern();
 
@@ -170,4 +169,13 @@ public interface JDBCDAO extends DAO
 	 */
 	String formatMessage(Exception excp, Object[] args);
 
+	/**
+	 * @param autoCommitFlag flag
+	 * @throws DAOException exc
+	 */
+	public void setAutoCommit(boolean autoCommitFlag) throws DAOException;
+	/**
+	 * gets sql Connection.
+	 */
+	public Connection getConnection();
 }

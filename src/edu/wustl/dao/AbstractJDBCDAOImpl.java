@@ -838,7 +838,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	 * This method will be called to get connection object.
 	 * @return Connection: Connection object.
 	 */
-	protected Connection getConnection()
+	public Connection getConnection()
 	{
 		return connection;
 	}
@@ -947,7 +947,23 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
 		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java");
 	}
-
-
-
+	
+	/**
+	 * setAutoCommit.
+	 * @param autoCommitFlag boolean flag
+	 * @throws DAOException exc
+	 */
+	public void setAutoCommit(boolean autoCommitFlag) throws DAOException
+	{
+		try
+		{
+			connection.setAutoCommit(autoCommitFlag);
+		}
+		catch (Exception sqlExp)
+		{
+			Logger.out.error(sqlExp.getMessage(), sqlExp);
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
+			throw new DAOException(errorKey,sqlExp,"AbstractJDBCDAOImpl.java");
+		}
+	}
 }
