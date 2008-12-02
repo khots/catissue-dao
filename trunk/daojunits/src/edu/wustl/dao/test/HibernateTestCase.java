@@ -403,7 +403,7 @@ public class HibernateTestCase extends BaseTestCase
 	  try
 	  {
 		  User user = new User();
-		  user.setIdentifier(Long.valueOf(76));
+		  user.setIdentifier(Long.valueOf(85));
 		  dao.openSession(null);
 	  	  dao.delete(user);
 	  	  dao.commit();
@@ -526,6 +526,21 @@ public class HibernateTestCase extends BaseTestCase
 	}
 
 	*//**
+	 * This test will various factory members.
+	 * 	 *//*
+	@Test
+	public void testDAOFactoryMembers()
+	{
+		IDAOFactory daoFactory = daoConfigFactory.getInstance().getDAOFactory("caTissuecore");
+		assertNotNull("No configuration file exist", daoFactory.getConfigurationFile());
+		assertNotNull("Default class name Name does not exists", daoFactory.getDefaultDAOClassName());
+		assertNotNull("Connection Manager Name not exists", daoFactory.getConnectionManagerName());
+		assertNotNull("Configuration object null ", dao.getConnectionManager().getConfiguration());
+		assertNotNull("JDBC class name Name does not exists", daoFactory.getJdbcDAOClassName());
+
+	}
+
+	*//**
 	 * @param user : user object
 	 * @throws DAOException : DAOExp
 	 * @throws UserNotAuthorizedException :
@@ -554,6 +569,7 @@ public class HibernateTestCase extends BaseTestCase
 	  user.setEmailAddress("abhijit_naik@persistent.co.in");
 	  return user;
 	}
+
 
 
 

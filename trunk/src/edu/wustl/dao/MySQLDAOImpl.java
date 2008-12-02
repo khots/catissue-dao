@@ -1,8 +1,5 @@
 package edu.wustl.dao;
 
-import java.sql.SQLException;
-import java.util.List;
-
 import edu.wustl.common.dao.queryExecutor.PagenatedResultData;
 import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.exceptionformatter.ConstraintViolationFormatter;
@@ -86,17 +83,18 @@ public class MySQLDAOImpl extends AbstractJDBCDAOImpl
 
 	/* (non-Javadoc)
 	 * @see edu.wustl.common.dao.JDBCDAO#insert(java.lang.String, java.util.List)
-	 */
-	/**
+
+	*//**
 	 * @param tableName : Name of the table.
 	 * @param columnValues : Column values of table.
 	 * @throws SQLException : SQLException
 	 * @throws DAOException : DAOException
-	 */
-	public void insert(String tableName, List<Object> columnValues) throws DAOException, SQLException
+	 *//*
+	public void insertHashedValues(String tableName, List<Object> columnValues)
+	throws DAOException, SQLException
 	{
-		insert(tableName, columnValues, null);
-	}
+		insertHashedValues(tableName, columnValues, null);
+	}*/
 
 
 	/**
@@ -154,8 +152,6 @@ public class MySQLDAOImpl extends AbstractJDBCDAOImpl
 		}
 		return pagenatedResultData;
 	}
-
-
 
 
 }

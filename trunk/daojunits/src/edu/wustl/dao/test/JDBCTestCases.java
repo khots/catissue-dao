@@ -1,21 +1,5 @@
 package edu.wustl.dao.test;
 
-import java.util.List;
-
-import org.junit.Test;
-
-import edu.wustl.common.dao.queryExecutor.PagenatedResultData;
-import edu.wustl.common.util.QueryParams;
-import edu.wustl.common.util.dbmanager.DAOException;
-import edu.wustl.common.util.global.Constants;
-import edu.wustl.dao.JDBCDAO;
-import edu.wustl.dao.QueryWhereClause;
-import edu.wustl.dao.condition.EqualClause;
-import edu.wustl.dao.condition.INClause;
-import edu.wustl.dao.condition.IsNullClause;
-import edu.wustl.dao.condition.NotNullClause;
-import edu.wustl.dao.daofactory.IDAOFactory;
-import edu.wustl.dao.util.DAOConstants;
 
 /**
  * @author kalpana_thakur
@@ -23,6 +7,10 @@ import edu.wustl.dao.util.DAOConstants;
  */
 public class JDBCTestCases extends BaseTestCase
 {/*
+	*//**
+	 * Logger.
+	 *//*
+	private static org.apache.log4j.Logger logger = Logger.getLogger(JDBCTestCases.class);
 
 	*//**
 	 * DAO instance.
@@ -45,7 +33,7 @@ public class JDBCTestCases extends BaseTestCase
 		}
 		catch (DAOException e)
 		{
-			e.printStackTrace();
+			logger.fatal(e.getLogMessage());
 		}
 	}
 
@@ -495,9 +483,11 @@ public class JDBCTestCases extends BaseTestCase
 		{
 			jdbcDAO.audit(null, null, null, false);
 		}
-		catch(Exception exp)
+		catch(ApplicationException exp)
 		{
-			assertEquals(DAOConstants.METHOD_WITHOUT_IMPLEMENTATION,exp.getMessage());
+			assertTrue("Problem: exception should be thrown :",exp.getLogMessage().
+					contains("There is no implementation for this method"));
+			logger.fatal(exp.getLogMessage());
 		}
 
 	}
@@ -513,9 +503,11 @@ public class JDBCTestCases extends BaseTestCase
 		{
 			jdbcDAO.delete(new Object());
 		}
-		catch(Exception exp)
+		catch(ApplicationException exp)
 		{
-			assertEquals(DAOConstants.METHOD_WITHOUT_IMPLEMENTATION,exp.getMessage());
+			assertTrue("Problem: exception should be thrown :",exp.getLogMessage().
+					contains("There is no implementation for this method"));
+			logger.fatal(exp.getLogMessage());
 		}
 
 	}
@@ -531,9 +523,11 @@ public class JDBCTestCases extends BaseTestCase
 		{
 			jdbcDAO.disableRelatedObjects(null, null, null);
 		}
-		catch(Exception exp)
+		catch(ApplicationException exp)
 		{
-			assertEquals(DAOConstants.METHOD_WITHOUT_IMPLEMENTATION,exp.getMessage());
+			assertTrue("Problem: exception should be thrown :",exp.getLogMessage().
+					contains("There is no implementation for this method"));
+			logger.fatal(exp.getLogMessage());
 		}
 
 	}
@@ -548,9 +542,11 @@ public class JDBCTestCases extends BaseTestCase
 		{
 			jdbcDAO.insert(null, null, false, false);
 		}
-		catch(Exception exp)
+		catch(ApplicationException exp)
 		{
-			assertEquals(DAOConstants.METHOD_WITHOUT_IMPLEMENTATION,exp.getMessage());
+			assertTrue("Problem: exception should be thrown :",exp.getLogMessage().
+					contains("There is no implementation for this method"));
+			logger.fatal(exp.getLogMessage());
 		}
 
 	}
@@ -565,9 +561,11 @@ public class JDBCTestCases extends BaseTestCase
 		{
 			jdbcDAO.retrieveAttribute(null, null, null, null);
 		}
-		catch(Exception exp)
+		catch(ApplicationException exp)
 		{
-			assertEquals(DAOConstants.METHOD_WITHOUT_IMPLEMENTATION,exp.getMessage());
+			assertTrue("Problem: exception should be thrown :",exp.getLogMessage().
+					contains("There is no implementation for this method"));
+			logger.fatal(exp.getLogMessage());
 		}
 
 	}
@@ -583,9 +581,11 @@ public class JDBCTestCases extends BaseTestCase
 		{
 			jdbcDAO.update(null);
 		}
-		catch(Exception exp)
+		catch(ApplicationException exp)
 		{
-			assertEquals(DAOConstants.METHOD_WITHOUT_IMPLEMENTATION,exp.getMessage());
+			assertTrue("Problem: exception should be thrown :",exp.getLogMessage().
+					contains("There is no implementation for this method"));
+			logger.fatal(exp.getLogMessage());
 		}
 
 	}
@@ -600,12 +600,120 @@ public class JDBCTestCases extends BaseTestCase
 		{
 			jdbcDAO.retrieve(null, Long.valueOf(0));
 		}
-		catch(Exception exp)
+		catch(ApplicationException exp)
 		{
-			assertEquals(DAOConstants.METHOD_WITHOUT_IMPLEMENTATION,exp.getMessage());
+			assertTrue("Problem: exception should be thrown :",exp.getLogMessage().
+					contains("There is no implementation for this method"));
+			logger.fatal(exp.getLogMessage());
 		}
 
 	}
+
+	*//**
+	 * This test will be called to insert default values in place of "##" column values.
+	 *//*
+	@Test
+	public void testInsertHashedValues()
+	{
+		  try
+		  {
+			  jdbcDAO.openSession(null);
+			  List<Object> columnValues = new ArrayList<Object>();
+			  columnValues.add(Long.valueOf(10));
+			  columnValues.add((Object)true);
+			  columnValues.add("##");
+			  columnValues.add((Object)"collected");
+			  jdbcDAO.insertHashedValues("xyz_catissue_specimen", columnValues,null);
+			  jdbcDAO.commit();
+			  jdbcDAO.closeSession();
+		  }
+		  catch(Exception exp)
+		  {
+			ApplicationException appExp = (ApplicationException)exp;
+			logger.fatal(appExp.getLogMessage());
+			assertFalse("Problem while inserting ## values", true);
+		  }
+	}
+
+	*//**
+	 * This test will be called to insert default values in place of "##" column values.
+	 *//*
+	@Test
+	public void testInsertHashedValuesGivenColumns()
+	{
+		  try
+		  {
+			  jdbcDAO.openSession(null);
+			  List<String> columnNames = new ArrayList<String>();
+			  columnNames.add("IDENTIFIER");
+			  columnNames.add("AVAILABLE");
+			  columnNames.add("CREATED_ON_DATE");
+			  columnNames.add("COLLECTION_STATUS");
+
+			  List<Object> columnValues = new ArrayList<Object>();
+			  columnValues.add(Long.valueOf(11));
+			  columnValues.add(false);
+			  columnValues.add("##");
+			  columnValues.add("collected");
+			  jdbcDAO.insertHashedValues("xyz_catissue_specimen", columnValues,columnNames);
+			  jdbcDAO.commit();
+			  jdbcDAO.closeSession();
+		  }
+		  catch(Exception exp)
+		  {
+			ApplicationException appExp = (ApplicationException)exp;
+			logger.fatal(appExp.getLogMessage());
+			assertFalse("Problem while inserting ## values", true);
+		  }
+	}
+
+	*//**
+	 * This test will assert the creation of database parameters.
+	 *//*
+	@Test
+	public void testDatabaseConnectionAndStmtAndResultSet()
+	{
+		DatabaseConnectionParams databaseConnectionParams = new DatabaseConnectionParams();
+		try
+		{
+
+			databaseConnectionParams.setConnection(jdbcDAO.getConnectionManager().getConnection());
+
+			assertNotNull("Connection retrieved is null",databaseConnectionParams.getConnection());
+
+			Statement stmt = databaseConnectionParams.getDatabaseStatement();
+
+			assertNotNull("Statement retrieved is null :",stmt);
+
+			ResultSet rs = databaseConnectionParams.getResultSet
+			("select * from xyz_catissue_specimen");
+
+			assertNotNull("ResultSet retrieved is null :",
+					rs);
+
+			assertTrue("ResultSet doesnot exists or empty :",
+					databaseConnectionParams.isResultSetExists());
+		}
+		catch(ApplicationException exp)
+		{
+			logger.fatal(exp.getLogMessage());
+			assertFalse("Problem occurred while retrieveing conn or " +
+					"while creating db stmt or rs", true);
+		}
+		finally
+		{
+			try
+			{
+				databaseConnectionParams.closeConnectionParams();
+			}
+			catch (ApplicationException exp)
+			{
+				logger.fatal(exp.getLogMessage());
+			}
+		}
+
+	}
+
 
 
 

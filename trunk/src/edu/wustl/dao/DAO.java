@@ -12,7 +12,6 @@ import java.util.Map;
 
 import edu.wustl.common.beans.QueryResultObjectDataBean;
 import edu.wustl.common.beans.SessionDataBean;
-import edu.wustl.common.security.exceptions.UserNotAuthorizedException;
 import edu.wustl.dao.connectionmanager.IConnectionManager;
 import edu.wustl.dao.exception.DAOException;
 

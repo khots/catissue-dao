@@ -90,7 +90,7 @@ public final class DAOUtility
         try
         {
         	qualifiedName = fullyQualifiedName.substring(fullyQualifiedName.
-        			lastIndexOf(DAOConstants.DOT_OPERATORS) + 1);
+        			lastIndexOf(DAOConstants.DOT_OPERATOR) + 1);
         }
         catch (Exception e)
         {

@@ -474,12 +474,10 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	 * @throws DAOException  :DAOException
 	 * @throws SQLException : SQLException
 	 */
-	public void insert(String tableName, List<Object> columnValues, List<String>... columnNames)
+	public void insertHashedValues(String tableName, List<Object> columnValues, List<String> columnNames)
 	throws DAOException, SQLException
 	{
-		List<Integer>dateColumns = new ArrayList<Integer>();
-		List<Integer>numberColumns = new ArrayList<Integer>();
-		List<Integer>tinyIntColumns = new ArrayList<Integer>();
+
 		List<String>columnNamesList = new ArrayList<String>();
 		ResultSetMetaData metaData;
 		DatabaseConnectionParams databaseConnectionParams = new DatabaseConnectionParams();
@@ -487,25 +485,19 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		PreparedStatement stmt = null;
 		try
 		{
-			if(columnNames != null && columnNames.length > 0)
+			if(columnNames != null && !columnNames.isEmpty())
 			{
-				metaData = getMetaData(tableName, columnNames[0]);
+				metaData = getMetaData(tableName, columnNames);
+				columnNamesList = columnNames;
 			}
 			else
 			{
 				metaData = getMetaDataAndUpdateColumns(tableName,columnNamesList);
 			}
-			updateColumns(metaData, dateColumns,numberColumns, tinyIntColumns);
-			String insertQuery = createInsertQuery(tableName,columnNamesList,columnValues);
+
+			String insertQuery = createInsertQuery(tableName,columnNamesList);
 			stmt = databaseConnectionParams.getPreparedStatement(insertQuery);
-			for (int i = 0; i < columnValues.size(); i++)
-			{
-				Object obj = columnValues.get(i);
-				setDateColumns(stmt, i,obj, dateColumns);
-				setTinyIntColumns(stmt, i, obj,tinyIntColumns);
-				setTimeStampColumn(stmt, i, obj);
-				setNumberColumns(numberColumns, stmt, i, obj);
-			}
+			setStmtIndexValue(columnValues, metaData, stmt);
 			stmt.executeUpdate();
 		}
 		catch (SQLException sqlExp)
@@ -521,34 +513,94 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	}
 
 	/**
-	 * @param metaData ResultSetMetaData
-	 * @param dateColumns : TODO
-	 * @param numberColumns : TODO
-	 * @param tinyIntColumns : TODO
-	 * @throws SQLException : SQLException
+	 * @param columnValues :
+	 * @param metaData :
+	 * @param stmt :
+	 * @throws SQLException :
+	 * @throws DAOException :
 	 */
-	protected void updateColumns(ResultSetMetaData metaData,List<Integer> dateColumns,
-			List<Integer> numberColumns,List<Integer> tinyIntColumns) throws SQLException
+	private void setStmtIndexValue(List<Object> columnValues,
+			ResultSetMetaData metaData, PreparedStatement stmt)
+			throws SQLException, DAOException
 	{
-		for (int i = 1; i <= metaData.getColumnCount(); i++)
+		for (int i = 0; i < columnValues.size(); i++)
 		{
-			String type = metaData.getColumnTypeName(i);
-			if (("DATE").equals(type))
+			Object obj = columnValues.get(i);
+			int index = i;index++;
+			if(isDateColumn(metaData,index))
 			{
-				dateColumns.add(Integer.valueOf(i));
+				setDateColumns(stmt, index,obj);
+				continue;
 			}
-			if (("NUMBER").equals(type))
+			if(isTinyIntColumn(metaData,index))
 			{
-				numberColumns.add(Integer.valueOf(i));
+				setTinyIntColumns(stmt, index, obj);
+				continue;
 			}
-			if (("TINYINT").equals(type))
+			/*if(isTimeStampColumn(stmt,i,obj))
 			{
-				tinyIntColumns.add(Integer.valueOf(i));
+				continue;
+			}*/
+			if(isNumberColumn(metaData,index))
+			{
+				setNumberColumns(stmt, index, obj);
+				continue;
 			}
-
+			stmt.setObject(index, obj);
 		}
-
 	}
+
+	/**
+	 * @param metaData :
+	 * @param index :
+	 * @return true if column type date.
+	 * @throws SQLException :Exception
+	 */
+	private boolean isDateColumn(ResultSetMetaData metaData,int index) throws SQLException
+	{
+		boolean isDateType = false;
+		String type = metaData.getColumnTypeName(index);
+		if (("DATE").equals(type))
+		{
+			isDateType = true;
+		}
+		return isDateType;
+	}
+
+	/**
+	 * @param metaData :
+	 * @param index :
+	 * @return true if column type TinyInt.
+	 * @throws SQLException :Exception
+	 */
+	private boolean isTinyIntColumn(ResultSetMetaData metaData,int index) throws SQLException
+	{
+		boolean isTinyIntType = false;
+		String type = metaData.getColumnTypeName(index);
+		if (("TINYINT").equals(type))
+		{
+			isTinyIntType = true;
+		}
+		return isTinyIntType;
+	}
+
+	/**
+	 * @param metaData :
+	 * @param index :
+	 * @return true if column type is Number.
+	 * @throws SQLException :Exception
+	 */
+	private boolean isNumberColumn(ResultSetMetaData metaData,int index) throws SQLException
+	{
+		boolean isNumberType = false;
+		String type = metaData.getColumnTypeName(index);
+		if (("NUMBER").equals(type))
+		{
+			isNumberType = true;
+		}
+		return isNumberType;
+	}
+
 
 	/**
 	 * This method returns the metaData associated to the table specified in tableName.
@@ -633,66 +685,48 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	 * This method generates the Insert query.
 	 * @param tableName : Name of the table given to insert query
 	 * @param columnNamesList : List of columns of the table.
-	 * @param columnValues : Column values.
-	 * @return
-	 * TODO Have to refractor this !!!!!!! columnValues might not needed
+	 * @return query String.
 	 */
-	protected String createInsertQuery(String tableName,List<String> columnNamesList,List<Object> columnValues)
+	protected String createInsertQuery(String tableName,List<String> columnNamesList)
 	{
 		StringBuffer query = new StringBuffer("INSERT INTO " + tableName + "(");
-
+		StringBuffer colValues = new StringBuffer();
 		Iterator<String> columnIterator = columnNamesList.iterator();
 		while (columnIterator.hasNext())
 		{
 			query.append(columnIterator.next());
+			colValues.append(DAOConstants.INDEX_VALUE_OPERATOR).append(DAOConstants.TAILING_SPACES);
 			if (columnIterator.hasNext())
 			{
-				query.append(", ");
+				query.append(DAOConstants.SPLIT_OPERATOR).append(DAOConstants.TAILING_SPACES);
+				colValues.append(DAOConstants.SPLIT_OPERATOR);
 			}
 			else
 			{
 				query.append(") values(");
+				colValues.append(") ");
+				query.append(colValues.toString());
 			}
 		}
-		Iterator<Object> iterator = columnValues.iterator();
-		while (iterator.hasNext())
-		{
-			iterator.next();
-			query.append("? ");
 
-			if (iterator.hasNext())
-			{
-				query.append(", ");
-			}
-			else
-			{
-				query.append(") ");
-			}
-		}
 		return query.toString();
 	}
 
 
 	/**
 	 * This method called to set Number value to PreparedStatement.
-	 * @param numberColumns : TODO
 	 * @param stmt : TODO
 	 * @param index : TODO
 	 * @param obj : Object
 	 * @throws SQLException : SQLException
 	 */
-	protected void setNumberColumns(List<Integer> numberColumns, PreparedStatement stmt,
+	protected void setNumberColumns(PreparedStatement stmt,
 			int index, Object obj) throws SQLException
 	{
-		if (obj != null && numberColumns.contains(Integer.valueOf(index + 1))
-				&& obj.toString().equals("##"))
-		{
-			stmt.setObject(index + 1, Integer.valueOf(-1));
-		}
-		else
-		{
-			stmt.setObject(index + 1, obj);
-		}
+			if (obj != null	&& obj.toString().equals("##"))
+			{
+				stmt.setObject(index , Integer.valueOf(-1));
+			}
 	}
 
 	/**
@@ -700,32 +734,21 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	 * @param stmt :PreparedStatement
 	 * @param index :
 	 * @param obj :
+	 * @return return true if column type is timeStamp.
 	 * @throws SQLException SQLException
 	 */
-	protected void setTimeStampColumn(PreparedStatement stmt, int index,Object obj) throws SQLException
+	protected boolean isTimeStampColumn(PreparedStatement stmt, int index,Object obj) throws SQLException
 	{
+		boolean isTimeStampColumn = false;
 		Timestamp date = isColumnValueDate(obj);
 		if (date != null)
 		{
-			stmt.setObject(index + 1, date);
+			stmt.setObject(index , date);
+			isTimeStampColumn = true;
 		}
+		return isTimeStampColumn;
 	}
 
-	/**
-	 * @param stmt :
-	 * @param index :
-	 * @param obj :
-	 * @param tinyIntColumns :
-	 * @throws SQLException :
-	 */
-	protected void setTinyIntColumns(PreparedStatement stmt,
-			int index, Object obj,List<Integer> tinyIntColumns) throws SQLException
-	{
-		if (tinyIntColumns.contains(Integer.valueOf(index + 1)))
-		{
-			setTinyIntColumns(stmt, index, obj);
-		}
-	}
 
 	/**
 	 * This method is called to set TinyInt value
@@ -738,13 +761,13 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	private void setTinyIntColumns(PreparedStatement stmt, int index, Object obj)
 			throws SQLException
 	{
-		if (obj != null && (obj.equals("true") || obj.equals("TRUE") || obj.equals("1")))
+		if (obj != null && (Boolean.parseBoolean(obj.toString())|| obj.equals("1")))
 		{
-			stmt.setObject(index + 1, 1);
+			stmt.setObject(index , 1);
 		}
 		else
 		{
-			stmt.setObject(index + 1, 0);
+			stmt.setObject(index, 0);
 		}
 	}
 
@@ -754,16 +777,14 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	 * @param stmt :TODO
 	 * @param index :
 	 * @param obj :
-	 * @param dateColumns :
 	 * @throws SQLException : SQLException
 	 * @throws DAOException : DAOException
 	 */
 	protected void setDateColumns(PreparedStatement stmt,
-			int index,Object obj,List<Integer> dateColumns)
+			int index,Object obj)
 			throws SQLException, DAOException
 	{
-		if (obj != null && dateColumns.contains(Integer.valueOf(index + 1))
-				&& obj.toString().equals("##"))
+		if (obj != null && obj.toString().equals("##"))
 		{
 			java.util.Date date = null;
 			try
@@ -777,7 +798,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 				throw new DAOException(errorKey,exp,"AbstractJDBCDAOImpl.java");
 			}
 			Date sqlDate = new Date(date.getTime());
-			stmt.setDate(index + 1, sqlDate);
+			stmt.setDate(index, sqlDate);
 		}
 	}
 
@@ -795,7 +816,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 			DateFormat formatter = new SimpleDateFormat("MM-dd-yyyy",Locale.getDefault());
 			formatter.setLenient(false);
 			java.util.Date date;
-			date = formatter.parse((String) obj);
+			date = formatter.parse(obj.toString());
 			/*
 			 * Recheck if some issues occurs.
 			 */
@@ -838,7 +859,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	 * This method will be called to get connection object.
 	 * @return Connection: Connection object.
 	 */
-	public Connection getConnection()
+	protected Connection getConnection()
 	{
 		return connection;
 	}
@@ -947,23 +968,5 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
 		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java");
 	}
-	
-	/**
-	 * setAutoCommit.
-	 * @param autoCommitFlag boolean flag
-	 * @throws DAOException exc
-	 */
-	public void setAutoCommit(boolean autoCommitFlag) throws DAOException
-	{
-		try
-		{
-			connection.setAutoCommit(autoCommitFlag);
-		}
-		catch (Exception sqlExp)
-		{
-			Logger.out.error(sqlExp.getMessage(), sqlExp);
-			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,sqlExp,"AbstractJDBCDAOImpl.java");
-		}
-	}
+
 }

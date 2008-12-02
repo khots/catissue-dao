@@ -86,10 +86,12 @@ public interface JDBCDAO extends DAO
 	 * Inserts records in given table.
 	 * @param tableName Name of the table in which record to be inserted
 	 * @param columnValues column data
+	 * @param columnNames (optional)column names- if not not provided,
 	 * @throws DAOException generic DAOException
 	 * @throws SQLException SQL Exception.
 	 */
-	void insert(String tableName, List<Object> columnValues) throws DAOException, SQLException;
+	void insertHashedValues(String tableName, List<Object> columnValues,List<String>
+	columnNames) throws DAOException, SQLException;
 
 	/**
 	* Inserts records in given table.
@@ -100,8 +102,8 @@ public interface JDBCDAO extends DAO
 	* @throws DAOException generic DAOException
 	* @throws SQLException SQL Exception.
 	*/
-	void insert(String tableName, List<Object> columnValues, List<String>... columnNames)
-			throws DAOException, SQLException;
+	/*void insert(String tableName, List<Object> columnValues, List<String>... columnNames)
+			throws DAOException, SQLException;*/
 
 	/**
 	   * Creates a table with the name and columns specified.
@@ -169,13 +171,4 @@ public interface JDBCDAO extends DAO
 	 */
 	String formatMessage(Exception excp, Object[] args);
 
-	/**
-	 * @param autoCommitFlag flag
-	 * @throws DAOException exc
-	 */
-	public void setAutoCommit(boolean autoCommitFlag) throws DAOException;
-	/**
-	 * gets sql Connection.
-	 */
-	public Connection getConnection();
 }
