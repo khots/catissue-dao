@@ -128,7 +128,7 @@ public class DAOConstants
 	/**
 	 * Dot operators.
 	 */
-	public static final String DOT_OPERATORS = ".";
+	public static final String DOT_OPERATOR = ".";
 
 	/**
 	 * Space .
@@ -171,6 +171,21 @@ public class DAOConstants
 	 */
 	public static final String EQUAL_OPERATOR = "=";
 
+	/**
+	 * index value operator"?".
+	 */
+	public static final String INDEX_VALUE_OPERATOR = "?";
 
+	/**
+	 * Opening bracket.
+	 *//*
+	public static final String OPENING_BRACKET_OPERATOR = "(";
+
+
+	*//**
+	 * Closing bracket.
+	 *//*
+	public static final String CLOSING_BRACKET_OPERATOR = ")";
+*/
 
 }

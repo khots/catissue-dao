@@ -25,7 +25,7 @@ public class IsNullClause implements Condition
 
 		String sourceObject = DAOUtility.getInstance().parseClassName(sourceObjectName);
 
-		strBuff.append(sourceObject).append(DAOConstants.DOT_OPERATORS).
+		strBuff.append(sourceObject).append(DAOConstants.DOT_OPERATOR).
 		append(columnName).append(DAOConstants.TAILING_SPACES).append(DAOConstants.NULL_OPERATOR).
 		append(DAOConstants.TAILING_SPACES);
 	}

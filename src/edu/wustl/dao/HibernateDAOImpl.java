@@ -27,7 +27,6 @@ import edu.wustl.common.beans.QueryResultObjectDataBean;
 import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.exception.AuditException;
 import edu.wustl.common.exception.ErrorKey;
-import edu.wustl.common.security.exceptions.UserNotAuthorizedException;
 import edu.wustl.common.util.global.Constants;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.condition.EqualClause;
@@ -563,8 +562,8 @@ public class HibernateDAOImpl implements HibernateDAO
 			append(objClassName).append(DAOConstants.TAILING_SPACES).
 			append(simpleName).append(DAOConstants.TAILING_SPACES).
 			append("where").append(DAOConstants.TAILING_SPACES).
-			append(simpleName).append(".").append(columnName).
-			append("=").append(DAOConstants.TAILING_SPACES).append(identifier);
+			append(simpleName).append(DAOConstants.DOT_OPERATOR).append(columnName).
+			append(DAOConstants.EQUAL_OPERATOR).append(DAOConstants.TAILING_SPACES).append(identifier);
 
 			return session.createQuery(queryStringBuffer.toString()).list();
 		}

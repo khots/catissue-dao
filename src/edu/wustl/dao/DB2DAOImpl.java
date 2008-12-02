@@ -1,19 +1,18 @@
 
 package edu.wustl.dao;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.List;
-
 import edu.wustl.common.dao.queryExecutor.PagenatedResultData;
 import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.QueryParams;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.DAOConstants;
+import edu.wustl.dao.util.DatabaseConnectionParams;
 
+/**
+ * @author kalpana_thakur
+ *
+ */
 public class DB2DAOImpl extends AbstractJDBCDAOImpl
 {
 	/**
@@ -28,93 +27,112 @@ public class DB2DAOImpl extends AbstractJDBCDAOImpl
 	 */
 	public void delete(String tableName) throws DAOException
 	{
-		StringBuffer query = new StringBuffer("select 1 from SYSCAT.TABLES where upper(tabname)=" + "upper('"
-				+ tableName + "')");
+		StringBuffer query = new StringBuffer(DAOConstants.TAILING_SPACES);
+		query.append("select 1 from SYSCAT.TABLES where upper(tabname)=upper('")
+		.append(tableName).append("')");
+
 		try
 		{
-			Connection connection = getConnection();
-			Statement statement = connection.createStatement();
-			ResultSet rs = statement.executeQuery(query.toString());
-			boolean isTableExists = rs.next();
+			DatabaseConnectionParams databaseConnectionParams =
+				new DatabaseConnectionParams();
+			databaseConnectionParams.setConnection(getConnection());
+
+			boolean isTableExists =databaseConnectionParams.isResultSetExists();
 			logger.info("DB2****" + query.toString() + isTableExists);
 			if (isTableExists)
 			{
 				logger.debug("Drop Table");
-				executeUpdate("DROP TABLE " + tableName);
+				databaseConnectionParams.executeUpdate("DROP TABLE " + tableName);
 			}
-			rs.close();
-			statement.close();
+
 		}
-		catch (SQLException sqlExp)
+		catch (Exception exp)
 		{
-			logger.error(sqlExp.getMessage(), sqlExp);
+			logger.error(exp.getMessage(), exp);
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,sqlExp,"AbstractJDBCDAOImpl.java"+
+			throw new DAOException(errorKey,exp,"AbstractJDBCDAOImpl.java"+
 					DAOConstants.OPEN_SESSION_ERROR);
 		}
 	}
 
+	/**
+	 * This method executed query, parses the result and returns List of rows after doing security checks
+	 * for user's right to view a record/field.
+	 * @param queryParams : TODO
+	 * @return This will return the PagenatedResultData.
+	 * @throws DAOException :DAOException
+	 */
+
 	@Override
-	public PagenatedResultData getQueryResultList(QueryParams queryParams) throws DAOException
+	public PagenatedResultData getQueryResultList(QueryParams queryParams)
+			throws DAOException
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	/**
+	 * @param excp : Exception Object.
+	 * @param args : TODO
+	 * @return : It will return the formated messages.
+	 */
 	public String formatMessage(Exception excp, Object[] args)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	/**
+	 * @return : This method will return Date Format function.
+	 */
 	public String getDateFormatFunction()
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	/**
+	 * @return : This method will return Date Pattern.
+	 */
 	public String getDatePattern()
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	@Override
+	/**
+	 * @return : This method will return Date to String function.
+	 */
 	public String getDateTostrFunction()
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	@Override
+	/**
+	 * @return : This method will return String to Date function.
+	 */
 	public String getStrTodateFunction()
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	/**
+	 * @return : This method will return Time format function.
+	 */
 	public String getTimeFormatFunction()
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	/**
+	 * @return : This method will return Time Pattern.
+	 */
 	public String getTimePattern()
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
-	public void insert(String tableName, List<Object> columnValues) throws DAOException,
-			SQLException
-	{
-		// TODO Auto-generated method stub
-		
-	}
+
 }

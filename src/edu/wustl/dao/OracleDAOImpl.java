@@ -1,8 +1,5 @@
 package edu.wustl.dao;
 
-import java.sql.SQLException;
-import java.util.List;
-
 import edu.wustl.common.dao.queryExecutor.PagenatedResultData;
 import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.exceptionformatter.ConstraintViolationFormatter;
@@ -125,11 +122,12 @@ public class OracleDAOImpl extends AbstractJDBCDAOImpl
 	 * @param columnValues : Column values of table.
 	 * @throws SQLException : SQLException
 	 * @throws DAOException : DAOException
-	 */
-	public void insert(String tableName, List<Object> columnValues) throws DAOException, SQLException
+	 *//*
+	public void insertHashedValues(String tableName, List<Object> columnValues)
+	 throws DAOException, SQLException
 	{
-		insert(tableName, columnValues, null);
-	}
+		insertHashedValues(tableName, columnValues, null);
+	}*/
 
 	/**
 	 * @param excp : Exception Object.

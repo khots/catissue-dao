@@ -24,7 +24,7 @@ public class NotNullClause implements Condition
 
 		String sourceObject = DAOUtility.getInstance().parseClassName(sourceObjectName);
 
-		strBuff.append(sourceObject).append(DAOConstants.DOT_OPERATORS).
+		strBuff.append(sourceObject).append(DAOConstants.DOT_OPERATOR).
 		append(columnName).append(DAOConstants.TAILING_SPACES).append(DAOConstants.NOT_NULL_OPERATOR).
 		append(DAOConstants.TAILING_SPACES);
 	}

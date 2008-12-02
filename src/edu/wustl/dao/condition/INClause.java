@@ -25,7 +25,7 @@ public class INClause implements Condition
 
 		String sourceObject = DAOUtility.getInstance().parseClassName(sourceObjectName);
 
-		strBuff.append(sourceObject).append(DAOConstants.DOT_OPERATORS).append(columnName).
+		strBuff.append(sourceObject).append(DAOConstants.DOT_OPERATOR).append(columnName).
 		append(DAOConstants.TAILING_SPACES).append(DAOConstants.IN_OPERATOR).
 		append(DAOConstants.TAILING_SPACES);
 
@@ -46,7 +46,7 @@ public class INClause implements Condition
 
 		String sourceObject = DAOUtility.getInstance().parseClassName(sourceObjectName);
 
-		strBuff.append(sourceObject).append(DAOConstants.DOT_OPERATORS).append(columnName).
+		strBuff.append(sourceObject).append(DAOConstants.DOT_OPERATOR).append(columnName).
 		append(DAOConstants.TAILING_SPACES).append("in").append(DAOConstants.TAILING_SPACES);
 
 		updateInclause(object);

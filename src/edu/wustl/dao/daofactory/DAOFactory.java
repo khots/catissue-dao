@@ -11,14 +11,12 @@ package edu.wustl.dao.daofactory;
 
 import java.io.InputStream;
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.dom4j.Document;
-import org.dom4j.DocumentException;
 import org.dom4j.io.DOMWriter;
 import org.hibernate.FlushMode;
 import org.hibernate.HibernateException;
