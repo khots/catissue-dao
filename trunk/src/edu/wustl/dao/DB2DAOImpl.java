@@ -37,7 +37,7 @@ public class DB2DAOImpl extends AbstractJDBCDAOImpl
 				new DatabaseConnectionParams();
 			databaseConnectionParams.setConnection(getConnection());
 
-			boolean isTableExists =databaseConnectionParams.isResultSetExists();
+			boolean isTableExists =databaseConnectionParams.isResultSetExists(query.toString());
 			logger.info("DB2****" + query.toString() + isTableExists);
 			if (isTableExists)
 			{

@@ -1,5 +1,24 @@
 package edu.wustl.dao.test;
 
+import java.util.List;
+
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.junit.Test;
+
+import test.User;
+import edu.wustl.common.util.logger.Logger;
+import edu.wustl.dao.DAO;
+import edu.wustl.dao.HibernateDAO;
+import edu.wustl.dao.HibernateDAOImpl;
+import edu.wustl.dao.QueryWhereClause;
+import edu.wustl.dao.condition.EqualClause;
+import edu.wustl.dao.condition.INClause;
+import edu.wustl.dao.condition.IsNullClause;
+import edu.wustl.dao.condition.NotNullClause;
+import edu.wustl.dao.daofactory.IDAOFactory;
+import edu.wustl.dao.exception.DAOException;
+
 
 /**
  * @author kalpana_thakur
@@ -60,6 +79,16 @@ public class HibernateTestCase extends BaseTestCase
 		  dao.insert(user, null, false, false);
 		  dao.commit();
 		  dao.closeSession();
+
+
+		  	User user2 = new User();
+		  	user2.setFirstName("sachin");
+		  	user2.setLastName("Lale");
+		  	user2.setEmailAddress("sach@lale.co.in");
+		  dao.openSession(null);
+		  dao.insert(user2, null, false, false);
+		  dao.commit();
+		  dao.closeSession();
 		}
 		catch(Exception exp)
 		{
@@ -78,7 +107,7 @@ public class HibernateTestCase extends BaseTestCase
 		{
 
 		  User user = new User();
-		  user.setIdentifier(Long.valueOf(6));
+		  user.setIdentifier(Long.valueOf(1));
 		  user.setFirstName("Srikanth");
 		  user.setLastName("Adiga");
 		  user.setEmailAddress("sri.adiga@persistent.co.in");
@@ -126,7 +155,7 @@ public class HibernateTestCase extends BaseTestCase
 	  try
 	  {
 	    dao.openSession(null);
-	    List<Object> list = dao.retrieve("test.User","identifier" , Long.valueOf(2));
+	    List<Object> list = dao.retrieve("test.User","identifier" , Long.valueOf(1));
 	  	dao.closeSession();
 	  	assertNotNull("No objects retrieved",list);
 		assertTrue("No object retrieved ::",!list.isEmpty());
@@ -170,7 +199,7 @@ public class HibernateTestCase extends BaseTestCase
 		try
 		{
 			dao.openSession(null);
-			User user  = (User)dao.retrieve("test.User", Long.valueOf(2));
+			User user  = (User)dao.retrieve("test.User", Long.valueOf(1));
 			dao.closeSession();
 			assertNotNull("Object is null ",user);
 		}
@@ -192,7 +221,7 @@ public class HibernateTestCase extends BaseTestCase
 		{
 			dao.openSession(null);
 			HibernateDAOImpl hiberDao = (HibernateDAOImpl)dao;
-			User user  = (User)hiberDao.loadCleanObj("test.User", Long.valueOf(2));
+			User user  = (User)hiberDao.loadCleanObj("test.User", Long.valueOf(1));
 			dao.closeSession();
 
 			assertNotNull("No object retieved ::",user);
@@ -218,11 +247,11 @@ public class HibernateTestCase extends BaseTestCase
 			String sourceObjectName = "test.User";
 			String[] selectColumnName = null;
 
-			Object[] object = {"Adiga"};
+			Object[] object = {"naik"};
 			QueryWhereClause queryWhereClause = new QueryWhereClause();
-			queryWhereClause.addCondition(new INClause("firstName","Rakesh,Srikanth",
+			queryWhereClause.addCondition(new INClause("firstName","JOHN,abhijit",
 					sourceObjectName));
-			queryWhereClause.operatorAnd();;
+			queryWhereClause.operatorAnd();
 			queryWhereClause.addCondition(new INClause("lastName",object,sourceObjectName));
 
 			dao.openSession(null);
@@ -315,7 +344,7 @@ public class HibernateTestCase extends BaseTestCase
 			List<Object> list = dao.executeQuery(sql, null, false, null);
 			dao.closeSession();
 			assertNotNull(list);
-			assertTrue("No object retrieved ::",list.size()> 0);
+			assertTrue("No object retrieved ::",!list.isEmpty());
 
 		}
 		catch(Exception exp)
@@ -331,16 +360,15 @@ public class HibernateTestCase extends BaseTestCase
 	@Test
 	public void testDisableRelatedObjects()
 	{
-		String tableName = "xyz_user";
+		String tableName = "test_user";
 		String whereColumnName = "IDENTIFIER";
-		Long[] whereColumnValues = {Long.valueOf(6),Long.valueOf(60)};
+		Long[] whereColumnValues = {Long.valueOf(1),Long.valueOf(2)};
 		try
 		{
 			dao.openSession(null);
 			dao.disableRelatedObjects(tableName,whereColumnName,whereColumnValues);
 			dao.commit();
 			dao.closeSession();
-			assertTrue("Problem in disabling object", true);
 		}
 		catch(Exception exp)
 		{
@@ -359,7 +387,7 @@ public class HibernateTestCase extends BaseTestCase
 		{
 			dao.openSession(null);
 			Object obj = (Object)dao.retrieveAttribute(User.class,
-					Long.valueOf(2),"emailAddress","identifier");
+					Long.valueOf(1),"emailAddress","identifier");
 			dao.closeSession();
 
 			assertNotNull("Object retrieved is null",obj);
@@ -384,7 +412,7 @@ public class HibernateTestCase extends BaseTestCase
 			hibernateDAO.openSession(null);
 
 			Object obj = (Object)hibernateDAO.loadCleanObj(User.class,
-					Long.valueOf(2));
+					Long.valueOf(1));
 			dao.closeSession();
 			assertNotNull("Object retrieved is null",obj);
 		}
@@ -403,7 +431,7 @@ public class HibernateTestCase extends BaseTestCase
 	  try
 	  {
 		  User user = new User();
-		  user.setIdentifier(Long.valueOf(85));
+		  user.setIdentifier(Long.valueOf(2));
 		  dao.openSession(null);
 	  	  dao.delete(user);
 	  	  dao.commit();
@@ -473,7 +501,7 @@ public class HibernateTestCase extends BaseTestCase
 	 * In this test application 'App1' and 'App2'insert object to their respective databases.
 	 * Pointing to same database type either MySQL , Oracle or any third type.
 	 *//*
-	@Test
+			@Test
 	public void testMultAppInsertPointngRespectiveDBSameDBType()
 	{
 		try
@@ -503,7 +531,7 @@ public class HibernateTestCase extends BaseTestCase
 		try
 		{
 			String sourceObjectName = "test.User";
-			Object [] colValues = {Long.valueOf(2),Long.valueOf(4)};
+			Object [] colValues = {Long.valueOf(1),Long.valueOf(2)};
 			String[] selectColumnName = null;
 
 			QueryWhereClause queryWhereClause = new QueryWhereClause();
@@ -543,10 +571,9 @@ public class HibernateTestCase extends BaseTestCase
 	*//**
 	 * @param user : user object
 	 * @throws DAOException : DAOExp
-	 * @throws UserNotAuthorizedException :
 	 *//*
-	private void insertObjectByApp2(User user) throws DAOException,
-			UserNotAuthorizedException
+	private void insertObjectByApp2(User user) throws DAOException
+
 	{
 		IDAOFactory daoFactory = daoConfigFactory.getInstance().getDAOFactory("DynamicExtensions");
 		DAO deDAO = daoFactory.getDAO();

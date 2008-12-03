@@ -1,11 +1,11 @@
 package edu.wustl.dao.util;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import com.mysql.jdbc.PreparedStatement;
 
 import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.logger.Logger;
@@ -74,6 +74,7 @@ public class DatabaseConnectionParams
 	{
 		try
 		{
+			statement = getDatabaseStatement();
 			resultSet = statement.executeQuery(query);
 		}
 		catch (SQLException sqlExp)
@@ -188,7 +189,7 @@ public class DatabaseConnectionParams
 			logger.fatal(sqlExp);
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
 			throw new DAOException(errorKey,sqlExp,"DatabaseConnectionParams.java"
-					+DAOConstants.EXECUTE_QUERY_ERROR);
+					+DAOConstants.EXECUTE_QUERY_ERROR+"   "+query);
 		}
 		finally
 		{
@@ -216,14 +217,16 @@ public class DatabaseConnectionParams
 	/**
 	 * Checks result set.
 	 * @return :true if result set exists.
+	 * @param query : query String
 	 * @throws DAOException : DAOException
 	 */
-	public boolean isResultSetExists()throws DAOException
+	public boolean isResultSetExists(String query)throws DAOException
 	{
 		boolean isResultSetExists = false;
 		try
 		{
 
+			resultSet = getResultSet(query);
 			if(resultSet.next())
 			{
 				isResultSetExists = true;

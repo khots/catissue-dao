@@ -39,7 +39,7 @@ public class OracleDAOImpl extends AbstractJDBCDAOImpl
 
 			StringBuffer query = new StringBuffer("select tname from tab where tname='"
 					+ tableName + "'");
-			boolean isTableExists = databaseConnectionParams.isResultSetExists();
+			boolean isTableExists = databaseConnectionParams.isResultSetExists(query.toString());
 
 			logger.debug("ORACLE :" + query.toString() + isTableExists);
 
