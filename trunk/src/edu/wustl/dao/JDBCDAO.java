@@ -5,9 +5,9 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
-import edu.wustl.common.beans.QueryResultObjectDataBean;
 import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.dao.queryExecutor.PagenatedResultData;
+import edu.wustl.common.querydatabean.QueryDataBean;
 import edu.wustl.common.util.QueryParams;
 import edu.wustl.dao.exception.DAOException;
 
@@ -65,7 +65,7 @@ public interface JDBCDAO extends DAO
 	   * @throws DAOException generic DAOException.
 	   */
 	List<Object> executeQuery(String query, SessionDataBean sessionDataBean, boolean isSecureExecute,
-			Map<Object,QueryResultObjectDataBean> queryResultObjectDataMap)
+			Map<Object,QueryDataBean> queryResultObjectDataMap)
 			throws ClassNotFoundException, DAOException;
 
 	/**

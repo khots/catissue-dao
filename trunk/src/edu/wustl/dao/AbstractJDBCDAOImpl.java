@@ -25,10 +25,10 @@ import java.util.Locale;
 import java.util.Map;
 
 import edu.wustl.common.audit.AuditManager;
-import edu.wustl.common.beans.QueryResultObjectDataBean;
 import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.dao.queryExecutor.PagenatedResultData;
 import edu.wustl.common.exception.ErrorKey;
+import edu.wustl.common.querydatabean.QueryDataBean;
 import edu.wustl.common.util.QueryParams;
 import edu.wustl.common.util.Utility;
 import edu.wustl.common.util.global.Constants;
@@ -422,7 +422,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	 * @throws ClassNotFoundException : ClassNotFoundException
 	 */
 	public List<Object> executeQuery(String query, SessionDataBean sessionDataBean,
-			boolean isSecureExecute, Map<Object,QueryResultObjectDataBean>
+			boolean isSecureExecute, Map<Object,QueryDataBean>
 			queryResultObjectDataMap) throws ClassNotFoundException,
 			DAOException
 	{

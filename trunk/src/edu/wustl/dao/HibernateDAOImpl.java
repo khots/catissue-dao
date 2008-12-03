@@ -23,10 +23,10 @@ import org.hibernate.proxy.HibernateProxy;
 
 import edu.wustl.common.audit.AuditManager;
 import edu.wustl.common.audit.Auditable;
-import edu.wustl.common.beans.QueryResultObjectDataBean;
 import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.exception.AuditException;
 import edu.wustl.common.exception.ErrorKey;
+import edu.wustl.common.querydatabean.QueryDataBean;
 import edu.wustl.common.util.global.Constants;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.condition.EqualClause;
@@ -516,7 +516,7 @@ public class HibernateDAOImpl implements HibernateDAO
 	 * @throws DAOException generic DAOException.
 	 */
 	public List<Object> executeQuery(String query, SessionDataBean sessionDataBean,
-			boolean isSecureExecute, Map<Object,QueryResultObjectDataBean>
+			boolean isSecureExecute, Map<Object,QueryDataBean>
 			queryResultObjectDataMap) throws ClassNotFoundException,
 			DAOException
 	{
