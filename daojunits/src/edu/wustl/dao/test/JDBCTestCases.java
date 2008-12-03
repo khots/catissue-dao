@@ -1,5 +1,25 @@
 package edu.wustl.dao.test;
 
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.Test;
+
+import edu.wustl.common.dao.queryExecutor.PagenatedResultData;
+import edu.wustl.common.exception.ApplicationException;
+import edu.wustl.common.util.QueryParams;
+import edu.wustl.common.util.logger.Logger;
+import edu.wustl.dao.JDBCDAO;
+import edu.wustl.dao.QueryWhereClause;
+import edu.wustl.dao.condition.EqualClause;
+import edu.wustl.dao.condition.INClause;
+import edu.wustl.dao.condition.IsNullClause;
+import edu.wustl.dao.condition.NotNullClause;
+import edu.wustl.dao.daofactory.IDAOFactory;
+import edu.wustl.dao.exception.DAOException;
+import edu.wustl.dao.util.DatabaseConnectionParams;
 
 /**
  * @author kalpana_thakur
@@ -48,6 +68,27 @@ public class JDBCTestCases extends BaseTestCase
 	}
 
 	*//**
+	 * This test will assert that table deleted successfully.
+	 *//*
+	@Test
+	public void testDropTableJDBC()
+	{
+		try
+		{
+			jdbcDAO.openSession(null);
+			jdbcDAO.delete("XYZ_PHONENUMBER");
+			jdbcDAO.delete("TEMP_ADDRESS");
+			jdbcDAO.commit();
+			jdbcDAO.closeSession();
+		}
+		catch(ApplicationException exp)
+		{
+			logger.fatal(exp.getLogMessage());
+			assertFalse("Failed while droping table ::", true);
+		}
+	}
+
+	*//**
 	 * This test will assert the execution of query.
 	 *//*
 	@Test
@@ -57,7 +98,7 @@ public class JDBCTestCases extends BaseTestCase
 		{
 			jdbcDAO.openSession(null);
 			StringBuffer strbuff = new StringBuffer();
-			strbuff.append("update xyz_user set EMAIL_ADDRESS ='abc@per.co.in'" +
+			strbuff.append("update test_user set EMAIL_ADDRESS ='abc@per.co.in'" +
 					" where FIRST_NAME = 'john'");
 			jdbcDAO.executeUpdate(strbuff.toString());
 			jdbcDAO.commit();
@@ -78,7 +119,7 @@ public class JDBCTestCases extends BaseTestCase
 	  try
 	  {
 		  jdbcDAO.openSession(null);
-		  List list = jdbcDAO.retrieve("xyz_user");
+		  List list = jdbcDAO.retrieve("test_user");
 	  	  jdbcDAO.closeSession();
 	  	  assertNotNull(list);
 
@@ -99,7 +140,7 @@ public class JDBCTestCases extends BaseTestCase
 	  try
 	  {
 		jdbcDAO.openSession(null);
-	    List<Object> list = jdbcDAO.retrieve("xyz_user","IDENTIFIER" , Long.valueOf(2));
+	    List<Object> list = jdbcDAO.retrieve("test_user","IDENTIFIER" , Long.valueOf(1));
 	    jdbcDAO.closeSession();
 	  	assertNotNull("No objects retrieved",list);
 		assertTrue("No object retrieved ::",!list.isEmpty());
@@ -122,7 +163,7 @@ public class JDBCTestCases extends BaseTestCase
 	  {
 		String[] selectColumnName = {"IDENTIFIER","FIRST_NAME","LAST_NAME","EMAIL_ADDRESS"};
 		jdbcDAO.openSession(null);
-	    List<Object> list = jdbcDAO.retrieve("xyz_user", selectColumnName);
+	    List<Object> list = jdbcDAO.retrieve("test_user", selectColumnName);
 	    jdbcDAO.closeSession();
 
 	    assertNotNull("No object retrieved ::",list);
@@ -145,7 +186,7 @@ public class JDBCTestCases extends BaseTestCase
 		  {
 			String[] selectColumnName = {"IDENTIFIER","FIRST_NAME","LAST_NAME","EMAIL_ADDRESS"};
 			jdbcDAO.openSession(null);
-		    List<Object> list = jdbcDAO.retrieve("xyz_user", selectColumnName,true);
+		    List<Object> list = jdbcDAO.retrieve("test_user", selectColumnName,true);
 		    jdbcDAO.closeSession();
 
 		    assertNotNull("No object retrieved ::",list);
@@ -168,8 +209,8 @@ public class JDBCTestCases extends BaseTestCase
 	{
 		try
 		{
-			String sourceObjectName = "xyz_user";
-			Object [] colValues = {Long.valueOf(2),Long.valueOf(4)};
+			String sourceObjectName = "test_user";
+			Object [] colValues = {Long.valueOf(1),Long.valueOf(2)};
 			String[] selectColumnName = null;
 
 			QueryWhereClause queryWhereClause = new QueryWhereClause();
@@ -197,7 +238,7 @@ public class JDBCTestCases extends BaseTestCase
 	{
 		try
 		{
-			String sourceObjectName = "xyz_user";
+			String sourceObjectName = "test_user";
 			String[] selectColumnName = null;
 
 			QueryWhereClause queryWhereClause = new QueryWhereClause();
@@ -228,7 +269,7 @@ public class JDBCTestCases extends BaseTestCase
 	{
 		try
 		{
-			String sourceObjectName = "xyz_user";
+			String sourceObjectName = "test_user";
 			String[] selectColumnName = null;
 
 			QueryWhereClause queryWhereClause = new QueryWhereClause();
@@ -258,11 +299,11 @@ public class JDBCTestCases extends BaseTestCase
 	{
 		try
 		{
-			String sourceObjectName = "xyz_user";
+			String sourceObjectName = "test_user";
 			String[] selectColumnName = null;
 
 			QueryWhereClause queryWhereClause = new QueryWhereClause();
-			queryWhereClause.addCondition(new EqualClause("LAST_NAME","Washu",sourceObjectName));
+			queryWhereClause.addCondition(new EqualClause("LAST_NAME","NAIK",sourceObjectName));
 
 			jdbcDAO.openSession(null);
 			List<Object> list = jdbcDAO.retrieve(sourceObjectName, selectColumnName,queryWhereClause);
@@ -286,7 +327,7 @@ public class JDBCTestCases extends BaseTestCase
 	{
 		try
 		{
-			String tableName = "XYZ_Address";
+			String tableName = "Temp_Address";
 			String[] columnNames = {"City","State"};
 			jdbcDAO.openSession(null);
 			jdbcDAO.createTable(tableName, columnNames);
@@ -321,25 +362,7 @@ public class JDBCTestCases extends BaseTestCase
 
 	}
 
-	*//**
-	 * This test will assert that table deleted successfully.
-	 *//*
-	@Test
-	public void testDropTableJDBC()
-	{
-		try
-		{
-			jdbcDAO.openSession(null);
-			jdbcDAO.delete("xyz_phoneNumber");
-			jdbcDAO.delete("XYZ_Address");
-			jdbcDAO.commit();
-			jdbcDAO.closeSession();
-		}
-		catch(Exception exp)
-		{
-			assertFalse("Failed while droping table ::", true);
-		}
-	}
+
 
 	*//**
 	 * This test will assert that date pattern retrieved successfully.
@@ -349,7 +372,7 @@ public class JDBCTestCases extends BaseTestCase
 	{
 		String datePattern = jdbcDAO.getDatePattern();
 		assertNotNull("Problem in geting date pattern.",datePattern);
-		assertTrue("Problem in geting date pattern.",datePattern.contains("%m-%d-%Y"));
+
 
 	}
 
@@ -420,7 +443,7 @@ public class JDBCTestCases extends BaseTestCase
 		try
 		{
 			QueryParams queryParams = new QueryParams();
-			queryParams.setQuery("select * from xyz_user");
+			queryParams.setQuery("select * from test_user");
 			queryParams.setSessionDataBean(null);
 			queryParams.setSecureToExecute(true);
 			queryParams.setHasConditionOnIdentifiedField(false);
@@ -450,8 +473,8 @@ public class JDBCTestCases extends BaseTestCase
 	{
 		try
 		{
-			String sourceObjectName = "xyz_user";
-			Object [] colValues = {Long.valueOf(2),Long.valueOf(4)};
+			String sourceObjectName = "test_user";
+			Object [] colValues = {Long.valueOf(1),Long.valueOf(2)};
 			String[] selectColumnName = null;
 
 			QueryWhereClause queryWhereClause = new QueryWhereClause();
@@ -459,7 +482,7 @@ public class JDBCTestCases extends BaseTestCase
 			queryWhereClause.operatorOr();
 			queryWhereClause.addCondition(new NotNullClause("FIRST_NAME",sourceObjectName));
 			queryWhereClause.operatorOr();
-			queryWhereClause.addCondition(new EqualClause("FIRST_NAME","Washu",sourceObjectName));
+			queryWhereClause.addCondition(new EqualClause("FIRST_NAME","naik",sourceObjectName));
 
 			jdbcDAO.openSession(null);
 			List<Object> list = jdbcDAO.retrieve(sourceObjectName, selectColumnName,queryWhereClause);
@@ -619,11 +642,11 @@ public class JDBCTestCases extends BaseTestCase
 		  {
 			  jdbcDAO.openSession(null);
 			  List<Object> columnValues = new ArrayList<Object>();
-			  columnValues.add(Long.valueOf(10));
+			  columnValues.add(Long.valueOf(1));
 			  columnValues.add((Object)true);
 			  columnValues.add("##");
 			  columnValues.add((Object)"collected");
-			  jdbcDAO.insertHashedValues("xyz_catissue_specimen", columnValues,null);
+			  jdbcDAO.insertHashedValues("test_table_hashed", columnValues,null);
 			  jdbcDAO.commit();
 			  jdbcDAO.closeSession();
 		  }
@@ -651,11 +674,11 @@ public class JDBCTestCases extends BaseTestCase
 			  columnNames.add("COLLECTION_STATUS");
 
 			  List<Object> columnValues = new ArrayList<Object>();
-			  columnValues.add(Long.valueOf(11));
+			  columnValues.add(Long.valueOf(2));
 			  columnValues.add(false);
 			  columnValues.add("##");
 			  columnValues.add("collected");
-			  jdbcDAO.insertHashedValues("xyz_catissue_specimen", columnValues,columnNames);
+			  jdbcDAO.insertHashedValues("test_table_hashed", columnValues,columnNames);
 			  jdbcDAO.commit();
 			  jdbcDAO.closeSession();
 		  }
@@ -686,13 +709,13 @@ public class JDBCTestCases extends BaseTestCase
 			assertNotNull("Statement retrieved is null :",stmt);
 
 			ResultSet rs = databaseConnectionParams.getResultSet
-			("select * from xyz_catissue_specimen");
+			("select * from test_user");
 
 			assertNotNull("ResultSet retrieved is null :",
 					rs);
 
 			assertTrue("ResultSet doesnot exists or empty :",
-					databaseConnectionParams.isResultSetExists());
+					databaseConnectionParams.isResultSetExists("select * from test_user"));
 		}
 		catch(ApplicationException exp)
 		{

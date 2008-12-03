@@ -231,7 +231,8 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	 */
 	private String createTableQuery(String tableName, String[] columnNames) throws DAOException
 	{
-		StringBuffer query = new StringBuffer("CREATE TABLE ").append(tableName).append(" (");
+		StringBuffer query = new StringBuffer("CREATE TABLE").append(DAOConstants.TAILING_SPACES).
+		append(tableName).append(" (");
 		int index;
 
 		for ( index=0; index < (columnNames.length - 1); index++)
@@ -239,7 +240,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 
 			query = query.append(columnNames[index]).append(" VARCHAR(50),");
 		}
-		query.append(columnNames[index]).append(" VARCHAR(50));");
+		query.append(columnNames[index]).append(" VARCHAR(50))");
 
 		return  query.toString();
 	}
@@ -480,23 +481,29 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 
 		List<String>columnNamesList = new ArrayList<String>();
 		ResultSetMetaData metaData;
-		DatabaseConnectionParams databaseConnectionParams = new DatabaseConnectionParams();
-		databaseConnectionParams.setConnection(getConnection());
+
+		DatabaseConnectionParams dbConnParamForMetadata = new DatabaseConnectionParams();
+		dbConnParamForMetadata.setConnection(getConnection());
+
+		DatabaseConnectionParams dbConnParamForInsertQuery = new DatabaseConnectionParams();
+		dbConnParamForInsertQuery.setConnection(getConnection());
+
 		PreparedStatement stmt = null;
 		try
 		{
 			if(columnNames != null && !columnNames.isEmpty())
 			{
-				metaData = getMetaData(tableName, columnNames);
+				metaData = getMetaData(tableName, columnNames,dbConnParamForMetadata);
 				columnNamesList = columnNames;
 			}
 			else
 			{
-				metaData = getMetaDataAndUpdateColumns(tableName,columnNamesList);
+				metaData = getMetaDataAndUpdateColumns(tableName,columnNamesList,
+						dbConnParamForMetadata);
 			}
 
 			String insertQuery = createInsertQuery(tableName,columnNamesList);
-			stmt = databaseConnectionParams.getPreparedStatement(insertQuery);
+			stmt = dbConnParamForInsertQuery.getPreparedStatement(insertQuery);
 			setStmtIndexValue(columnValues, metaData, stmt);
 			stmt.executeUpdate();
 		}
@@ -508,7 +515,8 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		}
 		finally
 		{
-			databaseConnectionParams.closeConnectionParams();
+			dbConnParamForMetadata.closeConnectionParams();
+			dbConnParamForInsertQuery.closeConnectionParams();
 		}
 	}
 
@@ -606,37 +614,29 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	 * This method returns the metaData associated to the table specified in tableName.
 	 * @param tableName Name of the table whose metaData is requested
 	 * @param columnNames Table columns
+	 * @param dbConnParamForMetadata : Database connections to retrieve meta data.
 	 * @return It will return the metaData associated to the table.
 	 * @throws DAOException : DAOException
 	 */
-	protected final ResultSetMetaData getMetaData(String tableName,List<String> columnNames)throws DAOException
+	protected final ResultSetMetaData getMetaData(String tableName,List<String> columnNames,
+			DatabaseConnectionParams dbConnParamForMetadata)throws DAOException
 	{
-		DatabaseConnectionParams databaseConnectionParams = new DatabaseConnectionParams();
 
 		ResultSetMetaData metaData;
 		StringBuffer sqlBuff = new StringBuffer(DAOConstants.TAILING_SPACES);
 		sqlBuff.append("Select").append(DAOConstants.TAILING_SPACES);
-		try
-		{
 
-			databaseConnectionParams.setConnection(connection);
-			for (int i = 0; i < columnNames.size(); i++)
+		dbConnParamForMetadata.setConnection(connection);
+		for (int i = 0; i < columnNames.size(); i++)
+		{
+			sqlBuff.append(columnNames.get(i));
+			if (i != columnNames.size() - 1)
 			{
-				sqlBuff.append(columnNames.get(i));
-				if (i != columnNames.size() - 1)
-				{
-					sqlBuff.append("  ,");
-				}
+				sqlBuff.append("  ,");
 			}
-			sqlBuff.append(" from " + tableName + " where 1!=1");
-			metaData = databaseConnectionParams.getMetaData(sqlBuff.toString());
-
 		}
-		finally
-		{
-
-			databaseConnectionParams.closeConnectionParams();
-		}
+		sqlBuff.append(" from " + tableName + " where 1!=1");
+		metaData = dbConnParamForMetadata.getMetaData(sqlBuff.toString());
 
 		return metaData;
 
@@ -647,21 +647,22 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	 * and update the list columnNames.
 	 * @param tableName Name of the table whose metaData is requested
 	 * @param columnNames Table columns
+	 * @param dbConnParamForMetadata : Database connections to retrieve meta data.
 	 * @return It will return the metaData associated to the table.
 	 * @throws DAOException : DAOException
 	 */
 	protected final ResultSetMetaData getMetaDataAndUpdateColumns(String tableName,
-			List<String> columnNames)throws DAOException
+			List<String> columnNames,DatabaseConnectionParams dbConnParamForMetadata)
+	throws DAOException
 	{
-		DatabaseConnectionParams databaseConnectionParams = new DatabaseConnectionParams();
 		ResultSetMetaData metaData;
 		try
 		{
 
-			databaseConnectionParams.setConnection(connection);
+			dbConnParamForMetadata.setConnection(connection);
 			StringBuffer sqlBuff = new StringBuffer(DAOConstants.TAILING_SPACES);
 			sqlBuff.append("Select * from " ).append(tableName).append(" where 1!=1");
-			metaData = databaseConnectionParams.getMetaData(sqlBuff.toString());
+			metaData = dbConnParamForMetadata.getMetaData(sqlBuff.toString());
 
 			for (int i = 1; i <= metaData.getColumnCount(); i++)
 			{
@@ -674,10 +675,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
 			throw new DAOException(errorKey,sqlExp,"AbstractJDBCDAOImpl.java");
 		}
-		finally
-		{
-			databaseConnectionParams.closeConnectionParams();
-		}
+
 		return metaData;
 	}
 
@@ -726,6 +724,10 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 			if (obj != null	&& obj.toString().equals("##"))
 			{
 				stmt.setObject(index , Integer.valueOf(-1));
+			}
+			else
+			{
+				stmt.setObject(index , obj);
 			}
 	}
 
