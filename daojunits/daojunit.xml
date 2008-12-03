@@ -8,7 +8,7 @@
 
 
 	<property name="base.dir" value="."/>
-	<property name="lib.dir" value="lib"/>
+	<property name="lib.dir" value="../lib"/>
 	<property name="cobertura.lib" value="coberturalib"/>
 
 	<property name="test.classes.dir" value="${base.dir}/classes"/>
@@ -51,8 +51,8 @@
 	</target>
 	
 	<target name="runDAOTestCases" depends="compileDaoTestCases">
-		<mkdir dir="${report.dir}/daoTestReports"/>
-		<mkdir dir="${report.dir}/daoTestReports/HtmlReports"/>
+		<mkdir dir="${report.dir}/reports/daoTestReports"/>
+		<mkdir dir="${report.dir}/reports/daoTestReports/HtmlReports"/>
 		
 		<junit printsummary="yes" fork="yes" haltonfailure="yes">
 			<formatter type="xml"/>
@@ -67,7 +67,7 @@
 			<classpath location="${proj.classes}" />
 						
 			<classpath>
-				<fileset dir="./lib">
+				<fileset dir="${lib.dir}">
 					<exclude name="DAO.jar"/>
 					<include name="*.jar"/>
 				</fileset>
@@ -81,7 +81,7 @@
 			<classpath refid="cobertura.classpath" />
 			
 			
-			<batchtest todir="${report.dir}/daoTestReports">
+			<batchtest todir="${report.dir}/reports/daoTestReports">
 				<fileset dir="${test.src.dir}">
 					<include name="**/DAOTestSuite.java" />
 				</fileset>	
@@ -92,11 +92,11 @@
 	
 		
 	 <target name="runJunitTestCases" depends="runDAOTestCases">
-		<junitreport todir="${report.dir}/daoTestReports">
-			<fileset dir="${report.dir}/daoTestReports">
+		<junitreport todir="${report.dir}/reports/daoTestReports">
+			<fileset dir="${report.dir}/reports/daoTestReports">
 				<include name="TEST-*.xml" />
 			</fileset>
-			<report todir="${report.dir}/daoTestReports/HtmlReports" />
+			<report todir="${report.dir}/reports/daoTestReports/HtmlReports" />
 		</junitreport>
 	</target>
 	
@@ -169,21 +169,21 @@
 	</target>
 	
 	<target name="coverage-report">
-		<mkdir dir="${coverage.dir}/daoCodeCoverageXml"/>
-		<mkdir dir="${coverage.dir}/daoCodeCoverageHtml"/>
+		<mkdir dir="${coverage.dir}/reports/daoCodeCoverageXml"/>
+		<mkdir dir="${coverage.dir}/reports/daoCodeCoverageHtml"/>
 		
 		<!--
 			Generate an XML file containing the coverage data using
 			the "srcdir" attribute.
 		-->
 			
-		<cobertura-report srcdir="${proj.src}" destdir="${coverage.dir}/daoCodeCoverageXml" format="xml" />
+		<cobertura-report srcdir="${proj.src}" destdir="${coverage.dir}/reports/daoCodeCoverageXml" format="xml" />
 		
 		<!--
 				Generate a series of HTML files containing the coverage
 				data in a user-readable form using nested source filesets.
 		-->
-		<cobertura-report destdir="${coverage.dir}/daoCodeCoverageHtml">
+		<cobertura-report destdir="${coverage.dir}/reports/daoCodeCoverageHtml">
 			<fileset dir="${proj.src}">
 				<include name="**/*.java"/>
 			</fileset>

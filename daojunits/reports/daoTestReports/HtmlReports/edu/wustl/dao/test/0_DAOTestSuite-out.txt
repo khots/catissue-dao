@@ -1,0 +1,15 @@
+WARN   buildCache, Could not find configuration [test.User]; using defaults.
+FATAL  testAuditJDBC, DB005:-There is no implementation for this method Error caused at- AbstractJDBCDAOImpl.java
+ Root cause java.lang.Exceptionnull
+FATAL  testDeleteJDBC, DB005:-There is no implementation for this method Error caused at- AbstractJDBCDAOImpl.java
+ Root cause java.lang.Exceptionnull
+FATAL  testDisableRelatedObjectsJDBC, DB005:-There is no implementation for this method Error caused at- AbstractJDBCDAOImpl.java
+ Root cause java.lang.Exceptionnull
+FATAL  testInsertJDBC, DB005:-There is no implementation for this method Error caused at- AbstractJDBCDAOImpl.java
+ Root cause java.lang.Exceptionnull
+FATAL  testRetrieveAttributeJDBC, DB005:-There is no implementation for this method Error caused at- AbstractJDBCDAOImpl.java
+ Root cause java.lang.Exceptionnull
+FATAL  testUpdateJDBC, DB005:-There is no implementation for this method Error caused at- AbstractJDBCDAOImpl.java
+ Root cause java.lang.Exceptionnull
+FATAL  testRetrieveJDBC, DB005:-There is no implementation for this method Error caused at- AbstractJDBCDAOImpl.java
+ Root cause java.lang.Exceptionnull

@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite errors="0" failures="5" name="edu.wustl.dao.test.DAOTestSuite" tests="56" time="2.44">
+  <properties>
+    <property name="java.vendor" value="Sun Microsystems Inc." />
+    <property name="lib.dir" value="../lib" />
+    <property name="ant.file.DAOJunits" value="F:\catissueWorkspace\DAOsac\daojunits\daojunit.xml" />
+    <property name="eclipse.pdebuild.templates" value="/F:/washuEclipse/eclipse/eclipse/plugins/org.eclipse.pde.build_3.4.0.v20080604/templates/" />
+    <property name="sun.management.compiler" value="HotSpot Client Compiler" />
+    <property name="os.name" value="Windows XP" />
+    <property name="sun.boot.class.path" value="C:\Program Files\Java\jdk1.5.0_08\jre\lib\rt.jar;C:\Program Files\Java\jdk1.5.0_08\jre\lib\i18n.jar;C:\Program Files\Java\jdk1.5.0_08\jre\lib\sunrsasign.jar;C:\Program Files\Java\jdk1.5.0_08\jre\lib\jsse.jar;C:\Program Files\Java\jdk1.5.0_08\jre\lib\jce.jar;C:\Program Files\Java\jdk1.5.0_08\jre\lib\charsets.jar;C:\Program Files\Java\jdk1.5.0_08\jre\classes" />
+    <property name="sun.desktop" value="windows" />
+    <property name="java.vm.specification.vendor" value="Sun Microsystems Inc." />
+    <property name="ant.home" value="E:\Ant\apache-ant-1.7.0" />
+    <property name="java.runtime.version" value="1.5.0_08-b03" />
+    <property name="user.name" value="kalpana_thakur" />
+    <property name="test.classes.dir" value="./classes" />
+    <property name="user.language" value="en" />
+    <property name="base.path" value="F:\catissueWorkspace\DAOsac\daojunits" />
+    <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk1.5.0_08\jre\bin" />
+    <property name="ant.project.name" value="DAOJunits" />
+    <property name="java.version" value="1.5.0_08" />
+    <property name="user.timezone" value="" />
+    <property name="sun.arch.data.model" value="32" />
+    <property name="test.src.dir" value="./src" />
+    <property name="java.endorsed.dirs" value="C:\Program Files\Java\jdk1.5.0_08\jre\lib\endorsed" />
+    <property name="sun.cpu.isalist" value="" />
+    <property name="sun.jnu.encoding" value="Cp1252" />
+    <property name="file.encoding.pkg" value="sun.io" />
+    <property name="file.separator" value="\" />
+    <property name="java.specification.name" value="Java Platform API Specification" />
+    <property name="java.class.version" value="49.0" />
+    <property name="user.country" value="US" />
+    <property name="java.home" value="C:\Program Files\Java\jdk1.5.0_08\jre" />
+    <property name="java.vm.info" value="mixed mode, sharing" />
+    <property name="ant.file" value="F:\catissueWorkspace\DAOsac\daojunits\daojunit.xml" />
+    <property name="os.version" value="5.1" />
+    <property name="path.separator" value=";" />
+    <property name="java.vm.version" value="1.5.0_08-b03" />
+    <property name="test.instrumented.dir" value="./instrument" />
+    <property name="report.dir" value="." />
+    <property name="user.variant" value="" />
+    <property name="ant.library.dir" value="E:\Ant\apache-ant-1.7.0\lib" />
+    <property name="java.awt.printerjob" value="sun.awt.windows.WPrinterJob" />
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle" />
+    <property name="awt.toolkit" value="sun.awt.windows.WToolkit" />
+    <property name="eclipse.pdebuild.scripts" value="/F:/washuEclipse/eclipse/eclipse/plugins/org.eclipse.pde.build_3.4.0.v20080604/scripts/" />
+    <property name="coverage.dir" value="." />
+    <property name="user.home" value="C:\Documents and Settings\kalpana_thakur" />
+    <property name="java.specification.vendor" value="Sun Microsystems Inc." />
+    <property name="java.library.path" value="F:\washuEclipse\eclipse\eclipse;.;C:\WINDOWS\system32;C:\WINDOWS;E:\Ant\apache-ant-1.7.0\bin;C:\Program Files\Java\jdk1.6.0\bin;C:\Program Files\DeID\;C:\Program Files\TortoiseCVS;C:\Program Files\Java\jdk1.5.0_08\bin;;F:\oracle\ora92\bin;C:\WINDOWS\system32;C:\WINDOWS;D:\mysql server\bin;F:\washuEclipse\eclipse\eclipse\configuration\org.eclipse.osgi\bundles\99\1\.cp" />
+    <property name="java.vendor.url" value="http://java.sun.com/" />
+    <property name="java.vm.vendor" value="Sun Microsystems Inc." />
+    <property name="java.runtime.name" value="Java(TM) 2 Runtime Environment, Standard Edition" />
+    <property name="java.class.path" value="E:\Ant\apache-ant-1.7.0\lib\ant-antlr.jar;E:\Ant\apache-ant-1.7.0\lib\ant-apache-bcel.jar;E:\Ant\apache-ant-1.7.0\lib\ant-apache-bsf.jar;E:\Ant\apache-ant-1.7.0\lib\ant-apache-log4j.jar;E:\Ant\apache-ant-1.7.0\lib\ant-apache-oro.jar;E:\Ant\apache-ant-1.7.0\lib\ant-apache-regexp.jar;E:\Ant\apache-ant-1.7.0\lib\ant-apache-resolver.jar;E:\Ant\apache-ant-1.7.0\lib\ant-commons-logging.jar;E:\Ant\apache-ant-1.7.0\lib\ant-commons-net.jar;E:\Ant\apache-ant-1.7.0\lib\ant-jai.jar;E:\Ant\apache-ant-1.7.0\lib\ant-javamail.jar;E:\Ant\apache-ant-1.7.0\lib\ant-jdepend.jar;E:\Ant\apache-ant-1.7.0\lib\ant-jmf.jar;E:\Ant\apache-ant-1.7.0\lib\ant-jsch.jar;E:\Ant\apache-ant-1.7.0\lib\ant-junit.jar;E:\Ant\apache-ant-1.7.0\lib\ant-launcher.jar;E:\Ant\apache-ant-1.7.0\lib\ant-netrexx.jar;E:\Ant\apache-ant-1.7.0\lib\ant-nodeps.jar;E:\Ant\apache-ant-1.7.0\lib\ant-starteam.jar;E:\Ant\apache-ant-1.7.0\lib\ant-stylebook.jar;E:\Ant\apache-ant-1.7.0\lib\ant-swing.jar;E:\Ant\apache-ant-1.7.0\lib\ant-testutil.jar;E:\Ant\apache-ant-1.7.0\lib\ant-trax.jar;E:\Ant\apache-ant-1.7.0\lib\ant-weblogic.jar;E:\Ant\apache-ant-1.7.0\lib\ant.jar;E:\Ant\apache-ant-1.7.0\lib\junit.jar;E:\Ant\apache-ant-1.7.0\lib\xercesImpl.jar;E:\Ant\apache-ant-1.7.0\lib\xml-apis.jar;F:\washuEclipse\eclipse\eclipse\configuration\org.eclipse.osgi\bundles\159\1\.cp\lib\remoteAnt.jar;C:\Program Files\Java\jdk1.5.0_08\lib\tools.jar;F:\washuEclipse\eclipse\eclipse\plugins\org.eclipse.swt.win32.win32.x86_3.4.0.v3448f.jar" />
+    <property name="ant.version" value="Apache Ant version 1.7.0 compiled on December 13 2006" />
+    <property name="cobertura.location" value="." />
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification" />
+    <property name="java.vm.specification.version" value="1.0" />
+    <property name="base.dir" value="." />
+    <property name="sun.cpu.endian" value="little" />
+    <property name="sun.os.patch.level" value="Service Pack 2" />
+    <property name="eclipse.pdebuild.home" value="/F:/washuEclipse/eclipse/eclipse/plugins/org.eclipse.pde.build_3.4.0.v20080604/./" />
+    <property name="java.io.tmpdir" value="C:\DOCUME~1\KALPAN~1\LOCALS~1\Temp\" />
+    <property name="java.vendor.url.bug" value="http://java.sun.com/cgi-bin/bugreport.cgi" />
+    <property name="os.arch" value="x86" />
+    <property name="java.awt.graphicsenv" value="sun.awt.Win32GraphicsEnvironment" />
+    <property name="java.ext.dirs" value="C:\Program Files\Java\jdk1.5.0_08\jre\lib\ext" />
+    <property name="user.dir" value="F:\catissueWorkspace\DAOsac\daojunits" />
+    <property name="proj.src" value="../src" />
+    <property name="line.separator" value="
+" />
+    <property name="java.vm.name" value="Java HotSpot(TM) Client VM" />
+    <property name="basedir" value="F:\catissueWorkspace\DAOsac\daojunits" />
+    <property name="ant.java.version" value="1.5" />
+    <property name="ant.core.lib" value="E:\Ant\apache-ant-1.7.0\lib\ant.jar" />
+    <property name="file.encoding" value="Cp1252" />
+    <property name="proj.classes" value="../classes" />
+    <property name="java.specification.version" value="1.5" />
+    <property name="cobertura.lib" value="coberturalib" />
+  </properties>
+  <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testDAOInstance" time="0.015" />
+  <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testCaseInsertObject" time="0.501" />
+  <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testCaseUpdateObject" time="0.031" />
+  <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testCaseRetriveAllObjects" time="0.266" />
+  <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testCaseRetriveObject" time="0.016" />
+  <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testCaseRetrieveObjectColumns" time="0.015" />
+  <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testCaseRetrieveObjectAsPerID" time="0.032" />
+  <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testCaseLoadCleanObject" time="0.0" />
+  <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testRetriveInCondition" time="0.047">
+    <failure message="No object retrieved ::" type="junit.framework.AssertionFailedError">junit.framework.AssertionFailedError: No object retrieved ::
+	at edu.wustl.dao.test.HibernateTestCase.testRetriveInCondition(Unknown Source)
+	at org.eclipse.ant.internal.ui.antsupport.EclipseDefaultExecutor.executeTargets(EclipseDefaultExecutor.java:32)
+	at org.eclipse.ant.internal.ui.antsupport.InternalAntRunner.run(InternalAntRunner.java:423)
+	at org.eclipse.ant.internal.ui.antsupport.InternalAntRunner.main(InternalAntRunner.java:137)
+</failure>
+  </testcase>
+  <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testRetriveIsNotNullCondition" time="0.0" />
+  <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testRetriveIsNullCondition" time="0.031">
+    <failure message="No object retrieved ::" type="junit.framework.AssertionFailedError">junit.framework.AssertionFailedError: No object retrieved ::
+	at edu.wustl.dao.test.HibernateTestCase.testRetriveIsNullCondition(Unknown Source)
+	at org.eclipse.ant.internal.ui.antsupport.EclipseDefaultExecutor.executeTargets(EclipseDefaultExecutor.java:32)
+	at org.eclipse.ant.internal.ui.antsupport.InternalAntRunner.run(InternalAntRunner.java:423)
+	at org.eclipse.ant.internal.ui.antsupport.InternalAntRunner.main(InternalAntRunner.java:137)
+</failure>
+  </testcase>
+  <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testCaseExecuteQuery" time="0.016" />
+  <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testDisableRelatedObjects" time="0.015" />
+  <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testRetrieveAttribute" time="0.016" />
+  <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testLoadCleanObjects" time="0.0" />
+  <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testCaseDeleteObject" time="0.031" />
+  <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testCleanSession" time="0.0" />
+  <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testCleanSessionWithinaSession" time="0.047" />
+  <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testMultAppInsertPointngRespectiveDBSameDBType" time="0.0">
+    <failure message="Problem occurred while opening second session within a session:" type="junit.framework.AssertionFailedError">junit.framework.AssertionFailedError: Problem occurred while opening second session within a session:
+	at edu.wustl.dao.test.HibernateTestCase.testMultAppInsertPointngRespectiveDBSameDBType(Unknown Source)
+	at org.eclipse.ant.internal.ui.antsupport.EclipseDefaultExecutor.executeTargets(EclipseDefaultExecutor.java:32)
+	at org.eclipse.ant.internal.ui.antsupport.InternalAntRunner.run(InternalAntRunner.java:423)
+	at org.eclipse.ant.internal.ui.antsupport.InternalAntRunner.main(InternalAntRunner.java:137)
+</failure>
+  </testcase>
+  <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testRetriveComplexQuery" time="0.016" />
+  <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testDAOFactoryMembers" time="0.015" />
+  <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testDAOConfigFactory" time="0.0" />
+  <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testDefaultFactory" time="0.0" />
+  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testJDBCDAOInstance" time="0.0" />
+  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testDropTableJDBC" time="0.908" />
+  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testExecuteUpdateJDBC" time="0.015" />
+  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testCaseRetriveAllObjectsJDBC" time="0.032" />
+  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testCaseRetriveObjectJDBC" time="0.0" />
+  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testCaseRetrieveObjectColumnsJDBC" time="0.015" />
+  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testCaseRetrieveOnlyDistinctRowsJDBC" time="0.0" />
+  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testRetriveInConditionJDBC" time="0.016" />
+  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testRetriveIsNotNullConditionJDBC" time="0.016" />
+  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testRetriveIsNullConditionJDBC" time="0.015">
+    <failure message="No object retrieved ::" type="junit.framework.AssertionFailedError">junit.framework.AssertionFailedError: No object retrieved ::
+	at edu.wustl.dao.test.JDBCTestCases.testRetriveIsNullConditionJDBC(Unknown Source)
+	at org.eclipse.ant.internal.ui.antsupport.EclipseDefaultExecutor.executeTargets(EclipseDefaultExecutor.java:32)
+	at org.eclipse.ant.internal.ui.antsupport.InternalAntRunner.run(InternalAntRunner.java:423)
+	at org.eclipse.ant.internal.ui.antsupport.InternalAntRunner.main(InternalAntRunner.java:137)
+</failure>
+  </testcase>
+  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testRetriveEqualConditionJDBC" time="0.047">
+    <failure message="No object retrieved ::" type="junit.framework.AssertionFailedError">junit.framework.AssertionFailedError: No object retrieved ::
+	at edu.wustl.dao.test.JDBCTestCases.testRetriveEqualConditionJDBC(Unknown Source)
+	at org.eclipse.ant.internal.ui.antsupport.EclipseDefaultExecutor.executeTargets(EclipseDefaultExecutor.java:32)
+	at org.eclipse.ant.internal.ui.antsupport.InternalAntRunner.run(InternalAntRunner.java:423)
+	at org.eclipse.ant.internal.ui.antsupport.InternalAntRunner.main(InternalAntRunner.java:137)
+</failure>
+  </testcase>
+  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testCreateTableJDBC" time="0.078" />
+  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testCreateTableQueryJDBC" time="0.047" />
+  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testDatePatternJDBC" time="0.0" />
+  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testTimePatternJDBC" time="0.0" />
+  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testDateFormatFunctionJDBC" time="0.0" />
+  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testTimeFormatFunctionJDBC" time="0.0" />
+  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testDateTostrFunctionJDBC" time="0.0" />
+  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testStrTodateFunctionJDBC" time="0.016" />
+  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testExecuteQueryJDBC" time="0.0" />
+  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testRetriveComplexQueryJDBC" time="0.016" />
+  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testAuditJDBC" time="0.015" />
+  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testDeleteJDBC" time="0.016" />
+  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testDisableRelatedObjectsJDBC" time="0.0" />
+  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testInsertJDBC" time="0.0" />
+  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testRetrieveAttributeJDBC" time="0.0" />
+  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testUpdateJDBC" time="0.0" />
+  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testRetrieveJDBC" time="0.0" />
+  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testInsertHashedValues" time="0.047" />
+  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testInsertHashedValuesGivenColumns" time="0.015" />
+  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testDatabaseConnectionAndStmtAndResultSet" time="0.0" />
+  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testDAOConfigFactory" time="0.0" />
+  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testDefaultFactory" time="0.016" />
+  <system-out><![CDATA[WARN   buildCache, Could not find configuration [test.User]; using defaults.
+FATAL  testAuditJDBC, DB005:-There is no implementation for this method Error caused at- AbstractJDBCDAOImpl.java
+ Root cause java.lang.Exceptionnull
+FATAL  testDeleteJDBC, DB005:-There is no implementation for this method Error caused at- AbstractJDBCDAOImpl.java
+ Root cause java.lang.Exceptionnull
+FATAL  testDisableRelatedObjectsJDBC, DB005:-There is no implementation for this method Error caused at- AbstractJDBCDAOImpl.java
+ Root cause java.lang.Exceptionnull
+FATAL  testInsertJDBC, DB005:-There is no implementation for this method Error caused at- AbstractJDBCDAOImpl.java
+ Root cause java.lang.Exceptionnull
+FATAL  testRetrieveAttributeJDBC, DB005:-There is no implementation for this method Error caused at- AbstractJDBCDAOImpl.java
+ Root cause java.lang.Exceptionnull
+FATAL  testUpdateJDBC, DB005:-There is no implementation for this method Error caused at- AbstractJDBCDAOImpl.java
+ Root cause java.lang.Exceptionnull
+FATAL  testRetrieveJDBC, DB005:-There is no implementation for this method Error caused at- AbstractJDBCDAOImpl.java
+ Root cause java.lang.Exceptionnull
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

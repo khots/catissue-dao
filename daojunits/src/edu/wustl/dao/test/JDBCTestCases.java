@@ -26,24 +26,24 @@ import edu.wustl.dao.util.DatabaseConnectionParams;
  *
  */
 public class JDBCTestCases extends BaseTestCase
-{/*
-	*//**
+{
+	/**
 	 * Logger.
-	 *//*
+	 */
 	private static org.apache.log4j.Logger logger = Logger.getLogger(JDBCTestCases.class);
 
-	*//**
+	/**
 	 * DAO instance.
-	 *//*
+	 */
 	private JDBCDAO jdbcDAO;
 
 	{
 		setJDBCDAO();
 	}
 
-	*//**
+	/**
 	 * This method will be called to set the Default DAO.
-	 *//*
+	 */
 	public void setJDBCDAO()
 	{
 		IDAOFactory daoFactory = daoConfigFactory.getInstance().getDAOFactory("caTissuecore");
@@ -58,18 +58,18 @@ public class JDBCTestCases extends BaseTestCase
 	}
 
 
-	*//**
+	/**
 	 * This test will assert that DAO instance is not null.
-	 *//*
+	 */
 	@Test
 	public void testJDBCDAOInstance()
 	{
 		assertNotNull("DAO Object is null",jdbcDAO);
 	}
 
-	*//**
+	/**
 	 * This test will assert that table deleted successfully.
-	 *//*
+	 */
 	@Test
 	public void testDropTableJDBC()
 	{
@@ -88,9 +88,9 @@ public class JDBCTestCases extends BaseTestCase
 		}
 	}
 
-	*//**
+	/**
 	 * This test will assert the execution of query.
-	 *//*
+	 */
 	@Test
 	public void testExecuteUpdateJDBC()
 	{
@@ -110,9 +110,9 @@ public class JDBCTestCases extends BaseTestCase
 		}
 	}
 
-	*//**
+	/**
 	 * This test will assert that all the objects are retrieved successfully.
-	 *//*
+	 */
 	@Test
 	public void testCaseRetriveAllObjectsJDBC()
 	{
@@ -130,10 +130,10 @@ public class JDBCTestCases extends BaseTestCase
 	  }
 	}
 
-	*//**
+	/**
 	 * This test will assert that the object with requested
 	 * column will be retrieved successfully.
-	 *//*
+	 */
 	@Test
 	public void testCaseRetriveObjectJDBC()
 	{
@@ -152,10 +152,10 @@ public class JDBCTestCases extends BaseTestCase
 	}
 
 
-	*//**
+	/**
 	 * This test will assert that requested columns of the objects are
 	 * retrieved successfully.
-	 *//*
+	 */
 	@Test
 	public void testCaseRetrieveObjectColumnsJDBC()
 	{
@@ -175,10 +175,10 @@ public class JDBCTestCases extends BaseTestCase
 	  }
 	}
 
-	*//**
+	/**
 	 * This test will assert that only distinct rows
 	 * retrieved successfully.
-	 *//*
+	 */
 	@Test
 	public void testCaseRetrieveOnlyDistinctRowsJDBC()
 	{
@@ -200,10 +200,10 @@ public class JDBCTestCases extends BaseTestCase
 	}
 
 
-	*//**
+	/**
 	 * This test will assert that objects retrieved successfully
 	 * when where clause holds in condition.
-	 *//*
+	 */
 	@Test
 	public void testRetriveInConditionJDBC()
 	{
@@ -229,10 +229,10 @@ public class JDBCTestCases extends BaseTestCase
 
 	}
 
-	*//**
+	/**
 	 * This test will assert that objects retrieved successfully
 	 * when where clause holds not null condition.
-	 *//*
+	 */
 	@Test
 	public void testRetriveIsNotNullConditionJDBC()
 	{
@@ -260,10 +260,10 @@ public class JDBCTestCases extends BaseTestCase
 		}
 	}
 
-	*//**
+	/**
 	 * This test will assert that objects retrieved successfully
 	 * when where clause holds is null condition.
-	 *//*
+	 */
 	@Test
 	public void testRetriveIsNullConditionJDBC()
 	{
@@ -290,10 +290,10 @@ public class JDBCTestCases extends BaseTestCase
 
 	}
 
-	*//**
+	/**
 	 * This test will assert that objects retrieved successfully with given column value
 	 * Having equal (=)condition.
-	 *//*
+	 */
 	@Test
 	public void testRetriveEqualConditionJDBC()
 	{
@@ -319,9 +319,9 @@ public class JDBCTestCases extends BaseTestCase
 
 	}
 
-	*//**
+	/**
 	 * This test will assert that table created successfully.
-	 *//*
+	 */
 	@Test
 	public void testCreateTableJDBC()
 	{
@@ -341,9 +341,9 @@ public class JDBCTestCases extends BaseTestCase
 
 	}
 
-	*//**
+	/**
 	 * This test will assert that table created successfully.
-	 *//*
+	 */
 	@Test
 	public void testCreateTableQueryJDBC()
 	{
@@ -364,9 +364,9 @@ public class JDBCTestCases extends BaseTestCase
 
 
 
-	*//**
+	/**
 	 * This test will assert that date pattern retrieved successfully.
-	 *//*
+	 */
 	@Test
 	public void testDatePatternJDBC()
 	{
@@ -376,9 +376,9 @@ public class JDBCTestCases extends BaseTestCase
 
 	}
 
-	*//**
+	/**
 	 * This test will assert that time pattern retrieved successfully.
-	 *//*
+	 */
 	@Test
 	public void testTimePatternJDBC()
 	{
@@ -387,9 +387,9 @@ public class JDBCTestCases extends BaseTestCase
 
 	}
 
-	*//**
+	/**
 	 * This test will assert that date format function retrieved successfully.
-	 *//*
+	 */
 	@Test
 	public void testDateFormatFunctionJDBC()
 	{
@@ -399,9 +399,9 @@ public class JDBCTestCases extends BaseTestCase
 
 	}
 
-	*//**
+	/**
 	 * This test will assert that time format function retrieved successfully.
-	 *//*
+	 */
 	@Test
 	public void testTimeFormatFunctionJDBC()
 	{
@@ -411,9 +411,9 @@ public class JDBCTestCases extends BaseTestCase
 	}
 
 
-	*//**
+	/**
 	 * This test will assert that Date to string format function retrieved successfully.
-	 *//*
+	 */
 	@Test
 	public void testDateTostrFunctionJDBC()
 	{
@@ -423,9 +423,9 @@ public class JDBCTestCases extends BaseTestCase
 	}
 
 
-	*//**
+	/**
 	 * This test will assert that string to date function retrieved successfully.
-	 *//*
+	 */
 	@Test
 	public void testStrTodateFunctionJDBC()
 	{
@@ -434,9 +434,9 @@ public class JDBCTestCases extends BaseTestCase
 
 	}
 
-	*//**
+	/**
 	 * This test will assert that string to date function retrieved successfully.
-	 *//*
+	 */
 	@Test
 	public void testExecuteQueryJDBC()
 	{
@@ -464,10 +464,10 @@ public class JDBCTestCases extends BaseTestCase
 	}
 
 
-	*//**
+	/**
 	 * This test will create a complex retrieve query having multiple clause(IN,NOT NULL,IS NULL)
 	 * It will ensure that objects retrieved successfully.
-	 *//*
+	 */
 	@Test
 	public void testRetriveComplexQueryJDBC()
 	{
@@ -496,9 +496,9 @@ public class JDBCTestCases extends BaseTestCase
 		}
 	}
 
-	*//**
+	/**
 	 * This test will assert the audit method implementation.
-	 *//*
+	 */
 	@Test
 	public void testAuditJDBC()
 	{
@@ -516,9 +516,9 @@ public class JDBCTestCases extends BaseTestCase
 	}
 
 
-	*//**
+	/**
 	 * This test will delete method implementation.
-	 *//*
+	 */
 	@Test
 	public void testDeleteJDBC()
 	{
@@ -536,9 +536,9 @@ public class JDBCTestCases extends BaseTestCase
 	}
 
 
-	*//**
+	/**
 	 * This test will DisableRelatedObjects method implementation.
-	 *//*
+	 */
 	@Test
 	public void testDisableRelatedObjectsJDBC()
 	{
@@ -555,9 +555,9 @@ public class JDBCTestCases extends BaseTestCase
 
 	}
 
-	*//**
+	/**
 	 * This test will insert method implementation.
-	 *//*
+	 */
 	@Test
 	public void testInsertJDBC()
 	{
@@ -574,9 +574,9 @@ public class JDBCTestCases extends BaseTestCase
 
 	}
 
-	*//**
+	/**
 	 * This test will retrieveAttribute() method implementation.
-	 *//*
+	 */
 	@Test
 	public void testRetrieveAttributeJDBC()
 	{
@@ -594,9 +594,9 @@ public class JDBCTestCases extends BaseTestCase
 	}
 
 
-	*//**
+	/**
 	 * This test will Update() method implementation.
-	 *//*
+	 */
 	@Test
 	public void testUpdateJDBC()
 	{
@@ -613,9 +613,9 @@ public class JDBCTestCases extends BaseTestCase
 
 	}
 
-	*//**
+	/**
 	 * This test will retrieve() method implementation.
-	 *//*
+	 */
 	@Test
 	public void testRetrieveJDBC()
 	{
@@ -632,9 +632,9 @@ public class JDBCTestCases extends BaseTestCase
 
 	}
 
-	*//**
+	/**
 	 * This test will be called to insert default values in place of "##" column values.
-	 *//*
+	 */
 	@Test
 	public void testInsertHashedValues()
 	{
@@ -658,9 +658,9 @@ public class JDBCTestCases extends BaseTestCase
 		  }
 	}
 
-	*//**
+	/**
 	 * This test will be called to insert default values in place of "##" column values.
-	 *//*
+	 */
 	@Test
 	public void testInsertHashedValuesGivenColumns()
 	{
@@ -690,9 +690,9 @@ public class JDBCTestCases extends BaseTestCase
 		  }
 	}
 
-	*//**
+	/**
 	 * This test will assert the creation of database parameters.
-	 *//*
+	 */
 	@Test
 	public void testDatabaseConnectionAndStmtAndResultSet()
 	{
@@ -740,4 +740,4 @@ public class JDBCTestCases extends BaseTestCase
 
 
 
-*/}
+}
