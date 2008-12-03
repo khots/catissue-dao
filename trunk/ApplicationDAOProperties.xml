@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Applications>
-	<Application name = "caTissuecore">
+	<Application name = "catissuecore">
 		<DAOFactory name="edu.wustl.dao.daofactory.DAOFactory">
 			<DefaultDAO>
 				<Class-name name = "edu.wustl.dao.HibernateDAOImpl"/>
