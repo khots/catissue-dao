@@ -6,7 +6,7 @@
 <hibernate-mapping>
     <class
         name="test.User"
-        table="XYZ_USER"
+        table="test_user"
         lazy="true"
     >
      <cache usage="read-write" />
@@ -19,7 +19,7 @@
             unsaved-value="null"
         >
             <generator class="native">
-                <param name="sequence">CATISSUE_USER_SEQ</param>
+                <param name="sequence">USER_SEQ</param>
               <!--  
                   To add non XDoclet generator parameters, create a file named 
                   hibernate-generator-params-User.xml 
@@ -63,7 +63,40 @@
             column="ACTIVITY_STATUS"
             length="255"
       />
-  
+      <!--
+       <many-to-one
+            name="address"
+            class="test.Address"
+            cascade="none"
+             
+            update="true"
+            insert="true"
+            column="ADDRESS_ID"  lazy="false" 
+        />
+        
+        
+        <set
+            name="orderCollection"
+            table="xyz_user_order"
+           	lazy="false" 
+            inverse="true"
+            cascade="save-update,all-delete-orphan"
+            sort="unsorted"
+        >
+        
+        <cache usage="read-write" />
+
+              <key
+                  column="user_id"
+              />
+
+              <one-to-many
+                  class="test.Order"
+              />
+        </set>
+        
+
+  -->
   
     </class>
 
