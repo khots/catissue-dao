@@ -10,17 +10,11 @@
 package edu.wustl.dao.daofactory;
 
 import java.io.InputStream;
-import java.sql.Connection;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.dom4j.Document;
 import org.dom4j.io.DOMWriter;
-import org.hibernate.FlushMode;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.util.XMLHelper;
@@ -39,7 +33,8 @@ import edu.wustl.dao.util.DAOConstants;
 /**
  * @author kalpana_thakur
  */
-public class DAOFactory implements IConnectionManager,IDAOFactory
+
+public class DAOFactory implements IDAOFactory
 {
 	/**
 	 * This member will store the Connection Manager name.
@@ -69,24 +64,18 @@ public class DAOFactory implements IConnectionManager,IDAOFactory
 	 */
 	private static final EntityResolver entityResolver =
 		XMLHelper.DEFAULT_DTD_RESOLVER;
-	/**
-	 * This member will store the configuration instance.
-	 */
-	private Configuration configuration;
-	/**
-	 * This member will store the sessionFactory instance.
-	 */
-	private SessionFactory sessionFactory;
+
 	/**
 	 * This member will store the connectionManager instance.
 	 */
 	private IConnectionManager connectionManager;
 
+
 	/**
-	 * ThreadLocal to hold the Session for the current executing thread.
+	 * This will store the default setting for DAO factory(true / false).
 	 */
-	private static final ThreadLocal<Map<String, Session>> threadLocal
-	= new ThreadLocal<Map<String, Session>>();
+	private boolean isDefaultDAOFactory;
+
 
 	/**
 	 * Class logger.
@@ -99,11 +88,7 @@ public class DAOFactory implements IConnectionManager,IDAOFactory
 	 * Map will stored in threadLocal,whenever new session will be created ,
 	 * threadLocal will be checked first to obtain the session associated to application.
 	 */
-	static
-	{
-		Map<String, Session> applicationSessionMap = new HashMap<String, Session>();
-		threadLocal.set(applicationSessionMap);
-	}
+
 
 	/**
 	 * This method will be called to retrieved default DAO instance.
@@ -157,113 +142,6 @@ public class DAOFactory implements IConnectionManager,IDAOFactory
 
 
 	/**
-	 *This method will be called to retrieved the current connection object.
-	 *@return Connection object
-	 *@throws DAOException :Generic DAOException.
-	 */
-	public Connection getConnection() throws DAOException
-	{
-		return currentSession().connection();
-	}
-
-	/**
-	 *This method will be called to close current connection.
-	 *@throws DAOException :Generic DAOException.
-	 */
-	public void closeConnection() throws DAOException
-	{
-		closeSession();
-	}
-
-	/**
-	 * This method will be called to close the session.
-	 * It will check the session for the running application in applicationSessionMap,
-	 * if present it will remove it from the Map.
-	 *@throws DAOException :Generic DAOException.
-	 */
-	public void closeSession() throws DAOException
-	{
-		Map<String, Session> applicationSessionMap = (Map<String, Session>) threadLocal.get();
-		if(applicationSessionMap.containsKey(applicationName))
-		{
-			Session session = (Session)applicationSessionMap.get(applicationName);
-			if(session != null)
-			{
-				session.close();
-			}
-			applicationSessionMap.remove(applicationName);
-		}
-	}
-
-	/**
-	 * This method will be called to retrieve the current session.
-	 * It will check the session for the running application in applicationSessionMap.
-	 * If present, retrieved the session from the Map otherwise create the
-	 * new session and store it into the Map.
-	 * @return session object.
-	 *@throws DAOException :Generic DAOException.
-	 */
-	public Session currentSession() throws DAOException
-	{
-
-		Map<String, Session> applicationSessionMap = (Map<String, Session>)threadLocal.get();
-	    // Open a new Session, if this Thread has none yet
-		if (!(applicationSessionMap.containsKey(applicationName)) )
-		{
-        	Session session = newSession();
-        	applicationSessionMap.put(applicationName, session);
-        }
-        return (Session)applicationSessionMap.get(applicationName);
-
-	}
-
-	/**
-	 * This method will be called to create new session.
-	 * @return session object.
-	 *@throws DAOException :Generic DAOException.
-	 */
-	public Session newSession() throws DAOException
-	{
-		Session session = null;
-		try
-        {
-			session = sessionFactory.openSession();
-			session.setFlushMode(FlushMode.COMMIT);
-            session.connection().setAutoCommit(false);
-        }
-        catch (Exception excp)
-        {
-        	ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,excp,"DAOFactory.java"+
-					DAOConstants.NEW_SESSION_ERROR);
-        }
-        return session;
-
-	}
-
-	/**
-	 * This method will be called to obtain clean session.
-	 * @return session object.
-	 *@throws DAOException :Generic DAOException.
-	 */
-	public Session getCleanSession() throws DAOException
-	{
-		Session session = null;
-		try
-		{
-			session = sessionFactory.openSession();
-			return session;
-		}
-		catch (HibernateException exp)
-		{
-			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,exp,"DAOFactory.java"+
-					DAOConstants.NEW_SESSION_ERROR);
-		}
-
-	}
-
-	/**
 	 *This method will be called to build the session factory.
 	 *It reads the configuration file ,build the sessionFactory and configuration object
 	 *and set the connection manager.
@@ -279,6 +157,7 @@ public class DAOFactory implements IConnectionManager,IDAOFactory
 		}
 		catch (Exception exp)
 		{
+			logger.fatal(exp.getMessage());
 			logger.error(exp.getMessage(),exp);
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
 			throw new DAOException(errorKey,exp,"DAOFactory.java"+
@@ -349,6 +228,7 @@ public class DAOFactory implements IConnectionManager,IDAOFactory
         }
         catch (Exception exp)
         {
+        	logger.fatal(exp.getMessage());
         	ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
 			throw new DAOException(errorKey,exp,"DAOFactory.java"+
 					DAOConstants.CONFIG_FILE_PARSE_ERROR);
@@ -447,43 +327,7 @@ public class DAOFactory implements IConnectionManager,IDAOFactory
 		this.configurationFile = configurationFile;
 	}
 
-	/**
-	 * This will called to retrieve session factory object.
-	 * @return sessionFactory
-	 */
-	public SessionFactory getSessionFactory()
-	{
-		return sessionFactory;
-	}
-
-	/**
-	 * This will called to set session factory object.
-	 * @param sessionFactory : session factory.
-	 */
-	public void setSessionFactory(SessionFactory sessionFactory)
-	{
-		this.sessionFactory = sessionFactory;
-	}
-
-	/**
-	 * This will called to retrieve configuration object.
-	 * @return configuration
-	 */
-	public Configuration getConfiguration()
-	{
-		return configuration;
-	}
-
-	/**
-	 * This will called to set the configuration object.
-	 * @param cfg configuration
-	 */
-	public void setConfiguration(Configuration cfg)
-	{
-		this.configuration = cfg;
-	}
-
-	/**
+	 /**
 	 * This will called to retrieve connectionManager object.
 	 * @return connectionManager
 	 */
@@ -499,6 +343,24 @@ public class DAOFactory implements IConnectionManager,IDAOFactory
 	private void setConnectionManager(IConnectionManager connectionManager)
 	{
 		this.connectionManager = connectionManager;
+	}
+
+	/**
+	 * @return This will return true if DAO factory is default.
+	 */
+	public boolean getIsDefaultDAOFactory()
+	{
+
+		return isDefaultDAOFactory;
+	}
+
+	/**
+	 * This will be set to true if DAO factory is default.
+	 * @param isDefaultDAOFactory :
+	 */
+	public void setIsDefaultDAOFactory(boolean isDefaultDAOFactory)
+	{
+		this.isDefaultDAOFactory = isDefaultDAOFactory;
 	}
 
 }

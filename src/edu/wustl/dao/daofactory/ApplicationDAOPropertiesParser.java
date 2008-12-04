@@ -42,7 +42,7 @@ public class ApplicationDAOPropertiesParser
 	/**
 	 * Specifies application variables.
 	 */
-	private String connectionManager, applicationName, daoFactoryName, defaultDaoName,
+	private String connectionManager, applicationName, daoFactoryName, defaultDaoName,isDefaultDAOFactory,
 			configFile, jdbcDAOName;
 
 	/**
@@ -125,6 +125,7 @@ public class ApplicationDAOPropertiesParser
 			daoFactory.setJdbcDAOClassName(jdbcDAOName);
 			daoFactory.setApplicationName(applicationName);
 			daoFactory.setConfigurationFile(configFile);
+			daoFactory.setIsDefaultDAOFactory(Boolean.parseBoolean(isDefaultDAOFactory));
 			daoFactory.buildSessionFactory();
 			daoFactoryMap.put(daoFactory.getApplicationName(), daoFactory);
 			resetApplicationProperties();
@@ -143,6 +144,7 @@ public class ApplicationDAOPropertiesParser
 		jdbcDAOName = "";
 		applicationName = "";
 		configFile = "";
+		isDefaultDAOFactory = "";
 	}
 
 	/**
@@ -188,8 +190,7 @@ public class ApplicationDAOPropertiesParser
 	 */
 	private void setDAOFactoryProperties(Node childNode)
 	{
-		NamedNodeMap attrMap = childNode.getAttributes();
-		daoFactoryName = ((Node) attrMap.item(0)).getNodeValue();
+		setAttributesOfDAOFactory(childNode);
 		NodeList childlist = childNode.getChildNodes();
 		for (int m = 0; m < childlist.getLength(); m++)
 		{
@@ -204,6 +205,28 @@ public class ApplicationDAOPropertiesParser
 			}
 		}
 
+	}
+
+	/**
+	 * This method sets the DAO factor Attributes as name and
+	 * default settings.
+	 * @param childNode :
+	 */
+	private void setAttributesOfDAOFactory(Node childNode)
+	{
+		NamedNodeMap attrMap = childNode.getAttributes();
+		for(int i =0 ; i < attrMap.getLength();i++)
+		{
+			Node daoFactoryPropertyNode = attrMap.item(i);
+			if(daoFactoryPropertyNode.getNodeName().equals("default"))
+			{
+				isDefaultDAOFactory = daoFactoryPropertyNode.getNodeValue();
+			}
+			if(daoFactoryPropertyNode.getNodeName().equals("name"))
+			{
+				daoFactoryName = daoFactoryPropertyNode.getNodeValue();
+			}
+		}
 	}
 
 	/**
@@ -242,6 +265,13 @@ public class ApplicationDAOPropertiesParser
 				configFile = configFileMapNode.getNodeValue();
 			}
 		}
+	}
+	
+	public static void main(String[] args)
+	{
+		Map<String, IDAOFactory> daoFactoryMap = new HashMap<String, IDAOFactory>();
+		ApplicationDAOPropertiesParser parser = new ApplicationDAOPropertiesParser();
+		daoFactoryMap = parser.getDaoFactoryMap();
 	}
 
 }

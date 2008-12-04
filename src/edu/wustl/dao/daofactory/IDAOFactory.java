@@ -93,4 +93,16 @@ public interface IDAOFactory
 	 */
 	JDBCDAO getJDBCDAO()throws DAOException;
 
+
+	/**
+	 * @return true if DAO factory is default DAO factory.
+	 */
+	boolean getIsDefaultDAOFactory();
+
+	/**
+	 * @param isDefaultDAOFactory this will be set to true if the DAOFactory has to be
+	 * used as default DAO factory.
+	 */
+	void setIsDefaultDAOFactory(boolean isDefaultDAOFactory);
+
 }
