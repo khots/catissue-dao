@@ -89,9 +89,13 @@ public class DAOConfigFactory
 			 * in Map with key as defaul tapplication.
 			 */
 			Iterator<String> mapKeySetIterator = daoFactoryMap.keySet().iterator();
-			if(mapKeySetIterator.hasNext())
+			while(mapKeySetIterator.hasNext())
 			{
-			 defaultDAOFactory = (IDAOFactory)daoFactoryMap.get(mapKeySetIterator.next());
+				IDAOFactory daoFactory = (IDAOFactory)daoFactoryMap.get(mapKeySetIterator.next());
+				if(daoFactory.getIsDefaultDAOFactory())
+				{
+					defaultDAOFactory = daoFactory;
+				}
 			}
 		}
 		catch (Exception expc)

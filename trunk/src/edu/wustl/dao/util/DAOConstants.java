@@ -171,6 +171,12 @@ public class DAOConstants
 	 */
 	public static final String EQUAL_OPERATOR = "=";
 
+
+	/**
+	 * Not Equal(!=) operator.
+	 */
+	public static final String NOT_EQUAL_OPERATOR = "!=";
+
 	/**
 	 * index value operator"?".
 	 */
