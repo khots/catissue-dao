@@ -7,7 +7,7 @@ import edu.wustl.dao.util.DAOUtility;
  * @author kalpana_thakur
  *
  */
-public class NotEqualClause
+public class NotEqualClause implements Condition
 {
 
 	/**
