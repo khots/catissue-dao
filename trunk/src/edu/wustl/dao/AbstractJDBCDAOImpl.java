@@ -83,7 +83,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		{
 			logger.error(sqlExp.getMessage(), sqlExp);
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,sqlExp,"AbstractJDBCDAOImpl.java"+
+			throw new DAOException(errorKey,sqlExp,"AbstractJDBCDAOImpl.java :"+
 					DAOConstants.OPEN_SESSION_ERROR);
 		}
 	}
@@ -103,7 +103,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		catch(Exception dbex)
 		{
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,dbex,"AbstractJDBCDAOImpl.java"
+			throw new DAOException(errorKey,dbex,"AbstractJDBCDAOImpl.java :"
 					+DAOConstants.CLOSE_SESSION_ERROR);
 		}
 	}
@@ -130,13 +130,13 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		{
 			logger.error(dbex.getMessage(), dbex);
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,dbex,"AbstractJDBCDAOImpl.java"
+			throw new DAOException(errorKey,dbex,"AbstractJDBCDAOImpl.java :"
 					+DAOConstants.COMMIT_DATA_ERROR);
 		}
 		catch (Exception exp)
 		{
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.audit.error");
-			throw new DAOException(errorKey,exp,"HibernateDAOImpl.java :"+
+			throw new DAOException(errorKey,exp,"AbstractJDBCDAOImpl.java :"+
 					DAOConstants.COMMIT_DATA_ERROR);
 		}
 	}
@@ -161,7 +161,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		{
 			logger.error(dbex.getMessage(), dbex);
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey, dbex,"AbstractJDBCDAOImpl.java"+
+			throw new DAOException(errorKey, dbex,"AbstractJDBCDAOImpl.java :"+
 					DAOConstants.ROLLBACK_ERROR);
 
 		}
@@ -364,9 +364,12 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 			logger.debug("JDBC Query " + queryStrBuff);
 			list = executeQuery(queryStrBuff.toString(), null, false, null);
 		}
-		catch (ClassNotFoundException classExp)
+		catch (Exception exp)
 		{
-			logger.error(classExp.getMessage(), classExp);
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
+			throw new DAOException(errorKey, exp,"AbstractJDBCDAOImpl.java :"+
+					DAOConstants.RETRIEVE_ERROR);
+
 		}
 
 		return list;
@@ -512,7 +515,8 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		{
 			logger.error(sqlExp.getMessage(),sqlExp);
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey, sqlExp,"AbstractJDBCDAOImpl.java");
+			throw new DAOException(errorKey, sqlExp,"AbstractJDBCDAOImpl.java :"+
+					DAOConstants.INSERT_OBJ_ERROR);
 		}
 		finally
 		{
@@ -674,7 +678,8 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		{
 			logger.fatal(sqlExp.getMessage(), sqlExp);
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,sqlExp,"AbstractJDBCDAOImpl.java");
+			throw new DAOException(errorKey,sqlExp,"AbstractJDBCDAOImpl.java :"+
+					DAOConstants.RS_METADATA_ERROR);
 		}
 
 		return metaData;
@@ -798,7 +803,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 			{
 				//TODO have to replace this by parse key
 				ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-				throw new DAOException(errorKey,exp,"AbstractJDBCDAOImpl.java");
+				throw new DAOException(errorKey,exp,"AbstractJDBCDAOImpl.java :");
 			}
 			Date sqlDate = new Date(date.getTime());
 			stmt.setDate(index, sqlDate);
@@ -891,7 +896,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 			boolean isAuditable) throws DAOException
 	{
 		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
-		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java");
+		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
 	}
 
 	/**
@@ -901,7 +906,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	public void delete(Object obj) throws DAOException
 	{
 		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
-		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java");
+		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
 	}
 
 	/**
@@ -914,7 +919,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 			Long[] whereColumnValues) throws DAOException
 	{
 		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
-		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java");
+		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
 	}
 
 	/**
@@ -929,7 +934,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 			throws DAOException
 	{
 		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
-		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java");
+		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
 	}
 
 	/**
@@ -945,7 +950,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 			String attributeName,String columnName) throws DAOException
 	{
 		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
-		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java");
+		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
 	}
 
 
@@ -956,7 +961,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	public void update(Object obj) throws DAOException
 	{
 		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
-		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java");
+		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
 	}
 
 	/**
@@ -969,7 +974,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 			throws DAOException
 	{
 		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
-		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java");
+		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
 	}
 
 }

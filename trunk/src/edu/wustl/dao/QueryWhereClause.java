@@ -21,7 +21,8 @@ public class QueryWhereClause
 	public QueryWhereClause()
 	{
 		whereClauseBuff = new StringBuffer();
-		whereClauseBuff.append(" WHERE ");
+		whereClauseBuff.append(DAOConstants.TAILING_SPACES)
+		.append("WHERE").append(DAOConstants.TAILING_SPACES);
 	}
 
 

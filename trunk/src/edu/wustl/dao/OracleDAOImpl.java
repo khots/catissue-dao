@@ -129,6 +129,35 @@ public class OracleDAOImpl extends AbstractJDBCDAOImpl
 		insertHashedValues(tableName, columnValues, null);
 	}*/
 
+
+
+	/**
+	 * This method executed query, parses the result and returns List of rows after doing security checks
+	 * for user's right to view a record/field.
+	 * @param queryParams : TODO
+	 * @return This will return the PagenatedResultData.
+	 * @throws DAOException :DAOException
+	 */
+	public PagenatedResultData getQueryResultList(QueryParams queryParams) throws DAOException
+	{
+		PagenatedResultData pagenatedResultData = null;
+		try
+		{
+			queryParams.setConnection(getConnectionManager().getConnection());
+			OracleQueryExecutor oracleQueryExecutor = new OracleQueryExecutor();
+			pagenatedResultData = oracleQueryExecutor.getQueryResultList(queryParams);
+		}
+		catch(Exception exp)
+		{
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
+			throw new DAOException(errorKey,exp,"OracleDAOImpl.java :"+
+					DAOConstants.EXECUTE_QUERY_ERROR);
+		}
+
+		return pagenatedResultData;
+
+	}
+
 	/**
 	 * @param excp : Exception Object.
 	 * @param args : TODO
@@ -156,32 +185,6 @@ public class OracleDAOImpl extends AbstractJDBCDAOImpl
 			formattedErrMsg = Constants.GENERIC_DATABASE_ERROR;
 		}
 		return formattedErrMsg;
-	}
-
-	/**
-	 * This method executed query, parses the result and returns List of rows after doing security checks
-	 * for user's right to view a record/field.
-	 * @param queryParams : TODO
-	 * @return This will return the PagenatedResultData.
-	 * @throws DAOException :DAOException
-	 */
-	public PagenatedResultData getQueryResultList(QueryParams queryParams) throws DAOException
-	{
-		PagenatedResultData pagenatedResultData = null;
-		try
-		{
-			queryParams.setConnection(getConnectionManager().getConnection());
-			OracleQueryExecutor oracleQueryExecutor = new OracleQueryExecutor();
-			pagenatedResultData = oracleQueryExecutor.getQueryResultList(queryParams);
-		}
-		catch(Exception exp)
-		{
-			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,exp,"OracleDAOImpl.java");
-		}
-
-		return pagenatedResultData;
-
 	}
 
 }

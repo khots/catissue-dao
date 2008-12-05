@@ -7,6 +7,7 @@ import edu.wustl.common.util.QueryParams;
 import edu.wustl.common.util.global.Constants;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.exception.DAOException;
+import edu.wustl.dao.util.DAOConstants;
 import edu.wustl.query.executor.MysqlQueryExecutor;
 
 
@@ -119,9 +120,9 @@ public class MySQLDAOImpl extends AbstractJDBCDAOImpl
 			formattedErrMsg = (String) ConstraintViolationFormatter.getFormattedErrorMessage(args,
 					objExcp, tableName);
 		}
-		catch (Exception e)
+		catch (Exception exp)
 		{
-			logger.error(e.getMessage(), e);
+			logger.error(exp.getMessage(), exp);
 			formattedErrMsg = Constants.GENERIC_DATABASE_ERROR;
 		}
 		return formattedErrMsg;
@@ -148,7 +149,8 @@ public class MySQLDAOImpl extends AbstractJDBCDAOImpl
 		catch(Exception exp)
 		{
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,exp,"MySQLDAOImpl.java");
+			throw new DAOException(errorKey,exp,"MySQLDAOImpl.java :"+
+					DAOConstants.EXECUTE_QUERY_ERROR);
 		}
 		return pagenatedResultData;
 	}

@@ -4,22 +4,22 @@
 
 package edu.wustl.dao.daofactory;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
+
+import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.exception.DAOException;
+import edu.wustl.dao.util.DAOConstants;
 
 /**
  * @author prashant_bandal
@@ -66,8 +66,9 @@ public class ApplicationDAOPropertiesParser
 
 	/**
 	 * This method parse Xml File.
+	 * @throws DAOException :
 	 */
-	private void readFile()
+	private void readFile() throws DAOException
 	{
 		//get the factory
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -81,18 +82,14 @@ public class ApplicationDAOPropertiesParser
 			dom = documentBuilder.parse("ApplicationDAOProperties.xml");
 
 		}
-		catch (ParserConfigurationException pce)
+		catch (Exception exp)
 		{
-			logger.error(pce.getMessage(), pce);
+			logger.error(exp.getMessage(), exp);
+			ErrorKey errorKey = ErrorKey.getErrorKey("app.prop.parsing.exp");
+			throw new DAOException(errorKey,exp,"ApplicationDAOPropertiesParser.java :"+
+					DAOConstants.FILE_PARSE_ERROR);
 		}
-		catch (SAXException se)
-		{
-			logger.error(se.getMessage(), se);
-		}
-		catch (IOException ioe)
-		{
-			logger.error(ioe.getMessage(), ioe);
-		}
+
 	}
 
 	/**
@@ -266,12 +263,12 @@ public class ApplicationDAOPropertiesParser
 			}
 		}
 	}
-	
-	public static void main(String[] args)
+
+/*	public static void main(String[] args)
 	{
 		Map<String, IDAOFactory> daoFactoryMap = new HashMap<String, IDAOFactory>();
 		ApplicationDAOPropertiesParser parser = new ApplicationDAOPropertiesParser();
 		daoFactoryMap = parser.getDaoFactoryMap();
-	}
+	}*/
 
 }
