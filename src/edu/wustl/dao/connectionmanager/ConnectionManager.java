@@ -45,6 +45,13 @@ public class ConnectionManager implements IConnectionManager
 	= new ThreadLocal<Map<String, Session>>();
 
 
+	/**
+	 * This block will instantiate applicationSessionMap.
+	 * This map holds the session object associated to the application.
+	 * Map will stored in threadLocal,whenever new session will be created ,
+	 * threadLocal will be checked first to obtain the session associated to application.
+	 */
+
 	static
 	{
 		Map<String, Session> applicationSessionMap = new HashMap<String, Session>();
@@ -121,7 +128,7 @@ public class ConnectionManager implements IConnectionManager
         catch (Exception excp)
         {
         	ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,excp,"DAOFactory.java"+
+			throw new DAOException(errorKey,excp,"DAOFactory.java :"+
 					DAOConstants.NEW_SESSION_ERROR);
         }
         return session;
@@ -144,7 +151,7 @@ public class ConnectionManager implements IConnectionManager
 		catch (HibernateException exp)
 		{
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,exp,"DAOFactory.java"+
+			throw new DAOException(errorKey,exp,"DAOFactory.java :"+
 					DAOConstants.NEW_SESSION_ERROR);
 		}
 

@@ -38,7 +38,7 @@ public class EqualClause implements Condition
 		{
 			strBuff.append(object);
 		}
-
+		strBuff.append(DAOConstants.TAILING_SPACES);
 	}
 
 	/**

@@ -157,6 +157,7 @@ public class HibernateDAOImpl implements HibernateDAO
 		}
 		catch (Exception exp)
 		{
+			//TODO
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.audit.error");
 			throw new DAOException(errorKey,exp,"HibernateDAOImpl.java :"+
 					DAOConstants.COMMIT_DATA_ERROR);
@@ -334,7 +335,8 @@ public class HibernateDAOImpl implements HibernateDAO
 		catch (AuditException auditExp)
 		{
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.audit.error");
-			throw new DAOException(errorKey,auditExp,"HibernateDAOImpl.java :");
+			throw new DAOException(errorKey,auditExp,"HibernateDAOImpl.java :"+
+					DAOConstants.AUDIT_ERROR);
 		}
 	}
 
@@ -362,8 +364,9 @@ public class HibernateDAOImpl implements HibernateDAO
 		catch (HibernateException hibExp)
 		{
 			logger.error(hibExp.getMessage() , hibExp);
-			ErrorKey errorKey = ErrorKey.getErrorKey("db.delete.obj");
-			throw new DAOException(errorKey,hibExp,"HibernateDAOImpl.java");
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
+			throw new DAOException(errorKey,hibExp,"HibernateDAOImpl.java :"+
+					DAOConstants.DELETE_OBJ_ERROR);
 		}
 	}
 
@@ -445,8 +448,9 @@ public class HibernateDAOImpl implements HibernateDAO
 		catch (Exception exp)
 		{
 			logger.error(exp.getMessage(), exp);
-			ErrorKey errorKey = ErrorKey.getErrorKey("db.retrieve.obj");
-			throw new DAOException(errorKey, exp,"HibernateDAOImpl.java");
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
+			throw new DAOException(errorKey, exp,"HibernateDAOImpl.java :"
+					+DAOConstants.RETRIEVE_ERROR);
 		}
 		return list;
 	}
@@ -484,8 +488,9 @@ public class HibernateDAOImpl implements HibernateDAO
 		catch (Exception exp)
 		{
 			logger.error(exp.getMessage(), exp);
-			ErrorKey errorKey = ErrorKey.getErrorKey("db.retrieve.obj");
-			throw new DAOException(errorKey, exp,"HibernateDAOImpl.java");
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
+			throw new DAOException(errorKey, exp,"HibernateDAOImpl.java :"+
+					DAOConstants.RETRIEVE_ERROR);
 		}
 
 	}
@@ -529,8 +534,9 @@ public class HibernateDAOImpl implements HibernateDAO
 		}
 		catch (Exception exp)
 		{
-			ErrorKey errorKey = ErrorKey.getErrorKey("db.hiber.query.create.err");
-			throw new DAOException(errorKey,exp,"HibernateDAOImpl.java");
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
+			throw new DAOException(errorKey,exp,"HibernateDAOImpl.java :"+
+					DAOConstants.EXECUTE_QUERY_ERROR);
 		}
 
 		return returner;
@@ -569,8 +575,9 @@ public class HibernateDAOImpl implements HibernateDAO
 		}
 		catch (HibernateException exception)
 		{
-			ErrorKey errorKey = ErrorKey.getErrorKey("db.retrieve.attribute");
-			throw new DAOException(errorKey, exception,"HibernateDAOImpl.java");
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
+			throw new DAOException(errorKey, exception,"HibernateDAOImpl.java :"+
+					DAOConstants.RETRIEVE_ERROR);
 		}
 	}
 

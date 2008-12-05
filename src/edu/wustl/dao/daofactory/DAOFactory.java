@@ -74,20 +74,13 @@ public class DAOFactory implements IDAOFactory
 	/**
 	 * This will store the default setting for DAO factory(true / false).
 	 */
-	private boolean isDefaultDAOFactory;
+	private Boolean isDefaultDAOFactory;
 
 
 	/**
 	 * Class logger.
 	 */
 	private static org.apache.log4j.Logger logger = Logger.getLogger(DAOFactory.class);
-
-	/**
-	 * This block will instantiate applicationSessionMap.
-	 * This map holds the session object associated to the application.
-	 * Map will stored in threadLocal,whenever new session will be created ,
-	 * threadLocal will be checked first to obtain the session associated to application.
-	 */
 
 
 	/**
@@ -109,7 +102,7 @@ public class DAOFactory implements IDAOFactory
 		{
 			logger.error(excp.getMessage() + DAOConstants.DEFAULT_DAO_INSTANTIATION_ERROR + excp);
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,excp,"DAOFactory.java"+
+			throw new DAOException(errorKey,excp,"DAOFactory.java :"+
 					DAOConstants.DEFAULT_DAO_INSTANTIATION_ERROR);
 		}
 
@@ -134,7 +127,7 @@ public class DAOFactory implements IDAOFactory
 		{
 			logger.error(excp.getMessage() + DAOConstants.JDBCDAO_INSTANTIATION_ERROR + excp);
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,excp,"DAOFactory.java"+
+			throw new DAOException(errorKey,excp,"DAOFactory.java :"+
 					DAOConstants.JDBCDAO_INSTANTIATION_ERROR);
 		}
 		return dao;
@@ -160,7 +153,7 @@ public class DAOFactory implements IDAOFactory
 			logger.fatal(exp.getMessage());
 			logger.error(exp.getMessage(),exp);
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,exp,"DAOFactory.java"+
+			throw new DAOException(errorKey,exp,"DAOFactory.java :"+
 					DAOConstants.BUILD_SESSION_FACTORY_ERROR);
 
 		}
@@ -191,7 +184,7 @@ public class DAOFactory implements IDAOFactory
 		{
 			logger.error(exp.getMessage(),exp);
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,exp,"DAOFactory.java"+
+			throw new DAOException(errorKey,exp,"DAOFactory.java :"+
 					DAOConstants.CONN_MANAGER_INSTANTIATION_ERROR);
 
 		}
@@ -230,7 +223,7 @@ public class DAOFactory implements IDAOFactory
         {
         	logger.fatal(exp.getMessage());
         	ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,exp,"DAOFactory.java"+
+			throw new DAOException(errorKey,exp,"DAOFactory.java :"+
 					DAOConstants.CONFIG_FILE_PARSE_ERROR);
         }
 
@@ -348,7 +341,7 @@ public class DAOFactory implements IDAOFactory
 	/**
 	 * @return This will return true if DAO factory is default.
 	 */
-	public boolean getIsDefaultDAOFactory()
+	public Boolean getIsDefaultDAOFactory()
 	{
 
 		return isDefaultDAOFactory;
@@ -358,7 +351,7 @@ public class DAOFactory implements IDAOFactory
 	 * This will be set to true if DAO factory is default.
 	 * @param isDefaultDAOFactory :
 	 */
-	public void setIsDefaultDAOFactory(boolean isDefaultDAOFactory)
+	public void setIsDefaultDAOFactory(Boolean isDefaultDAOFactory)
 	{
 		this.isDefaultDAOFactory = isDefaultDAOFactory;
 	}

@@ -81,7 +81,7 @@ public class DatabaseConnectionParams
 		{
 			logger.fatal(sqlExp);
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.conn.para.creation.error");
-			throw new DAOException(errorKey,sqlExp,"DatabaseConnectionParams.java"+
+			throw new DAOException(errorKey,sqlExp,"DatabaseConnectionParams.java :"+
 					DAOConstants.RESULTSET_CREATION_ERROR);
 		}
 		return resultSet;
@@ -108,7 +108,7 @@ public class DatabaseConnectionParams
 		{
 			logger.fatal(sqlExp);
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.conn.para.creation.error");
-			throw new DAOException(errorKey,sqlExp,"DatabaseConnectionParams.java"+
+			throw new DAOException(errorKey,sqlExp,"DatabaseConnectionParams.java :"+
 					DAOConstants.RS_METADATA_ERROR);
 		}
 
@@ -145,7 +145,8 @@ public class DatabaseConnectionParams
 		{
 			logger.fatal(sqlExp);
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.close.conn.error");
-			throw new DAOException(errorKey,sqlExp,"DatabaseConnectionParams.java");
+			throw new DAOException(errorKey,sqlExp,"DatabaseConnectionParams.java :"+
+					DAOConstants.CLOSE_CONNECTION_ERROR);
 		}
 	}
 
@@ -165,7 +166,7 @@ public class DatabaseConnectionParams
 		{
 			logger.fatal(sqlExp);
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.conn.para.creation.error");
-			throw new DAOException(errorKey,sqlExp,"DatabaseConnectionParams.java"+
+			throw new DAOException(errorKey,sqlExp,"DatabaseConnectionParams.java :"+
 					DAOConstants.PRPD_STMT_ERROR);
 		}
 		return preparedStatement;
@@ -188,7 +189,7 @@ public class DatabaseConnectionParams
 		{
 			logger.fatal(sqlExp);
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,sqlExp,"DatabaseConnectionParams.java"
+			throw new DAOException(errorKey,sqlExp,"DatabaseConnectionParams.java :"
 					+DAOConstants.EXECUTE_QUERY_ERROR+"   "+query);
 		}
 		finally
@@ -236,7 +237,8 @@ public class DatabaseConnectionParams
 		catch(Exception exp)
 		{
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,exp,"DatabaseConnectionParams.java");
+			throw new DAOException(errorKey,exp,"DatabaseConnectionParams.java :"+
+					DAOConstants.RS_METADATA_ERROR);
 		}
 		return isResultSetExists;
 	}

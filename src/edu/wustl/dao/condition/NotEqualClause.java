@@ -38,6 +38,7 @@ public class NotEqualClause implements Condition
 		{
 			strBuff.append(object);
 		}
+		strBuff.append(DAOConstants.TAILING_SPACES);
 
 	}
 

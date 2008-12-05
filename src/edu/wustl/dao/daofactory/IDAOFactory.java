@@ -97,12 +97,12 @@ public interface IDAOFactory
 	/**
 	 * @return true if DAO factory is default DAO factory.
 	 */
-	boolean getIsDefaultDAOFactory();
+	Boolean getIsDefaultDAOFactory();
 
 	/**
 	 * @param isDefaultDAOFactory this will be set to true if the DAOFactory has to be
 	 * used as default DAO factory.
 	 */
-	void setIsDefaultDAOFactory(boolean isDefaultDAOFactory);
+	void setIsDefaultDAOFactory(Boolean isDefaultDAOFactory);
 
 }
