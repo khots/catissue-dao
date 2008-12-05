@@ -14,13 +14,7 @@ public class NullClause implements Condition
 	/**
 	 * Name of the where Column.
 	 */
-	private String columnName;
-
-
-	/**
-	 * Value of the where column.
-	 */
-	private Object colValue;
+	private final String columnName;
 
 	/**
 	 * Name of the class or table.

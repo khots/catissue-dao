@@ -13,13 +13,8 @@ public class INClause implements Condition
 	/**
 	 * Name of the where Column.
 	 */
-	private String columnName;
+	private final String columnName;
 
-
-	/**
-	 * Value of the where column.
-	 */
-	private Object colValue;
 
 	/**
 	 * Value of the where column.
@@ -39,7 +34,6 @@ public class INClause implements Condition
 	public INClause(String columnName, String values ,String sourceObjectName )
 	{
 		this.columnName = columnName;
-		this.colValue = values;
 		this.sourceObjectName = sourceObjectName;
 		this.colValueArray = values.split(DAOConstants.SPLIT_OPERATOR);
 	}
@@ -51,7 +45,6 @@ public class INClause implements Condition
 	public INClause(String columnName, String values)
 	{
 		this.columnName = columnName;
-		this.colValue = values;
 		this.colValueArray = values.split(DAOConstants.SPLIT_OPERATOR);
 
 
