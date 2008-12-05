@@ -11,9 +11,21 @@ public class EqualClause implements Condition
 {
 
 	/**
-	 * strBuff.
+	 * Name of the where Column.
 	 */
-	private final StringBuffer strBuff;
+	private String columnName;
+
+
+	/**
+	 * Value of the where column.
+	 */
+	private Object colValue;
+
+	/**
+	 * Name of the class or table.
+	 */
+	private String sourceObjectName;
+
 
 	/**
 	 * @param columnName :
@@ -22,7 +34,28 @@ public class EqualClause implements Condition
 	 */
 	public EqualClause (String columnName ,Object object,String sourceObjectName)
 	{
-		strBuff = new StringBuffer(DAOConstants.TAILING_SPACES);
+		this.columnName = columnName;
+		this.colValue = object;
+		this.sourceObjectName = sourceObjectName;
+	}
+
+	/**
+	 * @param columnName :
+	 * @param object :
+	 */
+	public EqualClause (String columnName ,Object object)
+	{
+		this.columnName = columnName;
+		this.colValue = object;
+	}
+
+	/**
+	 * This method will be called to build EqualClause.
+	 * @return Query string.
+	 */
+	public String buildSql()
+	{
+		StringBuffer strBuff = new StringBuffer(DAOConstants.TAILING_SPACES);
 
 		String sourceObject = DAOUtility.getInstance().parseClassName(sourceObjectName);
 
@@ -30,23 +63,35 @@ public class EqualClause implements Condition
 		append(columnName).append(DAOConstants.TAILING_SPACES).append(DAOConstants.EQUAL_OPERATOR).
 		append(DAOConstants.TAILING_SPACES);
 
-		if(object instanceof String)
+		if(colValue instanceof String)
 		{
-			strBuff.append("'"+object+"'");
+			strBuff.append("'"+colValue+"'");
 		}
 		else
 		{
-			strBuff.append(object);
+			strBuff.append(colValue);
 		}
 		strBuff.append(DAOConstants.TAILING_SPACES);
-	}
-
-	/**
-	 * Returns the string value.
-	 * @return String:
-	 */
-	public String toString()
-	{
 		return strBuff.toString();
 	}
+
+
+	/**
+	 * @return class name or table name.
+	 */
+	public String getSourceObjectName()
+	{
+		return sourceObjectName;
+	}
+
+
+	/**
+	 * @param sourceObjectName set the class name or table name.
+	 */
+	public void setSourceObjectName(String sourceObjectName)
+	{
+		this.sourceObjectName = sourceObjectName;
+	}
+
+
 }

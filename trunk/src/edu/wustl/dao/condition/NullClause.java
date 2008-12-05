@@ -7,8 +7,9 @@ import edu.wustl.dao.util.DAOUtility;
  * @author kalpana_thakur
  *
  */
-public class NotNullClause implements Condition
+public class NullClause implements Condition
 {
+
 
 	/**
 	 * Name of the where Column.
@@ -25,11 +26,12 @@ public class NotNullClause implements Condition
 	 * Name of the class or table.
 	 */
 	private String sourceObjectName;
+
 	/**
 	 * @param columnName :
 	 * @param sourceObjectName :
 	 */
-	public NotNullClause (String columnName ,String sourceObjectName)
+	public NullClause (String columnName ,String sourceObjectName)
 	{
 		this.columnName = columnName;
 		this.sourceObjectName = sourceObjectName;
@@ -38,13 +40,14 @@ public class NotNullClause implements Condition
 	/**
 	 * @param columnName :
 	 */
-	public NotNullClause (String columnName)
+	public NullClause (String columnName)
 	{
 		this.columnName = columnName;
 	}
 
+
 	/**
-	 * This method will generate the not null clause of Query.
+	 *  This method will generate the Null clause of Query.
 	 * @return String:
 	 */
 	public String buildSql()
@@ -54,11 +57,11 @@ public class NotNullClause implements Condition
 		String sourceObject = DAOUtility.getInstance().parseClassName(sourceObjectName);
 
 		strBuff.append(sourceObject).append(DAOConstants.DOT_OPERATOR).
-		append(columnName).append(DAOConstants.TAILING_SPACES).append(DAOConstants.NOT_NULL_OPERATOR).
+		append(columnName).append(DAOConstants.TAILING_SPACES).append(DAOConstants.NULL_OPERATOR).
 		append(DAOConstants.TAILING_SPACES);
+
 		return strBuff.toString();
 	}
-
 
 	/**
 	 * @return class name or table name.
@@ -68,7 +71,6 @@ public class NotNullClause implements Condition
 		return sourceObjectName;
 	}
 
-
 	/**
 	 * @param sourceObjectName set the class name or table name.
 	 */
@@ -76,4 +78,5 @@ public class NotNullClause implements Condition
 	{
 		this.sourceObjectName = sourceObjectName;
 	}
+
 }

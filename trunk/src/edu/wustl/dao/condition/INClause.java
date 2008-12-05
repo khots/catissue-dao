@@ -11,9 +11,26 @@ public class INClause implements Condition
 {
 
 	/**
-	 * strBuff.
+	 * Name of the where Column.
 	 */
-	private final StringBuffer strBuff;
+	private String columnName;
+
+
+	/**
+	 * Value of the where column.
+	 */
+	private Object colValue;
+
+	/**
+	 * Value of the where column.
+	 */
+	private final Object[] colValueArray;
+
+	/**
+	 * Name of the class or table.
+	 */
+	private String sourceObjectName;
+
 	/**
 	 * @param columnName :
 	 * @param sourceObjectName :
@@ -21,17 +38,23 @@ public class INClause implements Condition
 	 */
 	public INClause(String columnName, String values ,String sourceObjectName )
 	{
-		strBuff = new StringBuffer(DAOConstants.TAILING_SPACES);
+		this.columnName = columnName;
+		this.colValue = values;
+		this.sourceObjectName = sourceObjectName;
+		this.colValueArray = values.split(DAOConstants.SPLIT_OPERATOR);
+	}
 
-		String sourceObject = DAOUtility.getInstance().parseClassName(sourceObjectName);
+	/**
+	 * @param columnName :
+	 * @param values :
+	 */
+	public INClause(String columnName, String values)
+	{
+		this.columnName = columnName;
+		this.colValue = values;
+		this.colValueArray = values.split(DAOConstants.SPLIT_OPERATOR);
 
-		strBuff.append(sourceObject).append(DAOConstants.DOT_OPERATOR).append(columnName).
-		append(DAOConstants.TAILING_SPACES).append(DAOConstants.IN_OPERATOR).
-		append(DAOConstants.TAILING_SPACES);
 
-		Object[] object = values.split(DAOConstants.SPLIT_OPERATOR);
-
-		updateInclause(object);
 	}
 
 	/**
@@ -42,6 +65,34 @@ public class INClause implements Condition
 	public INClause(String columnName,
 			Object[] object,String sourceObjectName)
 	{
+
+		this.columnName = columnName;
+		this.sourceObjectName = sourceObjectName;
+		this.colValueArray = object;
+	}
+
+	/**
+	 * @param columnName :
+	 * @param object :
+	 */
+	public INClause(String columnName,
+			Object[] object)
+	{
+
+		this.columnName = columnName;
+		this.colValueArray = object;
+	}
+
+
+
+	/**
+	 * This method will generate the in clause of Query.
+	 * @return String:
+	 */
+	public String buildSql()
+	{
+		StringBuffer strBuff = new StringBuffer(DAOConstants.TAILING_SPACES);
+
 		strBuff = new StringBuffer(DAOConstants.TAILING_SPACES);
 
 		String sourceObject = DAOUtility.getInstance().parseClassName(sourceObjectName);
@@ -50,57 +101,32 @@ public class INClause implements Condition
 		append(DAOConstants.TAILING_SPACES).append(DAOConstants.IN_OPERATOR).
 		append(DAOConstants.TAILING_SPACES);
 
-		updateInclause(object);
-	}
-	/**
-	 * @param columnName :
-	 * @param condition :
-	 * @param values :
-	 * @return :
-	 *//*
-	public String addCondition(String columnName, String condition, String values)
-	{
-		StringBuffer strBuff = new StringBuffer();
-		strBuff.append(columnName).append("   ").append(condition);
-		Object[] object = values.split(",");
-		updateInclause(object);
+		updateInclause(strBuff);
+
 		return strBuff.toString();
 	}
 
-	*//**
-	 * @param columnName :
-	 * @param condition :
-	 * @param object :
-	 * @return :
-	 *//*
-	public String addCondition(String columnName, String condition,
-			Object[] object)
-	{
-		return null;
-	}
-
-*/
-
 	/**
-	 * @param object :
+	 * This is called to append all the column values to in clause.
+	 * @param strBuff :
 	 */
-	private void updateInclause(Object[] object)
+	private void updateInclause(StringBuffer strBuff)
 	{
 
 		strBuff.append("(  ");
-		for (int j = 0; j < object.length; j++)
+		for (int j = 0; j < colValueArray.length; j++)
 		{
 
-			if(object[j] instanceof String)
+			if(colValueArray[j] instanceof String)
 			{
-				strBuff.append("'"+object[j]+"'");
+				strBuff.append("'"+colValueArray[j]+"'");
 			}
 			else
 			{
-				strBuff.append(object[j]);
+				strBuff.append(colValueArray[j]);
 			}
 
-			if((j+1) < object.length)
+			if((j+1) < colValueArray.length)
 			{
 				strBuff.append(", ");
 			}
@@ -109,12 +135,19 @@ public class INClause implements Condition
 	}
 
 	/**
-	 * Returns the string value.
-	 * @return String:
+	 * @return class name or table name.
 	 */
-	public String toString()
+	public String getSourceObjectName()
 	{
-		return strBuff.toString();
+		return sourceObjectName;
 	}
 
+
+	/**
+	 * @param sourceObjectName set the class name or table name.
+	 */
+	public void setSourceObjectName(String sourceObjectName)
+	{
+		this.sourceObjectName = sourceObjectName;
+	}
 }
