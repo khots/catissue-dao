@@ -6,26 +6,25 @@ package edu.wustl.dao.condition;
  */
 public interface Condition
 {
+
+
+
 	/**
-	 * @param columnName :
-	 * @param condition :
-	 * @param values :
-	 * @return :
-	 *//*
-	String addCondition(String columnName , String condition ,String values);
-	*//**
-	 * @param columnName :
-	 * @param condition :
-	 * @param object :
-	 * @return :
-	 *//*
-	String addCondition(String columnName , String condition , Object[] object);
-*/
+	 * @return class name or table name.
+	 */
+	String getSourceObjectName();
+
+	/**
+	 * @param sourceObjectName set the class name or table name.
+	 */
+	void setSourceObjectName(String sourceObjectName);
+
 
 
 	/**
 	 * Returns the string value.
 	 * @return String:
 	 */
-	String toString();
+	String buildSql();
+
 }
