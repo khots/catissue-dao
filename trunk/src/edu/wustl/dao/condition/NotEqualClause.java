@@ -13,13 +13,13 @@ public class NotEqualClause implements Condition
 	/**
 	 * Name of the where Column.
 	 */
-	private String columnName;
+	private final String columnName;
 
 
 	/**
 	 * Value of the where column.
 	 */
-	private Object colValue;
+	private final Object colValue;
 
 	/**
 	 * Name of the class or table.
@@ -52,7 +52,6 @@ public class NotEqualClause implements Condition
 
 		this.columnName = columnName;
 		this.colValue = object;
-		
 
 	}
 
