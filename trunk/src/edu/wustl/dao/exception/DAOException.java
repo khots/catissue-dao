@@ -1,3 +1,6 @@
+/*
+ *
+ */
 package edu.wustl.dao.exception;
 
 import org.hibernate.HibernateException;
@@ -49,7 +52,7 @@ public class DAOException extends ApplicationException
 
 	/**
 	 * This function formats a complete message with all details about error which caused the
-	 * exsception. This function intended to use for logging error message.
+	 * exception. This function intended to use for logging error message.
 	 *
 	 * Usage: logger.error(ex.getLogMessage,ex);
 	 *

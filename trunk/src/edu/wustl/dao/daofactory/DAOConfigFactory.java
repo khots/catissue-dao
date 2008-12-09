@@ -1,5 +1,12 @@
-/*
- * TODO
+/**
+ * <p>Title: DAOConfigFactory class>
+ * <p>Description: DAOConfigFactory is used to create DAOFactory objects as per the applications
+ * It creates a Map having key as the application name and value as DAOFactory object
+ * It reads the attribute default of ApplicationDAOProperties.xml and sets the Default DAOFactory object</p>
+ * Copyright:    Copyright (c) year
+ * Company: Washington University, School of Medicine, St. Louis.
+ * @version 1.0
+ * @author kalpana_thakur
  */
 package edu.wustl.dao.daofactory;
 
@@ -13,7 +20,8 @@ import edu.wustl.common.util.logger.Logger;
 
 /**
  * @author kalpana_thakur
- *
+ * It creates a Map having key as the application name and value as DAOFactory object
+ * It reads the attribute default of ApplicationDAOProperties.xml and sets the Default DAOFactory object.
  */
 public class DAOConfigFactory
 {
@@ -31,6 +39,7 @@ public class DAOConfigFactory
 	private static org.apache.log4j.Logger logger = Logger.getLogger(DAOConfigFactory.class);
 	/**
 	 *This Map holds the DAO factory object as per the application.
+	 *Key of the Map is application name and it holds IDAOFactory type Object.
 	 *TODO
 	 */
 	private static Map<String, IDAOFactory> daoFactoryMap = new HashMap<String, IDAOFactory>();
@@ -42,6 +51,8 @@ public class DAOConfigFactory
 
 	/**
 	 * Constructor.
+	 * It will call populateDaoFactoryMap which parses the
+	 * ApplicationDAOProperties.xml and populates the Map.
 	 */
 	public DAOConfigFactory()
 	{
@@ -49,7 +60,7 @@ public class DAOConfigFactory
 	}
 
 	/**
-	 * Getter method in singleton class is to setup mock unit testing.
+	 * It returns the daoConfigrationFactory instance.
 	 * @return factory
 	 */
 	public static DAOConfigFactory getInstance()
@@ -67,6 +78,8 @@ public class DAOConfigFactory
 	}
 
 	/**
+	 * Default factory object will be set as per the default attribute of
+	 * ApplicationDAOProperties.xml.
 	 * @return default DAO factory object.
 	 */
 	public IDAOFactory getDAOFactory()
@@ -77,7 +90,8 @@ public class DAOConfigFactory
 
 	/**
 	 * This method will parse the Application property file.
-	 * It will create the Map having application name as key and DAO factory object as a value.
+	 * It will create the Map having application name as key and DAO factory object as a value
+	 * and it also sets default DAO factory object.
 	 */
 	public static void populateDaoFactoryMap()
 	{
@@ -86,11 +100,6 @@ public class DAOConfigFactory
 			ApplicationDAOPropertiesParser applicationPropertiesParser =
 				new ApplicationDAOPropertiesParser();
 			daoFactoryMap = applicationPropertiesParser.getDaoFactoryMap();
-			/*TODO
-			 * Is this right approach ...have to confirm with abhijit
-			 * or we can keep default field in xml doc and save it
-			 * in Map with key as defaul tapplication.
-			 */
 			Iterator<String> mapKeySetIterator = daoFactoryMap.keySet().iterator();
 			while(mapKeySetIterator.hasNext())
 			{

@@ -1,9 +1,9 @@
 /**
  * <p>Title: DAOFactory Class>
- * <p>Description:	DAOFactory is a factory for JDBC DAO instances of various domain objects.</p>
+ * <p>Description:	DAOFactory is a factory class pluggable for different applications used
+ * to instantiate different DAO type objects.</p>
  * Copyright:    Copyright (c) year
  * Company: Washington University, School of Medicine, St. Louis.
- * @author Gautam Shetty
  * @version 1.00
  */
 
@@ -43,12 +43,11 @@ public class DAOFactory implements IDAOFactory
 
 	/**
 	 * This member will store the Default DAO class name.
-	 * TODO
+	 * Mostly HibernateDAOImpl will be considered as default DAO
 	 */
 	private String defaultDAOClassName;
 	/**
 	 * This member will store the JDBC DAO class name.
-	 * TODO
 	 */
 	private String jdbcDAOClassName;
 	/**
@@ -85,6 +84,8 @@ public class DAOFactory implements IDAOFactory
 
 	/**
 	 * This method will be called to retrieved default DAO instance.
+	 * It will read the concrete class for DAO and instantiate it
+	 * and also sets the Connection manager object to it.
 	 * @return return the DAO instance.
 	 * @throws DAOException :Generic DAOException.
 	 */
@@ -111,6 +112,8 @@ public class DAOFactory implements IDAOFactory
 
 	/**
 	 * This method will be called to retrieved the JDBC DAO instance.
+	 * It will read the concrete class for DAO and instantiate it
+	 * and also sets the Connection manager object to it.
 	 * @return the JDBCDAO instance
 	 * @throws DAOException :Generic DAOException.
 	 */
@@ -161,6 +164,8 @@ public class DAOFactory implements IDAOFactory
 
 	/**
 	 * This method instantiate the Connection Manager.
+	 * It will read the concrete class for Connection Manager,
+	 * instantiate it and sets the application name ,session factory and configuration object to it.
 	 * @param sessionFactory session factory object
 	 * @param configuration configuration
 	 *@throws DAOException :Generic DAOException.
@@ -168,9 +173,6 @@ public class DAOFactory implements IDAOFactory
 	private void setConnectionManager(SessionFactory sessionFactory,Configuration configuration)
 	throws DAOException
 	{
-		/*
-		 * Is writing this is valid here ...confirm !!!
-		 */
 		try
 		{
 			IConnectionManager connectionManager =
@@ -193,6 +195,7 @@ public class DAOFactory implements IDAOFactory
 
 	 /**
      * This method adds configuration file to Hibernate Configuration.
+     * It will parse the configuration file and creates the configuration.
      * @param configurationfile name of the file that needs to be added
      * @return Configuration :Configuration object.
 	 * @throws DAOException :Generic DAOException.
