@@ -1,6 +1,9 @@
-
+/*
+ * TODO
+ */
 package edu.wustl.dao;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
@@ -165,9 +168,9 @@ public interface JDBCDAO extends DAO
 
 	/**
 	 * @param excp : Exception Object.
-	 * @param args : TODO
+	 * @param connection :
 	 * @return : It will return the formated messages.
 	 */
-	String formatMessage(Exception excp, Object[] args);
+	String formatMessage(Exception excp,Connection connection);
 
 }

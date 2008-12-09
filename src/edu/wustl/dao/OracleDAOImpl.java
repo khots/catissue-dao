@@ -1,12 +1,16 @@
+/*
+ * TODO
+ */
 package edu.wustl.dao;
+
+import java.sql.Connection;
 
 import edu.wustl.common.dao.queryExecutor.PagenatedResultData;
 import edu.wustl.common.exception.ErrorKey;
-import edu.wustl.common.exceptionformatter.ConstraintViolationFormatter;
 import edu.wustl.common.util.QueryParams;
-import edu.wustl.common.util.global.Constants;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.exception.DAOException;
+import edu.wustl.dao.formatmessage.OracleFormatter;
 import edu.wustl.dao.util.DAOConstants;
 import edu.wustl.dao.util.DatabaseConnectionParams;
 import edu.wustl.query.executor.OracleQueryExecutor;
@@ -160,31 +164,14 @@ public class OracleDAOImpl extends AbstractJDBCDAOImpl
 
 	/**
 	 * @param excp : Exception Object.
-	 * @param args : TODO
+	 * @param connection :
 	 * @return : It will return the formated messages.
 	 */
-	public String formatMessage(Exception excp, Object[] args)
+	public String formatMessage(Exception excp,Connection connection)
 	{
 
-		String formattedErrMsg; // Formatted Error Message return by this method
-		Exception objExcp = excp;
-
-		try
-		{
-			if (excp instanceof gov.nih.nci.security.exceptions.CSTransactionException)
-			{
-				objExcp = (Exception) objExcp.getCause();
-				logger.debug(objExcp);
-			}
-			formattedErrMsg = ConstraintViolationFormatter.
-			getFormatedErrorMessageForOracle(args,objExcp);
-		}
-		catch (Exception e)
-		{
-			logger.error(e.getMessage(), e);
-			formattedErrMsg = Constants.GENERIC_DATABASE_ERROR;
-		}
-		return formattedErrMsg;
+		OracleFormatter oracleFormatter = new OracleFormatter();
+		return oracleFormatter.getFormatedMessage(excp,connection);
 	}
 
 }

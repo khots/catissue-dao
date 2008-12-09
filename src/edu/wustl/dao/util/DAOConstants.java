@@ -1,3 +1,6 @@
+/*
+ * TODO
+ */
 package edu.wustl.dao.util;
 
 /**
@@ -8,7 +11,7 @@ public final class DAOConstants
 {
 
 	/**
-	 * creates a single obj.
+	 * creates a single object.
 	 */
 	private static DAOConstants daoConstant = new DAOConstants();;
 	/**
@@ -19,8 +22,8 @@ public final class DAOConstants
 
 	}
 	/**
-	 * returns the single obj.
-	 * @return Utility obj
+	 * returns the single object.
+	 * @return Utility object
 	 */
 	public static DAOConstants getInstance()
 	{
@@ -167,6 +170,18 @@ public final class DAOConstants
 			"Check again before calling this method.";
 
 	/**
+	 * error message.
+	 */
+	public static final String CONSTRAINT_VOILATION_ERROR =" Submission failed since a " +
+			"{0} with the same {1} already exists";
+
+	/**
+	 *  The unique key error message is "Duplicate entry %s for key %d".
+	 *  This string is used for searching " for key " string in the above error message
+	 */
+	public static final String MYSQL_DUPL_KEY_MSG = " for key ";
+
+	/**
 	 * Dot operators.
 	 */
 	public static final String DOT_OPERATOR = ".";
@@ -194,29 +209,29 @@ public final class DAOConstants
 	/**
 	 * in operator.
 	 */
-	public static final String IN_OPERATOR = "in";
+	public static final String IN_CONDITION = "in";
 
 	/**
 	 * is not null operator.
 	 */
-	public static final String NOT_NULL_OPERATOR = "is not null";
+	public static final String NOT_NULL_CONDITION = "is not null";
 
 
 	/**
 	 * is null operator.
 	 */
-	public static final String NULL_OPERATOR = "is null";
+	public static final String NULL_CONDITION = "is null";
 
 	/**
 	 * Equal(=) operator.
 	 */
-	public static final String EQUAL_OPERATOR = "=";
+	public static final String EQUAL_CONDITION = "=";
 
 
 	/**
 	 * Not Equal(!=) operator.
 	 */
-	public static final String NOT_EQUAL_OPERATOR = "!=";
+	public static final String NOT_EQUAL_CONDITION = "!=";
 
 	/**
 	 * index value operator"?".

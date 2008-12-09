@@ -1,3 +1,6 @@
+/*
+ * TODO
+ */
 package edu.wustl.dao.condition;
 
 import edu.wustl.dao.util.DAOConstants;
@@ -67,7 +70,7 @@ public class NotEqualClause implements Condition
 		String sourceObject = DAOUtility.getInstance().parseClassName(sourceObjectName);
 
 		strBuff.append(sourceObject).append(DAOConstants.DOT_OPERATOR).
-		append(columnName).append(DAOConstants.TAILING_SPACES).append(DAOConstants.NOT_EQUAL_OPERATOR).
+		append(columnName).append(DAOConstants.TAILING_SPACES).append(DAOConstants.NOT_EQUAL_CONDITION).
 		append(DAOConstants.TAILING_SPACES);
 
 		if(colValue instanceof String)

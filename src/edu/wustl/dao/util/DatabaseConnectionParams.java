@@ -1,3 +1,6 @@
+/*
+ * TODO
+ */
 package edu.wustl.dao.util;
 
 import java.sql.Connection;
@@ -10,7 +13,7 @@ import java.sql.Statement;
 import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.exception.DAOException;
-
+import java.sql.DatabaseMetaData;
 
 /**
  * @author kalpana_thakur
@@ -242,5 +245,25 @@ public class DatabaseConnectionParams
 		}
 		return isResultSetExists;
 	}
+
+	/**
+	 *To get database meta data object for the connection.
+	 * @return Database meta data.
+	 * @throws DAOException  :
+	 */
+	public DatabaseMetaData getDatabaseMetaData() throws DAOException
+	{
+		try
+		{
+			return (DatabaseMetaData)connection.getMetaData();
+		}
+		catch(Exception exp)
+		{
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
+			throw new DAOException(errorKey,exp,"DatabaseConnectionParams.java :"+
+					DAOConstants.RS_METADATA_ERROR);
+		}
+	}
+
 
 }

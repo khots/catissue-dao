@@ -1,3 +1,6 @@
+/*
+ * TODO
+ */
 package edu.wustl.dao.condition;
 
 import edu.wustl.dao.util.DAOConstants;
@@ -91,7 +94,7 @@ public class INClause implements Condition
 		String sourceObject = DAOUtility.getInstance().parseClassName(sourceObjectName);
 
 		strBuff.append(sourceObject).append(DAOConstants.DOT_OPERATOR).append(columnName).
-		append(DAOConstants.TAILING_SPACES).append(DAOConstants.IN_OPERATOR).
+		append(DAOConstants.TAILING_SPACES).append(DAOConstants.IN_CONDITION).
 		append(DAOConstants.TAILING_SPACES);
 
 		updateInclause(strBuff);
