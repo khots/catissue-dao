@@ -1,5 +1,10 @@
+/*
+ * TODO
+ */
 
 package edu.wustl.dao;
+
+import java.sql.Connection;
 
 import edu.wustl.common.dao.queryExecutor.PagenatedResultData;
 import edu.wustl.common.exception.ErrorKey;
@@ -129,6 +134,17 @@ public class DB2DAOImpl extends AbstractJDBCDAOImpl
 	 * @return : This method will return Time Pattern.
 	 */
 	public String getTimePattern()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/**
+	 *@param excp : Exception.
+	 *@param connection :
+	 *@return returns the formatted message.
+	 */
+	public String formatMessage(Exception excp,Connection connection)
 	{
 		// TODO Auto-generated method stub
 		return null;

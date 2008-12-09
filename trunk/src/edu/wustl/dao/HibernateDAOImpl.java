@@ -31,6 +31,8 @@ import edu.wustl.common.util.global.Constants;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.condition.EqualClause;
 import edu.wustl.dao.connectionmanager.IConnectionManager;
+import edu.wustl.dao.daofactory.DAOConfigFactory;
+import edu.wustl.dao.daofactory.IDAOFactory;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.DAOConstants;
 import edu.wustl.dao.util.DAOUtility;
@@ -569,7 +571,8 @@ public class HibernateDAOImpl implements HibernateDAO
 			append(simpleName).append(DAOConstants.TAILING_SPACES).
 			append("where").append(DAOConstants.TAILING_SPACES).
 			append(simpleName).append(DAOConstants.DOT_OPERATOR).append(columnName).
-			append(DAOConstants.EQUAL_OPERATOR).append(DAOConstants.TAILING_SPACES).append(identifier);
+			append(DAOConstants.EQUAL_CONDITION).append(DAOConstants.TAILING_SPACES).
+			append(identifier);
 
 			return session.createQuery(queryStringBuffer.toString()).list();
 		}
@@ -649,6 +652,24 @@ public class HibernateDAOImpl implements HibernateDAO
 				session.close();
 			}
 		}
+	}
+
+
+	/**
+	 * @param excp : Exception Object.
+	 * @return : It will return the formated messages.
+	 * @param applicationName :
+	 * @throws DAOException :
+	 */
+	public String formatMessage(Exception excp,String applicationName) throws DAOException
+	{
+		String formatMessage = DAOConstants.TAILING_SPACES;
+		IDAOFactory daoFactory = DAOConfigFactory.getInstance().getDAOFactory(applicationName);
+		JDBCDAO jdbcDAO = daoFactory.getJDBCDAO();
+		//HibernateMetaData.initHibernateMetaData(jdbcDAO.getConnectionManager().getConfiguration());
+		formatMessage = jdbcDAO.formatMessage(excp,jdbcDAO.getConnectionManager().getConnection());
+		jdbcDAO.getConnectionManager().closeConnection();
+		return formatMessage;
 	}
 
 

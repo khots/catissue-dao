@@ -1,12 +1,16 @@
+/*
+ * TODO
+ */
 package edu.wustl.dao;
+
+import java.sql.Connection;
 
 import edu.wustl.common.dao.queryExecutor.PagenatedResultData;
 import edu.wustl.common.exception.ErrorKey;
-import edu.wustl.common.exceptionformatter.ConstraintViolationFormatter;
 import edu.wustl.common.util.QueryParams;
-import edu.wustl.common.util.global.Constants;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.exception.DAOException;
+import edu.wustl.dao.formatmessage.MysqlFormatter;
 import edu.wustl.dao.util.DAOConstants;
 import edu.wustl.query.executor.MysqlQueryExecutor;
 
@@ -100,33 +104,13 @@ public class MySQLDAOImpl extends AbstractJDBCDAOImpl
 
 	/**
 	 * @param excp : Exception Object.
-	 * @param args : TODO
+	 * @param connection :
 	 * @return : It will return the formated messages.
 	 */
-	public String formatMessage(Exception excp, Object[] args)
+	public String formatMessage(Exception excp,Connection connection)
 	{
-		logger.debug(excp.getClass().getName());
-		Exception objExcp = excp;
-		String tableName = null; // stores Table_Name for which column name to be found
-		String formattedErrMsg = null; // Formatted Error Message return by this method
-		try
-		{
-			if (objExcp instanceof gov.nih.nci.security.exceptions.CSTransactionException)
-			{
-				objExcp = (Exception) objExcp.getCause();
-				logger.debug(objExcp);
-			}
-			tableName = ConstraintViolationFormatter.getTableName(args);
-			formattedErrMsg = (String) ConstraintViolationFormatter.getFormattedErrorMessage(args,
-					objExcp, tableName);
-		}
-		catch (Exception exp)
-		{
-			logger.error(exp.getMessage(), exp);
-			formattedErrMsg = Constants.GENERIC_DATABASE_ERROR;
-		}
-		return formattedErrMsg;
-
+		MysqlFormatter mysqlFormatter = new MysqlFormatter();
+		return mysqlFormatter.getFormatedMessage(excp,connection);
 	}
 
 	/**
@@ -148,12 +132,14 @@ public class MySQLDAOImpl extends AbstractJDBCDAOImpl
 		}
 		catch(Exception exp)
 		{
+			logger.fatal(exp.getMessage(), exp);
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
 			throw new DAOException(errorKey,exp,"MySQLDAOImpl.java :"+
 					DAOConstants.EXECUTE_QUERY_ERROR);
 		}
 		return pagenatedResultData;
 	}
+
 
 
 }

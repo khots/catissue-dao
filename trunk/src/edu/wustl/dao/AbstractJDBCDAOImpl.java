@@ -976,4 +976,17 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
 	}
 
+	/**
+	 * @param excp : Exception Object.
+	 * @param applicationName : Name of the application.
+	 * @return : It will return the formated messages.
+	 * @throws DAOException : DAO exception.
+	 */
+	public String formatMessage(Exception excp, String applicationName)
+	throws DAOException
+	{
+		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
+		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
+	}
+
 }

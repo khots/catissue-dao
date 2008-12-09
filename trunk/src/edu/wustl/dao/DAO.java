@@ -193,4 +193,12 @@ public interface DAO
 	 * @return It will return the Connection Manager Object.
 	 */
 	IConnectionManager getConnectionManager();
+
+	/**
+	 * @param excp : Exception Object.
+	 * @param applicationName : Name of the application.
+	 * @return : It will return the formated messages.
+	 * @throws DAOException : DAO exception.
+	 */
+	String formatMessage(Exception excp,String applicationName)throws DAOException;
 }
