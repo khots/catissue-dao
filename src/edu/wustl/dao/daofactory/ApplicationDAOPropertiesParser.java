@@ -1,5 +1,6 @@
-/*
- * TODO
+/**
+ * This class is used to parse the ApplicationDAOProperties.xml
+ * It populates Map daoFactoryMap.
  */
 
 package edu.wustl.dao.daofactory;

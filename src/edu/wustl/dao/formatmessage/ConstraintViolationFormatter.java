@@ -1,5 +1,9 @@
-/*
- * TODO
+/**
+ * <p>Title: ConstraintViolationFormatter class>
+ * <p>Description: ConstraintViolationFormatter is used to construct user readable constraint
+ * violation messages</p>
+ * @version 1.0
+ * @author kalpana_thakur
  */
 package edu.wustl.dao.formatmessage;
 

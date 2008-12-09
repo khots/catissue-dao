@@ -185,11 +185,11 @@ public final class HibernateMetaData
 	 */
 	public static int getColumnWidth(Class classObj, String attributeName)
 	{
-		Iterator it = cfg.getClassMapping(classObj.getName()).getPropertyClosureIterator();
+		Iterator iterator = cfg.getClassMapping(classObj.getName()).getPropertyClosureIterator();
 		int colLength = 50;
-		while(it.hasNext())
+		while(iterator.hasNext())
 		{
-			Property property = (Property)it.next();
+			Property property = (Property)iterator.next();
 
 			if(property!=null && property.getName().equals(attributeName))
 			{

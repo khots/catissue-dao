@@ -1,6 +1,13 @@
-/*
- * TODO
+/**
+ * <p>Title: IDAOFactory Interface>
+ * <p>Description:	IDAOFactory is a factory class pluggable for different applications used
+ * to instantiate different DAO type objects.</p>
+ * Copyright:    Copyright (c) year
+ * Company: Washington University, School of Medicine, St. Louis.
+ * @version 1.00
+ * @author kalpana_thakur
  */
+
 package edu.wustl.dao.daofactory;
 
 import edu.wustl.dao.DAO;
@@ -11,7 +18,6 @@ import edu.wustl.dao.exception.DAOException;
 
 /**
  * @author kalpana_thakur
- *TODO
  */
 public interface IDAOFactory
 {
@@ -83,26 +89,34 @@ public interface IDAOFactory
 	String getConfigurationFile();
 
 	/**
-	 * This will be invoked to retrieve default DAO.
-	 * @return default DAO
-	 * @throws DAOException : generic exception
+	 * This method will be called to retrieved default DAO instance.
+	 * It will read the concrete class for DAO and instantiate it
+	 * and also sets the Connection manager object to it.
+	 * @return return the DAO instance.
+	 * @throws DAOException :Generic DAOException.
 	 */
 	DAO getDAO()throws DAOException;
 
 	/**
-	 * This will be invoked to retrieve JDBC DAO.
-	 * @return JDBC DAO.
-	 * @throws DAOException : generic exception
+	 * This method will be called to retrieved the JDBC DAO instance.
+	 * It will read the concrete class for DAO and instantiate it
+	 * and also sets the Connection manager object to it.
+	 * @return the JDBCDAO instance
+	 * @throws DAOException :Generic DAOException.
 	 */
 	JDBCDAO getJDBCDAO()throws DAOException;
 
 
 	/**
+	 * DAOFactory will be default if default attribute in ApplicationDAOProperties.xml
+	 * is set to true.
 	 * @return true if DAO factory is default DAO factory.
 	 */
 	Boolean getIsDefaultDAOFactory();
 
 	/**
+	 * DAOFactory will be default if default attribute in ApplicationDAOProperties.xml
+	 * is set to true.
 	 * @param isDefaultDAOFactory this will be set to true if the DAOFactory has to be
 	 * used as default DAO factory.
 	 */

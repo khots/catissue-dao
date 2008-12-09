@@ -120,22 +120,6 @@ public class OracleDAOImpl extends AbstractJDBCDAOImpl
 	}
 
 	/**
-	 * This method is called to insert data.
-	 * @see edu.wustl.dao.JDBCDAO#insert(java.lang.String, java.util.List)
-	 * @param tableName : Name of the table.
-	 * @param columnValues : Column values of table.
-	 * @throws SQLException : SQLException
-	 * @throws DAOException : DAOException
-	 *//*
-	public void insertHashedValues(String tableName, List<Object> columnValues)
-	 throws DAOException, SQLException
-	{
-		insertHashedValues(tableName, columnValues, null);
-	}*/
-
-
-
-	/**
 	 * This method executed query, parses the result and returns List of rows after doing security checks
 	 * for user's right to view a record/field.
 	 * @param queryParams : TODO
