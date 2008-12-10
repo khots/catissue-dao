@@ -1,5 +1,10 @@
-/*
- * TODO
+/**
+ *<p>Title: IConnectionManager Interface>
+ * <p>Description:	Pluggable IConnectionManager allows developer to select
+ * ConnectionManager at run time.It handles all
+ * hibernate specific operations like opening and closing of hibernate connection, session etc</p>
+ * @author kalpana_thakur
+ * @version 1.0
  */
 package edu.wustl.dao.connectionmanager;
 
