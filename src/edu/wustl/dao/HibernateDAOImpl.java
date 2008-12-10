@@ -1,6 +1,6 @@
 /**
  * <p>Title: HibernateDAO Class>
- * <p>Description:	HibernateDAO is default implemention of AbstractDAO through Hibernate ORM tool.
+ * <p>Description:	HibernateDAO is default implemention of DAO through Hibernate ORM tool.
  * Copyright:    Copyright (c) year
  * Company: Washington University, School of Medicine, St. Louis.
  * @author Gautam Shetty

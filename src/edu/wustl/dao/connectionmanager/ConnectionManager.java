@@ -1,5 +1,5 @@
 /**
-*<p>Title: ConnectionManager Interface>
+*<p>Title: ConnectionManager class>
  * <p>Description:	It handles all
  * hibernate specific operations like opening and closing of hibernate connection, session etc
  * Connection manager has ThreadLocal instance variable which holds the Map having session object

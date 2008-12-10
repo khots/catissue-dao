@@ -1,5 +1,8 @@
-/*
- * TODO
+/**
+ * <p>Title: HibernateDAO Interface</p>
+ * <p>Description :This interface defines methods which are specific to
+ * Hibernate operations</p>
+ *  * @author kalpana_thakur
  */
 package edu.wustl.dao;
 

@@ -24,6 +24,10 @@ import edu.wustl.dao.exception.DAOException;
  */
 public final class DAOUtility
 {
+	/**
+	 * GET_PARAMETERIZED_QUERIES_DETAILS String details of parameterized queries.
+	 */
+	 public static final String GET_PARAMETERIZED_QUERIES_DETAILS = "getParameterizedQueriesDetails";
 
 	/**
 	 * creates a single obj.
@@ -182,10 +186,8 @@ public final class DAOUtility
 	}
 
 
-	/**
-	 * GET_PARAMETERIZED_QUERIES_DETAILS String details of parameterized queries.
-	 */
-	public static final String GET_PARAMETERIZED_QUERIES_DETAILS = "getParameterizedQueriesDetails";
+
+
 	/** This method add details of query in a list.
 	 * @param queryName String name of query.
 	 * @param values List of type Object object list.
