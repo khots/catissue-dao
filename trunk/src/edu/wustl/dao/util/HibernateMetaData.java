@@ -10,6 +10,7 @@ import java.util.Iterator;
 
 import org.hibernate.cfg.Configuration;
 import org.hibernate.mapping.Column;
+import org.hibernate.mapping.PersistentClass;
 import org.hibernate.mapping.Property;
 import org.hibernate.mapping.Table;
 import org.hibernate.proxy.HibernateProxy;
@@ -207,6 +208,28 @@ public final class HibernateMetaData
 
 
 	/**
+	 * @param tableName :Name of table.
+	 * @return the class name
+	 */
+	public static  String getClassName(String tableName)
+	{
+		Iterator it = cfg.getClassMappings();
+		PersistentClass persistentClass;
+		String className = DAOConstants.TAILING_SPACES;
+		while(it.hasNext())
+		{
+			persistentClass = (PersistentClass) it.next();
+			if(tableName.equalsIgnoreCase(persistentClass.getTable().getName()))
+			{
+				className = persistentClass.getClassName();
+			}
+		}
+
+		return className;
+	}
+
+
+	/**
 	 *  This function returns the attributeName related to classObj1 and classObj2.
 	 * @param classObj1 :
 	 * @param classObj2 :
@@ -335,24 +358,9 @@ public final class HibernateMetaData
 	}
 */
 
-	/*public static  String getClassName(String tableName)
-	{
-		Iterator it = cfg.getClassMappings();
-		PersistentClass persistentClass;
-		while(it.hasNext())
-		{
-			persistentClass = (PersistentClass) it.next();
-			if(tableName.equalsIgnoreCase(persistentClass.getTable().getName()))
-			{
-				return persistentClass.getClassName();
-			}
-		}
-
-		return "";
-	}
 
 
-	public static void getDATA(Class classObj)
+	/*public static void getDATA(Class classObj)
 	{
 		org.hibernate.mapping.Collection coll = cfg.getCollectionMapping("edu.wustl.catissuecore.domain.
 		CollectionProtocolEvent.specimenRequirementCollection");
