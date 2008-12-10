@@ -1,7 +1,11 @@
-/*
- * TODO
- */
-package edu.wustl.dao;
+/**
+ * <p>Title: QueryWhereClause Class>
+ * <p>Description:	QueryWhereClause used to create where clause of Query.
+ * Copyright:    Copyright (c) year
+ * Company: Washington University, School of Medicine, St. Louis.
+ * @author kalpana_thakur
+ * @version 1.00
+ */package edu.wustl.dao;
 
 import java.lang.reflect.Constructor;
 import java.util.Map;

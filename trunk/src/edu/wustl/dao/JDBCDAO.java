@@ -1,6 +1,9 @@
-/*
- * TODO
+/**
+ * <p>Title: JDBCDAO Interface</p>
+ * <p>Description :This interface defines methods which are specific to JDBC operations</p>
+ *  @author kalpana_thakur
  */
+
 package edu.wustl.dao;
 
 import java.sql.Connection;

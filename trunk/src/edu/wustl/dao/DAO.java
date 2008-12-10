@@ -1,8 +1,9 @@
-/*
- * Created on Aug 6, 2005
- *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
+/**
+ * <p>Title: DAO Interface>
+ * <p>Description:	DAO provides methods to manipulate the domain objects.
+ * It provides methods like insert ,update etc .</p>
+ * @version 1.0
+ * @author kalpana_thakur
  */
 
 package edu.wustl.dao;
