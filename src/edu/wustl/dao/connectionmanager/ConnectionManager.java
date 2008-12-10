@@ -1,5 +1,12 @@
-/*
- * TODO
+/**
+*<p>Title: ConnectionManager Interface>
+ * <p>Description:	It handles all
+ * hibernate specific operations like opening and closing of hibernate connection, session etc
+ * Connection manager has ThreadLocal instance variable which holds the Map having session object
+ * as per the application .It holds Map<ApplicationName, session>
+ * thus allow user to use multiple hibernate sessions as per the application.</p>
+ * @author kalpana_thakur
+ * @version 1.0
  */
 package edu.wustl.dao.connectionmanager;
 
@@ -43,6 +50,8 @@ public class ConnectionManager implements IConnectionManager
 
 	/**
 	 * ThreadLocal to hold the Session for the current executing thread.
+	 * It holds Map(ApplicationName, session)
+  		thus allow user to use multiple hibernate sessions as per the application.
 	 */
 	private static final ThreadLocal<Map<String, Session>> threadLocal
 	= new ThreadLocal<Map<String, Session>>();
