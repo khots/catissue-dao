@@ -16,7 +16,6 @@ import edu.wustl.dao.QueryWhereClause;
 import edu.wustl.dao.condition.EqualClause;
 import edu.wustl.dao.condition.INClause;
 import edu.wustl.dao.condition.NullClause;
-import edu.wustl.dao.condition.NotEqualClause;
 import edu.wustl.dao.condition.NotNullClause;
 import edu.wustl.dao.daofactory.IDAOFactory;
 import edu.wustl.dao.exception.DAOException;
@@ -26,8 +25,9 @@ import edu.wustl.dao.util.DatabaseConnectionParams;
  * @author kalpana_thakur
  *
  */
-public class JDBCTestCases extends BaseTestCase
+public class JDBCTestCasesForIIDB extends BaseTestCase
 {
+
 	/**
 	 * Logger.
 	 */
@@ -47,7 +47,7 @@ public class JDBCTestCases extends BaseTestCase
 	 */
 	public void setJDBCDAO()
 	{
-		IDAOFactory daoFactory = daoConfigFactory.getInstance().getDAOFactory("caTissuecore");
+		IDAOFactory daoFactory = daoConfigFactory.getInstance().getDAOFactory("Dynamic Extensions");
 		try
 		{
 			jdbcDAO = daoFactory.getJDBCDAO();
@@ -67,9 +67,7 @@ public class JDBCTestCases extends BaseTestCase
 	{
 		assertNotNull("DAO Object is null",jdbcDAO);
 	}
-
-
-
+	
 	/**
 	 * This test will assert that table created successfully.
 	 */
@@ -261,9 +259,7 @@ public class JDBCTestCases extends BaseTestCase
 			String[] selectColumnName = null;
 
 			QueryWhereClause queryWhereClause = new QueryWhereClause(sourceObjectName);
-			queryWhereClause.addCondition(new INClause("IDENTIFIER",colValues,sourceObjectName)).
-			orOpr().addCondition(new INClause("FIRST_NAME","JOHN,abhijit",sourceObjectName));
-
+			queryWhereClause.addCondition(new INClause("IDENTIFIER",colValues,sourceObjectName));
 
 			jdbcDAO.openSession(null);
 			List<Object> list = jdbcDAO.retrieve(sourceObjectName, selectColumnName,queryWhereClause);
@@ -291,8 +287,9 @@ public class JDBCTestCases extends BaseTestCase
 			String[] selectColumnName = null;
 
 			QueryWhereClause queryWhereClause = new QueryWhereClause(sourceObjectName);
-			queryWhereClause.addCondition(new NotNullClause("IDENTIFIER",sourceObjectName)).orOpr().
-			addCondition(new NotNullClause("LAST_NAME",sourceObjectName));
+			queryWhereClause.addCondition(new NotNullClause("IDENTIFIER",sourceObjectName));
+			queryWhereClause.orOpr();
+			queryWhereClause.addCondition(new NotNullClause("LAST_NAME",sourceObjectName));
 
 			jdbcDAO.openSession(null);
 			List<Object> list = jdbcDAO.retrieve(sourceObjectName, selectColumnName,queryWhereClause);
@@ -321,48 +318,14 @@ public class JDBCTestCases extends BaseTestCase
 			String[] selectColumnName = null;
 
 			QueryWhereClause queryWhereClause = new QueryWhereClause(sourceObjectName);
-			queryWhereClause.addCondition(new NullClause("LAST_NAME",sourceObjectName)).orOpr().
-			addCondition(new NotEqualClause("IDENTIFIER",
-					Long.valueOf("1"),sourceObjectName));
-
-			jdbcDAO.openSession(null);
-			List<Object> list = jdbcDAO.retrieve(sourceObjectName,
-					selectColumnName,queryWhereClause);
-			jdbcDAO.closeSession();
-
-			assertNotNull("No object retrieved ::",list);
-
-		}
-		catch(Exception exp)
-		{
-			assertFalse("Failed while retrieving object ::", true);
-		}
-
-	}
-
-	/**
-	 * This test will assert that objects retrieved successfully
-	 * when where clause holds is not equal condition.
-	 */
-	@Test
-	public void testRetriveNotEqualConditionJDBC()
-	{
-		try
-		{
-			String sourceObjectName = "test_user";
-			String[] selectColumnName = null;
-
-			QueryWhereClause queryWhereClause = new QueryWhereClause(sourceObjectName);
-			queryWhereClause.addCondition(new NotEqualClause("IDENTIFIER",
-					Long.valueOf("1"),sourceObjectName)).andOpr().
-					addCondition(new NotEqualClause("LAST_NAME",
-					"NAIK",sourceObjectName));
+			queryWhereClause.addCondition(new NullClause("LAST_NAME",sourceObjectName));
 
 			jdbcDAO.openSession(null);
 			List<Object> list = jdbcDAO.retrieve(sourceObjectName, selectColumnName,queryWhereClause);
 			jdbcDAO.closeSession();
 
 			assertNotNull("No object retrieved ::",list);
+			assertTrue("No object retrieved ::",!list.isEmpty());
 
 		}
 		catch(Exception exp)
@@ -371,7 +334,6 @@ public class JDBCTestCases extends BaseTestCase
 		}
 
 	}
-
 
 	/**
 	 * This test will assert that objects retrieved successfully with given column value
@@ -517,9 +479,11 @@ public class JDBCTestCases extends BaseTestCase
 			String[] selectColumnName = null;
 
 			QueryWhereClause queryWhereClause = new QueryWhereClause(sourceObjectName);
-			queryWhereClause.addCondition(new INClause("IDENTIFIER",colValues,sourceObjectName)).
-			orOpr().addCondition(new NotNullClause("FIRST_NAME",sourceObjectName)).orOpr().
-			addCondition(new EqualClause("FIRST_NAME","naik",sourceObjectName));
+			queryWhereClause.addCondition(new INClause("IDENTIFIER",colValues,sourceObjectName));
+			queryWhereClause.orOpr();
+			queryWhereClause.addCondition(new NotNullClause("FIRST_NAME",sourceObjectName));
+			queryWhereClause.orOpr();
+			queryWhereClause.addCondition(new EqualClause("FIRST_NAME","naik",sourceObjectName));
 
 			jdbcDAO.openSession(null);
 			List<Object> list = jdbcDAO.retrieve(sourceObjectName, selectColumnName,queryWhereClause);
@@ -773,6 +737,8 @@ public class JDBCTestCases extends BaseTestCase
 		}
 
 	}
+
+
 
 
 

@@ -73,8 +73,7 @@ public final class HibernateMetaData
 		if (domainObject instanceof HibernateProxy)
 		{
 			HibernateProxy hiberProxy  = (HibernateProxy)domainObject;
-			Object obj = hiberProxy.getHibernateLazyInitializer().getImplementation();
-			object = (AbstractDomainObject)obj;
+			object = hiberProxy.getHibernateLazyInitializer().getImplementation();
 		}
         return object;
 	}
@@ -124,9 +123,10 @@ public final class HibernateMetaData
 		while(iter.hasNext())
 		{
 			columnName = getColumnName(attributeName,iter);
-			if(DAOConstants.TAILING_SPACES.equals(columnName))
+			if(!DAOConstants.TAILING_SPACES.equals(columnName))
 			{
 				foundColName = true;
+				break;
 			}
 		}
 

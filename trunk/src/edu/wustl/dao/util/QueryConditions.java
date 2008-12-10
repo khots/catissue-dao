@@ -37,8 +37,8 @@ public final class QueryConditions
 	{
 		Map<String, String> queryCondMap = new HashMap<String, String>();
 		queryCondMap.put(DAOConstants.IN_CONDITION, "edu.wustl.dao.condition.INClause");
-		queryCondMap.put(DAOConstants.EQUAL_CONDITION, "edu.wustl.dao.condition.EqualClause");
-		queryCondMap.put(DAOConstants.NOT_EQUAL_CONDITION, "edu.wustl.dao.condition.NotEqualClause");
+		queryCondMap.put(DAOConstants.EQUAL, "edu.wustl.dao.condition.EqualClause");
+		queryCondMap.put(DAOConstants.NOT_EQUAL, "edu.wustl.dao.condition.NotEqualClause");
 		queryCondMap.put(DAOConstants.NOT_NULL_CONDITION, "edu.wustl.dao.condition.NotNullClause");
 		queryCondMap.put(DAOConstants.NULL_CONDITION, "edu.wustl.dao.condition.NullClause");
 

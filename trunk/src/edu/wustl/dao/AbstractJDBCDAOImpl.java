@@ -322,7 +322,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	{
 		String[] selectColumnName = null;
 
-		QueryWhereClause queryWhereClause = new QueryWhereClause();
+		QueryWhereClause queryWhereClause = new QueryWhereClause(sourceObjectName);
 		queryWhereClause.addCondition(new EqualClause(whereColumnName,whereColumnValue,sourceObjectName));
 
 		return retrieve(sourceObjectName, selectColumnName,queryWhereClause,false);
