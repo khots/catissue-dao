@@ -41,6 +41,7 @@ public class BaseTestCase extends TestCase
 		}
 		catch (Exception e)
 		{
+			e.printStackTrace();
 			logger.fatal("Problem while retrieving factory object :",e);
 		}
 	}

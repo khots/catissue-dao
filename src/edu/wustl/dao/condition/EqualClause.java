@@ -63,7 +63,7 @@ public class EqualClause implements Condition
 		String sourceObject = DAOUtility.getInstance().parseClassName(sourceObjectName);
 
 		strBuff.append(sourceObject).append(DAOConstants.DOT_OPERATOR).
-		append(columnName).append(DAOConstants.TAILING_SPACES).append(DAOConstants.EQUAL_CONDITION).
+		append(columnName).append(DAOConstants.TAILING_SPACES).append(DAOConstants.EQUAL).
 		append(DAOConstants.TAILING_SPACES);
 
 		if(colValue instanceof String)

@@ -49,12 +49,12 @@ public class QueryWhereClause
 	/**
 	 * It will instantiate the whereClause buff.
 	 */
-	public QueryWhereClause()
+	/*public QueryWhereClause()
 	{
 		whereClauseBuff = new StringBuffer();
 		whereClauseBuff.append(DAOConstants.TAILING_SPACES)
 		.append("WHERE").append(DAOConstants.TAILING_SPACES);
-	}
+	}*/
 
 	/**
 	 * @return :
@@ -112,8 +112,7 @@ public class QueryWhereClause
 	{	Map<String,String> queryConMap = QueryConditions.getWhereClauseCondMap();
 		boolean isJoinConSet = false;
 		try
-		{
-			for(int index=0 ;index<whereColumnCondition.length;index++)
+		{	for(int index=0 ;index<whereColumnCondition.length;index++)
 			{
 				Condition condition = null;
 				Class conditionClass = Class.forName((queryConMap.get(whereColumnCondition[index]))
@@ -125,8 +124,8 @@ public class QueryWhereClause
 					condition = (Condition)constructor.newInstance(new Object[] {
 							whereColumnName[index],whereColumnValue[index] } );
 				}
-				else if(whereColumnCondition[index].contains(DAOConstants.EQUAL_CONDITION) ||
-					whereColumnCondition[index].contains(DAOConstants.NOT_EQUAL_CONDITION))
+				else if(whereColumnCondition[index].contains(DAOConstants.EQUAL) ||
+					whereColumnCondition[index].contains(DAOConstants.NOT_EQUAL))
 				{
 					Constructor constructor = conditionClass.getConstructor(new Class[]
 					                                  {String.class  ,Object.class } );
@@ -148,6 +147,7 @@ public class QueryWhereClause
 				if(!isJoinConSet)
 				{
 					whereClauseBuff.append(joinCondition);
+					isJoinConSet = true;
 				}
 			}
 		}

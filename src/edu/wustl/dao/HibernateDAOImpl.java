@@ -397,8 +397,8 @@ public class HibernateDAOImpl implements HibernateDAO
 	{
 		String[] selectColumnName = null;
 
-		QueryWhereClause queryWhereClause = new QueryWhereClause();
-		queryWhereClause.addCondition(new EqualClause(whereColumnName,whereColumnValue,sourceObjectName));
+		QueryWhereClause queryWhereClause = new QueryWhereClause(sourceObjectName);
+		queryWhereClause.addCondition(new EqualClause(whereColumnName,whereColumnValue));
 
 		return retrieve(sourceObjectName, selectColumnName,queryWhereClause);
 	}
@@ -571,7 +571,7 @@ public class HibernateDAOImpl implements HibernateDAO
 			append(simpleName).append(DAOConstants.TAILING_SPACES).
 			append("where").append(DAOConstants.TAILING_SPACES).
 			append(simpleName).append(DAOConstants.DOT_OPERATOR).append(columnName).
-			append(DAOConstants.EQUAL_CONDITION).append(DAOConstants.TAILING_SPACES).
+			append(DAOConstants.EQUAL).append(DAOConstants.TAILING_SPACES).
 			append(identifier);
 
 			return session.createQuery(queryStringBuffer.toString()).list();

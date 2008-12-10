@@ -225,13 +225,13 @@ public final class DAOConstants
 	/**
 	 * Equal(=) operator.
 	 */
-	public static final String EQUAL_CONDITION = "=";
+	public static final String EQUAL = "=";
 
 
 	/**
 	 * Not Equal(!=) operator.
 	 */
-	public static final String NOT_EQUAL_CONDITION = "!=";
+	public static final String NOT_EQUAL = "!=";
 
 	/**
 	 * index value operator"?".

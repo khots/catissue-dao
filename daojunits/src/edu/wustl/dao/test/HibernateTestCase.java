@@ -1,12 +1,19 @@
 package edu.wustl.dao.test;
 
+import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.junit.Test;
 
+import test.Address;
+import test.Order;
+import test.Person;
 import test.User;
+import edu.wustl.common.exception.ApplicationException;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.DAO;
 import edu.wustl.dao.HibernateDAO;
@@ -14,10 +21,15 @@ import edu.wustl.dao.HibernateDAOImpl;
 import edu.wustl.dao.QueryWhereClause;
 import edu.wustl.dao.condition.EqualClause;
 import edu.wustl.dao.condition.INClause;
-import edu.wustl.dao.condition.IsNullClause;
+import edu.wustl.dao.condition.NotEqualClause;
+import edu.wustl.dao.condition.NullClause;
 import edu.wustl.dao.condition.NotNullClause;
 import edu.wustl.dao.daofactory.IDAOFactory;
 import edu.wustl.dao.exception.DAOException;
+import edu.wustl.dao.formatmessage.ConstraintViolationFormatter;
+import edu.wustl.dao.util.DAOConstants;
+import edu.wustl.dao.util.HibernateMetaData;
+import edu.wustl.common.util.Utility;
 
 
 /**
@@ -65,6 +77,79 @@ public class HibernateTestCase extends BaseTestCase
 	{
 		assertNotNull("DAO Object is null",dao);
 	}
+
+
+	/**
+	 * This test will assert that Object inserted successfully.
+	 */
+	@Test
+	public void testInsertPerson()
+	{
+		try
+		{
+			dao.openSession(null);
+			Person person = new Person();
+
+			Address address = new Address();
+			address.setStreet("Street unknown");
+			dao.insert(address, null, false, false);
+			person.setAddress(address);
+
+			Collection<Object> orderCol = new HashSet<Object>();
+			Order order = new Order();
+			order.setPerson(person);
+
+			person.setName("Kalpana");
+			orderCol.add(order);
+			person.setOrderCollection(orderCol);
+			dao.insert(person, null, false, false);
+			dao.commit();
+			dao.closeSession();
+
+		}
+		catch(Exception exp)
+		{
+			ApplicationException appExp = (ApplicationException)exp;
+			logger.fatal(appExp.getLogMessage());
+			assertFalse("Failed while inserting object :", true);
+		}
+
+	}
+
+	/**
+	 * This test will assert on constraint violation proper message is thrown.
+	 */
+	@Test
+	public void testConstraintViolation()
+	{
+		try
+		{
+			dao.openSession(null);
+			Address address = new Address();
+			address.setStreet("Street unknown");
+			dao.insert(address, null, false, false);
+			dao.commit();
+			dao.closeSession();
+		}
+		catch(Exception exp)
+		{
+			ConstraintViolationFormatter formatter = new ConstraintViolationFormatter();
+			try
+			{
+				ApplicationException appExp = (ApplicationException)exp;
+				String messagethrown = formatter.formatMessage(appExp.getWrapException(),
+						"caTissuecore");
+				assertTrue("Message thrown is not correct!! ",
+						messagethrown.contains("Submission failed since"));
+
+			}
+			catch (DAOException e)
+			{
+				logger.fatal(e);
+			}
+
+		}
+	  }
 
 /**
 	 * This test will assert that Object inserted successfully.
@@ -123,6 +208,37 @@ public class HibernateTestCase extends BaseTestCase
 		}
 
 	  }
+
+	/**
+	 * This test will assert  the retrieve used by catissuecore.
+	 */
+	@Test
+	 public void testRetrieveForCatissue()
+	{
+		List<Object> list = null;
+		try
+		{
+			dao.openSession(null);
+			String[] selectColumnName = null;
+			String sourceObjectName = "test.User";
+			Object [] colValues = {Long.valueOf(1),Long.valueOf(2)};
+			String[] whereColNames = {"lastName" , "identifier"};
+			String[] whereColConditions = {DAOConstants.EQUAL,
+					DAOConstants.IN_CONDITION};
+			Object[] whereColValues = {"Naik",colValues};
+			String joinCondition = DAOConstants.OR_JOIN_CONDITION;
+			QueryWhereClause queryWhereClause = new QueryWhereClause(sourceObjectName);
+			queryWhereClause.getWhereCondition(whereColNames, whereColConditions,
+					whereColValues, joinCondition);
+			list = dao.retrieve(sourceObjectName, selectColumnName,queryWhereClause);
+			dao.closeSession();
+			assertNotNull("Object retrieved is null ",list);
+		}
+		catch(Exception exp)
+		{
+			assertFalse("Problem while retrieving :", true);
+		}
+	}
 
 	/**
 	 * This test will assert that all the objects are retrieved successfully.
@@ -248,11 +364,10 @@ public class HibernateTestCase extends BaseTestCase
 			String[] selectColumnName = null;
 
 			Object[] object = {"naik"};
-			QueryWhereClause queryWhereClause = new QueryWhereClause();
-			queryWhereClause.addCondition(new INClause("firstName","JOHN,abhijit",
-					sourceObjectName));
-			queryWhereClause.operatorAnd();
-			queryWhereClause.addCondition(new INClause("lastName",object,sourceObjectName));
+			QueryWhereClause queryWhereClause = new QueryWhereClause(sourceObjectName);
+			queryWhereClause.addCondition(new INClause("firstName","JOHN,abhijit")).andOpr().
+			addCondition(new INClause("lastName",object,sourceObjectName)).orOpr().
+			addCondition(new NotEqualClause("identifier",Long.valueOf(1)));
 
 			dao.openSession(null);
 			List<Object> list = dao.retrieve(sourceObjectName, selectColumnName,queryWhereClause);
@@ -280,10 +395,9 @@ public class HibernateTestCase extends BaseTestCase
 			String sourceObjectName = "test.User";
 			String[] selectColumnName = null;
 
-			QueryWhereClause queryWhereClause = new QueryWhereClause();
-			queryWhereClause.addCondition(new NotNullClause("identifier",sourceObjectName));
-			queryWhereClause.operatorOr();
-			queryWhereClause.addCondition(new NotNullClause("lastName",sourceObjectName));
+			QueryWhereClause queryWhereClause = new QueryWhereClause(sourceObjectName);
+			queryWhereClause.addCondition(new NotNullClause("identifier"))
+			.orOpr().addCondition(new NotNullClause("lastName",sourceObjectName));
 
 
 			dao.openSession(null);
@@ -313,8 +427,8 @@ public class HibernateTestCase extends BaseTestCase
 
 			String[] selectColumnName = null;
 
-			QueryWhereClause queryWhereClause = new QueryWhereClause();
-			queryWhereClause.addCondition(new IsNullClause("lastName",sourceObjectName));
+			QueryWhereClause queryWhereClause = new QueryWhereClause(sourceObjectName);
+			queryWhereClause.addCondition(new NullClause("lastName"));
 
 			dao.openSession(null);
 			List<Object> list = dao.retrieve(sourceObjectName, selectColumnName,queryWhereClause);
@@ -501,9 +615,9 @@ public class HibernateTestCase extends BaseTestCase
 	 * In this test application 'App1' and 'App2'insert object to their respective databases.
 	 * Pointing to same database type either MySQL , Oracle or any third type.
 	 */
-			@Test
+	@Test
 	public void testMultAppInsertPointngRespectiveDBSameDBType()
-	{
+	{/*
 		try
 		{
 			User user = (User)createUserObject();
@@ -518,7 +632,7 @@ public class HibernateTestCase extends BaseTestCase
 		{
 			assertFalse("Problem occurred while opening second session within a session:", true);
 		}
-	}
+	*/}
 
 
 	/**
@@ -534,12 +648,10 @@ public class HibernateTestCase extends BaseTestCase
 			Object [] colValues = {Long.valueOf(1),Long.valueOf(2)};
 			String[] selectColumnName = null;
 
-			QueryWhereClause queryWhereClause = new QueryWhereClause();
-			queryWhereClause.addCondition(new INClause("identifier",colValues,sourceObjectName));
-			queryWhereClause.operatorOr();
-			queryWhereClause.addCondition(new NotNullClause("firstName",sourceObjectName));
-			queryWhereClause.operatorOr();
-			queryWhereClause.addCondition(new EqualClause("firstName","Washu",sourceObjectName));
+			QueryWhereClause queryWhereClause = new QueryWhereClause(sourceObjectName);
+			queryWhereClause.addCondition(new INClause("identifier",colValues))
+			.orOpr().addCondition(new NotNullClause("firstName")).orOpr()
+			.addCondition(new EqualClause("firstName","Washu"));
 
 			dao.openSession(null);
 			List<Object> list = dao.retrieve(sourceObjectName, selectColumnName,queryWhereClause);
@@ -565,6 +677,50 @@ public class HibernateTestCase extends BaseTestCase
 		assertNotNull("Connection Manager Name not exists", daoFactory.getConnectionManagerName());
 		assertNotNull("Configuration object null ", dao.getConnectionManager().getConfiguration());
 		assertNotNull("JDBC class name Name does not exists", daoFactory.getJdbcDAOClassName());
+
+	}
+
+	/**
+	 * This test will test various methods of HibernateMetaData class.
+	 */
+	@Test
+	public void testDifferentMethodsOfHibernateMetaData()
+	{
+		try
+		{
+			dao.openSession(null);
+			HibernateMetaData.initHibernateMetaData(dao.getConnectionManager().getConfiguration());
+			User user  = (User)dao.retrieve("test.User", Long.valueOf(1));
+			Object object = HibernateMetaData.getProxyObjectImpl(user);
+				assertNotNull("Proxy Object retrieved is null :"+object);
+
+			String tableName = HibernateMetaData.getTableName(user.getClass());
+				assertTrue("Table name is empty",
+						!tableName.equals(DAOConstants.TAILING_SPACES));
+
+			String rootTableName = HibernateMetaData.getRootTableName(user.getClass());
+			assertTrue("Root Table name is empty",
+						!rootTableName.equals(DAOConstants.TAILING_SPACES));
+
+			String columnName = HibernateMetaData.getColumnName(user.getClass(),"lastName");
+				assertTrue("Column Name is empty",
+						!columnName.equals(DAOConstants.TAILING_SPACES));
+
+			int colWidth = HibernateMetaData.getColumnWidth(user.getClass(),"lastName");
+			assertTrue("colWidth  is 0",colWidth > 0);
+
+			String className = HibernateMetaData.getClassName("Test_user");
+				assertTrue("NO class name obtained ",
+						!className.equals(DAOConstants.TAILING_SPACES));
+
+
+			dao.closeSession();
+			assertNotNull("Object is null ",user);
+		}
+		catch(Exception exp)
+		{
+			assertFalse("Failed in HibernateMetaData ::", true);
+		}
 
 	}
 
