@@ -1,11 +1,16 @@
-/*
- * TODO
+/**
+ * <p>Title: DAOConstants Class>
+ * <p>Description:	DAOConstants class holds the DAO specific constants .</p>
+ * Copyright:    Copyright (c) year
+ * Company: Washington University, School of Medicine, St. Louis.
+ * @version 1.00
+ * @author kalpana_thakur
  */
 package edu.wustl.dao.util;
 
 /**
  * @author kalpana_thakur
- *TODO
+ * This class holds all DAO specific constants.
  */
 public final class DAOConstants
 {

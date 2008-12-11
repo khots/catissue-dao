@@ -1,6 +1,13 @@
-/*
- * TODO
+/**
+ * <p>Title: NullClause Class>
+ * <p>Description:	NullClause implements the Condition interface,
+ * it is used to generate null clause of query.</p>
+ * Copyright:    Copyright (c) year
+ * Company: Washington University, School of Medicine, St. Louis.
+ * @version 1.00
+ * @author kalpana_thakur
  */
+
 package edu.wustl.dao.condition;
 
 import edu.wustl.dao.util.DAOConstants;
@@ -8,7 +15,7 @@ import edu.wustl.dao.util.DAOUtility;
 
 /**
  * @author kalpana_thakur
- *
+ * This class is used to generate null clause of the query
  */
 public class NullClause implements Condition
 {
@@ -25,8 +32,10 @@ public class NullClause implements Condition
 	private String sourceObjectName;
 
 	/**
-	 * @param columnName :
-	 * @param sourceObjectName :
+	 * The public constructor to restrict creating object without
+	 * initializing mandatory members.
+	 * @param columnName : Name of the Column
+	 * @param sourceObjectName :Name of the Table or class name.
 	 */
 	public NullClause (String columnName ,String sourceObjectName)
 	{
@@ -35,7 +44,9 @@ public class NullClause implements Condition
 	}
 
 	/**
-	 * @param columnName :
+	 * The public constructor to restrict creating object without
+	 * initializing mandatory members.
+	 * @param columnName :Name of the Column
 	 */
 	public NullClause (String columnName)
 	{

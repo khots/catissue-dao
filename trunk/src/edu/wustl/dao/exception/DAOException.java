@@ -1,5 +1,11 @@
-/*
- *
+/**
+ * <p>Title: DAOException Class>
+ * <p>Description:DAOException implements the ApplicationException interface
+ * It will customizes the database related exception.</p>
+ * Copyright:    Copyright (c) year
+ * Company: Washington University, School of Medicine, St. Louis.
+ * @version 1.00
+ * @author kalpana_thakur
  */
 package edu.wustl.dao.exception;
 
@@ -7,11 +13,12 @@ import org.hibernate.HibernateException;
 
 import edu.wustl.common.exception.ApplicationException;
 import edu.wustl.common.exception.ErrorKey;
+import edu.wustl.dao.util.DAOConstants;
 
 
 /**
  * @author kalpana_thakur
- *
+ *	This will customizes the database related exceptions.
  */
 public class DAOException extends ApplicationException
 {
@@ -27,6 +34,8 @@ public class DAOException extends ApplicationException
 	private String errorlog ;
 
 	/**
+	 * The public constructor to restrict creating object without
+	 * initializing mandatory members.
 	 * It will called on occurrence of database related exception.
 	 * @param errorKey : key assigned to the error
 	 * @param throwable :
@@ -38,6 +47,8 @@ public class DAOException extends ApplicationException
 	}
 
 	/**
+	 * The public constructor will be invoked on occurrence of hibernate exception.
+	 * It also restrict creating object without initializing mandatory members.
 	 * It will invoked on occurrence of hibernate exception.
 	 * @param errorKey : key assigned to the error
 	 * @param hibernateException :
@@ -67,18 +78,22 @@ public class DAOException extends ApplicationException
 
 
 	/**
-	 * Generates Error Message.
+	 * This method will be invoked to generate buffer of all the
+	 * wrapped messages when hibernate exception has been thrown.
 	 * @param hibernateException Exception
 	 * @return message.
 	 */
 	private String generateErrorMessage(HibernateException hibernateException)
 	{
 		StringBuffer message = new StringBuffer();
-		String [] str = hibernateException.getMessages();
-
-		for (int i = 0; i < str.length; i++)
+		if(hibernateException != null)
 		{
-			message.append(str[i]).append("   ");
+			String [] str = hibernateException.getMessages();
+
+			for (int i = 0; i < str.length; i++)
+			{
+				message.append(str[i]).append(DAOConstants.TAILING_SPACES);
+			}
 		}
 		return message.toString();
 	}

@@ -1,5 +1,11 @@
-/*
- * TODO
+/**
+ * <p>Title: DatabaseConnectionParams Class>
+ * <p>Description:	DatabaseConnectionParams handles opening closing ,initialization of all database specific
+ * parameters  .</p>
+ * Copyright:    Copyright (c) year
+ * Company: Washington University, School of Medicine, St. Louis.
+ * @version 1.00
+ * @author kalpana_thakur
  */
 package edu.wustl.dao.util;
 
@@ -17,7 +23,7 @@ import java.sql.DatabaseMetaData;
 
 /**
  * @author kalpana_thakur
- *
+ * This class will handles all database specific parameters.
  */
 
 public class DatabaseConnectionParams

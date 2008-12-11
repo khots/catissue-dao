@@ -1,5 +1,11 @@
-/*
- * TODO
+/**
+ * <p>Title: EqualClause Class>
+ * <p>Description:	not EqualClause implements the Condition interface,
+ * it is used to generate "!=" condition clause of query.</p>
+ * Copyright:    Copyright (c) year
+ * Company: Washington University, School of Medicine, St. Louis.
+ * @version 1.00
+ * @author kalpana_thakur
  */
 package edu.wustl.dao.condition;
 
@@ -8,7 +14,7 @@ import edu.wustl.dao.util.DAOUtility;
 
 /**
  * @author kalpana_thakur
- *
+ * This class is used to generate "!=" condition clause of query.
  */
 public class NotEqualClause implements Condition
 {
@@ -30,11 +36,11 @@ public class NotEqualClause implements Condition
 	private String sourceObjectName;
 
 	/**
-	 * It will be called to instantiate columnName,
-	 * columnValue and sourceObject Name.
-	 * @param columnName :
-	 * @param sourceObjectName :
-	 * @param object :
+	 * The public constructor to restrict creating object without
+	 * initializing mandatory members.
+	 * @param columnName :Name of the Column
+	 * @param sourceObjectName :Name of the Table or class name.
+	 * @param object :Column value
 	 */
 	public NotEqualClause (String columnName ,Object object,String sourceObjectName)
 	{
@@ -45,10 +51,10 @@ public class NotEqualClause implements Condition
 
 	}
 	/**
-	 * It will be called to instantiate columnName,
-	 * columnValue.
-	 * @param columnName :
-	 * @param object :
+	 * The public constructor to restrict creating object without
+	 * initializing mandatory members.
+	 * @param columnName :Name of the Column
+	 * @param object :Column value
 	 */
 	public NotEqualClause (String columnName ,Object object)
 	{

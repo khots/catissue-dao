@@ -1,8 +1,11 @@
-/*
- * Created on Sep 15, 2005
- *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
+/**
+ * <p>Title: DatabaseConnectionParams Class>
+ * <p>Description:	DatabaseConnectionParams handles opening closing ,initialization of all database specific
+ * parameters  .</p>
+ * Copyright:    Copyright (c) year
+ * Company: Washington University, School of Medicine, St. Louis.
+ * @version 1.00
+ * @author kalpana_thakur
  */
 package edu.wustl.dao.util;
 
@@ -15,11 +18,9 @@ import org.hibernate.mapping.Property;
 import org.hibernate.mapping.Table;
 import org.hibernate.proxy.HibernateProxy;
 
-import edu.wustl.common.domain.AbstractDomainObject;
-
 /**
  * @author kalpana_thakur
- *
+ * This class is specific to hibernate.
  */
 
 public final class HibernateMetaData
@@ -79,8 +80,9 @@ public final class HibernateMetaData
 	}
 
 	/**
-	 * @param classObj :
-	 * @return tableName :
+	 * This method will be called to return table name for the given class.
+	 * @param classObj : Class of the object
+	 * @return tableName : It returns the table name associated to the class.
 	 */
 	public static String getTableName(Class classObj)
 	{
@@ -95,8 +97,9 @@ public final class HibernateMetaData
 
 	}
 	/**
-	 * @param classObj :
-	 * @return :
+	 * This method will be called to return root table name for the given class.
+	 * @param classObj :Class of the object
+	 * @return :It returns the root table name associated to the class.
 	 */
 	public static String getRootTableName(Class classObj)
 	{
@@ -111,9 +114,10 @@ public final class HibernateMetaData
 	}
 
 	/**
-	 * @param classObj :
-	 * @param attributeName :
-	 * @return returns the Column Name.
+	 * This will return the column name mapped to given attribute of the given class.
+	 * @param classObj : Class of the object
+	 * @param attributeName :attribute of the given class
+	 * @return returns the Column Name mapped to the attribute.
 	 */
 	public static String getColumnName(Class classObj, String attributeName)
 	{
@@ -137,9 +141,10 @@ public final class HibernateMetaData
 		return columnName;
 	}
 	/**
-	 * @param attributeName :
-	 * @param iter :
-	 * @return the column name.
+	 * This method will returns the column name associate to given property.
+	 * @param iter : holds the property object.
+	 * @param attributeName :attribute of the given class
+	 * @return returns the Column Name mapped to the attribute.
 	 */
 	private static String getColumnName(String attributeName,
 			Iterator<Object> iter)
@@ -159,9 +164,9 @@ public final class HibernateMetaData
 	}
 	/**
 	 *This method will iterate the Identified property file and returns the column name.
-	 * @param classObj :
-	 * @param attributeName :
-	 * @return It returns the column name.
+	 * @param classObj : Class of the object
+	 * @param attributeName :attribute of the given class
+	 * @return returns the Column Name mapped to the attribute.
 	 */
 	private static String getColumName(Class classObj, String attributeName)
 	{
@@ -180,6 +185,7 @@ public final class HibernateMetaData
 	}
 
 	/**
+	 * This method will be called to obtained column width of attribute field of given class.
 	 * @param classObj Name of the class.
 	 * @param attributeName Name of the attribute.
 	 * @return The width of the column. Returns width of the column or zero.
@@ -208,6 +214,8 @@ public final class HibernateMetaData
 
 
 	/**
+	 * This method will be called to obtained the
+	 * domain class name mapped to given table.
 	 * @param tableName :Name of table.
 	 * @return the class name
 	 */
