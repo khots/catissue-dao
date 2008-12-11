@@ -1,5 +1,11 @@
-/*
- * TODO
+/**
+ * <p>Title: INClause Class>
+ * <p>Description:	INClause implements the Condition interface,
+ * it is used to generate in clause of query.</p>
+ * Copyright:    Copyright (c) year
+ * Company: Washington University, School of Medicine, St. Louis.
+ * @version 1.00
+ * @author kalpana_thakur
  */
 package edu.wustl.dao.condition;
 
@@ -8,7 +14,7 @@ import edu.wustl.dao.util.DAOUtility;
 
 /**
  * @author kalpana_thakur
- *
+ * This class used to generate in clause of query
  */
 public class INClause implements Condition
 {
@@ -30,9 +36,12 @@ public class INClause implements Condition
 	private String sourceObjectName;
 
 	/**
-	 * @param columnName :
-	 * @param sourceObjectName :
-	 * @param values :
+	 * The public constructor to restrict creating object without
+	 * initializing mandatory members.
+	 * @param columnName : Name of the Column
+	 * @param sourceObjectName :Name of the Table or class name.
+	 * @param values : Values to be given to in condition.
+	 * It holds comma separated string values for queried column name.
 	 */
 	public INClause(String columnName, String values ,String sourceObjectName )
 	{
@@ -42,8 +51,11 @@ public class INClause implements Condition
 	}
 
 	/**
-	 * @param columnName :
-	 * @param values :
+	 * The public constructor to restrict creating object without
+	 * initializing mandatory members.
+	 * @param columnName : Name of the Column
+	 * @param values : Values to be given to in condition.
+	 * It holds comma separated string values for queried column name.
 	 */
 	public INClause(String columnName, String values)
 	{
@@ -54,9 +66,12 @@ public class INClause implements Condition
 	}
 
 	/**
-	 * @param columnName :
-	 * @param sourceObjectName :
-	 * @param object :
+	 * The public constructor to restrict creating object without
+	 * initializing mandatory members.
+	 * @param columnName :Name of the Column
+	 * @param sourceObjectName :Name of the Table or class name.
+	 * @param object : Values to be given to in condition.
+	 * It holds array of objects having values for queried column name.
 	 */
 	public INClause(String columnName,
 			Object[] object,String sourceObjectName)
@@ -68,8 +83,11 @@ public class INClause implements Condition
 	}
 
 	/**
-	 * @param columnName :
-	 * @param object :
+	 * The public constructor to restrict creating object without
+	 * initializing mandatory members.
+	 * @param columnName :Name of the Column
+	 * @param object : Values to be given to in condition.
+	 * It holds array of objects having values for queried column name.
 	 */
 	public INClause(String columnName,
 			Object[] object)

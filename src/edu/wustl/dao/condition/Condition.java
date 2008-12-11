@@ -1,11 +1,16 @@
-/*
- * TODO
+/**
+ * <p>Title: Condition Interface>
+ * <p>Description:	Condition Interface will be implemented by all where clause
+ * conditions like "in","=","!=" e.t.c.</p>
+ * Copyright:    Copyright (c) year
+ * Company: Washington University, School of Medicine, St. Louis.
+ * @version 1.00
+ * @author kalpana_thakur
  */
 package edu.wustl.dao.condition;
 
 /**
  * @author kalpana_thakur
- * TODO
  */
 public interface Condition
 {
@@ -13,6 +18,7 @@ public interface Condition
 
 
 	/**
+	 * This method will be called to get the class name and table name.
 	 * @return class name or table name.
 	 */
 	String getSourceObjectName();
@@ -25,7 +31,9 @@ public interface Condition
 
 
 	/**
-	 * Returns the string value.
+	 * This will create the where clause for the condition type.
+	 * It will called by QueryWhereClause.java ,it make use of column name,column value,
+	 * table or class name to generate the condition.
 	 * @return String:
 	 */
 	String buildSql();

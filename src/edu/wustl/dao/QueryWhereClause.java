@@ -8,6 +8,7 @@
  */package edu.wustl.dao;
 
 import java.lang.reflect.Constructor;
+import java.util.HashMap;
 import java.util.Map;
 
 import edu.wustl.common.exception.ErrorKey;
@@ -39,6 +40,8 @@ public class QueryWhereClause
 	private String sourceObjectName = "";
 
 	/**
+	 * The public constructor to restrict creating object without
+	 * initializing mandatory members.
 	 * It will instantiate the whereClause buff.
 	 * @param sourceObjectName : name of the class or table.
 	 */
@@ -70,7 +73,7 @@ public class QueryWhereClause
 
 
 	/**
-	 * @return :
+	 * @return :And join condition.
 	 */
 	public QueryWhereClause andOpr()
 	{
@@ -79,7 +82,7 @@ public class QueryWhereClause
 	}
 
 	/**
-	 * @return :
+	 * @return :Or join condition.
 	 */
 	public QueryWhereClause orOpr()
 	{
@@ -90,6 +93,8 @@ public class QueryWhereClause
 
 
 	/**
+	 * This will be called to generate condition clause sql.
+	 * It will also set the table or class name if required.
 	 * @param condition :
 	 * @return the QueryWhereClause object.
 	 */
@@ -104,16 +109,21 @@ public class QueryWhereClause
 	}
 
 	/**
-	 * @param whereColumnName :
-	 * @param whereColumnCondition :
-	 * @param whereColumnValue :
-	 * @param joinCondition :
-	 * @return :
-	 * @throws DAOException :
+	 * This method is catissuecore application specific,it is used to generate complete where clause
+	 * of the query.It reads the QueryConditionMap<condition,class name/> having key as condition and
+	 * value as class specific to condition.
+	 * @param whereColumnName : It holds the column names
+	 * @param whereColumnCondition : It holds the conditions like "in","=" etc
+	 * @param whereColumnValue : It holds the column values
+	 * @param joinCondition : It holds the join condition.
+	 * @return : the complete where clause of the query.
+	 * @throws DAOException : Database Exception.
+	 * It iterates the whereCondition clause reads the class name from the map as per the key ,
+	 * instantiate the object and generates the condition clause.
 	 */
 	public QueryWhereClause getWhereCondition(String[] whereColumnName, String[]
 	       whereColumnCondition, Object[] whereColumnValue,	String joinCondition) throws DAOException
-	{	Map<String,String> queryConMap = QueryConditions.getWhereClauseCondMap();
+	{	Map<String,String> queryConMap = getWhereClauseCondMap();
 		boolean isJoinConSet = false;
 		try
 		{	for(int index=0 ;index<whereColumnCondition.length;index++)
@@ -164,4 +174,21 @@ public class QueryWhereClause
 		return this;
 	}
 
+	/**
+	 * This is specific to catissuecore application.
+	 * @return QueryConditionMap<condition,class name/> having key as condition and
+	 * value as class specific to condition.
+	 */
+	public static Map<String, String> getWhereClauseCondMap()
+	{
+		Map<String, String> queryCondMap = new HashMap<String, String>();
+		queryCondMap.put(DAOConstants.IN_CONDITION, "edu.wustl.dao.condition.INClause");
+		queryCondMap.put(DAOConstants.EQUAL, "edu.wustl.dao.condition.EqualClause");
+		queryCondMap.put(DAOConstants.NOT_EQUAL, "edu.wustl.dao.condition.NotEqualClause");
+		queryCondMap.put(DAOConstants.NOT_NULL_CONDITION, "edu.wustl.dao.condition.NotNullClause");
+		queryCondMap.put(DAOConstants.NULL_CONDITION, "edu.wustl.dao.condition.NullClause");
+
+		return queryCondMap;
+
+	}
 }

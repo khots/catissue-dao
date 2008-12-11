@@ -1,5 +1,11 @@
-/*
- * TODO
+/**
+ * <p>Title: EqualClause Class>
+ * <p>Description:	EqualClause implements the Condition interface,
+ * it is used to generate "=" condition clause of query.</p>
+ * Copyright:    Copyright (c) year
+ * Company: Washington University, School of Medicine, St. Louis.
+ * @version 1.00
+ * @author kalpana_thakur
  */
 package edu.wustl.dao.condition;
 
@@ -8,7 +14,7 @@ import edu.wustl.dao.util.DAOUtility;
 
 /**
  * @author kalpana_thakur
- *
+ * This class is used to generate "=" condition clause of query
  */
 public class EqualClause implements Condition
 {
@@ -31,9 +37,11 @@ public class EqualClause implements Condition
 
 
 	/**
-	 * @param columnName :
-	 * @param sourceObjectName :
-	 * @param object :
+	 * The public constructor to restrict creating object without
+	 * initializing mandatory members.
+	 * @param columnName :Name of the Column
+	 * @param sourceObjectName :Name of the Table or class name.
+	 * @param object :Column value
 	 */
 	public EqualClause (String columnName ,Object object,String sourceObjectName)
 	{
@@ -43,8 +51,10 @@ public class EqualClause implements Condition
 	}
 
 	/**
-	 * @param columnName :
-	 * @param object :
+	 * The public constructor to restrict creating object without
+	 * initializing mandatory members.
+	 * @param columnName :Name of the Column
+	 * @param object :Column value
 	 */
 	public EqualClause (String columnName ,Object object)
 	{

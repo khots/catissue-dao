@@ -17,17 +17,17 @@ import edu.wustl.dao.util.HibernateMetaData;
 
 /**
  * @author kalpana_thakur
- *
+ * Used to format the exception thrown to user readable form.
  */
 public class ConstraintViolationFormatter implements ExceptionFormatter
 {
 
 	/**
-	 * @param objExcp :
-	 * @param applicationName :
-	 * This will be called to format exception messages.
-	 * @throws DAOException :
-	 * @return string :formated message.
+	 * This will be called to format constraint violation exception messages.
+	 * @param objExcp : Exception thrown.
+	 * @param applicationName :Name of the application
+	 * @throws DAOException : Database exception
+	 * @return string : It return the formatted error messages.
 	 */
 	public String formatMessage(Exception objExcp ,String applicationName) throws DAOException
 	{

@@ -1,5 +1,10 @@
-/*
- * TODO
+/**
+ * <p>Title: DAOUtility Class>
+ * <p>Description:	DAOUtility class holds utility methods for DAO .</p>
+ * Copyright:    Copyright (c) year
+ * Company: Washington University, School of Medicine, St. Louis.
+ * @version 1.00
+ * @author kalpana_thakur
  */
 package edu.wustl.dao.util;
 
@@ -20,7 +25,7 @@ import edu.wustl.dao.exception.DAOException;
 
 /**
  * @author kalpana_thakur
- *
+ * This class holds utility methods for DAO.
  */
 public final class DAOUtility
 {
@@ -30,7 +35,7 @@ public final class DAOUtility
 	 public static final String GET_PARAMETERIZED_QUERIES_DETAILS = "getParameterizedQueriesDetails";
 
 	/**
-	 * creates a single obj.
+	 * creates a singleton object.
 	 */
 	private static DAOUtility daoUtil = new DAOUtility();;
 	/**
@@ -41,8 +46,8 @@ public final class DAOUtility
 
 	}
 	/**
-	 * returns the single obj.
-	 * @return Utility obj
+	 * returns the single object.
+	 * @return Utility object.
 	 */
 	public static DAOUtility getInstance()
 	{
@@ -55,7 +60,7 @@ public final class DAOUtility
       private static org.apache.log4j.Logger logger =
            Logger.getLogger(DAOUtility.class);
 	 /**
-     * Constants that will appear in HQL for retreiving Attributes of the Collection data type.
+     * Constants that will appear in HQL for retrieving Attributes of the Collection data type.
      */
     private static final String ELEMENTS = "elements";
 
