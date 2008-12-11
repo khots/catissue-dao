@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Map;
 
 import edu.wustl.common.beans.SessionDataBean;
-import edu.wustl.common.dao.queryExecutor.PagenatedResultData;
 import edu.wustl.common.querydatabean.QueryDataBean;
+import edu.wustl.common.util.PagenatedResultData;
 import edu.wustl.common.util.QueryParams;
 import edu.wustl.dao.exception.DAOException;
 
@@ -175,5 +175,22 @@ public interface JDBCDAO extends DAO
 	 * @return : It will return the formated messages.
 	 */
 	String formatMessage(Exception excp,Connection connection);
-
+	/**
+	 * @param columnCount count of the columns in results
+	 * @param getSublistOfResult boolean for getting sublist
+	 * @return int column count
+	 */
+	int getColumnCount(int columnCount,boolean getSublistOfResult);
+	/**
+	 * Gets sql for Like operator
+	 * @param attributeName name of the attribute
+	 * @param value value
+	 * @return String sql
+	 */
+	String getSQLForLikeOperator(String attributeName, String value);
+	/**
+	 * Required for temporal query
+	 * @return Object of type either Mysql or Oracle Primitive operation processor.
+	 */
+	Object getPrimitiveOperationProcessor();
 }
