@@ -327,7 +327,7 @@ public class DAOFactory implements IDAOFactory
 	 * This will called to retrieve connectionManager object.
 	 * @return connectionManager
 	 */
-	private IConnectionManager getConnectionManager()
+	public IConnectionManager getConnectionManager()
 	{
 		return connectionManager;
 	}
