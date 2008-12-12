@@ -31,21 +31,6 @@ public class DAOTestSuite
 	 */
 	public static junit.framework.Test suite()
 	{
-	/*	JVMTIInterface jvmti = new JVMTIInterface();
-		  Object obj = TestDomainObject.createTestInstance();
-		  Map snapshot1=null;
-		  Map snapshot2=null;*/
-
-		/*  snapshot1=jvmti.produceInventory();
-
-		  // Whatever code you need to test
-
-		  snapshot2 = jvmti.produceInventory();
-
-		  assertTrue("Produced unexpected memory",
-		    jvmti.compareInventories(
-		      System.out, snapshot1, snapshot2, null, null, null));*/
-		
 		TestSuite daoSuite = new TestSuite("Test for DAO Layer");
 		daoSuite.addTestSuite(HibernateTestCase.class);
 		daoSuite.addTestSuite(JDBCTestCases.class);
