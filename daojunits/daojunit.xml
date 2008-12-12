@@ -31,6 +31,9 @@
 
 	
 	<target name="compileDaoTestCases">
+		
+		<delete dir="${test.classes.dir}" />
+		<mkdir dir="${test.classes.dir}" />		
 		<javac destdir="${test.classes.dir}" includes="**/*.java" includeantruntime="true">
 			<src path="${test.src.dir}"/>
 			<classpath>
@@ -54,7 +57,7 @@
 		<mkdir dir="${report.dir}/reports/daoTestReports"/>
 		<mkdir dir="${report.dir}/reports/daoTestReports/HtmlReports"/>
 		
-		<junit printsummary="yes" fork="yes" haltonfailure="yes">
+		<junit printsummary="yes" fork="yes" haltonfailure="yes" jvm="java -agentlib:yjpagent=onexit=memory,dir=f:\MySnapshots">
 			<formatter type="xml"/>
 			 <sysproperty key="net.sourceforge.cobertura.datafile" file="${cobertura.location}/coverage.ser" />
 			
@@ -76,6 +79,7 @@
 			<classpath>
 				<pathelement path="${test.src.dir}" />
 				<pathelement path= "${test.classes.dir}" />
+				<pathelement path = "C:/Program Files/YourKit Java Profiler 7.0.11/bin/win32" />
 			</classpath>
 						
 			<classpath refid="cobertura.classpath" />
@@ -101,6 +105,9 @@
 	</target>
 	
 	<target name="init">
+		
+		<delete dir="${proj.classes}" />
+		<mkdir dir="${proj.classes}" />
 		<delete dir="${test.classes.dir}" />
 		<mkdir dir="${test.classes.dir}" />
 		<delete dir="${test.instrumented.dir}" />
