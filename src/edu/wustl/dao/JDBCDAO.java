@@ -135,7 +135,7 @@ public interface JDBCDAO extends DAO
 	String getActivityStatus(String sourceObjectName, Long identifier) throws DAOException;*/
 
 	/**
-	 * Update the database.
+	 * This method will execute the SQL and modifies the database.
 	 * @param sql sql statement.
 	 * @throws DAOException generic DAOException.
 	 */
@@ -182,14 +182,14 @@ public interface JDBCDAO extends DAO
 	 */
 	int getColumnCount(int columnCount,boolean getSublistOfResult);
 	/**
-	 * Gets sql for Like operator
+	 * Gets sql for Like operator.
 	 * @param attributeName name of the attribute
 	 * @param value value
 	 * @return String sql
 	 */
 	String getSQLForLikeOperator(String attributeName, String value);
 	/**
-	 * Required for temporal query
+	 * Required for temporal query.
 	 * @return Object of type either Mysql or Oracle Primitive operation processor.
 	 */
 	Object getPrimitiveOperationProcessor();

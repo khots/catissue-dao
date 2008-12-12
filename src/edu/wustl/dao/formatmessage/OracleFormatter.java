@@ -57,10 +57,12 @@ public class OracleFormatter implements IDBFormatter
             int startIndexofMsg = temp.indexOf(DAOConstants.SPLIT_OPERATOR);
             int endIndexofMsg = temp.indexOf(')');
             String strKey =temp.substring((startIndexofMsg+1),endIndexofMsg);
+            startIndexofMsg = strKey.indexOf(".");
+            String key =strKey.substring((startIndexofMsg+1));
 
             formattedErrMsg = getFormatedMessage(
 					columnNameBuff, connection,
-					strKey);
+					key);
 
          }
         catch(Exception e)
@@ -73,13 +75,13 @@ public class OracleFormatter implements IDBFormatter
 /**
  * @param columnNameBuff ;
  * @param connection :
- * @param strKey :
+ * @param key :
  * @return :
  * @throws DAOException :
  * @throws SQLException :
  */
 	private String getFormatedMessage(StringBuffer columnNameBuff,
-			Connection connection, String strKey)throws DAOException, SQLException
+			Connection connection, String key)throws DAOException, SQLException
 
 	{
 		String formattedErrMsg = "";
@@ -90,7 +92,7 @@ public class OracleFormatter implements IDBFormatter
 		{
 			databaseConnectionParams.setConnection(connection);
 			String query = "select COLUMN_NAME,TABLE_NAME from user_cons_columns" +
-			" where constraint_name = '"+strKey+"'";
+			" where constraint_name = '"+key+"'";
 
 			ResultSet resultSet = databaseConnectionParams.getResultSet(query);
 			while(resultSet.next())
