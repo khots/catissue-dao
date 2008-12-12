@@ -1,36 +1,44 @@
 
-
-CREATE TABLE test_user (                                  
-            `IDENTIFIER` bigint(20) NOT NULL auto_increment,         
-            `EMAIL_ADDRESS` varchar(100) default NULL,               
-            `FIRST_NAME` varchar(50) default NULL,                   
-            `LAST_NAME` varchar(50) default NULL,                    
-            `ACTIVITY_STATUS` varchar(100) default NULL,
-			`ADDRESS_ID` bigint,
-            PRIMARY KEY  (`IDENTIFIER`)                              
-          ) 
+DROP TABLE test_order cascade constraints;
+DROP TABLE test_person cascade constraints;
+DROP TABLE test_address cascade constraints;
 
 
-create table XYZ_ADDRESS (
-   IDENTIFIER bigint not null auto_increment,
-   STREET varchar(255),
-   primary key (IDENTIFIER)
-)
+CREATE TABLE test_person (                                  
+            IDENTIFIER NUMBER(19,0) NOT NULL,         
+            NAME varchar(50) default NULL,                   
+            ADDRESS_ID NUMBER(19,0),
+            PRIMARY KEY  (IDENTIFIER)                              
+          );
 
 
-create table xyz_user_order (
-	`IDENTIFIER` bigint(20) NOT NULL auto_increment,  
-	 user_id BIGINT,
+
+CREATE TABLE test_address (                              
+                IDENTIFIER NUMBER(19,0) NOT NULL ,         
+                STREET varchar(255) not null unique,              
+                PRIMARY KEY  (IDENTIFIER)                              
+            ); 
+
+
+ALTER TABLE test_person ADD constraint person_address_index foreign key (ADDRESS_ID) references test_address (IDENTIFIER);	
+
+
+
+create table test_order (
+	 IDENTIFIER NUMBER(19,0) NOT NULL,  
+	 PERSON_ID NUMBER(19,0),
 	 primary key (IDENTIFIER)
-)
+);
 
-alter table xyz_user_order 
-    add constraint user_order_index foreign key (user_id) references xyz_user(IDENTIFIER);
 
-alter table XYZ_USER add index user_add_index (ADDRESS_ID), 
-	add constraint user_add_index foreign key (ADDRESS_ID) references xyz_ADDRESS (IDENTIFIER);
+alter table test_order add constraint person_order_index foreign key (PERSON_ID) references test_person (IDENTIFIER);
 
-create sequence USER_SEQ;
+
+DROP sequence 	PER_SEQ;	
+DROP sequence 	Address_SEQ;	
+DROP sequence 	ORDER_SEQ;	
+
+create sequence PER_SEQ;
 create sequence Address_SEQ;
 create sequence ORDER_SEQ;
 

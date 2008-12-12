@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Applications>
-	<Application name = "catissuecore">
+	<Application name = "caTissuecore">
+		<DAOFactory name="edu.wustl.dao.daofactory.DAOFactory" default="true">
+			<DefaultDAO>
+				<Class-name name = "edu.wustl.dao.HibernateDAOImpl"/>
+				<Config-file name = "hibernate.cfg.xml"/>
+			</DefaultDAO>
+			<jdbcDAO name = "edu.wustl.dao.MySQLDAOImpl"/>
+		</DAOFactory>
+		<ConnectionManager name= "edu.wustl.dao.connectionmanager.ConnectionManager"/>
+	 </Application>
+	 <Application name = "DynamicExtension">
 		<DAOFactory name="edu.wustl.dao.daofactory.DAOFactory">
 			<DefaultDAO>
 				<Class-name name = "edu.wustl.dao.HibernateDAOImpl"/>
@@ -8,16 +18,7 @@
 			</DefaultDAO>
 			<jdbcDAO name = "edu.wustl.dao.MySQLDAOImpl"/>
 		</DAOFactory>
-		<ConnectionManager name= "edu.wustl.dao.daofactory.DAOFactory"/>
+		<ConnectionManager name= "edu.wustl.dao.connectionmanager.ConnectionManager"/>
 	 </Application>
-	 <Application name = "Dynamic Extensions">
-		<DAOFactory name="edu.wustl.dao.daofactory.DAOFactory">
-			<DefaultDAO>
-				<Class-name name = "edu.wustl.dao.HibernateDAOImpl"/>
-				<Config-file name = "hibernate.cfg.xml"/>
-			</DefaultDAO>
-			<jdbcDAO name = "edu.wustl.dao.MySQLDAOImpl"/>
-		</DAOFactory>
-		<ConnectionManager name= "edu.wustl.dao.daofactory.DAOFactory"/>
-	 </Application>
+	
 </Applications>

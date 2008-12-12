@@ -1,6 +1,5 @@
 package edu.wustl.dao.test;
 
-import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -22,14 +21,13 @@ import edu.wustl.dao.QueryWhereClause;
 import edu.wustl.dao.condition.EqualClause;
 import edu.wustl.dao.condition.INClause;
 import edu.wustl.dao.condition.NotEqualClause;
-import edu.wustl.dao.condition.NullClause;
 import edu.wustl.dao.condition.NotNullClause;
+import edu.wustl.dao.condition.NullClause;
 import edu.wustl.dao.daofactory.IDAOFactory;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.formatmessage.ConstraintViolationFormatter;
 import edu.wustl.dao.util.DAOConstants;
 import edu.wustl.dao.util.HibernateMetaData;
-import edu.wustl.common.util.Utility;
 
 
 /**
@@ -617,7 +615,7 @@ public class HibernateTestCase extends BaseTestCase
 	 */
 	@Test
 	public void testMultAppInsertPointngRespectiveDBSameDBType()
-	{/*
+	{
 		try
 		{
 			User user = (User)createUserObject();
@@ -632,7 +630,7 @@ public class HibernateTestCase extends BaseTestCase
 		{
 			assertFalse("Problem occurred while opening second session within a session:", true);
 		}
-	*/}
+	}
 
 
 	/**
