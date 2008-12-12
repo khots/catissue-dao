@@ -7,8 +7,8 @@ import java.util.List;
 
 import org.junit.Test;
 
-import edu.wustl.common.dao.queryExecutor.PagenatedResultData;
 import edu.wustl.common.exception.ApplicationException;
+import edu.wustl.common.util.PagenatedResultData;
 import edu.wustl.common.util.QueryParams;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.JDBCDAO;
