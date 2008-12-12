@@ -4,16 +4,14 @@
 package edu.wustl.dao;
 
 import java.sql.Connection;
-
-import edu.wustl.common.dao.queryExecutor.PagenatedResultData;
 import edu.wustl.common.exception.ErrorKey;
+import edu.wustl.common.util.PagenatedResultData;
 import edu.wustl.common.util.QueryParams;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.formatmessage.OracleFormatter;
 import edu.wustl.dao.util.DAOConstants;
 import edu.wustl.dao.util.DatabaseConnectionParams;
-import edu.wustl.query.executor.OracleQueryExecutor;
 
 
 /**
@@ -129,7 +127,7 @@ public class OracleDAOImpl extends AbstractJDBCDAOImpl
 	public PagenatedResultData getQueryResultList(QueryParams queryParams) throws DAOException
 	{
 		PagenatedResultData pagenatedResultData = null;
-		try
+		/*try
 		{
 			queryParams.setConnection(getConnectionManager().getConnection());
 			OracleQueryExecutor oracleQueryExecutor = new OracleQueryExecutor();
@@ -141,7 +139,7 @@ public class OracleDAOImpl extends AbstractJDBCDAOImpl
 			throw new DAOException(errorKey,exp,"OracleDAOImpl.java :"+
 					DAOConstants.EXECUTE_QUERY_ERROR);
 		}
-
+*/
 		return pagenatedResultData;
 
 	}
@@ -156,6 +154,37 @@ public class OracleDAOImpl extends AbstractJDBCDAOImpl
 
 		OracleFormatter oracleFormatter = new OracleFormatter();
 		return oracleFormatter.getFormatedMessage(excp,connection);
+	}
+
+
+	/**
+	 * @param columnCount count of the columns in results
+	 * @param getSublistOfResult boolean for getting sublist
+	 * @return column count
+	 */
+	public int getColumnCount(int columnCount,boolean getSublistOfResult)
+	{
+		return 0;
+	}
+
+	/**
+	 * Gets sql for Like operator.
+	 * @param attributeName name of the attribute
+	 * @param value value
+	 * @return String sql
+	 */
+	public String getSQLForLikeOperator(String attributeName, String value)
+	{
+		return DAOConstants.TAILING_SPACES;
+	}
+
+	/**
+	 * Required for temporal query.
+	 * @return Object of type either Database specific Primitive operation processor.
+	 */
+	public Object getPrimitiveOperationProcessor()
+	{
+		return DAOConstants.TAILING_SPACES;
 	}
 
 }

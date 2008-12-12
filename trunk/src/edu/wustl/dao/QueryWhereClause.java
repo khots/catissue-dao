@@ -16,7 +16,6 @@ import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.condition.Condition;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.DAOConstants;
-import edu.wustl.dao.util.QueryConditions;
 
 /**
  * @author kalpana_thakur

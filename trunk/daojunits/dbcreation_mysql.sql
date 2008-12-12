@@ -1,34 +1,38 @@
-CREATE TABLE `test_user` (                                  
+drop table test_order;
+drop table test_person;
+drop table test_address;
+
+
+CREATE TABLE `test_person` (                                  
             `IDENTIFIER` bigint(20) NOT NULL auto_increment,         
-            `EMAIL_ADDRESS` varchar(100) default NULL,               
-            `FIRST_NAME` varchar(50) default NULL,                   
-            `LAST_NAME` varchar(50) default NULL,                    
-            `ACTIVITY_STATUS` varchar(100) default NULL,
-			`ADDRESS_ID` bigint,
+            `NAME` varchar(50) default NULL,                   
+            `ADDRESS_ID` bigint,
             PRIMARY KEY  (`IDENTIFIER`)                              
-          ) ENGINE=InnoDB AUTO_INCREMENT=114 DEFAULT CHARSET=latin1
+          ) ENGINE=InnoDB AUTO_INCREMENT=114 DEFAULT CHARSET=latin1;
+
+CREATE TABLE `test_address` (                              
+                `IDENTIFIER` bigint(20) NOT NULL auto_increment,         
+                `STREET` varchar(255) not null unique,              
+                PRIMARY KEY  (`IDENTIFIER`)                              
+            ) ENGINE=InnoDB AUTO_INCREMENT=115 DEFAULT CHARSET=latin1  ;
 
 
-create table test_address (
-   IDENTIFIER bigint not null auto_increment,
-   STREET varchar(255),
-   primary key (IDENTIFIER)
-)ENGINE=InnoDB AUTO_INCREMENT=114 DEFAULT CHARSET=latin1
+alter table test_person add index person_address_index (ADDRESS_ID), 
+	add constraint person_address_index foreign key (ADDRESS_ID) references test_address (IDENTIFIER);
 
 
-create table test_user_order (
+
+create table test_order (
 	`IDENTIFIER` bigint(20) NOT NULL auto_increment,  
-	 user_id BIGINT,
+	 PERSON_ID BIGINT,
 	 primary key (IDENTIFIER)
-)ENGINE=InnoDB AUTO_INCREMENT=114 DEFAULT CHARSET=latin1
+)ENGINE=InnoDB AUTO_INCREMENT=114 DEFAULT CHARSET=latin1;
 
-alter table test_user_order 
-    add constraint user_order_index foreign key (user_id) references test_user(IDENTIFIER);
 
-alter table test_user add index user_add_index (ADDRESS_ID), 
-	add constraint user_add_index foreign key (ADDRESS_ID) references test_address (IDENTIFIER);
+alter table test_order add index person_order_index 
+	(PERSON_ID), add constraint person_order_index foreign key (PERSON_ID) references test_person (IDENTIFIER);
 
-//-----------------------
+
 drop table test_user;
 drop table test_table_hashed;
 

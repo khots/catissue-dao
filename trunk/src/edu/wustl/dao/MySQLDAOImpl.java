@@ -5,14 +5,12 @@ package edu.wustl.dao;
 
 import java.sql.Connection;
 
-import edu.wustl.common.dao.queryExecutor.PagenatedResultData;
-import edu.wustl.common.exception.ErrorKey;
+import edu.wustl.common.util.PagenatedResultData;
 import edu.wustl.common.util.QueryParams;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.formatmessage.MysqlFormatter;
 import edu.wustl.dao.util.DAOConstants;
-import edu.wustl.query.executor.MysqlQueryExecutor;
 
 
 /**
@@ -86,22 +84,6 @@ public class MySQLDAOImpl extends AbstractJDBCDAOImpl
 	}
 
 
-	/* (non-Javadoc)
-	 * @see edu.wustl.common.dao.JDBCDAO#insert(java.lang.String, java.util.List)
-
-	*//**
-	 * @param tableName : Name of the table.
-	 * @param columnValues : Column values of table.
-	 * @throws SQLException : SQLException
-	 * @throws DAOException : DAOException
-	 *//*
-	public void insertHashedValues(String tableName, List<Object> columnValues)
-	throws DAOException, SQLException
-	{
-		insertHashedValues(tableName, columnValues, null);
-	}*/
-
-
 	/**
 	 * @param excp : Exception Object.
 	 * @param connection :
@@ -123,7 +105,7 @@ public class MySQLDAOImpl extends AbstractJDBCDAOImpl
 	public PagenatedResultData getQueryResultList(QueryParams queryParams) throws DAOException
 	{
 		PagenatedResultData pagenatedResultData = null;
-		try
+		/*try
 		{
 			queryParams.setConnection(getConnectionManager().getConnection());
 			MysqlQueryExecutor mysqlQueryExecutor = new MysqlQueryExecutor();
@@ -136,10 +118,39 @@ public class MySQLDAOImpl extends AbstractJDBCDAOImpl
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
 			throw new DAOException(errorKey,exp,"MySQLDAOImpl.java :"+
 					DAOConstants.EXECUTE_QUERY_ERROR);
-		}
+		}*/
 		return pagenatedResultData;
 	}
 
+	/**
+	 * @param columnCount count of the columns in results
+	 * @param getSublistOfResult boolean for getting sublist
+	 * @return column count
+	 */
+	public int getColumnCount(int columnCount,boolean getSublistOfResult)
+	{
+		return 0;
+	}
+
+	/**
+	 * Gets sql for Like operator.
+	 * @param attributeName name of the attribute
+	 * @param value value
+	 * @return String sql
+	 */
+	public String getSQLForLikeOperator(String attributeName, String value)
+	{
+		return DAOConstants.TAILING_SPACES;
+	}
+
+	/**
+	 * Required for temporal query.
+	 * @return Object of type either Database specific Primitive operation processor.
+	 */
+	public Object getPrimitiveOperationProcessor()
+	{
+		return DAOConstants.TAILING_SPACES;
+	}
 
 
 }

@@ -221,12 +221,12 @@ public final class HibernateMetaData
 	 */
 	public static  String getClassName(String tableName)
 	{
-		Iterator it = cfg.getClassMappings();
+		Iterator iter = cfg.getClassMappings();
 		PersistentClass persistentClass;
 		String className = DAOConstants.TAILING_SPACES;
-		while(it.hasNext())
+		while(iter.hasNext())
 		{
-			persistentClass = (PersistentClass) it.next();
+			persistentClass = (PersistentClass) iter.next();
 			if(tableName.equalsIgnoreCase(persistentClass.getTable().getName()))
 			{
 				className = persistentClass.getClassName();

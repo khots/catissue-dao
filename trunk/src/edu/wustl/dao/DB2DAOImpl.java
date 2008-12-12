@@ -5,9 +5,8 @@
 package edu.wustl.dao;
 
 import java.sql.Connection;
-
-import edu.wustl.common.dao.queryExecutor.PagenatedResultData;
 import edu.wustl.common.exception.ErrorKey;
+import edu.wustl.common.util.PagenatedResultData;
 import edu.wustl.common.util.QueryParams;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.exception.DAOException;
@@ -150,5 +149,34 @@ public class DB2DAOImpl extends AbstractJDBCDAOImpl
 		return null;
 	}
 
+	/**
+	 * @param columnCount count of the columns in results
+	 * @param getSublistOfResult boolean for getting sublist
+	 * @return column count
+	 */
+	public int getColumnCount(int columnCount,boolean getSublistOfResult)
+	{
+		return 0;
+	}
+
+	/**
+	 * Gets sql for Like operator.
+	 * @param attributeName name of the attribute
+	 * @param value value
+	 * @return String sql
+	 */
+	public String getSQLForLikeOperator(String attributeName, String value)
+	{
+		return DAOConstants.TAILING_SPACES;
+	}
+
+	/**
+	 * Required for temporal query.
+	 * @return Object of type either Database specific Primitive operation processor.
+	 */
+	public Object getPrimitiveOperationProcessor()
+	{
+		return DAOConstants.TAILING_SPACES;
+	}
 
 }
