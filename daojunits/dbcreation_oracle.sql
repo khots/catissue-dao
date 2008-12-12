@@ -42,7 +42,6 @@ create sequence PER_SEQ;
 create sequence Address_SEQ;
 create sequence ORDER_SEQ;
 
-----------------
 
 DROP TABLE TEST_USER cascade constraints;
 DROP TABLE TEST_TABLE_HASHED cascade constraints;
