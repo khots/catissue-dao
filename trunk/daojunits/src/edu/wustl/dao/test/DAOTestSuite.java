@@ -7,18 +7,18 @@ import junit.framework.TestSuite;
  *TODO
  */
 public class DAOTestSuite
-{
+{/*
 
-	/**
+	*//**
 	 * default constructor.
-	 */
+	 *//*
 	DAOTestSuite ()
 	{
 		super();
 	}
-	/**
+	*//**
 	 * @param args :
-	 */
+	 *//*
 	public static void main(String[] args)
 	{
 		//org.junit.runner.JUnitCore.main("edu.wustl.dao.test.HibernateInsertTestCase");
@@ -26,9 +26,9 @@ public class DAOTestSuite
 		junit.swingui.TestRunner.run(DAOTestSuite.class);
 	}
 
-	/**
+	*//**
 	 * @return daoSuite.
-	 */
+	 *//*
 	public static junit.framework.Test suite()
 	{
 		TestSuite daoSuite = new TestSuite("Test for DAO Layer");
@@ -39,4 +39,4 @@ public class DAOTestSuite
 		return daoSuite;
 	}
 
-}
+*/}
