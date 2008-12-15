@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite errors="0" failures="5" name="edu.wustl.dao.test.DAOTestSuite" tests="56" time="2.44">
+<testsuite errors="0" failures="0" name="edu.wustl.dao.test.DAOTestSuite" tests="5" time="0.438">
   <properties>
     <property name="java.vendor" value="Sun Microsystems Inc." />
     <property name="lib.dir" value="../lib" />
-    <property name="ant.file.DAOJunits" value="F:\catissueWorkspace\DAOsac\daojunits\daojunit.xml" />
+    <property name="ant.file.DAOJunits" value="F:\catissueWorkspace\DAONew\daojunits\daojunit.xml" />
     <property name="eclipse.pdebuild.templates" value="/F:/washuEclipse/eclipse/eclipse/plugins/org.eclipse.pde.build_3.4.0.v20080604/templates/" />
     <property name="sun.management.compiler" value="HotSpot Client Compiler" />
     <property name="os.name" value="Windows XP" />
@@ -15,7 +15,7 @@
     <property name="user.name" value="kalpana_thakur" />
     <property name="test.classes.dir" value="./classes" />
     <property name="user.language" value="en" />
-    <property name="base.path" value="F:\catissueWorkspace\DAOsac\daojunits" />
+    <property name="base.path" value="F:\catissueWorkspace\DAONew\daojunits" />
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk1.5.0_08\jre\bin" />
     <property name="ant.project.name" value="DAOJunits" />
     <property name="java.version" value="1.5.0_08" />
@@ -32,7 +32,7 @@
     <property name="user.country" value="US" />
     <property name="java.home" value="C:\Program Files\Java\jdk1.5.0_08\jre" />
     <property name="java.vm.info" value="mixed mode, sharing" />
-    <property name="ant.file" value="F:\catissueWorkspace\DAOsac\daojunits\daojunit.xml" />
+    <property name="ant.file" value="F:\catissueWorkspace\DAONew\daojunits\daojunit.xml" />
     <property name="os.version" value="5.1" />
     <property name="path.separator" value=";" />
     <property name="java.vm.version" value="1.5.0_08-b03" />
@@ -47,7 +47,7 @@
     <property name="coverage.dir" value="." />
     <property name="user.home" value="C:\Documents and Settings\kalpana_thakur" />
     <property name="java.specification.vendor" value="Sun Microsystems Inc." />
-    <property name="java.library.path" value="F:\washuEclipse\eclipse\eclipse;.;C:\WINDOWS\system32;C:\WINDOWS;E:\Ant\apache-ant-1.7.0\bin;C:\Program Files\Java\jdk1.6.0\bin;C:\Program Files\DeID\;C:\Program Files\TortoiseCVS;C:\Program Files\Java\jdk1.5.0_08\bin;;F:\oracle\ora92\bin;C:\WINDOWS\system32;C:\WINDOWS;D:\mysql server\bin;F:\washuEclipse\eclipse\eclipse\configuration\org.eclipse.osgi\bundles\99\1\.cp" />
+    <property name="java.library.path" value="F:\washuEclipse\eclipse\eclipse;.;C:\WINDOWS\system32;C:\WINDOWS;E:\Ant\apache-ant-1.7.0\bin;C:\Program Files\Java\jdk1.6.0\bin;C:\Program Files\DeID\;C:\Program Files\TortoiseCVS;C:\Program Files\Java\jdk1.5.0_08\bin;;F:\oracle\ora92\bin;C:\WINDOWS\system32;C:\WINDOWS;D:\mysql server\bin;C:\Program Files\YourKit Java Profiler 7.0.11\bin\win32;F:\washuEclipse\eclipse\eclipse\configuration\org.eclipse.osgi\bundles\99\1\.cp" />
     <property name="java.vendor.url" value="http://java.sun.com/" />
     <property name="java.vm.vendor" value="Sun Microsystems Inc." />
     <property name="java.runtime.name" value="Java(TM) 2 Runtime Environment, Standard Edition" />
@@ -65,12 +65,12 @@
     <property name="os.arch" value="x86" />
     <property name="java.awt.graphicsenv" value="sun.awt.Win32GraphicsEnvironment" />
     <property name="java.ext.dirs" value="C:\Program Files\Java\jdk1.5.0_08\jre\lib\ext" />
-    <property name="user.dir" value="F:\catissueWorkspace\DAOsac\daojunits" />
+    <property name="user.dir" value="F:\catissueWorkspace\DAONew\daojunits" />
     <property name="proj.src" value="../src" />
     <property name="line.separator" value="
 " />
     <property name="java.vm.name" value="Java HotSpot(TM) Client VM" />
-    <property name="basedir" value="F:\catissueWorkspace\DAOsac\daojunits" />
+    <property name="basedir" value="F:\catissueWorkspace\DAONew\daojunits" />
     <property name="ant.java.version" value="1.5" />
     <property name="ant.core.lib" value="E:\Ant\apache-ant-1.7.0\lib\ant.jar" />
     <property name="file.encoding" value="Cp1252" />
@@ -78,112 +78,113 @@
     <property name="java.specification.version" value="1.5" />
     <property name="cobertura.lib" value="coberturalib" />
   </properties>
-  <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testDAOInstance" time="0.015" />
-  <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testCaseInsertObject" time="0.501" />
-  <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testCaseUpdateObject" time="0.031" />
-  <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testCaseRetriveAllObjects" time="0.266" />
-  <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testCaseRetriveObject" time="0.016" />
-  <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testCaseRetrieveObjectColumns" time="0.015" />
-  <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testCaseRetrieveObjectAsPerID" time="0.032" />
-  <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testCaseLoadCleanObject" time="0.0" />
-  <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testRetriveInCondition" time="0.047">
-    <failure message="No object retrieved ::" type="junit.framework.AssertionFailedError">junit.framework.AssertionFailedError: No object retrieved ::
-	at edu.wustl.dao.test.HibernateTestCase.testRetriveInCondition(Unknown Source)
-	at org.eclipse.ant.internal.ui.antsupport.EclipseDefaultExecutor.executeTargets(EclipseDefaultExecutor.java:32)
-	at org.eclipse.ant.internal.ui.antsupport.InternalAntRunner.run(InternalAntRunner.java:423)
-	at org.eclipse.ant.internal.ui.antsupport.InternalAntRunner.main(InternalAntRunner.java:137)
-</failure>
-  </testcase>
-  <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testRetriveIsNotNullCondition" time="0.0" />
-  <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testRetriveIsNullCondition" time="0.031">
-    <failure message="No object retrieved ::" type="junit.framework.AssertionFailedError">junit.framework.AssertionFailedError: No object retrieved ::
-	at edu.wustl.dao.test.HibernateTestCase.testRetriveIsNullCondition(Unknown Source)
-	at org.eclipse.ant.internal.ui.antsupport.EclipseDefaultExecutor.executeTargets(EclipseDefaultExecutor.java:32)
-	at org.eclipse.ant.internal.ui.antsupport.InternalAntRunner.run(InternalAntRunner.java:423)
-	at org.eclipse.ant.internal.ui.antsupport.InternalAntRunner.main(InternalAntRunner.java:137)
-</failure>
-  </testcase>
-  <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testCaseExecuteQuery" time="0.016" />
-  <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testDisableRelatedObjects" time="0.015" />
-  <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testRetrieveAttribute" time="0.016" />
-  <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testLoadCleanObjects" time="0.0" />
-  <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testCaseDeleteObject" time="0.031" />
-  <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testCleanSession" time="0.0" />
-  <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testCleanSessionWithinaSession" time="0.047" />
-  <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testMultAppInsertPointngRespectiveDBSameDBType" time="0.0">
-    <failure message="Problem occurred while opening second session within a session:" type="junit.framework.AssertionFailedError">junit.framework.AssertionFailedError: Problem occurred while opening second session within a session:
-	at edu.wustl.dao.test.HibernateTestCase.testMultAppInsertPointngRespectiveDBSameDBType(Unknown Source)
-	at org.eclipse.ant.internal.ui.antsupport.EclipseDefaultExecutor.executeTargets(EclipseDefaultExecutor.java:32)
-	at org.eclipse.ant.internal.ui.antsupport.InternalAntRunner.run(InternalAntRunner.java:423)
-	at org.eclipse.ant.internal.ui.antsupport.InternalAntRunner.main(InternalAntRunner.java:137)
-</failure>
-  </testcase>
-  <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testRetriveComplexQuery" time="0.016" />
-  <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testDAOFactoryMembers" time="0.015" />
+  <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testDAOInstance" time="0.0" />
+  <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testCaseInsertObject" time="0.406" />
+  <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testCaseUpdateObject" time="0.016" />
   <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testDAOConfigFactory" time="0.0" />
   <testcase classname="edu.wustl.dao.test.HibernateTestCase" name="testDefaultFactory" time="0.0" />
-  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testJDBCDAOInstance" time="0.0" />
-  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testDropTableJDBC" time="0.908" />
-  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testExecuteUpdateJDBC" time="0.015" />
-  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testCaseRetriveAllObjectsJDBC" time="0.032" />
-  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testCaseRetriveObjectJDBC" time="0.0" />
-  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testCaseRetrieveObjectColumnsJDBC" time="0.015" />
-  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testCaseRetrieveOnlyDistinctRowsJDBC" time="0.0" />
-  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testRetriveInConditionJDBC" time="0.016" />
-  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testRetriveIsNotNullConditionJDBC" time="0.016" />
-  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testRetriveIsNullConditionJDBC" time="0.015">
-    <failure message="No object retrieved ::" type="junit.framework.AssertionFailedError">junit.framework.AssertionFailedError: No object retrieved ::
-	at edu.wustl.dao.test.JDBCTestCases.testRetriveIsNullConditionJDBC(Unknown Source)
+  <system-out><![CDATA[WARN   buildCache, Could not find configuration [test.Address]; using defaults.
+WARN   buildCache, Could not find configuration [test.Order]; using defaults.
+WARN   buildCache, Could not find configuration [test.Person]; using defaults.
+WARN   buildCache, Could not find configuration [test.User]; using defaults.
+WARN   buildCache, Could not find configuration [test.Person.orderCollection]; using defaults.
+FATAL  setConfiguration, null Nested exception: null
+FATAL  <init>, While constructing application exception errorKey object must not be null
+FATAL  buildSessionFactory, Failed to construct ApplicationException object. Please see the comple error log above
+ERROR  buildSessionFactory, Failed to construct ApplicationException object. Please see the comple error log above
+edu.wustl.common.exception.ApplicationException$AppRunTimeException: Failed to construct ApplicationException object. Please see the comple error log above
+	at edu.wustl.common.exception.ApplicationException.<init>(ApplicationException.java:68)
+	at edu.wustl.dao.exception.DAOException.<init>(DAOException.java:46)
+	at edu.wustl.dao.daofactory.DAOFactory.setConfiguration(DAOFactory.java:229)
+	at edu.wustl.dao.daofactory.DAOFactory.buildSessionFactory(DAOFactory.java:150)
+	at edu.wustl.dao.daofactory.ApplicationDAOPropertiesParser.parseDocument(ApplicationDAOPropertiesParser.java:127)
+	at edu.wustl.dao.daofactory.ApplicationDAOPropertiesParser.getDaoFactoryMap(ApplicationDAOPropertiesParser.java:59)
+	at edu.wustl.dao.daofactory.DAOConfigFactory.populateDaoFactoryMap(DAOConfigFactory.java:102)
+	at edu.wustl.dao.daofactory.DAOConfigFactory.<init>(DAOConfigFactory.java:59)
+	at edu.wustl.dao.daofactory.DAOConfigFactory.<clinit>(DAOConfigFactory.java:49)
+	at edu.wustl.dao.test.HibernateTestCase.setDAO(Unknown Source)
+	at edu.wustl.dao.test.HibernateTestCase.<init>(Unknown Source)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:39)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:27)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:494)
+	at junit.framework.TestSuite.createTest(TestSuite.java:131)
+	at junit.framework.TestSuite.addTestMethod(TestSuite.java:114)
+	at junit.framework.TestSuite.<init>(TestSuite.java:75)
+	at junit.framework.TestSuite.addTestSuite(TestSuite.java:101)
+	at edu.wustl.dao.test.DAOTestSuite.suite(Unknown Source)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:585)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:272)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1072)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:682)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1434)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:632)
+	at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:288)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:585)
+	at org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:105)
+	at org.apache.tools.ant.Task.perform(Task.java:348)
+	at org.apache.tools.ant.Target.execute(Target.java:357)
+	at org.apache.tools.ant.Target.performTasks(Target.java:385)
+	at org.apache.tools.ant.Project.executeSortedTargets(Project.java:1329)
+	at org.apache.tools.ant.Project.executeTarget(Project.java:1298)
+	at org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)
 	at org.eclipse.ant.internal.ui.antsupport.EclipseDefaultExecutor.executeTargets(EclipseDefaultExecutor.java:32)
+	at org.apache.tools.ant.Project.executeTargets(Project.java:1181)
 	at org.eclipse.ant.internal.ui.antsupport.InternalAntRunner.run(InternalAntRunner.java:423)
 	at org.eclipse.ant.internal.ui.antsupport.InternalAntRunner.main(InternalAntRunner.java:137)
-</failure>
-  </testcase>
-  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testRetriveEqualConditionJDBC" time="0.047">
-    <failure message="No object retrieved ::" type="junit.framework.AssertionFailedError">junit.framework.AssertionFailedError: No object retrieved ::
-	at edu.wustl.dao.test.JDBCTestCases.testRetriveEqualConditionJDBC(Unknown Source)
+FATAL  <init>, While constructing application exception errorKey object must not be null
+ERROR  getDaoFactoryMap, Failed to construct ApplicationException object. Please see the comple error log above
+edu.wustl.common.exception.ApplicationException$AppRunTimeException: Failed to construct ApplicationException object. Please see the comple error log above
+	at edu.wustl.common.exception.ApplicationException.<init>(ApplicationException.java:68)
+	at edu.wustl.dao.exception.DAOException.<init>(DAOException.java:46)
+	at edu.wustl.dao.daofactory.DAOFactory.buildSessionFactory(DAOFactory.java:159)
+	at edu.wustl.dao.daofactory.ApplicationDAOPropertiesParser.parseDocument(ApplicationDAOPropertiesParser.java:127)
+	at edu.wustl.dao.daofactory.ApplicationDAOPropertiesParser.getDaoFactoryMap(ApplicationDAOPropertiesParser.java:59)
+	at edu.wustl.dao.daofactory.DAOConfigFactory.populateDaoFactoryMap(DAOConfigFactory.java:102)
+	at edu.wustl.dao.daofactory.DAOConfigFactory.<init>(DAOConfigFactory.java:59)
+	at edu.wustl.dao.daofactory.DAOConfigFactory.<clinit>(DAOConfigFactory.java:49)
+	at edu.wustl.dao.test.HibernateTestCase.setDAO(Unknown Source)
+	at edu.wustl.dao.test.HibernateTestCase.<init>(Unknown Source)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:39)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:27)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:494)
+	at junit.framework.TestSuite.createTest(TestSuite.java:131)
+	at junit.framework.TestSuite.addTestMethod(TestSuite.java:114)
+	at junit.framework.TestSuite.<init>(TestSuite.java:75)
+	at junit.framework.TestSuite.addTestSuite(TestSuite.java:101)
+	at edu.wustl.dao.test.DAOTestSuite.suite(Unknown Source)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:585)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:272)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1072)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:682)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1434)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:632)
+	at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:288)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:585)
+	at org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:105)
+	at org.apache.tools.ant.Task.perform(Task.java:348)
+	at org.apache.tools.ant.Target.execute(Target.java:357)
+	at org.apache.tools.ant.Target.performTasks(Target.java:385)
+	at org.apache.tools.ant.Project.executeSortedTargets(Project.java:1329)
+	at org.apache.tools.ant.Project.executeTarget(Project.java:1298)
+	at org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)
 	at org.eclipse.ant.internal.ui.antsupport.EclipseDefaultExecutor.executeTargets(EclipseDefaultExecutor.java:32)
+	at org.apache.tools.ant.Project.executeTargets(Project.java:1181)
 	at org.eclipse.ant.internal.ui.antsupport.InternalAntRunner.run(InternalAntRunner.java:423)
 	at org.eclipse.ant.internal.ui.antsupport.InternalAntRunner.main(InternalAntRunner.java:137)
-</failure>
-  </testcase>
-  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testCreateTableJDBC" time="0.078" />
-  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testCreateTableQueryJDBC" time="0.047" />
-  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testDatePatternJDBC" time="0.0" />
-  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testTimePatternJDBC" time="0.0" />
-  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testDateFormatFunctionJDBC" time="0.0" />
-  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testTimeFormatFunctionJDBC" time="0.0" />
-  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testDateTostrFunctionJDBC" time="0.0" />
-  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testStrTodateFunctionJDBC" time="0.016" />
-  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testExecuteQueryJDBC" time="0.0" />
-  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testRetriveComplexQueryJDBC" time="0.016" />
-  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testAuditJDBC" time="0.015" />
-  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testDeleteJDBC" time="0.016" />
-  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testDisableRelatedObjectsJDBC" time="0.0" />
-  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testInsertJDBC" time="0.0" />
-  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testRetrieveAttributeJDBC" time="0.0" />
-  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testUpdateJDBC" time="0.0" />
-  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testRetrieveJDBC" time="0.0" />
-  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testInsertHashedValues" time="0.047" />
-  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testInsertHashedValuesGivenColumns" time="0.015" />
-  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testDatabaseConnectionAndStmtAndResultSet" time="0.0" />
-  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testDAOConfigFactory" time="0.0" />
-  <testcase classname="edu.wustl.dao.test.JDBCTestCases" name="testDefaultFactory" time="0.016" />
-  <system-out><![CDATA[WARN   buildCache, Could not find configuration [test.User]; using defaults.
-FATAL  testAuditJDBC, DB005:-There is no implementation for this method Error caused at- AbstractJDBCDAOImpl.java
- Root cause java.lang.Exceptionnull
-FATAL  testDeleteJDBC, DB005:-There is no implementation for this method Error caused at- AbstractJDBCDAOImpl.java
- Root cause java.lang.Exceptionnull
-FATAL  testDisableRelatedObjectsJDBC, DB005:-There is no implementation for this method Error caused at- AbstractJDBCDAOImpl.java
- Root cause java.lang.Exceptionnull
-FATAL  testInsertJDBC, DB005:-There is no implementation for this method Error caused at- AbstractJDBCDAOImpl.java
- Root cause java.lang.Exceptionnull
-FATAL  testRetrieveAttributeJDBC, DB005:-There is no implementation for this method Error caused at- AbstractJDBCDAOImpl.java
- Root cause java.lang.Exceptionnull
-FATAL  testUpdateJDBC, DB005:-There is no implementation for this method Error caused at- AbstractJDBCDAOImpl.java
- Root cause java.lang.Exceptionnull
-FATAL  testRetrieveJDBC, DB005:-There is no implementation for this method Error caused at- AbstractJDBCDAOImpl.java
- Root cause java.lang.Exceptionnull
 ]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
