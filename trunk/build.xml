@@ -9,6 +9,7 @@
 	<property name="target.dir" value="${base.dir}/classes" />
 
 	<target name="compile" depends="init">
+		<echo> Compiling DAO source code : </echo>
 			<javac destdir="${target.dir}" includes="**/*.*" debug="on" includeAntRuntime="false" target="1.5">
 				<src path="${src.dir}" />
 				<classpath>
@@ -28,6 +29,7 @@
 		</target>
 	<!-- sub tasks -->
 		<target name="init">
+			<echo>Initializing necessary parameters : </echo>
 			<!-- Create the time stamp -->
 			<tstamp />
 			<!-- Create the build directory structure used by compile -->
@@ -35,8 +37,10 @@
 			<mkdir dir="${target.dir}" />
 			<mkdir dir="${build.dir}" />
 		</target>
+	
 	<target name="build_jar" depends="compile">
-			<delete>
+		<echo>Building project jar : </echo>
+		<delete>
 				<fileset dir="${build.dir}" includes="**/*" />
 			</delete>
 			<tstamp />
@@ -51,10 +55,12 @@
 
 			<antcall target="build_code_zip" />
 		</target>
+	
 	<target name="build_code_zip" depends="compile">
+		<echo> Building project installable zip : </echo>
 			<zip destfile="${build.dir}/DAO-src.zip">
 				<fileset dir="${src.dir}" includes="**/*" />
 			</zip>
-		</target>
+	</target>
 
 </project>

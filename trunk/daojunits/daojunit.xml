@@ -31,7 +31,7 @@
 
 	
 	<target name="compileDaoTestCases">
-		
+		<echo>Compiling DAO test cases : </echo>
 		<delete dir="${test.classes.dir}" />
 		<mkdir dir="${test.classes.dir}" />		
 		<javac destdir="${test.classes.dir}" includes="**/*.java" includeantruntime="true">
@@ -54,6 +54,7 @@
 	</target>
 	
 	<target name="runDAOTestCases" depends="compileDaoTestCases">
+		<echo>Executing DAO test cases : </echo>
 		<mkdir dir="${report.dir}/reports/daoTestReports"/>
 		<mkdir dir="${report.dir}/reports/daoTestReports/HtmlReports"/>
 		
@@ -96,6 +97,7 @@
 	
 		
 	 <target name="runJunitTestCases" depends="runDAOTestCases">
+	 	<echo>Executing Junit test cases : </echo>
 		<junitreport todir="${report.dir}/reports/daoTestReports">
 			<fileset dir="${report.dir}/reports/daoTestReports">
 				<include name="TEST-*.xml" />
@@ -105,7 +107,7 @@
 	</target>
 	
 	<target name="init">
-		
+		<echo>Initializing all the necessarry parameters : </echo>
 		<delete dir="${proj.classes}" />
 		<mkdir dir="${proj.classes}" />
 		<delete dir="${test.classes.dir}" />
@@ -118,6 +120,7 @@
 	
 	
 	<target name="compile" depends="init">
+		<echo>Compiling DAO source code : </echo>
 		<javac destdir="${proj.classes}" includes="**/*.*" debug="on" includeAntRuntime="false" target="1.5">
 					<src path="${proj.src}" />
 					<classpath>
@@ -139,6 +142,7 @@
 	
 	
 	<target name="instrument" depends="init,compile">
+		<echo>Instrumenting the application classes : </echo>
 			<!--
 				Remove the coverage data file.
 			-->
@@ -176,6 +180,7 @@
 	</target>
 	
 	<target name="coverage-report">
+		<echo> Generating coverage reports :</echo>
 		<mkdir dir="${coverage.dir}/reports/daoCodeCoverageXml"/>
 		<mkdir dir="${coverage.dir}/reports/daoCodeCoverageHtml"/>
 		
