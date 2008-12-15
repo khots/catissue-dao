@@ -28,7 +28,6 @@ import edu.wustl.common.audit.AuditManager;
 import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.querydatabean.QueryDataBean;
-import edu.wustl.common.security.exceptions.SMException;
 import edu.wustl.common.util.PagenatedResultData;
 import edu.wustl.common.util.QueryParams;
 import edu.wustl.common.util.Utility;
