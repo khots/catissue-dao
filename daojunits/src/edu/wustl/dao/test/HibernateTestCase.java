@@ -76,6 +76,63 @@ public class HibernateTestCase extends BaseTestCase
 		assertNotNull("DAO Object is null",dao);
 	}
 
+	/**
+	 * This test will assert that Object inserted successfully.
+	 */
+	@Test
+	public void testCaseInsertObject()
+	{
+		try
+		{
+		  User user = (User)createUserObject();
+		  dao.openSession(null);
+		  dao.insert(user, null, false, false);
+		  dao.commit();
+		  dao.closeSession();
+
+
+		  	User user2 = new User();
+		  	user2.setFirstName("sachin");
+		  	user2.setLastName("Lale");
+		  	user2.setEmailAddress("sach@lale.co.in");
+		  dao.openSession(null);
+		  dao.insert(user2, null, false, false);
+		  dao.commit();
+		  dao.closeSession();
+		}
+		catch(Exception exp)
+		{
+			assertFalse("Failed while inserting object :", true);
+		}
+
+	}
+
+		/**
+	 * This test will assert that Object updated successfully.
+	 */
+	@Test
+	public void testCaseUpdateObject()
+	{
+		try
+		{
+
+		  User user = new User();
+		  user.setIdentifier(Long.valueOf(1));
+		  user.setFirstName("Srikanth");
+		  user.setLastName("Adiga");
+		  user.setEmailAddress("sri.adiga@persistent.co.in");
+
+		  dao.openSession(null);
+		  	  dao.update(user);
+		  	  dao.commit();
+		  dao.closeSession();
+		}
+		catch(Exception exp)
+		{
+			assertFalse("Failed while updating object :", true);
+		}
+
+	  }
 
 	/**
 	 * This test will assert that Object inserted successfully.
@@ -149,63 +206,7 @@ public class HibernateTestCase extends BaseTestCase
 		}
 	  }
 
-/**
-	 * This test will assert that Object inserted successfully.
-	 */
-	@Test
-	public void testCaseInsertObject()
-	{
-		try
-		{
-		  User user = (User)createUserObject();
-		  dao.openSession(null);
-		  dao.insert(user, null, false, false);
-		  dao.commit();
-		  dao.closeSession();
 
-
-		  	User user2 = new User();
-		  	user2.setFirstName("sachin");
-		  	user2.setLastName("Lale");
-		  	user2.setEmailAddress("sach@lale.co.in");
-		  dao.openSession(null);
-		  dao.insert(user2, null, false, false);
-		  dao.commit();
-		  dao.closeSession();
-		}
-		catch(Exception exp)
-		{
-			assertFalse("Failed while inserting object :", true);
-		}
-
-	}
-
-		/**
-	 * This test will assert that Object updated successfully.
-	 */
-	@Test
-	public void testCaseUpdateObject()
-	{
-		try
-		{
-
-		  User user = new User();
-		  user.setIdentifier(Long.valueOf(1));
-		  user.setFirstName("Srikanth");
-		  user.setLastName("Adiga");
-		  user.setEmailAddress("sri.adiga@persistent.co.in");
-
-		  dao.openSession(null);
-		  	  dao.update(user);
-		  	  dao.commit();
-		  dao.closeSession();
-		}
-		catch(Exception exp)
-		{
-			assertFalse("Failed while updating object :", true);
-		}
-
-	  }
 
 	/**
 	 * This test will assert  the retrieve used by catissuecore.
