@@ -1,15 +1,102 @@
+WARN   buildCache, Could not find configuration [test.Address]; using defaults.
+WARN   buildCache, Could not find configuration [test.Order]; using defaults.
+WARN   buildCache, Could not find configuration [test.Person]; using defaults.
 WARN   buildCache, Could not find configuration [test.User]; using defaults.
-FATAL  testAuditJDBC, DB005:-There is no implementation for this method Error caused at- AbstractJDBCDAOImpl.java
- Root cause java.lang.Exceptionnull
-FATAL  testDeleteJDBC, DB005:-There is no implementation for this method Error caused at- AbstractJDBCDAOImpl.java
- Root cause java.lang.Exceptionnull
-FATAL  testDisableRelatedObjectsJDBC, DB005:-There is no implementation for this method Error caused at- AbstractJDBCDAOImpl.java
- Root cause java.lang.Exceptionnull
-FATAL  testInsertJDBC, DB005:-There is no implementation for this method Error caused at- AbstractJDBCDAOImpl.java
- Root cause java.lang.Exceptionnull
-FATAL  testRetrieveAttributeJDBC, DB005:-There is no implementation for this method Error caused at- AbstractJDBCDAOImpl.java
- Root cause java.lang.Exceptionnull
-FATAL  testUpdateJDBC, DB005:-There is no implementation for this method Error caused at- AbstractJDBCDAOImpl.java
- Root cause java.lang.Exceptionnull
-FATAL  testRetrieveJDBC, DB005:-There is no implementation for this method Error caused at- AbstractJDBCDAOImpl.java
- Root cause java.lang.Exceptionnull
+WARN   buildCache, Could not find configuration [test.Person.orderCollection]; using defaults.
+FATAL  setConfiguration, null Nested exception: null
+FATAL  &lt;init&gt;, While constructing application exception errorKey object must not be null
+FATAL  buildSessionFactory, Failed to construct ApplicationException object. Please see the comple error log above
+ERROR  buildSessionFactory, Failed to construct ApplicationException object. Please see the comple error log above
+edu.wustl.common.exception.ApplicationException$AppRunTimeException: Failed to construct ApplicationException object. Please see the comple error log above
+	at edu.wustl.common.exception.ApplicationException.&lt;init&gt;(ApplicationException.java:68)
+	at edu.wustl.dao.exception.DAOException.&lt;init&gt;(DAOException.java:46)
+	at edu.wustl.dao.daofactory.DAOFactory.setConfiguration(DAOFactory.java:229)
+	at edu.wustl.dao.daofactory.DAOFactory.buildSessionFactory(DAOFactory.java:150)
+	at edu.wustl.dao.daofactory.ApplicationDAOPropertiesParser.parseDocument(ApplicationDAOPropertiesParser.java:127)
+	at edu.wustl.dao.daofactory.ApplicationDAOPropertiesParser.getDaoFactoryMap(ApplicationDAOPropertiesParser.java:59)
+	at edu.wustl.dao.daofactory.DAOConfigFactory.populateDaoFactoryMap(DAOConfigFactory.java:102)
+	at edu.wustl.dao.daofactory.DAOConfigFactory.&lt;init&gt;(DAOConfigFactory.java:59)
+	at edu.wustl.dao.daofactory.DAOConfigFactory.&lt;clinit&gt;(DAOConfigFactory.java:49)
+	at edu.wustl.dao.test.HibernateTestCase.setDAO(Unknown Source)
+	at edu.wustl.dao.test.HibernateTestCase.&lt;init&gt;(Unknown Source)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:39)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:27)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:494)
+	at junit.framework.TestSuite.createTest(TestSuite.java:131)
+	at junit.framework.TestSuite.addTestMethod(TestSuite.java:114)
+	at junit.framework.TestSuite.&lt;init&gt;(TestSuite.java:75)
+	at junit.framework.TestSuite.addTestSuite(TestSuite.java:101)
+	at edu.wustl.dao.test.DAOTestSuite.suite(Unknown Source)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:585)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:272)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1072)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:682)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1434)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:632)
+	at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:288)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:585)
+	at org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:105)
+	at org.apache.tools.ant.Task.perform(Task.java:348)
+	at org.apache.tools.ant.Target.execute(Target.java:357)
+	at org.apache.tools.ant.Target.performTasks(Target.java:385)
+	at org.apache.tools.ant.Project.executeSortedTargets(Project.java:1329)
+	at org.apache.tools.ant.Project.executeTarget(Project.java:1298)
+	at org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)
+	at org.eclipse.ant.internal.ui.antsupport.EclipseDefaultExecutor.executeTargets(EclipseDefaultExecutor.java:32)
+	at org.apache.tools.ant.Project.executeTargets(Project.java:1181)
+	at org.eclipse.ant.internal.ui.antsupport.InternalAntRunner.run(InternalAntRunner.java:423)
+	at org.eclipse.ant.internal.ui.antsupport.InternalAntRunner.main(InternalAntRunner.java:137)
+FATAL  &lt;init&gt;, While constructing application exception errorKey object must not be null
+ERROR  getDaoFactoryMap, Failed to construct ApplicationException object. Please see the comple error log above
+edu.wustl.common.exception.ApplicationException$AppRunTimeException: Failed to construct ApplicationException object. Please see the comple error log above
+	at edu.wustl.common.exception.ApplicationException.&lt;init&gt;(ApplicationException.java:68)
+	at edu.wustl.dao.exception.DAOException.&lt;init&gt;(DAOException.java:46)
+	at edu.wustl.dao.daofactory.DAOFactory.buildSessionFactory(DAOFactory.java:159)
+	at edu.wustl.dao.daofactory.ApplicationDAOPropertiesParser.parseDocument(ApplicationDAOPropertiesParser.java:127)
+	at edu.wustl.dao.daofactory.ApplicationDAOPropertiesParser.getDaoFactoryMap(ApplicationDAOPropertiesParser.java:59)
+	at edu.wustl.dao.daofactory.DAOConfigFactory.populateDaoFactoryMap(DAOConfigFactory.java:102)
+	at edu.wustl.dao.daofactory.DAOConfigFactory.&lt;init&gt;(DAOConfigFactory.java:59)
+	at edu.wustl.dao.daofactory.DAOConfigFactory.&lt;clinit&gt;(DAOConfigFactory.java:49)
+	at edu.wustl.dao.test.HibernateTestCase.setDAO(Unknown Source)
+	at edu.wustl.dao.test.HibernateTestCase.&lt;init&gt;(Unknown Source)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:39)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:27)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:494)
+	at junit.framework.TestSuite.createTest(TestSuite.java:131)
+	at junit.framework.TestSuite.addTestMethod(TestSuite.java:114)
+	at junit.framework.TestSuite.&lt;init&gt;(TestSuite.java:75)
+	at junit.framework.TestSuite.addTestSuite(TestSuite.java:101)
+	at edu.wustl.dao.test.DAOTestSuite.suite(Unknown Source)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:585)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:272)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeInVM(JUnitTask.java:1072)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:682)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.executeOrQueue(JUnitTask.java:1434)
+	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTask.execute(JUnitTask.java:632)
+	at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:288)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:585)
+	at org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:105)
+	at org.apache.tools.ant.Task.perform(Task.java:348)
+	at org.apache.tools.ant.Target.execute(Target.java:357)
+	at org.apache.tools.ant.Target.performTasks(Target.java:385)
+	at org.apache.tools.ant.Project.executeSortedTargets(Project.java:1329)
+	at org.apache.tools.ant.Project.executeTarget(Project.java:1298)
+	at org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)
+	at org.eclipse.ant.internal.ui.antsupport.EclipseDefaultExecutor.executeTargets(EclipseDefaultExecutor.java:32)
+	at org.apache.tools.ant.Project.executeTargets(Project.java:1181)
+	at org.eclipse.ant.internal.ui.antsupport.InternalAntRunner.run(InternalAntRunner.java:423)
+	at org.eclipse.ant.internal.ui.antsupport.InternalAntRunner.main(InternalAntRunner.java:137)

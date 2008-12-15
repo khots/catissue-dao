@@ -1,6 +1,5 @@
 package edu.wustl.dao.test;
 
-import junit.framework.TestSuite;
 
 /**
  * @author kalpana_thakur
