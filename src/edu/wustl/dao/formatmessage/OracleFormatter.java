@@ -36,7 +36,7 @@ public class OracleFormatter implements IDBFormatter
 
 		Exception objExcp = excp;
         StringBuffer columnNameBuff = new StringBuffer(DAOConstants.TAILING_SPACES);
-        String formattedErrMsg = ""; // Formatted Error Message return by this method
+        String formattedErrMsg = DAOConstants.TAILING_SPACES; // Formatted Error Message return by this method
 	    if(objExcp instanceof gov.nih.nci.security.exceptions.CSTransactionException)
         {
             objExcp = (Exception)objExcp.getCause();
@@ -57,7 +57,7 @@ public class OracleFormatter implements IDBFormatter
             int startIndexofMsg = temp.indexOf(DAOConstants.SPLIT_OPERATOR);
             int endIndexofMsg = temp.indexOf(')');
             String strKey =temp.substring((startIndexofMsg+1),endIndexofMsg);
-            startIndexofMsg = strKey.indexOf(".");
+            startIndexofMsg = strKey.indexOf('.');
             String key =strKey.substring((startIndexofMsg+1));
 
             formattedErrMsg = getFormatedMessage(
