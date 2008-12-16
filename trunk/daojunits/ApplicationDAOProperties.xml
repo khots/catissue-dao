@@ -7,7 +7,7 @@
 				<Class-name name = "edu.wustl.dao.HibernateDAOImpl"/>
 				<Config-file name = "hibernate.cfg.xml"/>
 			</DefaultDAO>
-			<jdbcDAO name = "edu.wustl.dao.OracleDAOImpl"/>
+			<jdbcDAO name = "edu.wustl.dao.MySQLDAOImpl"/>
 		</DAOFactory>
 		<ConnectionManager name= "edu.wustl.dao.connectionmanager.ConnectionManager"/>
 		
@@ -17,7 +17,7 @@
 		<DAOFactory name="edu.wustl.dao.daofactory.DAOFactory">
 			<DefaultDAO>
 				<Class-name name = "edu.wustl.dao.HibernateDAOImpl"/>
-				<Config-file name = "ciderHibernate.cfg.xml"/>
+				<Config-file name = "hibernateOracle.cfg.xml"/>
 			</DefaultDAO>
 			<jdbcDAO name = "edu.wustl.dao.OracleDAOImpl"/>
 		</DAOFactory>
