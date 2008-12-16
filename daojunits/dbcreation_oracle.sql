@@ -42,7 +42,6 @@ create sequence PER_SEQ;
 create sequence Address_SEQ;
 create sequence ORDER_SEQ;
 
-
 DROP TABLE TEST_USER cascade constraints;
 DROP TABLE TEST_TABLE_HASHED cascade constraints;
 
@@ -67,6 +66,4 @@ CREATE TABLE TEST_TABLE_HASHED (
                          PRIMARY KEY  (IDENTIFIER)                             
                        )  ;
 					   
-INSERT INTO TEST_USER (IDENTIFIER,EMAIL_ADDRESS,FIRST_NAME,LAST_NAME,ACTIVITY_STATUS) VALUES ('1','john@per.co.in','JOHN','REBER','Active');
-INSERT INTO TEST_USER (IDENTIFIER,EMAIL_ADDRESS,FIRST_NAME,LAST_NAME,ACTIVITY_STATUS)VALUES ('2','sri@per.co.in','srikanth',NULL,'Active');
 
