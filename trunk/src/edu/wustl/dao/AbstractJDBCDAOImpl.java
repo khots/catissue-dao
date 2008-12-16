@@ -426,7 +426,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	 */
 	public List<Object> executeQuery(String query, SessionDataBean sessionDataBean,
 			boolean isSecureExecute, Map<Object,QueryDataBean>
-			queryResultObjectDataMap) throws ClassNotFoundException,
+			queryResultObjectDataMap) throws 
 			DAOException
 	{
 
