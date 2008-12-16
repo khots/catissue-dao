@@ -193,4 +193,13 @@ public interface JDBCDAO extends DAO
 	 * @return Object of type either Mysql or Oracle Primitive operation processor.
 	 */
 	Object getPrimitiveOperationProcessor();
+	/**
+	 * This method fires a query to insert auditing details into audit tables.
+	 * @param sql sql to be fired
+	 * @param sessionData sessiondata to get userId and ip address
+	 * @param comments comments to be inserted in the table
+	 * @throws DAOException Daoexception
+	 */
+	void executeAuditSql(String sql, SessionDataBean sessionData, String comments) throws DAOException;
+
 }
