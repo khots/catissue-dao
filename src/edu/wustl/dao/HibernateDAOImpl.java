@@ -504,6 +504,7 @@ public class HibernateDAOImpl implements HibernateDAO
 	 * @param identifier identifier.
 	 * @return object.
 	 * @throws DAOException It will throw the DAOException
+	 * Do we need to remove this.
 	 */
 	public Object loadCleanObj(String sourceObjectName, Long identifier)
 	 throws DAOException
@@ -640,6 +641,14 @@ public class HibernateDAOImpl implements HibernateDAO
 		return connectionManager.currentSession().connection();
 	}
 
+	/**
+	 *This method will be called to close current connection.
+	 *@throws DAOException :Generic DAOException.
+	 */
+	public void closeConnection() throws DAOException
+	{
+		connectionManager.closeConnection();
+	}
 
 	/**
 	 * This method will be called to obtain clean session.
@@ -651,6 +660,18 @@ public class HibernateDAOImpl implements HibernateDAO
 		return connectionManager.getCleanSession();
 	}
 
+	/**
+	 * This method will be called to retrieve the current session.
+	 * It will check the session for the running application in applicationSessionMap.
+	 * If present, retrieved the session from the Map otherwise create the
+	 * new session and store it into the Map.
+	 * @return session object.
+	 *@throws DAOException :Generic DAOException.
+	 */
+	public Session getCurrentSession() throws DAOException
+	{
+		return connectionManager.currentSession();
+	}
 	/**
 	 * This method opens a new session, loads an object with given class and Id,
 	 * and closes the session. This method should be used only when an object is
