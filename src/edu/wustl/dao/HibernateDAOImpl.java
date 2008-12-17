@@ -648,19 +648,7 @@ public class HibernateDAOImpl implements HibernateDAO
 	 */
 	public Session getCleanSession() throws DAOException
 	{
-		Session session = null;
-		try
-		{
-			session = connectionManager.getSessionFactory().openSession();
-			return session;
-		}
-		catch (HibernateException exp)
-		{
-			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,exp,"DAOFactory.java :"+
-					DAOConstants.NEW_SESSION_ERROR);
-		}
-
+		return connectionManager.getCleanSession();
 	}
 
 	/**
