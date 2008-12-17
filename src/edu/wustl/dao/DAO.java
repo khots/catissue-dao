@@ -193,7 +193,7 @@ public interface DAO
 	 *This method will be called to get connection Manager Object.
 	 * @return It will return the Connection Manager Object.
 	 */
-	IConnectionManager getConnectionManager();
+	//IConnectionManager getConnectionManager();
 
 	/**
 	 * @param excp : Exception Object.

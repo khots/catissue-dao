@@ -667,8 +667,8 @@ public class HibernateDAOImpl implements HibernateDAO
 		IDAOFactory daoFactory = DAOConfigFactory.getInstance().getDAOFactory(applicationName);
 		JDBCDAO jdbcDAO = daoFactory.getJDBCDAO();
 		//HibernateMetaData.initHibernateMetaData(jdbcDAO.getConnectionManager().getConfiguration());
-		formatMessage = jdbcDAO.formatMessage(excp,jdbcDAO.getConnectionManager().getConnection());
-		jdbcDAO.getConnectionManager().closeConnection();
+		formatMessage = jdbcDAO.formatMessage(excp,getConnectionManager().getConnection());
+		getConnectionManager().closeConnection();
 		return formatMessage;
 	}
 

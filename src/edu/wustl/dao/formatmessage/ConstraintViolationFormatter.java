@@ -36,7 +36,6 @@ public class ConstraintViolationFormatter implements ExceptionFormatter
 		{
 			IDAOFactory daoFactory = DAOConfigFactory.getInstance().getDAOFactory(applicationName);
 			DAO dao = daoFactory.getDAO();
-			HibernateMetaData.initHibernateMetaData(dao.getConnectionManager().getConfiguration());
 			formatedMessage = dao.formatMessage(objExcp,applicationName);
 		}
 		catch(Exception exp)
