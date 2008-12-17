@@ -1004,4 +1004,28 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 
 	}
 
+	/**
+	 *This method will be called to close current connection.
+	 *@throws DAOException :Generic DAOException.
+	 */
+	public void closeConnection() throws DAOException
+	{
+		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
+		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
+	}
+
+	/**
+	 * This method will be called to retrieve the current session.
+	 * It will check the session for the running application in applicationSessionMap.
+	 * If present, retrieved the session from the Map otherwise create the
+	 * new session and store it into the Map.
+	 * @return session object.
+	 *@throws DAOException :Generic DAOException.
+	 */
+	public Session getCurrentSession() throws DAOException
+	{
+		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
+		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
+	}
+
 }
