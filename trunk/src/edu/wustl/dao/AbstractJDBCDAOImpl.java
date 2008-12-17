@@ -196,7 +196,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	public void executeUpdate(String query) throws DAOException
 	{
 		DatabaseConnectionParams databaseConnectionParams = new DatabaseConnectionParams();
-		databaseConnectionParams.setConnection(connection);
+		databaseConnectionParams.setConnection(getCleanConnection());
 		databaseConnectionParams.executeUpdate(query);
 	}
 
@@ -488,10 +488,10 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		ResultSetMetaData metaData;
 
 		DatabaseConnectionParams dbConnParamForMetadata = new DatabaseConnectionParams();
-		dbConnParamForMetadata.setConnection(getConnection());
+		dbConnParamForMetadata.setConnection(getCleanConnection());
 
 		DatabaseConnectionParams dbConnParamForInsertQuery = new DatabaseConnectionParams();
-		dbConnParamForInsertQuery.setConnection(getConnection());
+		dbConnParamForInsertQuery.setConnection(getCleanConnection());
 
 		PreparedStatement stmt = null;
 		try
@@ -632,7 +632,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		StringBuffer sqlBuff = new StringBuffer(DAOConstants.TAILING_SPACES);
 		sqlBuff.append("Select").append(DAOConstants.TAILING_SPACES);
 
-		dbConnParamForMetadata.setConnection(connection);
+		dbConnParamForMetadata.setConnection(getCleanConnection());
 		for (int i = 0; i < columnNames.size(); i++)
 		{
 			sqlBuff.append(columnNames.get(i));
@@ -665,7 +665,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		try
 		{
 
-			dbConnParamForMetadata.setConnection(connection);
+			dbConnParamForMetadata.setConnection(getCleanConnection());
 			StringBuffer sqlBuff = new StringBuffer(DAOConstants.TAILING_SPACES);
 			sqlBuff.append("Select * from " ).append(tableName).append(" where 1!=1");
 			metaData = dbConnParamForMetadata.getMetaData(sqlBuff.toString());
@@ -865,13 +865,15 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	}
 
 	/**
-	 * This method will be called to get connection object.
-	 * @return Connection: Connection object.
+	 *This method will be called to retrieved the current connection object.
+	 *@return Connection object
+	 *@throws DAOException :Generic DAOException.
 	 */
-	public Connection getConnection()
+	public Connection getCleanConnection() throws DAOException
 	{
-		return connection;
+		return connectionManager.getCleanSession().connection();
 	}
+
 
 
 	/**@see edu.wustl.dao.JDBCDAO#getActivityStatus(java.lang.String, java.lang.Long)
@@ -1014,18 +1016,5 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
 	}
 
-	/**
-	 * This method will be called to retrieve the current session.
-	 * It will check the session for the running application in applicationSessionMap.
-	 * If present, retrieved the session from the Map otherwise create the
-	 * new session and store it into the Map.
-	 * @return session object.
-	 *@throws DAOException :Generic DAOException.
-	 */
-	public Session getCurrentSession() throws DAOException
-	{
-		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
-		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
-	}
 
 }

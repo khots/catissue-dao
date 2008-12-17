@@ -12,6 +12,7 @@ package edu.wustl.dao;
 
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -57,7 +58,18 @@ public class HibernateDAOImpl implements HibernateDAO
 	 * specify Session instance.
 	 */
       private Session session = null;
-		/**
+
+
+     /**
+  	 * specify clean Session instance.
+  	 */
+     private Session cleanSession = null;
+
+     /**
+   	 * specify clean connection instance.
+   	 */
+     private Connection cleanConnection = null;
+     /**
 	 * specify Transaction instance.
 	 */
       private Transaction transaction = null;
@@ -215,7 +227,7 @@ public class HibernateDAOImpl implements HibernateDAO
 		DatabaseConnectionParams  databaseConnectionParams = new DatabaseConnectionParams();
 		try
 		{
-			databaseConnectionParams.setConnection(session.connection());
+			databaseConnectionParams.setConnection(getCleanConnection());
 			//Statement statement = session.connection().createStatement();
 
 			StringBuffer buff = new StringBuffer();
@@ -636,18 +648,29 @@ public class HibernateDAOImpl implements HibernateDAO
 	 *@return Connection object
 	 *@throws DAOException :Generic DAOException.
 	 */
-	public Connection getConnection() throws DAOException
+	public Connection getCleanConnection() throws DAOException
 	{
-		return connectionManager.currentSession().connection();
+		cleanConnection =  connectionManager.getCleanSession().connection();
+		return cleanConnection;
 	}
 
 	/**
 	 *This method will be called to close current connection.
 	 *@throws DAOException :Generic DAOException.
 	 */
-	public void closeConnection() throws DAOException
+	public void closeCleanConnection() throws DAOException
 	{
-		connectionManager.closeConnection();
+		try
+		{
+			cleanConnection.close();
+
+		}
+		catch (SQLException sqlExp)
+		{
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
+			throw new DAOException(errorKey,sqlExp,"DAOFactory.java :"+
+					DAOConstants.CLOSE_CONNECTION_ERROR);
+		}
 	}
 
 	/**
@@ -657,21 +680,19 @@ public class HibernateDAOImpl implements HibernateDAO
 	 */
 	public Session getCleanSession() throws DAOException
 	{
-		return connectionManager.getCleanSession();
+		cleanSession = connectionManager.getCleanSession();
+		return cleanSession;
 	}
 
 	/**
-	 * This method will be called to retrieve the current session.
-	 * It will check the session for the running application in applicationSessionMap.
-	 * If present, retrieved the session from the Map otherwise create the
-	 * new session and store it into the Map.
-	 * @return session object.
+	 *This method will be called to close current connection.
 	 *@throws DAOException :Generic DAOException.
 	 */
-	public Session getCurrentSession() throws DAOException
+	public void closeCleanSession() throws DAOException
 	{
-		return connectionManager.currentSession();
+			cleanSession.close();
 	}
+
 	/**
 	 * This method opens a new session, loads an object with given class and Id,
 	 * and closes the session. This method should be used only when an object is
@@ -712,7 +733,7 @@ public class HibernateDAOImpl implements HibernateDAO
 		IDAOFactory daoFactory = DAOConfigFactory.getInstance().getDAOFactory(applicationName);
 		JDBCDAO jdbcDAO = daoFactory.getJDBCDAO();
 		//HibernateMetaData.initHibernateMetaData(jdbcDAO.getConnectionManager().getConfiguration());
-		formatMessage = jdbcDAO.formatMessage(excp,getConnectionManager().getConnection());
+		formatMessage = jdbcDAO.formatMessage(excp,getCleanConnection());
 		getConnectionManager().closeConnection();
 		return formatMessage;
 	}
