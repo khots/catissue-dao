@@ -979,7 +979,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	}
 
 	/**
-	 * @param excp : Exception Object.
+	 * @param excp : Exception Object. Refactoring
 	 * @param applicationName : Name of the application.
 	 * @return : It will return the formated messages.
 	 * @throws DAOException : DAO exception.
