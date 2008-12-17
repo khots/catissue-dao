@@ -207,9 +207,8 @@ public final class DAOUtility
 		Session session = null;
 		try
 		{
-			session = DAOConfigFactory.getInstance().
-				getDAOFactory(applicationName).getDAO().
-				getConnectionManager().currentSession();
+			DAOConfigFactory.getInstance().
+				getDAOFactory(applicationName).getDAO().openSession(null);
 			Query query = session.getNamedQuery(queryName);
 
 			/*if (values != null)
@@ -242,7 +241,8 @@ public final class DAOUtility
 		}
 		finally
 		{
-			session.close();
+			DAOConfigFactory.getInstance().
+			getDAOFactory(applicationName).getDAO().closeSession();
 		}
 	}
 	/**

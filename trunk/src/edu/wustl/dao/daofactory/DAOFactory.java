@@ -28,6 +28,7 @@ import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.connectionmanager.IConnectionManager;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.DAOConstants;
+import edu.wustl.dao.util.HibernateMetaData;
 
 
 /**
@@ -97,6 +98,7 @@ public class DAOFactory implements IDAOFactory
 		{
 		   dao = (DAO)Class.forName(defaultDAOClassName).newInstance();
 		   dao.setConnectionManager(getConnectionManager());
+		   HibernateMetaData.initHibernateMetaData(getConnectionManager().getConfiguration());
 
 		}
 		catch (Exception excp )
@@ -125,6 +127,7 @@ public class DAOFactory implements IDAOFactory
 		{
 			   dao = (JDBCDAO) Class.forName(jdbcDAOClassName).newInstance();
 			   dao.setConnectionManager(getConnectionManager());
+			   HibernateMetaData.initHibernateMetaData(getConnectionManager().getConfiguration());
 		}
 		catch (Exception excp )
 		{
@@ -327,7 +330,7 @@ public class DAOFactory implements IDAOFactory
 	 * This will called to retrieve connectionManager object.
 	 * @return connectionManager
 	 */
-	public IConnectionManager getConnectionManager()
+	private IConnectionManager getConnectionManager()
 	{
 		return connectionManager;
 	}

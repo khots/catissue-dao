@@ -128,6 +128,6 @@ public interface IDAOFactory
 	 * This will called to retrieve connectionManager object.
 	 * @return connectionManager
 	 */
-	IConnectionManager getConnectionManager();
+	//IConnectionManager getConnectionManager();
 
 }
