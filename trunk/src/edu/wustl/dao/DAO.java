@@ -8,8 +8,11 @@
 
 package edu.wustl.dao;
 
+import java.sql.Connection;
 import java.util.List;
 import java.util.Map;
+
+import org.hibernate.Session;
 
 import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.querydatabean.QueryDataBean;
@@ -202,4 +205,23 @@ public interface DAO
 	 * @throws DAOException : DAO exception.
 	 */
 	String formatMessage(Exception excp,String applicationName)throws DAOException;
+
+
+	/**
+	 *This method will be called to retrieved the current connection object.
+	 *@return Connection object
+	 *@throws DAOException :Generic DAOException.
+	 */
+	Connection getConnection() throws DAOException;
+
+
+	/**
+	 * This method will be called to obtain clean session.
+	 * @return session object.
+	 *@throws DAOException :Generic DAOException.
+	 */
+	Session getCleanSession() throws DAOException;
+
+
+
 }
