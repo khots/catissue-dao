@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.hibernate.Session;
+
 import edu.wustl.common.audit.AuditManager;
 import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.exception.ErrorKey;
@@ -422,11 +424,11 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	 * @param queryResultObjectDataMap : queryResultObjectDataMap
 	 * @return This method executed query, parses the result and returns List of rows.
 	 * @throws DAOException : DAOException
-	 * @throws ClassNotFoundException : ClassNotFoundException
+
 	 */
 	public List<Object> executeQuery(String query, SessionDataBean sessionDataBean,
 			boolean isSecureExecute, Map<Object,QueryDataBean>
-			queryResultObjectDataMap) throws 
+			queryResultObjectDataMap) throws
 			DAOException
 	{
 
@@ -866,7 +868,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	 * This method will be called to get connection object.
 	 * @return Connection: Connection object.
 	 */
-	protected Connection getConnection()
+	public Connection getConnection()
 	{
 		return connection;
 	}
@@ -987,6 +989,19 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	{
 		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
 		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
+	}
+
+	/**
+	 * This method will be called to obtain clean session.
+	 * @return session object.
+	 *@throws DAOException :Generic DAOException.
+	 */
+	public Session getCleanSession() throws DAOException
+	{
+
+		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
+		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
+
 	}
 
 }
