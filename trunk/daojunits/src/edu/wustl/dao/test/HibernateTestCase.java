@@ -577,7 +577,7 @@ public class HibernateTestCase extends BaseTestCase
 	{
 		try
 		{
-			Session session = dao.getConnectionManager().getCleanSession();
+			Session session = dao.getCleanSession();
 			assertNotNull("session Object is null",session);
 			session.close();
 		}
@@ -599,7 +599,7 @@ public class HibernateTestCase extends BaseTestCase
 		{
 			dao.openSession(null);
 
-			Session session = dao.getConnectionManager().getCleanSession();
+			Session session = dao.getCleanSession();
 				User user = (User)createUserObject();
 				Transaction transaction = session.beginTransaction();
 				session.save(user);
@@ -685,7 +685,6 @@ public class HibernateTestCase extends BaseTestCase
 		assertNotNull("No configuration file exist", daoFactory.getConfigurationFile());
 		assertNotNull("Default class name Name does not exists", daoFactory.getDefaultDAOClassName());
 		assertNotNull("Connection Manager Name not exists", daoFactory.getConnectionManagerName());
-		assertNotNull("Configuration object null ", dao.getConnectionManager().getConfiguration());
 		assertNotNull("JDBC class name Name does not exists", daoFactory.getJdbcDAOClassName());
 
 	}
@@ -699,7 +698,6 @@ public class HibernateTestCase extends BaseTestCase
 		try
 		{
 			dao.openSession(null);
-			HibernateMetaData.initHibernateMetaData(dao.getConnectionManager().getConfiguration());
 			User user  = (User)dao.retrieve("test.User", Long.valueOf(1));
 			Object object = HibernateMetaData.getProxyObjectImpl(user);
 				assertNotNull("Proxy Object retrieved is null :"+object);
