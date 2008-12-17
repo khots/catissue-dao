@@ -208,19 +208,18 @@ public interface DAO
 
 
 	/**
-	 *This method will be called to retrieved the current connection object.
+	 *This method will be called to retrieved the clean connection object.
 	 *@return Connection object
 	 *@throws DAOException :Generic DAOException.
 	 */
-	Connection getConnection() throws DAOException;
+	Connection getCleanConnection() throws DAOException;
 
 
 	/**
-	 *This method will be called to close current connection.
+	 *This method will be called to close connection.
 	 *@throws DAOException :Generic DAOException.
 	 */
-	void closeConnection() throws DAOException;
-
+	void closeCleanConnection() throws DAOException;
 
 
 	/**
@@ -231,15 +230,10 @@ public interface DAO
 	Session getCleanSession() throws DAOException;
 
 	/**
-	 * This method will be called to retrieve the current session.
-	 * It will check the session for the running application in applicationSessionMap.
-	 * If present, retrieved the session from the Map otherwise create the
-	 * new session and store it into the Map.
-	 * @return session object.
+	 *This method will be called to close session.
 	 *@throws DAOException :Generic DAOException.
 	 */
-	Session getCurrentSession() throws DAOException;
-
+	void closeCleanSession() throws DAOException;
 
 
 }
