@@ -11,6 +11,7 @@
 package edu.wustl.dao;
 
 
+import java.sql.Connection;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -622,9 +623,44 @@ public class HibernateDAOImpl implements HibernateDAO
 	 * @see edu.wustl.dao.DAO#getConnectionManager()
 	 * @return : It returns the Connection Manager
 	 */
-	public IConnectionManager getConnectionManager()
+	private IConnectionManager getConnectionManager()
 	{
 		return connectionManager;
+	}
+
+
+
+	/**
+	 *This method will be called to retrieved the current connection object.
+	 *@return Connection object
+	 *@throws DAOException :Generic DAOException.
+	 */
+	public Connection getConnection() throws DAOException
+	{
+		return connectionManager.currentSession().connection();
+	}
+
+
+	/**
+	 * This method will be called to obtain clean session.
+	 * @return session object.
+	 *@throws DAOException :Generic DAOException.
+	 */
+	public Session getCleanSession() throws DAOException
+	{
+		Session session = null;
+		try
+		{
+			session = connectionManager.getSessionFactory().openSession();
+			return session;
+		}
+		catch (HibernateException exp)
+		{
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
+			throw new DAOException(errorKey,exp,"DAOFactory.java :"+
+					DAOConstants.NEW_SESSION_ERROR);
+		}
+
 	}
 
 	/**
