@@ -48,10 +48,17 @@ import edu.wustl.dao.util.DatabaseConnectionParams;
 public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 {
 
+
 	/**
 	 * Connection object.
 	 */
 	private Connection connection = null;
+
+	 /**
+   	 * specify clean connection instance.
+   	 */
+     private Connection cleanConnection = null;
+
 	/**
 	 * Audit Manager.
 	 */
@@ -864,6 +871,25 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		return connectionManager;
 	}
 
+
+	/**
+	 *This method will be called to close current connection.
+	 *@throws DAOException :Generic DAOException.
+	 */
+	public void closeCleanConnection() throws DAOException
+	{
+		try
+		{
+			cleanConnection.close();
+
+		}
+		catch (SQLException sqlExp)
+		{
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
+			throw new DAOException(errorKey,sqlExp,"DAOFactory.java :"+
+					DAOConstants.CLOSE_CONNECTION_ERROR);
+		}
+	}
 	/**
 	 *This method will be called to retrieved the current connection object.
 	 *@return Connection object
@@ -873,7 +899,6 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	{
 		return connectionManager.getCleanSession().connection();
 	}
-
 
 
 	/**@see edu.wustl.dao.JDBCDAO#getActivityStatus(java.lang.String, java.lang.Long)
@@ -1010,11 +1035,10 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	 *This method will be called to close current connection.
 	 *@throws DAOException :Generic DAOException.
 	 */
-	public void closeConnection() throws DAOException
+	public void closeCleanSession() throws DAOException
 	{
 		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
 		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
 	}
-
 
 }
