@@ -42,7 +42,7 @@ import edu.wustl.dao.util.DatabaseConnectionParams;
 
 
 /**
- * Default implementation of AbstractDAO through Hibernate ORM tool.
+ * Default implementation of DAO through Hibernate ORM tool.
  * @author kapil_kaveeshwar
  */
 public class HibernateDAOImpl implements HibernateDAO
@@ -89,7 +89,7 @@ public class HibernateDAOImpl implements HibernateDAO
 
 	/**
 	 * This method will be used to establish the session with the database.
-	 * Declared in AbstractDAO class.
+	 * Declared in  class.
 	 * @param sessionDataBean session Data.
 	 * @throws DAOException generic DAOException.
 	 */
@@ -126,7 +126,7 @@ public class HibernateDAOImpl implements HibernateDAO
 
 	/**
 	 * This method will be used to close the session with the database.
-	 * Declared in AbstractDAO class.
+	 * Declared in  class.
 	 * @throws DAOException generic DAOException.
 	 */
 	public void closeSession() throws DAOException
@@ -149,7 +149,7 @@ public class HibernateDAOImpl implements HibernateDAO
 
 	/**
 	 * Commit the database level changes.
-	 * Declared in AbstractDAO class.
+	 * Declared in  class.
 	 * @throws DAOException generic DAOException.
 	 */
 	public void commit() throws DAOException
@@ -181,7 +181,7 @@ public class HibernateDAOImpl implements HibernateDAO
 
 	/**
 	 * RollBack all the changes after last commit.
-	 * Declared in AbstractDAO class.
+	 * Declared in  class.
 	 * @throws DAOException generic DAOException.
 	 */
 	public void rollback() throws DAOException
