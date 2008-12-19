@@ -234,6 +234,17 @@ public final class DAOConstants
 
 
 	/**
+	 * Greater (>) operator.
+	 */
+	public static final String GREATERTHEN = ">";
+
+	/**
+	 * Less then (<) operator.
+	 */
+	public static final String LESSTHEN = "<";
+
+
+	/**
 	 * Not Equal(!=) operator.
 	 */
 	public static final String NOT_EQUAL = "!=";
