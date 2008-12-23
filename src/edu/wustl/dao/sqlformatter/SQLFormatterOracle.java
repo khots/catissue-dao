@@ -5,7 +5,7 @@ package edu.wustl.dao.sqlformatter;
  * @author kalpana_thakur
  *
  */
-public class SQLFormaterOracle extends AbstractSQLFormatter
+public class SQLFormatterOracle extends AbstractSQLFormatter
 {
 
 
@@ -25,8 +25,13 @@ public class SQLFormaterOracle extends AbstractSQLFormatter
 			case Types.TIMESTAMP :
 				break;
 
+			case Types.NUMBER :
+			case Types.INTEGER :
+				appendNumericValue(colValBean.getColumnValue(),valuePart);
+				break ;
+
 			default :
-				appendColumnValue(colValBean.getColumnValue(),valuePart);
+				appendStringValue(colValBean.getColumnValue(),valuePart);
 				break;
 
 		}
@@ -41,18 +46,6 @@ public class SQLFormaterOracle extends AbstractSQLFormatter
 	private void appendDateValue(Object colValue,StringBuffer valuePart)
 	{
 		valuePart.append("to_date ( '").append(colValue).append("','yyyy-mm-dd')");
-	}
-
-
-	/**
-
-	 * @param colValue :
-	 * @param valuePart :
-	 */
-	private void appendColumnValue(Object colValue,StringBuffer valuePart)
-	{
-		valuePart.append("' ").append(colValue).append("' ");
-
 	}
 
 }

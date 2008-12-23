@@ -79,6 +79,28 @@ public abstract class AbstractSQLFormatter implements SQLFormatter
 			return null;
 	}
 
+	/**
+
+	 * @param colValue :
+	 * @param valuePart :
+	 */
+	protected void appendStringValue(Object colValue,StringBuffer valuePart)
+	{
+		valuePart.append("' ").append(colValue).append("' ");
+
+	}
+
+	/**
+
+	 * @param colValue :
+	 * @param valuePart :
+	 */
+	protected void appendNumericValue(Object colValue,StringBuffer valuePart)
+	{
+		valuePart.append(colValue);
+
+	}
+
 
 
 }
