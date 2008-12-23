@@ -16,7 +16,7 @@ import edu.wustl.dao.util.DAOUtility;
  * @author kalpana_thakur
  * This class is used to generate "<" condition clause of query
  */
-public class LessThenClause
+public class LessThenClause implements Condition
 {
 
 
