@@ -210,5 +210,24 @@ public interface JDBCDAO extends DAO
 	 */
 	SQLFormatter getSQLFormatter() throws DAOException;
 
+	/**
+	 * @param sequenceName :
+	 * @param query :
+	 * @return :
+	 */
+	int getSequenceNumber(String sequenceName, String query);
+
+	/**
+	 * @param sqlFormatter :
+	 */
+	void insert(SQLFormatter sqlFormatter);
+
+	/**
+	 * @param query :
+	 * @param clobContent :
+	 */
+	void updateClob(String query,String clobContent);
+
+
 
 }
