@@ -16,7 +16,7 @@ import edu.wustl.dao.util.DAOUtility;
  * @author kalpana_thakur
  * This class is used to generate ">" condition clause of query
  */
-public class GreaterThenClause
+public class GreaterThenClause implements Condition
 {
 
 

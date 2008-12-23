@@ -183,23 +183,23 @@ public interface JDBCDAO extends DAO
 	 */
 	int getColumnCount(int columnCount,boolean getSublistOfResult);
 	/**
-	 * Gets sql for Like operator.
+	 * Gets SQL for Like operator.
 	 * @param attributeName name of the attribute
 	 * @param value value
-	 * @return String sql
+	 * @return String SQL
 	 */
 	String getSQLForLikeOperator(String attributeName, String value);
 	/**
 	 * Required for temporal query.
-	 * @return Object of type either Mysql or Oracle Primitive operation processor.
+	 * @return Object of type either MySQL or Oracle Primitive operation processor.
 	 */
 	Object getPrimitiveOperationProcessor();
 	/**
 	 * This method fires a query to insert auditing details into audit tables.
-	 * @param sql sql to be fired
-	 * @param sessionData sessiondata to get userId and ip address
+	 * @param sql SQL to be fired
+	 * @param sessionData session data to get userId and ip address
 	 * @param comments comments to be inserted in the table
-	 * @throws DAOException Daoexception
+	 * @throws DAOException DaoException
 	 */
 	void executeAuditSql(String sql, SessionDataBean sessionData, String comments) throws DAOException;
 
