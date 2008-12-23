@@ -18,7 +18,6 @@ import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.querydatabean.QueryDataBean;
 import edu.wustl.dao.connectionmanager.IConnectionManager;
 import edu.wustl.dao.exception.DAOException;
-import edu.wustl.dao.sqlformatter.SQLFormatter;
 
 
 /**
@@ -235,14 +234,6 @@ public interface DAO
 	 *@throws DAOException :Generic DAOException.
 	 */
 	void closeCleanSession() throws DAOException;
-
-	/**
-	 *This method will be called to format the SQL.
-	 *@throws DAOException :Generic DAOException.
-	 *@return SQLFormatter :
-	 */
-	SQLFormatter getSQLFormatter() throws DAOException;
-
 
 
 }
