@@ -16,6 +16,7 @@ import edu.wustl.common.querydatabean.QueryDataBean;
 import edu.wustl.common.util.PagenatedResultData;
 import edu.wustl.common.util.QueryParams;
 import edu.wustl.dao.exception.DAOException;
+import edu.wustl.dao.sqlformatter.SQLFormatter;
 
 /** This interface defines methods which are specific to JDBC operations.*/
 public interface JDBCDAO extends DAO
@@ -201,5 +202,13 @@ public interface JDBCDAO extends DAO
 	 * @throws DAOException Daoexception
 	 */
 	void executeAuditSql(String sql, SessionDataBean sessionData, String comments) throws DAOException;
+
+	/**
+	 *This method will be called to format the SQL.
+	 *@throws DAOException :Generic DAOException.
+	 *@return SQLFormatter :
+	 */
+	SQLFormatter getSQLFormatter() throws DAOException;
+
 
 }
