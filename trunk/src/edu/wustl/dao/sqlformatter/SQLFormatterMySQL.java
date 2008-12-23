@@ -19,23 +19,20 @@ public class SQLFormatterMySQL extends AbstractSQLFormatter
 
 		switch(colValBean.getColumnType())
 		{
+			case Types.BIGINT :
+			case Types.BIT :
+			case Types.FLOAT :
+			case Types.TINYINT :
+				appendNumericValue(colValBean.getColumnValue(),valuePart);
+			break;
+
 			default :
-				appendColumnValue(colValBean.getColumnValue(),valuePart);
-				break;
+				appendStringValue(colValBean.getColumnValue(),valuePart);
+			break;
 
 		}
 
 	}
 
-	/**
-
-	 * @param colValue :
-	 * @param valuePart :
-	 */
-	private void appendColumnValue(Object colValue,StringBuffer valuePart)
-	{
-		valuePart.append("' ").append(colValue).append("' ");
-
-	}
 
 }

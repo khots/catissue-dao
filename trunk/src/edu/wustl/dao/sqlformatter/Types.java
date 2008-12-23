@@ -78,7 +78,7 @@ package edu.wustl.dao.sqlformatter;
  * to as a type code, that identifies the generic SQL type
  * <code>NUMERIC</code>.
  */
-    public static final  int NUMERIC = 8;
+    public static final  int NUMBER = 8;
 
 /**
 * <P>The constant in the Java programming language, sometimes referred
