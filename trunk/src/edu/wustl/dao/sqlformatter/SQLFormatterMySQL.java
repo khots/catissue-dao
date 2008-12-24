@@ -1,6 +1,5 @@
 package edu.wustl.dao.sqlformatter;
 
-import java.util.Collection;
 
 
 /**
@@ -11,6 +10,13 @@ public class SQLFormatterMySQL extends AbstractSQLFormatter
 {
 
 
+	/**
+	 * @param tableName :
+	 */
+	public SQLFormatterMySQL(String tableName)
+	{
+		super(tableName);
+	}
 
 	/**
 	 * @param colValBean :

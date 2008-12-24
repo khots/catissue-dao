@@ -27,6 +27,15 @@ public abstract class AbstractSQLFormatter implements SQLFormatter
 	protected String tableName;
 
 	/**
+	 * @param tableName :
+	 */
+	public AbstractSQLFormatter(String tableName)
+	{
+		this.tableName = tableName;
+	}
+
+
+	/**
 	 * @param columnValueBean :
 	 * @return SQLFormatter :
 	 */

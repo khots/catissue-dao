@@ -166,5 +166,11 @@ package edu.wustl.dao.sqlformatter;
       */
     public static final  int BOOLEAN = 20;
 
+    /**
+     * The constant in the Java programming language, somtimes referred to
+     * as a type code, that identifies the generic SQL type <code>STRING</code>.
+     */
+    public static final  int STRING = 21;
+
 
 }
