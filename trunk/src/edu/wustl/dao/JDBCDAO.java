@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Map;
 
 import edu.wustl.common.beans.SessionDataBean;
+import edu.wustl.common.dao.queryExecutor.PagenatedResultData;
 import edu.wustl.common.querydatabean.QueryDataBean;
-import edu.wustl.common.util.PagenatedResultData;
 import edu.wustl.common.util.QueryParams;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.sqlformatter.SQLFormatter;
@@ -211,16 +211,15 @@ public interface JDBCDAO extends DAO
 	SQLFormatter getSQLFormatter() throws DAOException;
 
 	/**
-	 * @param sequenceName :
-	 * @param query :
+	 * @param queryParams :
 	 * @return :
 	 */
-	int getSequenceNumber(String sequenceName, String query);
+	int getSequenceNumber(Map<String,Object> queryParams);
 
 	/**
 	 * @param sqlFormatter :
 	 */
-	void insert(SQLFormatter sqlFormatter);
+	//void insert(SQLFormatter sqlFormatter);
 
 	/**
 	 * @param query :

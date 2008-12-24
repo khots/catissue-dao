@@ -138,16 +138,11 @@ public interface DAO
 	/**
 	 * Execute Query.
 	 * @param query query
-	 * @param sessionDataBean session Data
-	 * @param isSecureExecute is Secure Execute.
-	 * @param queryResultObjectDataMap query Result Object Data Map.
 	 * @return List.
-	 * @throws ClassNotFoundException Class Not Found Exception.
 	 * @throws DAOException generic DAOException.
 	 */
-	List<Object> executeQuery(String query, SessionDataBean sessionDataBean,
-		boolean isSecureExecute, Map<Object,QueryDataBean> queryResultObjectDataMap)
-		throws ClassNotFoundException,DAOException;
+	List<Object> executeQuery(String query)
+		throws DAOException;
 
 
 

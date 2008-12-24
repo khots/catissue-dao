@@ -529,32 +529,13 @@ public class HibernateDAOImpl implements HibernateDAO
 	/**
 	 * Executes the HQL query.
 	 * @param query HQL query to execute.
-	 * @param sessionDataBean session Data
-	 * @param isSecureExecute is Secure Execute.
-	 * @param queryResultObjectDataMap query Result Object Data Map.
 	 * @return List.
-	 * @throws ClassNotFoundException Class Not Found Exception.
-	 * @throws DAOException generic DAOException.
 	 */
-	public List<Object> executeQuery(String query, SessionDataBean sessionDataBean,
-			boolean isSecureExecute, Map<Object,QueryDataBean>
-			queryResultObjectDataMap) throws ClassNotFoundException,
-			DAOException
+	public List<Object> executeQuery(String query)
 	{
 		List < Object > returner;
-		try
-		{
-			Query hibernateQuery = session.createQuery(query);
-			returner = hibernateQuery.list();
-
-		}
-		catch (Exception exp)
-		{
-			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,exp,"HibernateDAOImpl.java :"+
-					DAOConstants.EXECUTE_QUERY_ERROR);
-		}
-
+		Query hibernateQuery = session.createQuery(query);
+		returner = hibernateQuery.list();
 		return returner;
 	}
 
