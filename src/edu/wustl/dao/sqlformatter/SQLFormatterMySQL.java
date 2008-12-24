@@ -1,5 +1,7 @@
 package edu.wustl.dao.sqlformatter;
 
+import java.util.Collection;
+
 
 /**
  * @author kalpana_thakur
