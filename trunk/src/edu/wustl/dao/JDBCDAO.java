@@ -213,8 +213,9 @@ public interface JDBCDAO extends DAO
 	/**
 	 * @param queryParams :
 	 * @return :
+	 *@throws DAOException :Generic DAOException.
 	 */
-	int getSequenceNumber(Map<String,Object> queryParams);
+	int getSequenceNumber(Map<String,Object> queryParams) throws DAOException;
 
 	/**
 	 * @param sqlFormatter :
@@ -224,8 +225,9 @@ public interface JDBCDAO extends DAO
 	/**
 	 * @param query :
 	 * @param clobContent :
+	 * @throws DAOException :Generic DAOException.
 	 */
-	void updateClob(String query,String clobContent);
+	void updateClob(String query,String clobContent)throws DAOException;
 
 
 
