@@ -1,5 +1,7 @@
 package edu.wustl.dao.sqlformatter;
 
+import java.util.Collection;
+
 /**
  * @author kalpana_thakur
  *
@@ -8,19 +10,28 @@ public interface SQLFormatter
 {
 	/**
 	 *@param columnValueBean :
+	 *@return SQLFormatter :
 	 */
-	void addColValBean(ColumnValueBean columnValueBean);
+	SQLFormatter addColValBean(ColumnValueBean columnValueBean);
+
+	/**
+	 *@return collection :
+	 */
+	Collection<ColumnValueBean> getColValBeans();
+
+	/**
+	 * @return :
+	 */
+	String getInsertQuery();
+
+	/**
+	 * @return :
+	 */
+	String getUpdateQuery();
 
 	/**
 	 * @param tableName :
-	 * @return :
 	 */
-	String insertQuery(String tableName);
-
-	/**
-	 * @param tableName :
-	 * @return :
-	 */
-	String updateQuery(String tableName);
+	void setTableName(String tableName);
 
 }

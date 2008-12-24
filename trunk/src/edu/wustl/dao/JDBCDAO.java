@@ -211,16 +211,14 @@ public interface JDBCDAO extends DAO
 	SQLFormatter getSQLFormatter() throws DAOException;
 
 	/**
-	 * @param queryParams :
-	 * @return :
-	 *@throws DAOException :Generic DAOException.
-	 */
-	int getSequenceNumber(Map<String,Object> queryParams) throws DAOException;
-
-	/**
 	 * @param sqlFormatter :
+	 * @param sequenceName :
+	 * @param columnName :
+	 * @param columnTpe :
+	 * @throws DAOException :Generic DAOException.
 	 */
-	//void insert(SQLFormatter sqlFormatter);
+	void insert(SQLFormatter sqlFormatter,String sequenceName,String columnName,
+			int columnTpe) throws DAOException;
 
 	/**
 	 * @param query :

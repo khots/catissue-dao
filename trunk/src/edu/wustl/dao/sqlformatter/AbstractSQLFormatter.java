@@ -22,19 +22,25 @@ public abstract class AbstractSQLFormatter implements SQLFormatter
 
 
 	/**
-	 * @param columnValueBean :
+	 *
 	 */
-	public void addColValBean(ColumnValueBean columnValueBean)
+	protected String tableName;
+
+	/**
+	 * @param columnValueBean :
+	 * @return SQLFormatter :
+	 */
+	public SQLFormatter addColValBean(ColumnValueBean columnValueBean)
 	{
 		colValBeanColl.add(columnValueBean);
+		return this;
 	}
 
 	/**
-	 * @see edu.wustl.dao.sqlformatter.SQLFormatter#insertQuery(java.lang.String)
-	 * @param tableName :
+	 * @see edu.wustl.dao.sqlformatter.SQLFormatter#getInsertQuery(java.lang.String)
 	 * @return :
 	 */
-	public String insertQuery(String tableName)
+	public String getInsertQuery()
 	{
 
 		boolean isColumnMoreThnOne = false;
@@ -70,13 +76,12 @@ public abstract class AbstractSQLFormatter implements SQLFormatter
 
 
 	/**
-	 * @param tableName :
 	 * @return :
 	 */
-	public String updateQuery(String tableName)
+	public String getUpdateQuery()
 	{
 
-			return null;
+			return "";
 	}
 
 	/**
@@ -99,6 +104,31 @@ public abstract class AbstractSQLFormatter implements SQLFormatter
 	{
 		valuePart.append(colValue);
 
+	}
+
+	/**
+	 * @return :
+	 */
+	protected String getTableName()
+	{
+		return tableName;
+	}
+
+	/**
+	 * @param tableName :
+	 */
+
+	public void setTableName(String tableName)
+	{
+		this.tableName = tableName;
+	}
+
+	/**
+	 *@return collection :
+	 */
+	public Collection<ColumnValueBean> getColValBeans()
+	{
+		return colValBeanColl;
 	}
 
 
