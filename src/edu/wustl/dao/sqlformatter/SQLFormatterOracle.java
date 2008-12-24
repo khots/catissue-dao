@@ -10,6 +10,14 @@ public class SQLFormatterOracle extends AbstractSQLFormatter
 
 
 	/**
+	 * @param tableName :
+	 */
+	public SQLFormatterOracle(String tableName)
+	{
+		super(tableName);
+	}
+
+	/**
 	 * @param colValBean :
 	 * @param valuePart :
 	 */

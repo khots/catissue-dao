@@ -205,10 +205,11 @@ public interface JDBCDAO extends DAO
 
 	/**
 	 *This method will be called to format the SQL.
+	 *@param tableName :
 	 *@throws DAOException :Generic DAOException.
 	 *@return SQLFormatter :
 	 */
-	SQLFormatter getSQLFormatter() throws DAOException;
+	SQLFormatter getSQLFormatter(String tableName) throws DAOException;
 
 	/**
 	 * @param sqlFormatter :
