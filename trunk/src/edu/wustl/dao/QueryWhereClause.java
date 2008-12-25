@@ -128,7 +128,7 @@ public class QueryWhereClause
 		{	for(int index=0 ;index<whereColumnCondition.length;index++)
 			{
 				Condition condition = null;
-				Class conditionClass = Class.forName((queryConMap.get(whereColumnCondition[index]))
+				Class conditionClass = Class.forName(queryConMap.get(whereColumnCondition[index])
 						.toString());
 				if(whereColumnCondition[index].contains(DAOConstants.IN_CONDITION))
 				{

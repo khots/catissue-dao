@@ -648,7 +648,7 @@ public class HibernateDAOImpl implements HibernateDAO
 		{
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
 			throw new DAOException(errorKey,sqlExp,"DAOFactory.java :"+
-					DAOConstants.CLOSE_CONNECTION_ERROR);
+					DAOConstants.CLOSE_CONN_ERR);
 		}
 	}
 
