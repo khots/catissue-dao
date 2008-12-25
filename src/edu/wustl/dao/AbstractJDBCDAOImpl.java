@@ -898,17 +898,36 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	}
 
 
-	/**@see edu.wustl.dao.JDBCDAO#getActivityStatus(java.lang.String, java.lang.Long)
-	 * @param sourceObjectName :
-	 * @param indetifier :
-	 * @throws DAOException :
-	 * @return Activity status :
-	 *//*
 
-	public String getActivityStatus(String sourceObjectName, Long indetifier) throws DAOException
+	/**
+	 * Gets Query Number of given SQL.
+	 * @param jdbcDAO JDBCDAO object.
+	 * @param sql SQL query.
+	 * @return queryNo.
+	 * @throws ClassNotFoundException Class Not Found Exception.
+	 * @throws DAOException generic DAOException.
+	 */
+	protected Long getSequenceNumber(JDBCDAO jdbcDAO, String sql) throws ClassNotFoundException,
+			DAOException
 	{
-		throw new DAOException(DAOConstants.METHOD_WITHOUT_IMPLEMENTATION);
-	}*/
+		List<Object> list = executeQuery(sql, null, false, null);
+		long queryNo = 1;
+		if (!list.isEmpty())
+		{
+
+			List<Object> columnList = (List) list.get(0);
+			if (!columnList.isEmpty())
+			{
+				String str = (String) columnList.get(0);
+				if (!"".equals(str))
+				{
+					queryNo = Long.parseLong(str);
+
+				}
+			}
+		}
+		return queryNo;
+	}
 
 	/**
 	 * @param obj :
@@ -1038,4 +1057,16 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
 	}
 
+
+	/**
+	 *This method will be called to close current connection.
+	 *@param query :
+	 *@throws DAOException :Generic DAOException.
+	 *@return list
+	 */
+	public List<Object> executeQuery(String query) throws DAOException
+	{
+		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
+		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
+	}
 }
