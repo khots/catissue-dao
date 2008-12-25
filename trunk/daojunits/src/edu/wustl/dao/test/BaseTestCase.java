@@ -15,22 +15,22 @@ import edu.wustl.dao.daofactory.IDAOFactory;
  *
  */
 public class BaseTestCase extends TestCase
-{
+{/*
 
-	/**
+	*//**
 	 * DAO configFactory instance.
-	 */
+	 *//*
 	protected DAOConfigFactory daoConfigFactory;
 
-	/**
+	*//**
 	 * Logger.
-	 */
+	 *//*
 	private static org.apache.log4j.Logger logger = Logger.getLogger(BaseTestCase.class);
 
-	/**
+	*//**
 	 * This will invoke the daoFactory instance
 	 * and returns the DAO object as per the application.
-	 */
+	 *//*
 	@Before
 	public void setUp()
 	{
@@ -45,9 +45,9 @@ public class BaseTestCase extends TestCase
 		}
 	}
 
-	/**
+	*//**
 	 * This will test the instance of daoConfigFactory.
-	 */
+	 *//*
 	@Test
 	public void testDAOConfigFactory()
 	{
@@ -55,9 +55,9 @@ public class BaseTestCase extends TestCase
 	}
 
 
-	/**
+	*//**
 	 * This will test the instance of default DAOFACTORY.
-	 */
+	 *//*
 	@Test
 	public void testDefaultFactory()
 	{
@@ -65,4 +65,4 @@ public class BaseTestCase extends TestCase
 		assertNotNull("DAO config factory object is null",daoFactory);
 	}
 
-}
+*/}

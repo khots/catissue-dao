@@ -254,14 +254,6 @@ public class DAOFactory implements IDAOFactory
 		this.defaultDAOClassName = defaultDAOClassName;
 	}
 
-	/**
-	 * This method will be called to set jdbcDAOClassName.
-	 * @param jdbcDAOClassName : jdbcDAOClassName.
-	 */
-	public void setJdbcDAOClassName(String jdbcDAOClassName)
-	{
-		this.jdbcDAOClassName = jdbcDAOClassName;
-	}
 
 	/**
 	 * This method will be called to set applicationName.
@@ -280,6 +272,16 @@ public class DAOFactory implements IDAOFactory
 	{
 		return applicationName;
 	}
+
+	/**
+	 * This method will be called to set jdbcDAOClassName.
+	 * @param jdbcDAOClassName : jdbcDAOClassName.
+	 */
+	public void setJdbcDAOClassName(String jdbcDAOClassName)
+	{
+		this.jdbcDAOClassName = jdbcDAOClassName;
+	}
+
 
 	/**
 	 * This method will be called to retrieved the connectionManagerName.

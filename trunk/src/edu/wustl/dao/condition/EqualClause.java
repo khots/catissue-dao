@@ -40,6 +40,18 @@ public class EqualClause implements Condition
 	 * The public constructor to restrict creating object without
 	 * initializing mandatory members.
 	 * @param columnName :Name of the Column
+	 * @param object :Column value
+	 */
+	public EqualClause (String columnName ,Object object)
+	{
+		this.columnName = columnName;
+		this.colValue = object;
+	}
+
+	/**
+	 * The public constructor to restrict creating object without
+	 * initializing mandatory members.
+	 * @param columnName :Name of the Column
 	 * @param sourceObjectName :Name of the Table or class name.
 	 * @param object :Column value
 	 */
@@ -48,18 +60,6 @@ public class EqualClause implements Condition
 		this.columnName = columnName;
 		this.colValue = object;
 		this.sourceObjectName = sourceObjectName;
-	}
-
-	/**
-	 * The public constructor to restrict creating object without
-	 * initializing mandatory members.
-	 * @param columnName :Name of the Column
-	 * @param object :Column value
-	 */
-	public EqualClause (String columnName ,Object object)
-	{
-		this.columnName = columnName;
-		this.colValue = object;
 	}
 
 	/**

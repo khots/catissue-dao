@@ -850,17 +850,6 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		return timestamp;
 	}
 
-	/* @see edu.wustl.dao.DAO#setConnectionManager(edu.wustl.dao.connectionmanager.IConnectionManager)
-	 */
-
-	/**
-	 * This method will be called to set connection Manager object.
-	 * @param connectionManager : Connection Manager.
-	 */
-	public void setConnectionManager(IConnectionManager connectionManager)
-	{
-		this.connectionManager = connectionManager;
-	}
 
 	/**
 	 * This method will be called to get connection Manager object.
@@ -871,6 +860,14 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		return connectionManager;
 	}
 
+	/**
+	 * This method will be called to set connection Manager object.
+	 * @param connectionManager : Connection Manager.
+	 */
+	public void setConnectionManager(IConnectionManager connectionManager)
+	{
+		this.connectionManager = connectionManager;
+	}
 
 	/**
 	 *This method will be called to close current connection.

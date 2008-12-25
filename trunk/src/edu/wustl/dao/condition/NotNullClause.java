@@ -53,21 +53,6 @@ public class NotNullClause implements Condition
 		this.columnName = columnName;
 	}
 
-	/**
-	 * This method will generate the not null clause of Query.
-	 * @return String:
-	 */
-	public String buildSql()
-	{
-		StringBuffer strBuff = new StringBuffer(DAOConstants.TAILING_SPACES);
-
-		String sourceObject = DAOUtility.getInstance().parseClassName(sourceObjectName);
-
-		strBuff.append(sourceObject).append(DAOConstants.DOT_OPERATOR).
-		append(columnName).append(DAOConstants.TAILING_SPACES).append(DAOConstants.NOT_NULL_CONDITION).
-		append(DAOConstants.TAILING_SPACES);
-		return strBuff.toString();
-	}
 
 
 	/**
@@ -86,4 +71,21 @@ public class NotNullClause implements Condition
 	{
 		this.sourceObjectName = sourceObjectName;
 	}
+
+	/**
+	 * This method will generate the not null clause of Query.
+	 * @return String:
+	 */
+	public String buildSql()
+	{
+		StringBuffer strBuff = new StringBuffer(DAOConstants.TAILING_SPACES);
+
+		String sourceObject = DAOUtility.getInstance().parseClassName(sourceObjectName);
+
+		strBuff.append(sourceObject).append(DAOConstants.DOT_OPERATOR).
+		append(columnName).append(DAOConstants.TAILING_SPACES).append(DAOConstants.NOT_NULL_CONDITION).
+		append(DAOConstants.TAILING_SPACES);
+		return strBuff.toString();
+	}
+
 }
