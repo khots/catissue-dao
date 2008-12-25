@@ -54,22 +54,6 @@ public class NullClause implements Condition
 	}
 
 
-	/**
-	 *  This method will generate the Null clause of Query.
-	 * @return String:
-	 */
-	public String buildSql()
-	{
-		StringBuffer strBuff = new StringBuffer(DAOConstants.TAILING_SPACES);
-
-		String sourceObject = DAOUtility.getInstance().parseClassName(sourceObjectName);
-
-		strBuff.append(sourceObject).append(DAOConstants.DOT_OPERATOR).
-		append(columnName).append(DAOConstants.TAILING_SPACES).append(DAOConstants.NULL_CONDITION).
-		append(DAOConstants.TAILING_SPACES);
-
-		return strBuff.toString();
-	}
 
 	/**
 	 * @return class name or table name.
@@ -85,6 +69,23 @@ public class NullClause implements Condition
 	public void setSourceObjectName(String sourceObjectName)
 	{
 		this.sourceObjectName = sourceObjectName;
+	}
+
+	/**
+	 *  This method will generate the Null clause of Query.
+	 * @return String:
+	 */
+	public String buildSql()
+	{
+		StringBuffer strBuff = new StringBuffer(DAOConstants.TAILING_SPACES);
+
+		String sourceObject = DAOUtility.getInstance().parseClassName(sourceObjectName);
+
+		strBuff.append(sourceObject).append(DAOConstants.DOT_OPERATOR).
+		append(columnName).append(DAOConstants.TAILING_SPACES).append(DAOConstants.NULL_CONDITION).
+		append(DAOConstants.TAILING_SPACES);
+
+		return strBuff.toString();
 	}
 
 }

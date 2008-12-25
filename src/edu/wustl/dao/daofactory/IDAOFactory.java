@@ -12,7 +12,6 @@ package edu.wustl.dao.daofactory;
 
 import edu.wustl.dao.DAO;
 import edu.wustl.dao.JDBCDAO;
-import edu.wustl.dao.connectionmanager.IConnectionManager;
 import edu.wustl.dao.exception.DAOException;
 
 

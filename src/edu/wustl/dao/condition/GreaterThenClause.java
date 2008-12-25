@@ -36,6 +36,18 @@ public class GreaterThenClause implements Condition
 	 */
 	private String sourceObjectName;
 
+	/**
+	 * The public constructor to restrict creating object without
+	 * initializing mandatory members.
+	 * @param columnName :Name of the Column
+	 * @param object :Column value
+	 */
+	public GreaterThenClause (String columnName ,Object object)
+	{
+		this.columnName = columnName;
+		this.colValue = object;
+	}
+
 
 	/**
 	 * The public constructor to restrict creating object without
@@ -51,17 +63,6 @@ public class GreaterThenClause implements Condition
 		this.sourceObjectName = sourceObjectName;
 	}
 
-	/**
-	 * The public constructor to restrict creating object without
-	 * initializing mandatory members.
-	 * @param columnName :Name of the Column
-	 * @param object :Column value
-	 */
-	public GreaterThenClause (String columnName ,Object object)
-	{
-		this.columnName = columnName;
-		this.colValue = object;
-	}
 
 	/**
 	 * This method will be called to build Greater clause.

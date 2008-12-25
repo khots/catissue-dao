@@ -10,12 +10,10 @@ package edu.wustl.dao;
 
 import java.sql.Connection;
 import java.util.List;
-import java.util.Map;
 
 import org.hibernate.Session;
 
 import edu.wustl.common.beans.SessionDataBean;
-import edu.wustl.common.querydatabean.QueryDataBean;
 import edu.wustl.dao.connectionmanager.IConnectionManager;
 import edu.wustl.dao.exception.DAOException;
 

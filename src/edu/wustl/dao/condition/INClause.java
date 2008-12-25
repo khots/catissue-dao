@@ -120,6 +120,25 @@ public class INClause implements Condition
 		return strBuff.toString();
 	}
 
+
+
+	/**
+	 * @return class name or table name.
+	 */
+	public String getSourceObjectName()
+	{
+		return sourceObjectName;
+	}
+
+
+	/**
+	 * @param sourceObjectName set the class name or table name.
+	 */
+	public void setSourceObjectName(String sourceObjectName)
+	{
+		this.sourceObjectName = sourceObjectName;
+	}
+
 	/**
 	 * This is called to append all the column values to in clause.
 	 * @param strBuff :
@@ -146,22 +165,5 @@ public class INClause implements Condition
 			}
 		}
 		strBuff.append(") ");
-	}
-
-	/**
-	 * @return class name or table name.
-	 */
-	public String getSourceObjectName()
-	{
-		return sourceObjectName;
-	}
-
-
-	/**
-	 * @param sourceObjectName set the class name or table name.
-	 */
-	public void setSourceObjectName(String sourceObjectName)
-	{
-		this.sourceObjectName = sourceObjectName;
 	}
 }

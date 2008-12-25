@@ -15,7 +15,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -28,7 +27,6 @@ import edu.wustl.common.audit.Auditable;
 import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.exception.AuditException;
 import edu.wustl.common.exception.ErrorKey;
-import edu.wustl.common.querydatabean.QueryDataBean;
 import edu.wustl.common.util.global.Constants;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.condition.EqualClause;

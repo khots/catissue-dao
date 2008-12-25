@@ -13,7 +13,6 @@ import edu.wustl.dao.DAO;
 import edu.wustl.dao.daofactory.DAOConfigFactory;
 import edu.wustl.dao.daofactory.IDAOFactory;
 import edu.wustl.dao.exception.DAOException;
-import edu.wustl.dao.util.HibernateMetaData;
 
 /**
  * @author kalpana_thakur

@@ -92,13 +92,6 @@ public class NotEqualClause implements Condition
 		return strBuff.toString();
 	}
 
-	/**
-	 * @return class name or table name.
-	 */
-	public String getSourceObjectName()
-	{
-		return sourceObjectName;
-	}
 
 	/**
 	 * @param sourceObjectName set the class name or table name.
@@ -108,7 +101,13 @@ public class NotEqualClause implements Condition
 		this.sourceObjectName = sourceObjectName;
 	}
 
-
+	/**
+	 * @return class name or table name.
+	 */
+	public String getSourceObjectName()
+	{
+		return sourceObjectName;
+	}
 
 
 
