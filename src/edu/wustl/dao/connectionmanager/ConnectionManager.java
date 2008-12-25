@@ -53,7 +53,7 @@ public class ConnectionManager implements IConnectionManager
 	 * It holds Map(ApplicationName, session)
   		thus allow user to use multiple hibernate sessions as per the application.
 	 */
-	private static final ThreadLocal<Map<String, Session>> threadLocal
+	private static final ThreadLocal<Map<String, Session>> SESSION_THREAD_LOCAL
 	= new ThreadLocal<Map<String, Session>>();
 
 
@@ -67,7 +67,7 @@ public class ConnectionManager implements IConnectionManager
 	static
 	{
 		Map<String, Session> applicationSessionMap = new HashMap<String, Session>();
-		threadLocal.set(applicationSessionMap);
+		SESSION_THREAD_LOCAL.set(applicationSessionMap);
 	}
 
 
@@ -89,15 +89,16 @@ public class ConnectionManager implements IConnectionManager
 	 */
 	public void closeSession() throws DAOException
 	{
-		Map<String, Session> applicationSessionMap = (Map<String, Session>) threadLocal.get();
+		Map<String, Session> applicationSessionMap = SESSION_THREAD_LOCAL.get();
 		if(applicationSessionMap.containsKey(applicationName))
 		{
-			Session session = (Session)applicationSessionMap.get(applicationName);
+			Session session = applicationSessionMap.get(applicationName);
 			if(session != null)
 			{
 				session.close();
+				applicationSessionMap.remove(applicationName);
+				session=null;
 			}
-			applicationSessionMap.remove(applicationName);
 		}
 	}
 	/**
@@ -111,14 +112,14 @@ public class ConnectionManager implements IConnectionManager
 	public Session currentSession() throws DAOException
 	{
 
-		Map<String, Session> applicationSessionMap = (Map<String, Session>)threadLocal.get();
+		Map<String, Session> appSessionMap = SESSION_THREAD_LOCAL.get();
 	    // Open a new Session, if this Thread has none yet
-		if (!(applicationSessionMap.containsKey(applicationName)) )
+		if (!(appSessionMap.containsKey(applicationName)) )
 		{
         	Session session = newSession();
-        	applicationSessionMap.put(applicationName, session);
+        	appSessionMap.put(applicationName, session);
         }
-        return (Session)applicationSessionMap.get(applicationName);
+        return appSessionMap.get(applicationName);
 
 	}
 
@@ -130,12 +131,12 @@ public class ConnectionManager implements IConnectionManager
 	 */
 	public Session newSession() throws DAOException
 	{
-		Session session = null;
 		try
         {
-			session = sessionFactory.openSession();
+			Session session = sessionFactory.openSession();
 			session.setFlushMode(FlushMode.COMMIT);
             session.connection().setAutoCommit(false);
+            return session;
         }
         catch (Exception excp)
         {
@@ -143,8 +144,6 @@ public class ConnectionManager implements IConnectionManager
 			throw new DAOException(errorKey,excp,"DAOFactory.java :"+
 					DAOConstants.NEW_SESSION_ERROR);
         }
-        return session;
-
 	}
 
 	/**
@@ -154,10 +153,10 @@ public class ConnectionManager implements IConnectionManager
 	 */
 	public Session getCleanSession() throws DAOException
 	{
-		Session session = null;
+
 		try
 		{
-			session = sessionFactory.openSession();
+			Session session = sessionFactory.openSession();
 			return session;
 		}
 		catch (HibernateException exp)
