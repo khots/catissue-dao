@@ -903,11 +903,9 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	 * Gets Query Number of given SQL.
 	 * @param sql SQL query.
 	 * @return queryNo.
-	 * @throws ClassNotFoundException Class Not Found Exception.
 	 * @throws DAOException generic DAOException.
 	 */
-	protected Long getSequenceNumber(String sql) throws ClassNotFoundException,
-			DAOException
+	protected Long getSequenceNumber(String sql) throws DAOException
 	{
 		List<Object> list = executeQuery(sql, null, false, null);
 		long queryNo = 1;
