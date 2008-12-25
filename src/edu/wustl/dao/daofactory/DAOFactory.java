@@ -103,10 +103,10 @@ public class DAOFactory implements IDAOFactory
 		}
 		catch (Exception excp )
 		{
-			logger.error(excp.getMessage() + DAOConstants.DEFAULT_DAO_INSTANTIATION_ERROR + excp);
+			logger.error(excp.getMessage() + DAOConstants.DEFAULTDAO_INIT_ERR + excp);
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
 			throw new DAOException(errorKey,excp,"DAOFactory.java :"+
-					DAOConstants.DEFAULT_DAO_INSTANTIATION_ERROR);
+					DAOConstants.DEFAULTDAO_INIT_ERR);
 		}
 
 		return dao;
@@ -131,10 +131,10 @@ public class DAOFactory implements IDAOFactory
 		}
 		catch (Exception excp )
 		{
-			logger.error(excp.getMessage() + DAOConstants.JDBCDAO_INSTANTIATION_ERROR + excp);
+			logger.error(excp.getMessage() + DAOConstants.JDBCDAO_INIT_ERR + excp);
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
 			throw new DAOException(errorKey,excp,"DAOFactory.java :"+
-					DAOConstants.JDBCDAO_INSTANTIATION_ERROR);
+					DAOConstants.JDBCDAO_INIT_ERR);
 		}
 		return dao;
 	}
@@ -160,7 +160,7 @@ public class DAOFactory implements IDAOFactory
 			logger.error(exp.getMessage(),exp);
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
 			throw new DAOException(errorKey,exp,"DAOFactory.java :"+
-					DAOConstants.BUILD_SESSION_FACTORY_ERROR);
+					DAOConstants.BUILD_SESS_FACTORY_ERR);
 
 		}
 	}
@@ -190,7 +190,7 @@ public class DAOFactory implements IDAOFactory
 			logger.error(exp.getMessage(),exp);
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
 			throw new DAOException(errorKey,exp,"DAOFactory.java :"+
-					DAOConstants.CONN_MANAGER_INSTANTIATION_ERROR);
+					DAOConstants.CONN_MANAGER_INIT_ERR);
 
 		}
 	}

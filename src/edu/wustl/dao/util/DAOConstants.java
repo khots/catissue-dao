@@ -103,27 +103,27 @@ public final class DAOConstants
 	/**
 	 * Default DAO.
 	 */
-	public static final String DEFAULT_DAO_INSTANTIATION_ERROR = " Problem while retrieving the default DAO ";
+	public static final String DEFAULTDAO_INIT_ERR = " Problem while retrieving the default DAO ";
 
 	/**
 	 * Default JDBCDAO.
 	 */
-	public static final String JDBCDAO_INSTANTIATION_ERROR = " Problem while retrieving the JDBC DAO ";
+	public static final String JDBCDAO_INIT_ERR = " Problem while retrieving the JDBC DAO ";
 
 	/**
 	 * Error while closing connections.
 	 */
-	public static final String CLOSE_CONNECTION_ERROR = " Problem while closing connections : ";
+	public static final String CLOSE_CONN_ERR = " Problem while closing connections : ";
 
 	/**
 	 * Error while building session factory.
 	 */
-	public static final String BUILD_SESSION_FACTORY_ERROR = " Problem while building Sessoin Factory : ";
+	public static final String BUILD_SESS_FACTORY_ERR = " Problem while building Sessoin Factory : ";
 
 	/**
 	 * Error while instantiating connection manager.
 	 */
-	public static final String CONN_MANAGER_INSTANTIATION_ERROR =
+	public static final String CONN_MANAGER_INIT_ERR =
 		" Problem while instantiating connection manager: ";
 
 

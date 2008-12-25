@@ -32,7 +32,7 @@ public final class DAOUtility
 	/**
 	 * GET_PARAMETERIZED_QUERIES_DETAILS String details of parameterized queries.
 	 */
-	 public static final String GET_PARAMETERIZED_QUERIES_DETAILS = "getParameterizedQueriesDetails";
+	 public static final String GET_PARAM_QUERIES_DETAILS = "getParameterizedQueriesDetails";
 
 	/**
 	 * creates a singleton object.

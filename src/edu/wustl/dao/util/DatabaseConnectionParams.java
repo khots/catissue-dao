@@ -155,7 +155,7 @@ public class DatabaseConnectionParams
 			logger.fatal(sqlExp);
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.close.conn.error");
 			throw new DAOException(errorKey,sqlExp,"DatabaseConnectionParams.java :"+
-					DAOConstants.CLOSE_CONNECTION_ERROR);
+					DAOConstants.CLOSE_CONN_ERR);
 		}
 	}
 

@@ -156,8 +156,7 @@ public class ConnectionManager implements IConnectionManager
 
 		try
 		{
-			Session session = sessionFactory.openSession();
-			return session;
+			return sessionFactory.openSession();
 		}
 		catch (HibernateException exp)
 		{

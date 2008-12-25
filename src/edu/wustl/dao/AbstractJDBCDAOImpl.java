@@ -581,7 +581,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	{
 		boolean isDateType = false;
 		String type = metaData.getColumnTypeName(index);
-		if (("DATE").equals(type))
+		if ("DATE".equals(type))
 		{
 			isDateType = true;
 		}
@@ -598,7 +598,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	{
 		boolean isTinyIntType = false;
 		String type = metaData.getColumnTypeName(index);
-		if (("TINYINT").equals(type))
+		if ("TINYINT".equals(type))
 		{
 			isTinyIntType = true;
 		}
@@ -615,7 +615,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	{
 		boolean isNumberType = false;
 		String type = metaData.getColumnTypeName(index);
-		if (("NUMBER").equals(type))
+		if ("NUMBER".equals(type))
 		{
 			isNumberType = true;
 		}
@@ -884,7 +884,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		{
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
 			throw new DAOException(errorKey,sqlExp,"DAOFactory.java :"+
-					DAOConstants.CLOSE_CONNECTION_ERROR);
+					DAOConstants.CLOSE_CONN_ERR);
 		}
 	}
 	/**
