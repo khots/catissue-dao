@@ -131,7 +131,7 @@ public class ApplicationDAOPropertiesParser
 			daoFactory.setDataSource(dataSource);
 			daoFactory.setJdbcConnMangrName(jdbcConnManager);
 
-			//daoFactory.buildSessionFactory();
+			daoFactory.buildSessionFactory();
 			daoFactoryMap.put(daoFactory.getApplicationName(), daoFactory);
 			resetApplicationProperties();
 		}

@@ -189,8 +189,10 @@ public class HibernateDAOImpl implements HibernateDAO
 					+ whereColumnName + " IN ( "
 					+ buff.toString() + ")";
 			databaseConnectionParams.executeUpdate(sql);
+			databaseConnectionParams.commit();
+
 		}
-		catch (HibernateException dbex)
+		catch (Exception dbex)
 		{
 			logger.error(dbex.getMessage(), dbex);
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
