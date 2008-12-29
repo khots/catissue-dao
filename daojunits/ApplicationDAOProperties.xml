@@ -1,27 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Applications>
-	
 	<Application name = "caTissuecore">
 		<DAOFactory name="edu.wustl.dao.daofactory.DAOFactory" default="true">
+	
 			<DefaultDAO>
 				<Class-name name = "edu.wustl.dao.HibernateDAOImpl"/>
 				<Config-file name = "hibernate.cfg.xml"/>
+				<DefaultConnectionManager name = "edu.wustl.dao.connectionmanager.ConnectionManager"/>
 			</DefaultDAO>
-			<jdbcDAO name = "edu.wustl.dao.MySQLDAOImpl"/>
+	
+			<JDBCDAO>
+				<Class-name name = "edu.wustl.dao.MySQLDAOImpl"/>
+				<DataSource name = ""/>
+				<JDBCConnectionManager name = "edu.wustl.dao.connectionmanager.JDBCConnectionManager"/>
+			</JDBCDAO>
+	
 		</DAOFactory>
-		<ConnectionManager name= "edu.wustl.dao.connectionmanager.ConnectionManager"/>
-		
 	 </Application>
 	
 	 <Application name = "cider">
 		<DAOFactory name="edu.wustl.dao.daofactory.DAOFactory">
+	
 			<DefaultDAO>
 				<Class-name name = "edu.wustl.dao.HibernateDAOImpl"/>
 				<Config-file name = "hibernateOracle.cfg.xml"/>
+				<DefaultConnectionManager name = "edu.wustl.dao.connectionmanager.ConnectionManager"/>
 			</DefaultDAO>
-			<jdbcDAO name = "edu.wustl.dao.OracleDAOImpl"/>
+			<JDBCDAO>
+				<Class-name name = "edu.wustl.dao.OracleDAOImpl"/>
+				<DataSource name = ""/>
+				<JDBCConnectionManager name = "edu.wustl.dao.connectionmanager.JDBCConnectionManager"/>
+			</JDBCDAO>
+			
 		</DAOFactory>
-		<ConnectionManager name= "edu.wustl.dao.connectionmanager.ConnectionManager"/>
 	 </Application>
-	
 </Applications>
