@@ -18,6 +18,7 @@ import org.hibernate.FlushMode;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
 import edu.wustl.common.exception.ErrorKey;
@@ -33,25 +34,40 @@ public class ConnectionManager implements IConnectionManager
 	/**
 	 * This member will store the name of the application.
 	 */
-	private String applicationName;
+	protected String applicationName;
 
 
 	/**
 	 * This member will store the configuration instance.
 	 */
-	private Configuration configuration;
+	protected Configuration configuration;
 
 
 	/**
 	 * This member will store the sessionFactory instance.
 	 */
-	private SessionFactory sessionFactory;
+	protected SessionFactory sessionFactory;
 
+
+	/**
+	 * This member will store data source for JDBC connection.
+	 */
+	protected String dataSource;
+
+	/**
+	 * specify Session instance.
+	 */
+      private Session session = null;
+
+      /**
+  	 * specify Transaction instance.
+  	 */
+        private Transaction transaction = null;
 
 	/**
 	 * ThreadLocal to hold the Session for the current executing thread.
 	 * It holds Map(ApplicationName, session)
-  		thus allow user to use multiple hibernate sessions as per the application.
+  		thus allow user to use multiple Hibernate sessions as per the application.
 	 */
 	private static final ThreadLocal<Map<String, Session>> SESSION_THREAD_LOCAL
 	= new ThreadLocal<Map<String, Session>>();
@@ -98,6 +114,7 @@ public class ConnectionManager implements IConnectionManager
 				session.close();
 				applicationSessionMap.remove(applicationName);
 				session=null;
+				transaction = null;
 			}
 		}
 	}
@@ -117,9 +134,10 @@ public class ConnectionManager implements IConnectionManager
 		if (!(appSessionMap.containsKey(applicationName)) )
 		{
         	Session session = newSession();
+        	transaction = session.beginTransaction();
         	appSessionMap.put(applicationName, session);
         }
-        return appSessionMap.get(applicationName);
+		return appSessionMap.get(applicationName);
 
 	}
 
@@ -141,7 +159,7 @@ public class ConnectionManager implements IConnectionManager
         catch (Exception excp)
         {
         	ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,excp,"DAOFactory.java :"+
+			throw new DAOException(errorKey,excp,"ConnectionManager.java :"+
 					DAOConstants.NEW_SESSION_ERROR);
         }
 	}
@@ -161,7 +179,7 @@ public class ConnectionManager implements IConnectionManager
 		catch (HibernateException exp)
 		{
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,exp,"DAOFactory.java :"+
+			throw new DAOException(errorKey,exp,"ConnectionManager.java :"+
 					DAOConstants.NEW_SESSION_ERROR);
 		}
 
@@ -231,6 +249,52 @@ public class ConnectionManager implements IConnectionManager
 	public String getApplicationName()
 	{
 		return applicationName;
+	}
+
+	/**
+	 * This method will be called to get the data source.
+	 * @return dataSource
+	 */
+	public String getDataSource()
+	{
+		return dataSource;
+	}
+
+	/**
+	 * This method will be called to set the data source.
+	 * @param dataSource : JDBC connection name.
+	 */
+	public void setDataSource(String dataSource)
+	{
+		this.dataSource = dataSource;
+	}
+
+
+
+	 /**
+	 * Commit the database level changes.
+	 * @throws DAOException : It will throw DAOException.
+	 */
+	public void commit() throws DAOException
+	{
+		if (transaction != null)
+		{
+			transaction.commit();
+		}
+	}
+
+
+	 /**
+	 * RollBack all the changes after last commit.
+	 * Declared in DAO class.
+	 * @throws DAOException : It will throw DAOException.
+	 */
+	public void rollback() throws DAOException
+	{
+		if (transaction != null)
+		{
+			transaction.rollback();
+		}
 	}
 
 }

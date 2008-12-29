@@ -58,12 +58,12 @@ public interface IDAOFactory
 	 * This method will be called to set the Connection Manager name.
 	 * @param connectionManagerName : Name of connection manager.
 	 */
-	void setConnectionManagerName(String connectionManagerName);
+	void setDefaultConnMangrName(String connectionManagerName);
 	/**
 	 * This method will be called to get the Connection Manager name.
 	 * @return Connection Manager name.
 	 */
-	String getConnectionManagerName();
+	String getDefaultConnMangrName();
 
 	/**
 	 * This method will be called to set the application name.
@@ -129,4 +129,27 @@ public interface IDAOFactory
 	 */
 	//IConnectionManager getConnectionManager();
 
+	/**
+	 * This method will be called to get the JDBC connection manager name.
+	 * @return jdbcConnMangrName
+	 */
+	 String getJdbcConnMangrName();
+
+	/**
+	 * This method will be called to set connection manager name.
+	 * @param jdbcConnMangrName : JDBC connection manager name.
+	 */
+	 void setJdbcConnMangrName(String jdbcConnMangrName);
+
+	 /**
+	 * This method will be called to get the data source.
+	 * @return dataSource
+	 */
+	 String getDataSource();
+
+	 /**
+	 * This method will be called to set the data source.
+	 * @param dataSource : JDBC connection name.
+	 */
+	 void setDataSource(String dataSource);
 }

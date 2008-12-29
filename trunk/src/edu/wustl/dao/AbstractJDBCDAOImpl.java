@@ -48,12 +48,6 @@ import edu.wustl.dao.util.DatabaseConnectionParams;
 public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 {
 
-
-	/**
-	 * Connection object.
-	 */
-	private Connection connection = null;
-
 	 /**
    	 * specify clean connection instance.
    	 */
@@ -84,8 +78,8 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		try
 		{
 			initializeAuditManager(sessionDataBean);
-			connection = connectionManager.getConnection();
-			connection.setAutoCommit(false);
+			connectionManager.getConnection().setAutoCommit(false);
+
 		}
 		catch (SQLException sqlExp)
 		{
@@ -106,7 +100,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		try
 		{
 			auditManager = null;
-			getConnectionManager().closeConnection();
+			connectionManager.closeConnection();
 		}
 		catch(Exception dbex)
 		{
@@ -127,19 +121,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		try
 		{
 			auditManager.insert(this);
-			if(connection == null)
-			{
-				logger.fatal(DAOConstants.NO_CONNECTION_TO_DB);
-			}
-
-			connection.commit();
-		}
-		catch (SQLException dbex)
-		{
-			logger.error(dbex.getMessage(), dbex);
-			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,dbex,"AbstractJDBCDAOImpl.java :"
-					+DAOConstants.COMMIT_DATA_ERROR);
+			connectionManager.commit();
 		}
 		catch (Exception exp)
 		{
@@ -156,23 +138,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	 */
 	public void rollback() throws DAOException
 	{
-		try
-		{
-			if(connection == null)
-			{
-				logger.fatal(DAOConstants.NO_CONNECTION_TO_DB);
-			}
-
-			connection.rollback();
-		}
-		catch (SQLException dbex)
-		{
-			logger.error(dbex.getMessage(), dbex);
-			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey, dbex,"AbstractJDBCDAOImpl.java :"+
-					DAOConstants.ROLLBACK_ERROR);
-
-		}
+		connectionManager.rollback();
 	}
 
 
@@ -203,7 +169,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	public void executeUpdate(String query) throws DAOException
 	{
 		DatabaseConnectionParams databaseConnectionParams = new DatabaseConnectionParams();
-		databaseConnectionParams.setConnection(getCleanConnection());
+		databaseConnectionParams.setConnection(connectionManager.getConnection());
 		databaseConnectionParams.executeUpdate(query);
 	}
 
@@ -887,15 +853,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 					DAOConstants.CLOSE_CONN_ERR);
 		}
 	}
-	/**
-	 *This method will be called to retrieved the current connection object.
-	 *@return Connection object
-	 *@throws DAOException :Generic DAOException.
-	 */
-	public Connection getCleanConnection() throws DAOException
-	{
-		return connectionManager.getCleanSession().connection();
-	}
+	
 
 
 
@@ -1062,6 +1020,17 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	 *@return list
 	 */
 	public List<Object> executeQuery(String query) throws DAOException
+	{
+		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
+		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
+	}
+
+	/**
+	 *This method will be called to retrieved the current connection object.
+	 *@return Connection object
+	 *@throws DAOException :Generic DAOException.
+	 */
+	public Connection getCleanConnection() throws DAOException
 	{
 		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
 		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
