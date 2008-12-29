@@ -28,9 +28,9 @@ import org.hibernate.Session;
 
 import edu.wustl.common.audit.AuditManager;
 import edu.wustl.common.beans.SessionDataBean;
+import edu.wustl.common.dao.queryExecutor.PagenatedResultData;
 import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.querydatabean.QueryDataBean;
-import edu.wustl.common.util.PagenatedResultData;
 import edu.wustl.common.util.QueryParams;
 import edu.wustl.common.util.Utility;
 import edu.wustl.common.util.global.Constants;
@@ -461,10 +461,10 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		ResultSetMetaData metaData;
 
 		DatabaseConnectionParams dbConnParamForMetadata = new DatabaseConnectionParams();
-		dbConnParamForMetadata.setConnection(getCleanConnection());
+		dbConnParamForMetadata.setConnection(connectionManager.getConnection());
 
 		DatabaseConnectionParams dbConnParamForInsertQuery = new DatabaseConnectionParams();
-		dbConnParamForInsertQuery.setConnection(getCleanConnection());
+		dbConnParamForInsertQuery.setConnection(connectionManager.getConnection());
 
 		PreparedStatement stmt = null;
 		try
@@ -605,7 +605,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		StringBuffer sqlBuff = new StringBuffer(DAOConstants.TAILING_SPACES);
 		sqlBuff.append("Select").append(DAOConstants.TAILING_SPACES);
 
-		dbConnParamForMetadata.setConnection(getCleanConnection());
+		dbConnParamForMetadata.setConnection(connectionManager.getConnection());
 		for (int i = 0; i < columnNames.size(); i++)
 		{
 			sqlBuff.append(columnNames.get(i));
@@ -638,7 +638,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		try
 		{
 
-			dbConnParamForMetadata.setConnection(getCleanConnection());
+			dbConnParamForMetadata.setConnection(connectionManager.getConnection());
 			StringBuffer sqlBuff = new StringBuffer(DAOConstants.TAILING_SPACES);
 			sqlBuff.append("Select * from " ).append(tableName).append(" where 1!=1");
 			metaData = dbConnParamForMetadata.getMetaData(sqlBuff.toString());

@@ -192,6 +192,7 @@ public class DatabaseConnectionParams
 		{
 			stmt = getPreparedStatement(query);
 			stmt.executeUpdate();
+		//	connection.commit();
 		}
 		catch (SQLException sqlExp)
 		{
@@ -221,6 +222,7 @@ public class DatabaseConnectionParams
 	public void setConnection(Connection connection)
 	{
 			this.connection = connection;
+
 	}
 
 	/**
@@ -242,7 +244,7 @@ public class DatabaseConnectionParams
 			}
 
 		}
-		catch(Exception exp)
+		catch(SQLException exp)
 		{
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
 			throw new DAOException(errorKey,exp,"DatabaseConnectionParams.java :"+
@@ -262,11 +264,24 @@ public class DatabaseConnectionParams
 		{
 			return (DatabaseMetaData)connection.getMetaData();
 		}
-		catch(Exception exp)
+		catch(SQLException exp)
 		{
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
 			throw new DAOException(errorKey,exp,"DatabaseConnectionParams.java :"+
 					DAOConstants.RS_METADATA_ERROR);
+		}
+	}
+
+	/**
+	 *For tempory use ..
+	 *TODO will be removed when getCleanConnection get removed.
+	 * @throws SQLException :
+	 */
+	public void commit() throws SQLException
+	{
+		if(connection != null)
+		{
+			connection.commit();
 		}
 	}
 

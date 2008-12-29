@@ -30,8 +30,8 @@ public interface SQLFormatter
 	String getUpdateQuery();
 
 	/**
-	 * @param tableName :
+	 * @return tableName :
 	 */
-	void setTableName(String tableName);
+	String getTableName();
 
 }
