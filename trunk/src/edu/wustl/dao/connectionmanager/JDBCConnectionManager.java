@@ -73,7 +73,10 @@ public class JDBCConnectionManager extends ConnectionManager
 	{
 		try
 		{
-			connection.commit();
+			if (connection != null)
+			{
+				connection.commit();
+			}
 		}
 		catch (SQLException dbex)
 		{
@@ -93,7 +96,10 @@ public class JDBCConnectionManager extends ConnectionManager
 	{
 		try
 		{
-			connection.rollback();
+			if (connection != null)
+			{
+				connection.rollback();
+			}
 		}
 		catch (SQLException dbex)
 		{
