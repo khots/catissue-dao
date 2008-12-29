@@ -52,12 +52,6 @@ public class HibernateDAOImpl implements HibernateDAO
       private static org.apache.log4j.Logger logger =
            Logger.getLogger(HibernateDAOImpl.class);
 
-   /**
-	 * specify Session instance.
-	 */
-      private Session session = null;
-
-
      /**
   	 * specify clean Session instance.
   	 */
@@ -67,10 +61,7 @@ public class HibernateDAOImpl implements HibernateDAO
    	 * specify clean connection instance.
    	 */
      private Connection cleanConnection = null;
-     /**
-	 * specify Transaction instance.
-	 */
-      private Transaction transaction = null;
+
 	/**
 	 * specify AuditManager instance.
 	 */
@@ -86,6 +77,11 @@ public class HibernateDAOImpl implements HibernateDAO
 	private IConnectionManager connectionManager;
 
 	/**
+	 * specify Session instance.
+	 */
+      private Session session = null;
+
+	/**
 	 * This method will be used to establish the session with the database.
 	 * Declared in  class.
 	 * @param sessionDataBean session Data.
@@ -93,18 +89,13 @@ public class HibernateDAOImpl implements HibernateDAO
 	 */
 	public void openSession(SessionDataBean sessionDataBean) throws DAOException
 	{
-
-		try
+		session = connectionManager.currentSession();
+		auditManager = new AuditManager();
+		if (sessionDataBean != null)
 		{
-			session = connectionManager.currentSession();
-			transaction = session.beginTransaction();
-			auditManager = new AuditManager();
-
-			if (sessionDataBean != null)
-			{
-				auditManager.setUserId(sessionDataBean.getUserId());
-				auditManager.setIpAddress(sessionDataBean.getIpAddress());
-			}
+			auditManager.setUserId(sessionDataBean.getUserId());
+			auditManager.setIpAddress(sessionDataBean.getIpAddress());
+		}
 		/*
 		 * TODO Removed ..check if some issues occur because of this
 		 * 	else
@@ -112,14 +103,6 @@ public class HibernateDAOImpl implements HibernateDAO
 				auditManager.setUserId(null);
 			}
 		 */
-		}
-		catch (HibernateException dbex)
-		{
-			logger.error(dbex.getMessage(), dbex);
-			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,dbex,"HibernateDAOImpl.java :"+
-					DAOConstants.OPEN_SESSION_ERROR);
-		}
 	}
 
 	/**
@@ -129,19 +112,7 @@ public class HibernateDAOImpl implements HibernateDAO
 	 */
 	public void closeSession() throws DAOException
 	{
-		try
-		{
-			getConnectionManager().closeSession();
-		}
-		catch (HibernateException dbex)
-		{
-			logger.error(dbex.getMessage(), dbex);
-			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,dbex,"HibernateDAOImpl.java :"+
-					DAOConstants.CLOSE_SESSION_ERROR);
-		}
-		session = null;
-		transaction = null;
+		connectionManager.closeSession();
 		auditManager = null;
 	}
 
@@ -155,18 +126,7 @@ public class HibernateDAOImpl implements HibernateDAO
 		try
 		{
 			auditManager.insert(this);
-
-			if (transaction != null)
-			{
-				transaction.commit();
-			}
-		}
-		catch (HibernateException dbex)
-		{
-			logger.error(dbex.getMessage() , dbex);
-			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,dbex,"HibernateDAOImpl.java :"+
-					DAOConstants.COMMIT_DATA_ERROR);
+			connectionManager.commit();
 		}
 		catch (Exception exp)
 		{
@@ -194,20 +154,7 @@ public class HibernateDAOImpl implements HibernateDAO
 		 */
 		if (updated)
 		{
-			try
-			{
-				if (transaction != null)
-				{
-					transaction.rollback();
-				}
-			}
-			catch (HibernateException dbex)
-			{
-				logger.error(dbex.getMessage(), dbex);
-				ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-				throw new DAOException(errorKey,dbex,"HibernateDAOImpl.java :"+
-						DAOConstants.ROLLBACK_ERROR);
-			}
+			connectionManager.rollback();
 		}
 	}
 

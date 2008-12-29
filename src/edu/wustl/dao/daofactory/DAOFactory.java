@@ -38,9 +38,19 @@ import edu.wustl.dao.util.HibernateMetaData;
 public class DAOFactory implements IDAOFactory
 {
 	/**
-	 * This member will store the Connection Manager name.
+	 * This member will store the default Connection Manager name.
 	 */
-	private String connectionManagerName;
+	private String defaultConnMangrName;
+
+	/**
+	 * This member will store the JDBC Connection Manager name.
+	 */
+	private String jdbcConnMangrName;
+
+	/**
+	 * This member will store data source for JDBC connection.
+	 */
+	private String dataSource;
 
 	/**
 	 * This member will store the Default DAO class name.
@@ -66,9 +76,14 @@ public class DAOFactory implements IDAOFactory
 		XMLHelper.DEFAULT_DTD_RESOLVER;
 
 	/**
-	 * This member will store the connectionManager instance.
+	 * This member will store the default connectionManager instance.
 	 */
-	private IConnectionManager connectionManager;
+	private IConnectionManager defaultConnectionManager;
+
+	/**
+	 * This member will store the JDBC connectionManager instance.
+	 */
+	private IConnectionManager jdbcConnectionManager;
 
 
 	/**
@@ -97,8 +112,8 @@ public class DAOFactory implements IDAOFactory
 		try
 		{
 		   dao = (DAO)Class.forName(defaultDAOClassName).newInstance();
-		   dao.setConnectionManager(getConnectionManager());
-		   HibernateMetaData.initHibernateMetaData(getConnectionManager().getConfiguration());
+		   dao.setConnectionManager(getDefaultConnectionManager());
+		   HibernateMetaData.initHibernateMetaData(getDefaultConnectionManager().getConfiguration());
 
 		}
 		catch (Exception excp )
@@ -126,8 +141,9 @@ public class DAOFactory implements IDAOFactory
 		try
 		{
 			   dao = (JDBCDAO) Class.forName(jdbcDAOClassName).newInstance();
-			   dao.setConnectionManager(getConnectionManager());
-			   HibernateMetaData.initHibernateMetaData(getConnectionManager().getConfiguration());
+			   dao.setConnectionManager(getJdbcConnectionManager());
+			   HibernateMetaData.initHibernateMetaData(getJdbcConnectionManager().
+					   getConfiguration());
 		}
 		catch (Exception excp )
 		{
@@ -178,12 +194,8 @@ public class DAOFactory implements IDAOFactory
 	{
 		try
 		{
-			IConnectionManager connectionManager =
-				(IConnectionManager)Class.forName(connectionManagerName).newInstance();
-			connectionManager.setApplicationName(applicationName);
-			connectionManager.setSessionFactory(sessionFactory);
-			connectionManager.setConfiguration(configuration);
-			setConnectionManager(connectionManager);
+			setDefaultConnManager(sessionFactory, configuration);
+			setJDBCConnManager(sessionFactory, configuration);
 		}
 		catch (Exception exp)
 		{
@@ -194,7 +206,39 @@ public class DAOFactory implements IDAOFactory
 
 		}
 	}
+	/**
+	 * @param sessionFactory :session factory object
+	 * @param configuration :configuration
+	 * @throws Exception : exception
+	 */
+	private void setDefaultConnManager(SessionFactory sessionFactory,
+			Configuration configuration) throws Exception
+	{
+		IConnectionManager connectionManager =
+			(IConnectionManager)Class.forName(defaultConnMangrName).newInstance();
+		connectionManager.setApplicationName(applicationName);
+		connectionManager.setSessionFactory(sessionFactory);
+		connectionManager.setConfiguration(configuration);
+		setDefaultConnectionManager(connectionManager);
+	}
 
+	/**
+	 * @param sessionFactory  session factory object
+	 * @param configuration configuration
+	 * @throws Exception exception
+	 */
+	private void setJDBCConnManager(SessionFactory sessionFactory,
+			Configuration configuration) throws Exception
+	{
+		IConnectionManager connectionManager =
+			(IConnectionManager)Class.forName(jdbcConnMangrName).newInstance();
+		connectionManager.setApplicationName(applicationName);
+		connectionManager.setDataSource(dataSource);
+		connectionManager.setSessionFactory(sessionFactory);
+		connectionManager.setConfiguration(configuration);
+		setJdbcConnectionManager(connectionManager);
+
+	}
 
 	 /**
      * This method adds configuration file to Hibernate Configuration.
@@ -240,9 +284,9 @@ public class DAOFactory implements IDAOFactory
 	 * This method will be called to set Connection Manager name.
 	 * @param connectionManagerName : Connection Manager.
 	 */
-	public void setConnectionManagerName(String connectionManagerName)
+	public void setDefaultConnMangrName(String connectionManagerName)
 	{
-		this.connectionManagerName = connectionManagerName;
+		this.defaultConnMangrName = connectionManagerName;
 	}
 
 	/**
@@ -287,9 +331,9 @@ public class DAOFactory implements IDAOFactory
 	 * This method will be called to retrieved the connectionManagerName.
 	 * @return connectionManagerName.
 	 */
-	public String getConnectionManagerName()
+	public String getDefaultConnMangrName()
 	{
-		return connectionManagerName;
+		return defaultConnMangrName;
 	}
 
 	/**
@@ -332,18 +376,18 @@ public class DAOFactory implements IDAOFactory
 	 * This will called to retrieve connectionManager object.
 	 * @return connectionManager
 	 */
-	private IConnectionManager getConnectionManager()
+	private IConnectionManager getDefaultConnectionManager()
 	{
-		return connectionManager;
+		return defaultConnectionManager;
 	}
 
 	/**
 	 * This will called to set connectionManager object.
 	 * @param connectionManager :connectionManager
 	 */
-	private void setConnectionManager(IConnectionManager connectionManager)
+	private void setDefaultConnectionManager(IConnectionManager connectionManager)
 	{
-		this.connectionManager = connectionManager;
+		this.defaultConnectionManager = connectionManager;
 	}
 
 	/**
@@ -363,5 +407,58 @@ public class DAOFactory implements IDAOFactory
 	{
 		this.isDefaultDAOFactory = isDefaultDAOFactory;
 	}
+
+	/**
+	 * This method will be called to get the JDBC connection manager name.
+	 * @return jdbcConnMangrName
+	 */
+	public String getJdbcConnMangrName()
+	{
+		return jdbcConnMangrName;
+	}
+
+	/**
+	 * This method will be called to set connection manager name.
+	 * @param jdbcConnMangrName : JDBC connection manager name.
+	 */
+	public void setJdbcConnMangrName(String jdbcConnMangrName)
+	{
+		this.jdbcConnMangrName = jdbcConnMangrName;
+	}
+
+	/**
+	 * This method will be called to get the data source.
+	 * @return dataSource
+	 */
+	public String getDataSource()
+	{
+		return dataSource;
+	}
+
+	/**
+	 * This method will be called to set the data source.
+	 * @param dataSource : JDBC connection name.
+	 */
+	public void setDataSource(String dataSource)
+	{
+		this.dataSource = dataSource;
+	}
+
+	/**
+	 * @return :
+	 */
+	public IConnectionManager getJdbcConnectionManager()
+	{
+		return jdbcConnectionManager;
+	}
+
+	/**
+	 * @param jdbcConnectionManager :
+	 */
+	public void setJdbcConnectionManager(IConnectionManager jdbcConnectionManager)
+	{
+		this.jdbcConnectionManager = jdbcConnectionManager;
+	}
+
 
 }

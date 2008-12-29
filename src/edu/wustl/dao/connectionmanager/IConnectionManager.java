@@ -9,6 +9,7 @@
 package edu.wustl.dao.connectionmanager;
 
 import java.sql.Connection;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -89,5 +90,30 @@ public interface IConnectionManager
 	 * @return Configuration.
 	 */
 	Configuration getConfiguration();
+
+	/**
+	 * This method will be called to get the data source.
+	 * @return dataSource
+	 */
+	 String getDataSource();
+
+	 /**
+	 * This method will be called to set the data source.
+	 * @param dataSource : JDBC connection name.
+	 */
+	 void setDataSource(String dataSource);
+
+	 /**
+	 * Commit the database level changes.
+	 * @throws DAOException : It will throw DAOException.
+	 */
+	 void commit() throws DAOException;
+
+	 /**
+	 * RollBack all the changes after last commit.
+	 * Declared in DAO class.
+	 * @throws DAOException : It will throw DAOException.
+	 */
+	 void rollback() throws DAOException;
 
 }

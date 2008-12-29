@@ -11,6 +11,7 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -43,12 +44,12 @@ public class ApplicationDAOPropertiesParser
 	/**
 	 * Specifies application variables.
 	 */
-	private String connectionManager, applicationName, daoFactoryName, defaultDaoName,isDefaultDAOFactory,
-			configFile, jdbcDAOName;
+	private String defaultConnManager,jdbcConnManager,applicationName, daoFactoryName,
+	defaultDaoName,isDefaultDAOFactory,	configFile, jdbcDAOName,dataSource;
 
 	/**
-	 * This method gets Dao Factory Map.
-	 * @return dao Factory Map.
+	 * This method gets DAO Factory Map.
+	 * @return DAO Factory Map.
 	 */
 	public Map<String, IDAOFactory> getDaoFactoryMap()
 	{
@@ -66,7 +67,7 @@ public class ApplicationDAOPropertiesParser
 	}
 
 	/**
-	 * This method parse Xml File.
+	 * This method parse XML File.
 	 * @throws DAOException :
 	 */
 	private void readFile() throws DAOException
@@ -118,13 +119,19 @@ public class ApplicationDAOPropertiesParser
 			}
 
 			IDAOFactory daoFactory = (IDAOFactory) Class.forName(daoFactoryName).newInstance();
-			daoFactory.setConnectionManagerName(connectionManager);
-			daoFactory.setDefaultDAOClassName(defaultDaoName);
-			daoFactory.setJdbcDAOClassName(jdbcDAOName);
+
 			daoFactory.setApplicationName(applicationName);
-			daoFactory.setConfigurationFile(configFile);
 			daoFactory.setIsDefaultDAOFactory(Boolean.parseBoolean(isDefaultDAOFactory));
-			daoFactory.buildSessionFactory();
+
+			daoFactory.setDefaultDAOClassName(defaultDaoName);
+			daoFactory.setConfigurationFile(configFile);
+			daoFactory.setDefaultConnMangrName(defaultConnManager);
+
+			daoFactory.setJdbcDAOClassName(jdbcDAOName);
+			daoFactory.setDataSource(dataSource);
+			daoFactory.setJdbcConnMangrName(jdbcConnManager);
+
+			//daoFactory.buildSessionFactory();
 			daoFactoryMap.put(daoFactory.getApplicationName(), daoFactory);
 			resetApplicationProperties();
 		}
@@ -137,12 +144,16 @@ public class ApplicationDAOPropertiesParser
 	private void resetApplicationProperties()
 	{
 		daoFactoryName = "";
-		connectionManager = "";
-		defaultDaoName = "";
-		jdbcDAOName = "";
 		applicationName = "";
-		configFile = "";
 		isDefaultDAOFactory = "";
+
+		defaultDaoName = "";
+		configFile = "";
+		defaultConnManager = "";
+
+		jdbcDAOName = "";
+		dataSource = "";
+		jdbcConnManager = "";
 	}
 
 	/**
@@ -164,10 +175,10 @@ public class ApplicationDAOPropertiesParser
 			{
 				setDAOFactoryProperties(applicationChildNode);
 			}
-			if (applicationChildNode.getNodeName().equals("ConnectionManager"))
+			/*if (applicationChildNode.getNodeName().equals("ConnectionManager"))
 			{
 				setConnectionManagerProperties(applicationChildNode);
-			}
+			}*/
 		}
 	}
 
@@ -175,13 +186,13 @@ public class ApplicationDAOPropertiesParser
 	 * This method sets Connection Manager Properties.
 	 * @param applicationChildNode application Child Node.
 	 */
-	private void setConnectionManagerProperties(Node applicationChildNode)
+	/*private void setConnectionManagerProperties(Node applicationChildNode)
 	{
 		NamedNodeMap attMap = applicationChildNode.getAttributes();
 		Node attNode = attMap.item(0);
-		connectionManager = attNode.getNodeValue();
+		defaultConnManager = attNode.getNodeValue();
 	}
-
+*/
 	/**
 	 * This method sets DAOFactory Properties.
 	 * @param childNode DAOFactory child Node.
@@ -197,7 +208,7 @@ public class ApplicationDAOPropertiesParser
 			{
 				setDefaultDAOProperties(childrenDAOFactory);
 			}
-			if (childrenDAOFactory.getNodeName().equals("jdbcDAO"))
+			if (childrenDAOFactory.getNodeName().equals("JDBCDAO"))
 			{
 				setJDBCDAOProperties(childrenDAOFactory);
 			}
@@ -233,9 +244,36 @@ public class ApplicationDAOPropertiesParser
 	 */
 	private void setJDBCDAOProperties(Node childrenDAOFactory)
 	{
-		NamedNodeMap attMap = childrenDAOFactory.getAttributes();
-		Node attNode = attMap.item(0);
-		jdbcDAOName = attNode.getNodeValue();
+		//NamedNodeMap attMap = childrenDAOFactory.getAttributes();
+		//Node attNode = attMap.item(0);
+		//jdbcDAOName = attNode.getNodeValue();
+
+
+		NodeList childJDBCDAO = childrenDAOFactory.getChildNodes();
+		for (int l = 0; l < childJDBCDAO.getLength(); l++)
+		{
+			Node childnode = childJDBCDAO.item(l);
+
+			if (childnode.getNodeName().equals("Class-name"))
+			{
+				NamedNodeMap attMap = childnode.getAttributes();
+				Node attNode = attMap.item(0);
+				jdbcDAOName = attNode.getNodeValue();
+			}
+			if (childnode.getNodeName().equals("DataSource"))
+			{
+				NamedNodeMap configFileMap = childnode.getAttributes();
+				Node configFileMapNode = configFileMap.item(0);
+				dataSource = configFileMapNode.getNodeValue();
+			}
+			if (childnode.getNodeName().equals("JDBCConnectionManager"))
+			{
+				NamedNodeMap defaultConnMangrMap = childnode.getAttributes();
+				Node defaultConnMangrNode = defaultConnMangrMap.item(0);
+				jdbcConnManager = defaultConnMangrNode.getNodeValue();
+			}
+		}
+
 	}
 
 	/**
@@ -262,10 +300,16 @@ public class ApplicationDAOPropertiesParser
 				Node configFileMapNode = configFileMap.item(0);
 				configFile = configFileMapNode.getNodeValue();
 			}
+			if (childnode.getNodeName().equals("DefaultConnectionManager"))
+			{
+				NamedNodeMap defaultConnMangrMap = childnode.getAttributes();
+				Node defaultConnMangrNode = defaultConnMangrMap.item(0);
+				defaultConnManager = defaultConnMangrNode.getNodeValue();
+			}
 		}
 	}
 
-/*	public static void main(String[] args)
+	/*public static void main(String[] args)
 	{
 		Map<String, IDAOFactory> daoFactoryMap = new HashMap<String, IDAOFactory>();
 		ApplicationDAOPropertiesParser parser = new ApplicationDAOPropertiesParser();

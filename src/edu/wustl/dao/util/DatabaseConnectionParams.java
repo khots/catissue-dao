@@ -132,21 +132,20 @@ public class DatabaseConnectionParams
 	{
 		try
 		{
-			if(connection != null)
-			{
-				connection.close();
-			}
 			if(resultSet != null )
 			{
 				resultSet.close();
+				resultSet = null;
 			}
 			if (statement != null)
 			{
 				statement.close();
+				statement = null;
 			}
 			if (preparedStatement != null)
 			{
 				preparedStatement.close();
+				statement = null;
 			}
 
 		}
