@@ -139,7 +139,7 @@ public interface DAO
 	 * @return List.
 	 * @throws DAOException generic DAOException.
 	 */
-	List<Object> executeQuery(String query)
+	List executeQuery(String query)
 		throws DAOException;
 
 
