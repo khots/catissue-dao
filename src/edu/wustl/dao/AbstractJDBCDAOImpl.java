@@ -1020,7 +1020,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	 *@throws DAOException :Generic DAOException.
 	 *@return list
 	 */
-	public List<Object> executeQuery(String query) throws DAOException
+	public List executeQuery(String query) throws DAOException
 	{
 		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
 		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
