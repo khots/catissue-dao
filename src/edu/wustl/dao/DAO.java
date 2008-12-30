@@ -227,6 +227,13 @@ public interface DAO
 	 *@throws DAOException :Generic DAOException.
 	 */
 	void closeCleanSession() throws DAOException;
-
-
+	/**
+	 * This method inserts sql statemnent in audit tables.
+	 * @param sqlQuery sql to be audited
+	 * @param sessionData
+	 * @param comments comments to be inserted in audit tables
+	 * @throws DAOException Exception to be thrown
+	 */
+	public void executeAuditSql(String sqlQuery, SessionDataBean sessionData, String comments)
+	throws DAOException;
 }
