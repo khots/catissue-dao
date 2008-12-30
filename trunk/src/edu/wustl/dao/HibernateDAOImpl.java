@@ -479,7 +479,7 @@ public class HibernateDAOImpl implements HibernateDAO
 	 * @param query HQL query to execute.
 	 * @return List.
 	 */
-	public List<Object> executeQuery(String query)
+	public List executeQuery(String query)
 	{
 		List < Object > returner;
 		Query hibernateQuery = session.createQuery(query);
