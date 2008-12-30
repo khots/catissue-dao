@@ -25,6 +25,7 @@ import org.hibernate.proxy.HibernateProxy;
 import edu.wustl.common.audit.AuditManager;
 import edu.wustl.common.audit.Auditable;
 import edu.wustl.common.beans.SessionDataBean;
+import edu.wustl.common.domain.AuditEventLog;
 import edu.wustl.common.exception.AuditException;
 import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.global.Constants;
@@ -306,7 +307,7 @@ public class HibernateDAOImpl implements HibernateDAO
 	 * add Audit Event Logs.
 	 * @param auditEventDetailsCollection audit Event Details Collection.
 	 */
-	public void addAuditEventLogs(Collection<Object> auditEventDetailsCollection)
+	public void addAuditEventLogs(Collection<AuditEventLog> auditEventDetailsCollection)
 	{
 		auditManager.addAuditEventLogs(auditEventDetailsCollection);
 	}

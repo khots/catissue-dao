@@ -8,6 +8,7 @@ package edu.wustl.dao;
 
 import java.util.Collection;
 
+import edu.wustl.common.domain.AuditEventLog;
 import edu.wustl.dao.exception.DAOException;
 
 
@@ -29,7 +30,7 @@ public interface HibernateDAO extends DAO
 	 * Add AuditEvent Logs.
 	 * @param auditEventDetailsCollection audit Event Details Collection.
 	 */
-	void addAuditEventLogs(Collection<Object> auditEventDetailsCollection);
+	void addAuditEventLogs(Collection<AuditEventLog> auditEventDetailsCollection);
 
 	/**
 	 * @param objectClass : Name of object class
