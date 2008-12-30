@@ -666,5 +666,4 @@ public class HibernateDAOImpl implements HibernateDAO
 		return formatMessage;
 	}
 
-
 }
