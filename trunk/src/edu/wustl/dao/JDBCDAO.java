@@ -234,4 +234,10 @@ public interface JDBCDAO extends DAO
 	 */
 	Long getMaxBarcodeCol();
 
+	/**
+	 * This method will be called to obtained max Label.
+	 * @return max Label column.
+	 */
+	Long getMaxLabelCol();
+
 }
