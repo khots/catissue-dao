@@ -31,7 +31,8 @@ public class JDBCConnectionManager extends ConnectionManager
 
 		try
 		{
-			return sessionFactory.openSession().connection();
+			connection = sessionFactory.openSession().connection();
+			return connection;
 		}
 		catch (HibernateException exp)
 		{
