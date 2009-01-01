@@ -578,7 +578,7 @@ public class JDBCTestCases extends BaseTestCase
 	/**
 	 * This test will DisableRelatedObjects method implementation.
 	 */
-	@Test
+	/*@Test
 	public void testDisableRelatedObjectsJDBC()
 	{
 		try
@@ -592,7 +592,7 @@ public class JDBCTestCases extends BaseTestCase
 			logger.fatal(exp.getLogMessage());
 		}
 
-	}
+	}*/
 
 	/**
 	 * This test will insert method implementation.

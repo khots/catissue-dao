@@ -71,6 +71,7 @@ public final class DAOConstants
 	 */
 	public static final String INSERT_OBJ_ERROR = " Object insert error: ";
 
+	
 
 	/**
 	 * update object.
@@ -253,6 +254,11 @@ public final class DAOConstants
 	 * index value operator"?".
 	 */
 	public static final String INDEX_VALUE_OPERATOR = "?";
+
+	/**
+	 * Security constant.
+	 */
+	public static final boolean SWITCH_SECURITY = true;
 
 	/**
 	 * Opening bracket.
