@@ -232,6 +232,6 @@ public interface JDBCDAO extends DAO
 	 * This method will be called to obtained max barcode.
 	 * @return max Barcode column.
 	 */
-	String getMaxBarcodeCol();
+	Long getMaxBarcodeCol();
 
 }
