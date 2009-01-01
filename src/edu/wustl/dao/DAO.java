@@ -228,4 +228,10 @@ public interface DAO
 	 */
 	void closeCleanSession() throws DAOException;
 
+	/**
+	 * This method will be called to obtained max barcode.
+	 * @return max Barcode column.
+	 */
+	String getMaxBarcodeCol();
+
 }
