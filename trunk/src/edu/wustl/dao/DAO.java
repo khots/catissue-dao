@@ -129,9 +129,9 @@ public interface DAO
 	 * @param whereColumnName Column name to be included in where clause.
 	 * @param whereColumnValues Value of the Column name that included in where clause.
 	 * @throws DAOException generic DAOException.
-	 */
+	 *//*
 	void disableRelatedObjects(String tableName, String whereColumnName,
-			Long [] whereColumnValues) throws DAOException;
+			Long [] whereColumnValues) throws DAOException;*/
 
 	/**
 	 * Execute Query.

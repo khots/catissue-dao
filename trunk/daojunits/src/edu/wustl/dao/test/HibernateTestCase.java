@@ -480,7 +480,7 @@ public class HibernateTestCase extends BaseTestCase
 	/**
 	 * This test will assert that requested objects disabled successfully.
 	 */
-	@Test
+	/*@Test
 	public void testDisableRelatedObjects()
 	{
 		String tableName = "test_user";
@@ -497,7 +497,7 @@ public class HibernateTestCase extends BaseTestCase
 		{
 			assertFalse("Problem in disabling object : :", true);
 		}
-	}
+	}*/
 
 
 	/**

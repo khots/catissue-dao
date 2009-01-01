@@ -30,7 +30,6 @@ import edu.wustl.common.audit.AuditManager;
 import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.querydatabean.QueryDataBean;
-import edu.wustl.common.security.exceptions.SMException;
 import edu.wustl.common.util.PagenatedResultData;
 import edu.wustl.common.util.QueryParams;
 import edu.wustl.common.util.Utility;
@@ -430,7 +429,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	public PagenatedResultData executeQuery(QueryParams  queryParams) throws DAOException
 	{
 		PagenatedResultData pagenatedResultData = null;
-		if (!(Constants.SWITCH_SECURITY && queryParams.isSecureToExecute() &&
+		if (!(DAOConstants.SWITCH_SECURITY && queryParams.isSecureToExecute() &&
 				queryParams.getSessionDataBean() == null))
 		{
 		  pagenatedResultData = (PagenatedResultData)getQueryResultList(queryParams);
@@ -914,13 +913,43 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	 * @param whereColumnName :
 	 * @param whereColumnValues :
 	 * @throws DAOException :
-	 */
+	 *//*
 	public void disableRelatedObjects(String tableName, String whereColumnName,
 			Long[] whereColumnValues) throws DAOException
 	{
-		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
-		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
-	}
+		DatabaseConnectionParams  databaseConnectionParams = new DatabaseConnectionParams();
+		try
+		{
+			databaseConnectionParams.setConnection(connectionManager.getConnection());
+			//Statement statement = session.connection().createStatement();
+
+			StringBuffer buff = new StringBuffer();
+			for (int i = 0; i < whereColumnValues.length; i++)
+			{
+				buff.append(whereColumnValues[i].longValue());
+				if ((i + 1) < whereColumnValues.length)
+				{
+					buff.append("  ,");
+				}
+			}
+			String sql = "UPDATE " + tableName + " SET ACTIVITY_STATUS = '"
+			+ Constants.ACTIVITY_STATUS_DISABLED + "' WHERE "
+			+ whereColumnName + " IN ( "
+			+ buff.toString() + ")";
+			databaseConnectionParams.executeUpdate(sql);
+		}
+		catch (Exception dbex)
+		{
+			logger.error(dbex.getMessage(), dbex);
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
+			throw new DAOException(errorKey,dbex,"HibernateDAOImpl.java :"+
+					DAOConstants.DISABLE_RELATED_OBJ);
+		}
+		finally
+		{
+			databaseConnectionParams.closeConnectionParams();
+		}
+	}*/
 
 	/**
 	 * @param obj :

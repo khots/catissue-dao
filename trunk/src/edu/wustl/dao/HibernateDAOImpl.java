@@ -19,7 +19,6 @@ import java.util.List;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.hibernate.proxy.HibernateProxy;
 
 import edu.wustl.common.audit.AuditManager;
@@ -157,54 +156,6 @@ public class HibernateDAOImpl implements HibernateDAO
 		{
 			connectionManager.rollback();
 		}
-	}
-
-	/**
-	 * Disabled Related Objects.
-	 * @param tableName table Name.
-	 * @param whereColumnName Column name to be included in where clause.
-	 * @param whereColumnValues Value of the Column name that included in where clause.
-	 * @throws DAOException generic DAOException.
-	 */
-	public void disableRelatedObjects(String tableName, String whereColumnName,
-			Long[] whereColumnValues) throws DAOException
-	{
-
-		DatabaseConnectionParams  databaseConnectionParams = new DatabaseConnectionParams();
-		try
-		{
-			databaseConnectionParams.setConnection(getCleanConnection());
-			//Statement statement = session.connection().createStatement();
-
-			StringBuffer buff = new StringBuffer();
-			for (int i = 0; i < whereColumnValues.length; i++)
-			{
-				buff.append(whereColumnValues[i].longValue());
-				if ((i + 1) < whereColumnValues.length)
-				{
-					buff.append("  ,");
-				}
-			}
-			String sql = "UPDATE " + tableName + " SET ACTIVITY_STATUS = '"
-					+ Constants.ACTIVITY_STATUS_DISABLED + "' WHERE "
-					+ whereColumnName + " IN ( "
-					+ buff.toString() + ")";
-			databaseConnectionParams.executeUpdate(sql);
-			databaseConnectionParams.commit();
-
-		}
-		catch (Exception dbex)
-		{
-			logger.error(dbex.getMessage(), dbex);
-			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,dbex,"HibernateDAOImpl.java :"+
-					DAOConstants.DISABLE_RELATED_OBJ);
-		}
-		finally
-		{
-			databaseConnectionParams.closeConnectionParams();
-		}
-
 	}
 
 	/**
