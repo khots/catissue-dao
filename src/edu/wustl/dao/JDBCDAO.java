@@ -228,6 +228,10 @@ public interface JDBCDAO extends DAO
 	 */
 	void updateClob(String query,String clobContent)throws DAOException;
 
-
+	/**
+	 * This method will be called to obtained max barcode.
+	 * @return max Barcode column.
+	 */
+	String getMaxBarcodeCol();
 
 }
