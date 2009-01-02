@@ -309,11 +309,11 @@ public class ApplicationDAOPropertiesParser
 		}
 	}
 
-public static void main(String[] args)
+/*public static void main(String[] args)
 	{
 		Map<String, IDAOFactory> daoFactoryMap = new HashMap<String, IDAOFactory>();
 		ApplicationDAOPropertiesParser parser = new ApplicationDAOPropertiesParser();
 		daoFactoryMap = parser.getDaoFactoryMap();
 	}
-
+*/
 }
