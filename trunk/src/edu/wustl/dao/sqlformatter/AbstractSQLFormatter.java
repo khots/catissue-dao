@@ -50,7 +50,7 @@ public abstract class AbstractSQLFormatter implements SQLFormatter
 	 * @return :
 	 */
 	public String getInsertQuery()
-	{
+	{/*
 
 		boolean isColumnMoreThnOne = false;
 		StringBuffer insertSql = new StringBuffer(DAOConstants.TAILING_SPACES);
@@ -75,6 +75,8 @@ public abstract class AbstractSQLFormatter implements SQLFormatter
 		insertSql.append(valuePart.toString());
 
 		return insertSql.toString();
+	*/
+		return null;
 	}
 
 	/**

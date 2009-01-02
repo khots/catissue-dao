@@ -1,7 +1,5 @@
 package edu.wustl.dao.test;
 
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,23 +13,22 @@ import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.QueryWhereClause;
 import edu.wustl.dao.condition.EqualClause;
 import edu.wustl.dao.condition.INClause;
-import edu.wustl.dao.condition.NullClause;
+import edu.wustl.dao.condition.NotEqualClause;
 import edu.wustl.dao.condition.NotNullClause;
+import edu.wustl.dao.condition.NullClause;
 import edu.wustl.dao.daofactory.IDAOFactory;
 import edu.wustl.dao.exception.DAOException;
-import edu.wustl.dao.util.DatabaseConnectionParams;
 
 /**
  * @author kalpana_thakur
  *
  */
-public class JDBCTestCasesForOracle extends BaseTestCase
+public class JDBCTestCasesForCatissue extends BaseTestCase
 {
-
 	/**
 	 * Logger.
 	 */
-	private static org.apache.log4j.Logger logger = Logger.getLogger(JDBCTestCases.class);
+	private static org.apache.log4j.Logger logger = Logger.getLogger(JDBCTestCasesForCatissue.class);
 
 	/**
 	 * DAO instance.
@@ -47,7 +44,7 @@ public class JDBCTestCasesForOracle extends BaseTestCase
 	 */
 	public void setJDBCDAO()
 	{
-		IDAOFactory daoFactory = daoConfigFactory.getInstance().getDAOFactory("cider");
+		IDAOFactory daoFactory = daoConfigFactory.getInstance().getDAOFactory("caTissuecore");
 		try
 		{
 			jdbcDAO = daoFactory.getJDBCDAO();
@@ -67,7 +64,9 @@ public class JDBCTestCasesForOracle extends BaseTestCase
 	{
 		assertNotNull("DAO Object is null",jdbcDAO);
 	}
-	
+
+
+
 	/**
 	 * This test will assert that table created successfully.
 	 */
@@ -81,11 +80,23 @@ public class JDBCTestCasesForOracle extends BaseTestCase
 			jdbcDAO.openSession(null);
 			jdbcDAO.createTable(tableName, columnNames);
 			jdbcDAO.commit();
-			jdbcDAO.closeSession();
+
 		}
 		catch(Exception exp)
 		{
 			assertFalse("Failed while creating table ::", true);
+		}
+		finally
+		{
+			try 
+			{
+				jdbcDAO.closeSession();
+			} 
+			catch (DAOException e)
+			{
+		
+				e.printStackTrace();
+			}
 		}
 
 	}
@@ -102,11 +113,23 @@ public class JDBCTestCasesForOracle extends BaseTestCase
 			jdbcDAO.openSession(null);
 			jdbcDAO.createTable(query);
 			jdbcDAO.commit();
-			jdbcDAO.closeSession();
+		//	jdbcDAO.closeSession();
 		}
 		catch(Exception exp)
 		{
 			assertFalse("Failed while creating table ::", true);
+		}
+		finally
+		{
+			try 
+			{
+				jdbcDAO.closeSession();
+			} 
+			catch (DAOException e)
+			{
+		
+				e.printStackTrace();
+			}
 		}
 
 	}
@@ -122,14 +145,27 @@ public class JDBCTestCasesForOracle extends BaseTestCase
 		{
 			jdbcDAO.openSession(null);
 			jdbcDAO.delete("XYZ_PHONENUMBER");
+			jdbcDAO.commit();
 			jdbcDAO.delete("TEMP_ADDRESS");
 			jdbcDAO.commit();
-			jdbcDAO.closeSession();
+		//	jdbcDAO.closeSession();
 		}
 		catch(ApplicationException exp)
 		{
 			logger.fatal(exp.getLogMessage());
 			assertFalse("Failed while droping table ::", true);
+		}
+		finally
+		{
+			try 
+			{
+				jdbcDAO.closeSession();
+			} 
+			catch (DAOException e)
+			{
+		
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -147,11 +183,24 @@ public class JDBCTestCasesForOracle extends BaseTestCase
 					" where FIRST_NAME = 'john'");
 			jdbcDAO.executeUpdate(strbuff.toString());
 			jdbcDAO.commit();
-			jdbcDAO.closeSession();
+		//	jdbcDAO.closeSession();
 		}
 		catch(Exception exp)
 		{
-			assertFalse("Failed while inserting object :", true);
+			 exp.printStackTrace();
+			assertFalse("Failed while inserting object Mysql :", true);
+		}
+		finally
+		{
+			try 
+			{
+				jdbcDAO.closeSession();
+			} 
+			catch (DAOException e)
+			{
+		
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -165,7 +214,7 @@ public class JDBCTestCasesForOracle extends BaseTestCase
 	  {
 		  jdbcDAO.openSession(null);
 		  List list = jdbcDAO.retrieve("test_user");
-	  	  jdbcDAO.closeSession();
+	  	 // jdbcDAO.closeSession();
 	  	  assertNotNull(list);
 
 	  }
@@ -173,6 +222,18 @@ public class JDBCTestCasesForOracle extends BaseTestCase
 	  {
 		  assertFalse("Failed while retrieving object :", true);
 	  }
+	  finally
+		{
+			try 
+			{
+				jdbcDAO.closeSession();
+			} 
+			catch (DAOException e)
+			{
+		
+				e.printStackTrace();
+			}
+		}
 	}
 
 	/**
@@ -186,7 +247,7 @@ public class JDBCTestCasesForOracle extends BaseTestCase
 	  {
 		jdbcDAO.openSession(null);
 	    List<Object> list = jdbcDAO.retrieve("test_user","IDENTIFIER" , Long.valueOf(1));
-	    jdbcDAO.closeSession();
+	 //   jdbcDAO.closeSession();
 	  	assertNotNull("No objects retrieved",list);
 		//assertTrue("No object retrieved ::",!list.isEmpty());
 	  }
@@ -194,6 +255,18 @@ public class JDBCTestCasesForOracle extends BaseTestCase
 	  {
 		  assertFalse("Failed while retrieving object ::", true);
 	  }
+	  finally
+		{
+			try 
+			{
+				jdbcDAO.closeSession();
+			} 
+			catch (DAOException e)
+			{
+		
+				e.printStackTrace();
+			}
+		}
 	}
 
 
@@ -209,7 +282,7 @@ public class JDBCTestCasesForOracle extends BaseTestCase
 		String[] selectColumnName = {"IDENTIFIER","FIRST_NAME","LAST_NAME","EMAIL_ADDRESS"};
 		jdbcDAO.openSession(null);
 	    List<Object> list = jdbcDAO.retrieve("test_user", selectColumnName);
-	    jdbcDAO.closeSession();
+	  //  jdbcDAO.closeSession();
 
 	    assertNotNull("No object retrieved ::",list);
 	//	assertTrue("No object retrieved ::",!list.isEmpty());
@@ -218,6 +291,18 @@ public class JDBCTestCasesForOracle extends BaseTestCase
 	  {
 		  assertFalse("Failed while retrieving object ::", true);
 	  }
+	  finally
+		{
+			try 
+			{
+				jdbcDAO.closeSession();
+			} 
+			catch (DAOException e)
+			{
+		
+				e.printStackTrace();
+			}
+		}
 	}
 
 	/**
@@ -232,7 +317,7 @@ public class JDBCTestCasesForOracle extends BaseTestCase
 			String[] selectColumnName = {"IDENTIFIER","FIRST_NAME","LAST_NAME","EMAIL_ADDRESS"};
 			jdbcDAO.openSession(null);
 		    List<Object> list = jdbcDAO.retrieve("test_user", selectColumnName,true);
-		    jdbcDAO.closeSession();
+		   // jdbcDAO.closeSession();
 
 		    assertNotNull("No object retrieved ::",list);
 	//		assertTrue("No object retrieved ::",!list.isEmpty());
@@ -241,6 +326,18 @@ public class JDBCTestCasesForOracle extends BaseTestCase
 		  {
 			  assertFalse("Failed while retrieving object ::", true);
 		  }
+		  finally
+			{
+				try 
+				{
+					jdbcDAO.closeSession();
+				} 
+				catch (DAOException e)
+				{
+			
+					e.printStackTrace();
+				}
+			}
 
 	}
 
@@ -259,17 +356,31 @@ public class JDBCTestCasesForOracle extends BaseTestCase
 			String[] selectColumnName = null;
 
 			QueryWhereClause queryWhereClause = new QueryWhereClause(sourceObjectName);
-			queryWhereClause.addCondition(new INClause("IDENTIFIER",colValues,sourceObjectName));
+			queryWhereClause.addCondition(new INClause("IDENTIFIER",colValues,sourceObjectName)).
+			orOpr().addCondition(new INClause("FIRST_NAME","JOHN,abhijit",sourceObjectName));
+
 
 			jdbcDAO.openSession(null);
 			List<Object> list = jdbcDAO.retrieve(sourceObjectName, selectColumnName,queryWhereClause);
-			jdbcDAO.closeSession();
+			//jdbcDAO.closeSession();
 			assertNotNull("No value retrieved :",list);
 
 		}
 		catch(Exception exp)
 		{
 			assertFalse("Failed while retrieving object ::", true);
+		}
+		finally
+		{
+			try 
+			{
+				jdbcDAO.closeSession();
+			} 
+			catch (DAOException e)
+			{
+		
+				e.printStackTrace();
+			}
 		}
 
 	}
@@ -287,21 +398,32 @@ public class JDBCTestCasesForOracle extends BaseTestCase
 			String[] selectColumnName = null;
 
 			QueryWhereClause queryWhereClause = new QueryWhereClause(sourceObjectName);
-			queryWhereClause.addCondition(new NotNullClause("IDENTIFIER",sourceObjectName));
-			queryWhereClause.orOpr();
-			queryWhereClause.addCondition(new NotNullClause("LAST_NAME",sourceObjectName));
+			queryWhereClause.addCondition(new NotNullClause("IDENTIFIER",sourceObjectName)).orOpr().
+			addCondition(new NotNullClause("LAST_NAME",sourceObjectName));
 
 			jdbcDAO.openSession(null);
 			List<Object> list = jdbcDAO.retrieve(sourceObjectName, selectColumnName,queryWhereClause);
-			jdbcDAO.closeSession();
+			//jdbcDAO.closeSession();
 
 			assertNotNull("No value retrieved :" + list);
-	//		assertTrue("No object retrieved ::",list.size() > 0);
+			assertTrue("No object retrieved ::",list.size() > 0);
 
 		}
 		catch(Exception exp)
 		{
 			assertFalse("Failed while retrieving object ::", true);
+		}
+		finally
+		{
+			try 
+			{
+				jdbcDAO.closeSession();
+			} 
+			catch (DAOException e)
+			{
+		
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -318,22 +440,81 @@ public class JDBCTestCasesForOracle extends BaseTestCase
 			String[] selectColumnName = null;
 
 			QueryWhereClause queryWhereClause = new QueryWhereClause(sourceObjectName);
-			queryWhereClause.addCondition(new NullClause("LAST_NAME",sourceObjectName));
+			queryWhereClause.addCondition(new NullClause("LAST_NAME",sourceObjectName)).orOpr().
+			addCondition(new NotEqualClause("IDENTIFIER",
+					Long.valueOf("1"),sourceObjectName));
 
 			jdbcDAO.openSession(null);
-			List<Object> list = jdbcDAO.retrieve(sourceObjectName, selectColumnName,queryWhereClause);
-			jdbcDAO.closeSession();
+			List<Object> list = jdbcDAO.retrieve(sourceObjectName,
+					selectColumnName,queryWhereClause);
+			//jdbcDAO.closeSession();
 
 			assertNotNull("No object retrieved ::",list);
-	//		assertTrue("No object retrieved ::",!list.isEmpty());
 
 		}
 		catch(Exception exp)
 		{
 			assertFalse("Failed while retrieving object ::", true);
 		}
+		finally
+		{
+			try 
+			{
+				jdbcDAO.closeSession();
+			} 
+			catch (DAOException e)
+			{
+		
+				e.printStackTrace();
+			}
+		}
 
 	}
+
+	/**
+	 * This test will assert that objects retrieved successfully
+	 * when where clause holds is not equal condition.
+	 */
+	@Test
+	public void testRetriveNotEqualConditionJDBC()
+	{
+		try
+		{
+			String sourceObjectName = "test_user";
+			String[] selectColumnName = null;
+
+			QueryWhereClause queryWhereClause = new QueryWhereClause(sourceObjectName);
+			queryWhereClause.addCondition(new NotEqualClause("IDENTIFIER",
+					Long.valueOf("1"),sourceObjectName)).andOpr().
+					addCondition(new NotEqualClause("LAST_NAME",
+					"NAIK",sourceObjectName));
+
+			jdbcDAO.openSession(null);
+			List<Object> list = jdbcDAO.retrieve(sourceObjectName, selectColumnName,queryWhereClause);
+			//jdbcDAO.closeSession();
+
+			assertNotNull("No object retrieved ::",list);
+
+		}
+		catch(Exception exp)
+		{
+			assertFalse("Failed while retrieving object ::", true);
+		}
+		finally
+		{
+			try 
+			{
+				jdbcDAO.closeSession();
+			} 
+			catch (DAOException e)
+			{
+		
+				e.printStackTrace();
+			}
+		}
+
+	}
+
 
 	/**
 	 * This test will assert that objects retrieved successfully with given column value
@@ -352,14 +533,26 @@ public class JDBCTestCasesForOracle extends BaseTestCase
 
 			jdbcDAO.openSession(null);
 			List<Object> list = jdbcDAO.retrieve(sourceObjectName, selectColumnName,queryWhereClause);
-			jdbcDAO.closeSession();
+			//jdbcDAO.closeSession();
 
 			assertNotNull("No object retrieved ::",list);
-		//	assertTrue("No object retrieved ::",list.size() > 0);
+			assertTrue("No object retrieved ::",list.size() > 0);
 		}
 		catch(Exception exp)
 		{
 			assertFalse("Failed while retrieving object ::", true);
+		}
+		finally
+		{
+			try 
+			{
+				jdbcDAO.closeSession();
+			} 
+			catch (DAOException e)
+			{
+		
+				e.printStackTrace();
+			}
 		}
 
 	}
@@ -454,12 +647,24 @@ public class JDBCTestCasesForOracle extends BaseTestCase
 			jdbcDAO.openSession(null);
 			PagenatedResultData pagenatedResultData =
 				(PagenatedResultData)jdbcDAO.executeQuery(queryParams);
-			jdbcDAO.closeSession();
+			//jdbcDAO.closeSession();
 			assertNotNull("Problem while retrieving data ",pagenatedResultData!=null);
 		}
 		catch(Exception exp)
 		{
 			assertFalse("Problem while retrieving data ", true);
+		}
+		finally
+		{
+			try 
+			{
+				jdbcDAO.closeSession();
+			} 
+			catch (DAOException e)
+			{
+		
+				e.printStackTrace();
+			}
 		}
 
 	}
@@ -479,21 +684,31 @@ public class JDBCTestCasesForOracle extends BaseTestCase
 			String[] selectColumnName = null;
 
 			QueryWhereClause queryWhereClause = new QueryWhereClause(sourceObjectName);
-			queryWhereClause.addCondition(new INClause("IDENTIFIER",colValues,sourceObjectName));
-			queryWhereClause.orOpr();
-			queryWhereClause.addCondition(new NotNullClause("FIRST_NAME",sourceObjectName));
-			queryWhereClause.orOpr();
-			queryWhereClause.addCondition(new EqualClause("FIRST_NAME","naik",sourceObjectName));
+			queryWhereClause.addCondition(new INClause("IDENTIFIER",colValues,sourceObjectName)).
+			orOpr().addCondition(new NotNullClause("FIRST_NAME",sourceObjectName)).orOpr().
+			addCondition(new EqualClause("FIRST_NAME","naik",sourceObjectName));
 
 			jdbcDAO.openSession(null);
 			List<Object> list = jdbcDAO.retrieve(sourceObjectName, selectColumnName,queryWhereClause);
-			jdbcDAO.closeSession();
+			//jdbcDAO.closeSession();
 			assertNotNull("No data retrieved :",list);
 		//	assertTrue("No data retrieved :",!list.isEmpty());
 		}
 		catch(Exception exp)
 		{
 			assertFalse("Problem occurred while retrieving object:", true);
+		}
+		finally
+		{
+			try
+			{
+				jdbcDAO.closeSession();
+			}
+			catch (DAOException e)
+			{
+
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -516,10 +731,10 @@ public class JDBCTestCasesForOracle extends BaseTestCase
 
 	}
 
-
-	/**
+/*
+	*//**
 	 * This test will delete method implementation.
-	 */
+	 *//*
 	@Test
 	public void testDeleteJDBC()
 	{
@@ -534,7 +749,7 @@ public class JDBCTestCasesForOracle extends BaseTestCase
 			logger.fatal(exp.getLogMessage());
 		}
 
-	}
+	}*/
 
 
 	/**
@@ -649,14 +864,27 @@ public class JDBCTestCasesForOracle extends BaseTestCase
 			  columnValues.add((Object)"collected");
 			  jdbcDAO.insertHashedValues("test_table_hashed", columnValues,null);
 			  jdbcDAO.commit();
-			  jdbcDAO.closeSession();
+			//  jdbcDAO.closeSession();
 		  }
 		  catch(Exception exp)
 		  {
+			  exp.printStackTrace();
 			ApplicationException appExp = (ApplicationException)exp;
 			logger.fatal(appExp.getLogMessage());
 			assertFalse("Problem while inserting ## values", true);
 		  }
+		  finally
+			{
+				try 
+				{
+					jdbcDAO.closeSession();
+				} 
+				catch (DAOException e)
+				{
+			
+					e.printStackTrace();
+				}
+			}
 	}
 
 	/**
@@ -685,23 +913,36 @@ public class JDBCTestCasesForOracle extends BaseTestCase
 		  }
 		  catch(Exception exp)
 		  {
+			  exp.printStackTrace();
 			ApplicationException appExp = (ApplicationException)exp;
 			logger.fatal(appExp.getLogMessage());
 			assertFalse("Problem while inserting ## values", true);
 		  }
+		  finally
+			{
+				try
+				{
+					jdbcDAO.closeSession();
+				}
+				catch (DAOException e)
+				{
+
+					e.printStackTrace();
+				}
+			}
 	}
 
 	/**
 	 * This test will assert the creation of database parameters.
 	 */
-	@Test
+	/*@Test
 	public void testDatabaseConnectionAndStmtAndResultSet()
 	{
 		DatabaseConnectionParams databaseConnectionParams = new DatabaseConnectionParams();
 		try
 		{
 
-			databaseConnectionParams.setConnection(jdbcDAO.getCleanConnection());
+			databaseConnectionParams.setConnection(jdbcDAO.getConnection());
 
 			assertNotNull("Connection retrieved is null",databaseConnectionParams.getConnection());
 
@@ -715,7 +956,7 @@ public class JDBCTestCasesForOracle extends BaseTestCase
 			assertNotNull("ResultSet retrieved is null :",
 					rs);
 
-			assertNotNull("ResultSet doesnot exists or empty :",
+			assertTrue("ResultSet doesnot exists or empty :",
 					databaseConnectionParams.isResultSetExists("select * from test_user"));
 		}
 		catch(ApplicationException exp)
@@ -736,10 +977,28 @@ public class JDBCTestCasesForOracle extends BaseTestCase
 			}
 		}
 
+	}*/
+
+	/**
+	 * This test will assert the creation of database parameters.
+	 */
+	@Test
+	public void testAllMethodsWithDefaultImplementation()
+	{
+		try
+		{
+		jdbcDAO.getSQLForLikeOperator(null, null);
+		jdbcDAO.getPrimitiveOperationProcessor();
+		jdbcDAO.getMaxBarcodeCol();
+		jdbcDAO.getMaxLabelCol();
+		jdbcDAO.executeAuditSql(null, null, null);
+		jdbcDAO.updateClob(null, null);
+		}
+		catch(Exception exp)
+		{
+			assertFalse(true);
+		}
 	}
-
-
-
 
 
 

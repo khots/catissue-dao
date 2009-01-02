@@ -33,9 +33,10 @@ public class DAOTestSuite
 	public static junit.framework.Test suite()
 	{
 		TestSuite daoSuite = new TestSuite("Test for DAO Layer");
-		daoSuite.addTestSuite(HibernateTestCase.class);
-		daoSuite.addTestSuite(JDBCTestCases.class);
-	//	daoSuite.addTestSuite(JDBCTestCasesForIIDB.class);
+		daoSuite.addTestSuite(HibernateTestCaseForCatissue.class);
+		daoSuite.addTestSuite(JDBCTestCasesForCatissue.class);
+		daoSuite.addTestSuite(JDBCTestCasesForCider.class);
+		daoSuite.addTestSuite(HibernateTestCaseForCider.class);
 		//return new junit.framework.JUnit4TestAdapter(HibernateInsertTestCase.class);
 		return daoSuite;
 	}

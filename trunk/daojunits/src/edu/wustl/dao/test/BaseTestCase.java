@@ -38,6 +38,7 @@ public class BaseTestCase extends TestCase
 		{
 			daoConfigFactory = DAOConfigFactory.getInstance();
 			ErrorKey.init(":");
+			System.setProperty("app.propertiesFile",System.getProperty("user.dir")+"/caTissueCore_Properties.xml");
 		}
 		catch (Exception e)
 		{
