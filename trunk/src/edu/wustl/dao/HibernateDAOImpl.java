@@ -27,7 +27,6 @@ import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.domain.AuditEventLog;
 import edu.wustl.common.exception.AuditException;
 import edu.wustl.common.exception.ErrorKey;
-import edu.wustl.common.util.global.Constants;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.condition.EqualClause;
 import edu.wustl.dao.connectionmanager.IConnectionManager;
@@ -36,7 +35,6 @@ import edu.wustl.dao.daofactory.IDAOFactory;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.DAOConstants;
 import edu.wustl.dao.util.DAOUtility;
-import edu.wustl.dao.util.DatabaseConnectionParams;
 
 
 /**

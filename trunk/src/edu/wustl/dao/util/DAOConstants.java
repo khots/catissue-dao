@@ -71,7 +71,6 @@ public final class DAOConstants
 	 */
 	public static final String INSERT_OBJ_ERROR = " Object insert error: ";
 
-	
 
 	/**
 	 * update object.

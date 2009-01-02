@@ -2,9 +2,6 @@ package edu.wustl.dao.sqlformatter;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
-
-import edu.wustl.dao.util.DAOConstants;
 
 /**
  * @author kalpana_thakur

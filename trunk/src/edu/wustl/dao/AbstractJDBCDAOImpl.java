@@ -33,7 +33,6 @@ import edu.wustl.common.querydatabean.QueryDataBean;
 import edu.wustl.common.util.PagenatedResultData;
 import edu.wustl.common.util.QueryParams;
 import edu.wustl.common.util.Utility;
-import edu.wustl.common.util.global.Constants;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.condition.EqualClause;
 import edu.wustl.dao.connectionmanager.IConnectionManager;
@@ -853,8 +852,6 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 					DAOConstants.CLOSE_CONN_ERR);
 		}
 	}
-	
-
 
 
 	/**
