@@ -901,12 +901,12 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	/**
 	 * @param obj :
 	 * @throws DAOException :
-	 */
+	 *//*
 	public void delete(Object obj) throws DAOException
 	{
 		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
 		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
-	}
+	}*/
 
 	/**
 	 * @param tableName :

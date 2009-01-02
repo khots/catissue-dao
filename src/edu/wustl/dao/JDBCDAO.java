@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Map;
 
 import edu.wustl.common.beans.SessionDataBean;
-import edu.wustl.common.util.PagenatedResultData;
 import edu.wustl.common.querydatabean.QueryDataBean;
+import edu.wustl.common.util.PagenatedResultData;
 import edu.wustl.common.util.QueryParams;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.sqlformatter.SQLFormatter;
@@ -124,7 +124,7 @@ public interface JDBCDAO extends DAO
 	   * @param tableName Name of the table to delete.
 	   * @throws DAOException generic DAOException.
 	   */
-	void delete(String tableName) throws DAOException;
+	//void delete(String tableName) throws DAOException;
 
 	/**
 	 * This method gets Activity Status.

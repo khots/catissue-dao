@@ -23,7 +23,7 @@ public class SQLFormatterMySQL extends AbstractSQLFormatter
 	 * @param valuePart :
 	 */
 	protected void appendColumnValue(ColumnValueBean colValBean,StringBuffer valuePart)
-	{
+	{/*
 
 		switch(colValBean.getColumnType())
 		{
@@ -40,7 +40,7 @@ public class SQLFormatterMySQL extends AbstractSQLFormatter
 
 		}
 
-	}
+	*/}
 
 
 }
