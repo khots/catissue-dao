@@ -5,6 +5,7 @@
 
 package edu.wustl.dao.daofactory;
 
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -81,7 +82,9 @@ public class ApplicationDAOPropertiesParser
 			DocumentBuilder documentBuilder = dbf.newDocumentBuilder();
 
 			//parse using builder to get DOM representation of the XML file
-			dom = documentBuilder.parse("ApplicationDAOProperties.xml");
+			InputStream inputStream = ApplicationDAOPropertiesParser.class.getClassLoader()
+			.getResourceAsStream("ApplicationDAOProperties.xml");
+			dom = documentBuilder.parse(inputStream);
 
 		}
 		catch (Exception exp)
