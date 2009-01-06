@@ -175,7 +175,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	public void executeUpdate(String query) throws DAOException
 	{
 		DatabaseConnectionParams databaseConnectionParams = new DatabaseConnectionParams();
-		databaseConnectionParams.setConnection(connectionManager.getConnection());
+		databaseConnectionParams.setConnection(connection);
 		databaseConnectionParams.executeUpdate(query);
 	}
 
@@ -468,10 +468,10 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		ResultSetMetaData metaData;
 
 		DatabaseConnectionParams dbConnParamForMetadata = new DatabaseConnectionParams();
-		dbConnParamForMetadata.setConnection(connectionManager.getConnection());
+		dbConnParamForMetadata.setConnection(connection);
 
 		DatabaseConnectionParams dbConnParamForInsertQuery = new DatabaseConnectionParams();
-		dbConnParamForInsertQuery.setConnection(connectionManager.getConnection());
+		dbConnParamForInsertQuery.setConnection(connection);
 
 		PreparedStatement stmt = null;
 		try
@@ -612,7 +612,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		StringBuffer sqlBuff = new StringBuffer(DAOConstants.TAILING_SPACES);
 		sqlBuff.append("Select").append(DAOConstants.TAILING_SPACES);
 
-		dbConnParamForMetadata.setConnection(connectionManager.getConnection());
+		dbConnParamForMetadata.setConnection(connection);
 		for (int i = 0; i < columnNames.size(); i++)
 		{
 			sqlBuff.append(columnNames.get(i));
@@ -645,7 +645,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		try
 		{
 
-			dbConnParamForMetadata.setConnection(connectionManager.getConnection());
+			dbConnParamForMetadata.setConnection(connection);
 			StringBuffer sqlBuff = new StringBuffer(DAOConstants.TAILING_SPACES);
 			sqlBuff.append("Select * from " ).append(tableName).append(" where 1!=1");
 			metaData = dbConnParamForMetadata.getMetaData(sqlBuff.toString());
