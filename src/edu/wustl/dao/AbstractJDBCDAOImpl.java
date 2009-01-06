@@ -828,9 +828,18 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	 * This method will be called to get connection Manager object.
 	 * @return IConnectionManager: Connection Manager.
 	 */
-	protected IConnectionManager getConnectionManager()
+/*	protected IConnectionManager getConnectionManager()
 	{
 		return connectionManager;
+	}
+*/
+	/**
+	 * This method will be called to get connection Manager object.
+	 * @return IConnectionManager: Connection Manager.
+	 */
+	protected Connection getConnection()
+	{
+		return connection;
 	}
 
 	/**
