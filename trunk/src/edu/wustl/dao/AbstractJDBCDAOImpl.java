@@ -33,6 +33,7 @@ import edu.wustl.common.querydatabean.QueryDataBean;
 import edu.wustl.common.util.PagenatedResultData;
 import edu.wustl.common.util.QueryParams;
 import edu.wustl.common.util.Utility;
+import edu.wustl.common.util.global.Constants;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.condition.EqualClause;
 import edu.wustl.dao.connectionmanager.IConnectionManager;
@@ -66,6 +67,11 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	private IConnectionManager connectionManager = null ;
 
 	/**
+	 * Connection.
+	 */
+	private Connection connection = null ;
+
+	/**
 	 * This method will be used to establish the session with the database.
 	 * Declared in DAO class.
 	 * @param sessionDataBean : holds the data associated to the session.
@@ -77,7 +83,8 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		try
 		{
 			initializeAuditManager(sessionDataBean);
-			connectionManager.getConnection().setAutoCommit(false);
+			connection = connectionManager.getConnection();
+			connection.setAutoCommit(false);
 
 		}
 		catch (SQLException sqlExp)
@@ -413,6 +420,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		queryParams.setQueryResultObjectDataMap(queryResultObjectDataMap);
 		queryParams.setStartIndex(-1);
 		queryParams.setNoOfRecords(-1);
+		queryParams.setConnection(connection);
 
 		return getQueryResultList(queryParams).getResult();
 	}
@@ -820,7 +828,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	 * This method will be called to get connection Manager object.
 	 * @return IConnectionManager: Connection Manager.
 	 */
-	public IConnectionManager getConnectionManager()
+	protected IConnectionManager getConnectionManager()
 	{
 		return connectionManager;
 	}
@@ -852,6 +860,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 					DAOConstants.CLOSE_CONN_ERR);
 		}
 	}
+
 
 
 	/**
