@@ -232,6 +232,11 @@ public final class DAOConstants
 	 */
 	public static final String EQUAL = "=";
 
+	/**
+	 * like operator.
+	 */
+	public static final String LIKE = "like";
+
 
 	/**
 	 * Greater (>) operator.
