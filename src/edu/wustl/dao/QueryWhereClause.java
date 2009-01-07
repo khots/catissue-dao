@@ -123,7 +123,7 @@ public class QueryWhereClause
 	public QueryWhereClause getWhereCondition(String[] whereColumnName, String[]
 	       whereColumnCondition, Object[] whereColumnValue,	String joinCondition) throws DAOException
 	{	Map<String,String> queryConMap = getWhereClauseCondMap();
-		boolean isJoinConSet = false;
+		int counter = 0;
 		try
 		{	for(int index=0 ;index<whereColumnCondition.length;index++)
 			{
@@ -157,11 +157,11 @@ public class QueryWhereClause
 					condition.setSourceObjectName(sourceObjectName);
 				}
 				whereClauseBuff.append(condition.buildSql());
-				if(!isJoinConSet)
+				if(counter < whereColumnCondition.length-1)
 				{
 					whereClauseBuff.append(joinCondition);
-					isJoinConSet = true;
 				}
+				counter++;
 			}
 		}
 		catch(Exception exp)

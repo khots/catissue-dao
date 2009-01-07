@@ -106,6 +106,7 @@ public class ConnectionManager implements IConnectionManager
 	public void closeSession() throws DAOException
 	{
 		Map<String, Session> applicationSessionMap = SESSION_THREAD_LOCAL.get();
+		
 		if(applicationSessionMap.containsKey(applicationName))
 		{
 			Session session = applicationSessionMap.get(applicationName);
@@ -130,6 +131,12 @@ public class ConnectionManager implements IConnectionManager
 	{
 
 		Map<String, Session> appSessionMap = SESSION_THREAD_LOCAL.get();
+		if(appSessionMap == null)
+		{
+			appSessionMap = new HashMap<String, Session>();
+			SESSION_THREAD_LOCAL.set(appSessionMap);
+		}
+
 	    // Open a new Session, if this Thread has none yet
 		if (!(appSessionMap.containsKey(applicationName)) )
 		{
