@@ -393,9 +393,10 @@ public class HibernateDAOImpl implements HibernateDAO
 		try
 		{
 			Object object = session.load(Class.forName(sourceObjectName), identifier);
-			HibernateProxy hibernatProxy = (HibernateProxy) object;
-			return (Object)hibernatProxy.getHibernateLazyInitializer().getImplementation();
+		//	HibernateProxy hibernatProxy = (HibernateProxy) object;
+			//return (Object)hibernatProxy.getHibernateLazyInitializer().getImplementation();
 			//return HibernateMetaData.getProxyObjectImpl(object);
+			return object;
 		}
 		catch (Exception exp)
 		{
