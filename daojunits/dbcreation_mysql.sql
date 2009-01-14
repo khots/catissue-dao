@@ -1,3 +1,7 @@
+DROP DATABASE daotestdb;
+CREATE DATABASE daotestdb;
+
+
 drop table test_order;
 drop table test_person;
 drop table test_address;
