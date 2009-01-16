@@ -19,7 +19,9 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -33,11 +35,11 @@ import edu.wustl.common.querydatabean.QueryDataBean;
 import edu.wustl.common.util.PagenatedResultData;
 import edu.wustl.common.util.QueryParams;
 import edu.wustl.common.util.Utility;
-import edu.wustl.common.util.global.Constants;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.condition.EqualClause;
 import edu.wustl.dao.connectionmanager.IConnectionManager;
 import edu.wustl.dao.exception.DAOException;
+import edu.wustl.dao.sqlformatter.SQLFormatter;
 import edu.wustl.dao.util.DAOConstants;
 import edu.wustl.dao.util.DatabaseConnectionParams;
 
@@ -72,6 +74,11 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	private Connection connection = null ;
 
 	/**
+	 * JDBCBatchUpdate instance.
+	 */
+	private JDBCBatchUpdate jdbcBatchUpdate= null;
+
+	/**
 	 * This method will be used to establish the session with the database.
 	 * Declared in DAO class.
 	 * @param sessionDataBean : holds the data associated to the session.
@@ -87,7 +94,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 			connection.setAutoCommit(false);
 
 		}
-		catch (SQLException sqlExp)
+		catch (Exception sqlExp)
 		{
 			logger.error(sqlExp.getMessage(), sqlExp);
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
@@ -107,6 +114,8 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		{
 			auditManager = null;
 			connectionManager.closeConnection();
+			jdbcBatchUpdate.clearBatch();
+			jdbcBatchUpdate = null;
 		}
 		catch(Exception dbex)
 		{
@@ -899,6 +908,47 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		return queryNo;
 	}
 
+
+	/**
+	 * This method will be called to set the size of the batch.
+	 * @param batchSize batchSize
+	 * @throws DAOException : Generic database exception.
+	 */
+	public void setBatchSize(int batchSize) throws DAOException
+	{
+		jdbcBatchUpdate = new JDBCBatchUpdate();
+		jdbcBatchUpdate.setConnection(connection);
+		jdbcBatchUpdate.setBatchSize(batchSize);
+	}
+
+	/**
+	 * This method will be called to set the DML object to batch.
+	 * @param dmlObject :DML object
+	 * @throws DAOException : Generic database exception.
+	 */
+	public void addDMLToBatch(String dmlObject) throws DAOException
+	{
+		jdbcBatchUpdate.addDMLToBatch(dmlObject);
+	}
+
+	/**
+	 * This method will be called for batch update insert.
+	 * @throws DAOException :Generic DAOException.
+	 */
+	public void batchUpdate() throws DAOException
+	{
+		jdbcBatchUpdate.batchUpdate();
+	}
+
+
+	/**
+	 * @throws DAOException :Generic DAOException.
+	 */
+	public void clearBatch() throws DAOException
+	{
+		jdbcBatchUpdate.clearBatch();
+	}
+
 	/**
 	 * @param obj :
 	 * @param oldObj :
@@ -1080,4 +1130,201 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
 		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
 	}
+
+	/**
+	 * @throws DAOException DaoException
+	 */
+	public void closeBatch() throws DAOException
+	{
+		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
+		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
+
+	}
+
+	/**
+	 * This method fires a query to insert auditing details into audit tables.
+	 * @param sql SQL to be fired
+	 * @param sessionData session data to get userId and ip address
+	 * @param comments comments to be inserted in the table
+	 * @throws DAOException DaoException
+	 */
+	public void executeAuditSql(String sql, SessionDataBean sessionData,
+			String comments) throws DAOException
+	{
+		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
+		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
+
+	}
+
+	/**
+	 * @param excp :excp
+	 * @param connection :conn
+	 * @return null
+	 */
+	public String formatMessage(Exception excp, Connection connection)
+	{
+
+		return null;
+	}
+
+	/**
+	 * @param columnCount count of the columns in results
+	 * @param getSublistOfResult boolean for getting sublist
+	 * @return int column count
+	 */
+	public int getColumnCount(int columnCount, boolean getSublistOfResult)
+	{
+
+		return 0;
+	}
+
+	/**
+	 * @return string
+	 */
+	public String getDateFormatFunction()
+	{
+
+		return null;
+	}
+
+	/**
+	 * @return string
+	 */
+	public String getDatePattern()
+	{
+
+		return null;
+	}
+
+	/**
+	 * @return string
+	 */
+	public String getDateTostrFunction()
+	{
+
+		return null;
+	}
+
+	/**
+	 * @return string
+	 */
+	public String getMaxBarcodeCol()
+	{
+
+		return null;
+	}
+
+	/**
+	 * @return string
+	 */
+	public String getMaxLabelCol()
+	{
+
+		return null;
+	}
+
+	/**
+	 * @return string
+	 */
+	public Object getPrimitiveOperationProcessor()
+	{
+
+		return null;
+	}
+
+	/**
+	 * Gets SQL for Like operator.
+	 * @param attributeName name of the attribute
+	 * @param value value
+	 * @return String SQL
+	 */
+	public String getSQLForLikeOperator(String attributeName, String value)
+	{
+
+		return null;
+	}
+
+	/**
+	 *This method will be called to format the SQL.
+	 *@param tableName :
+	 *@throws DAOException :Generic DAOException.
+	 *@return SQLFormatter :
+	 */
+	public SQLFormatter getSQLFormatter(String tableName) throws DAOException
+	{
+
+		return null;
+	}
+
+	/**
+	 * @return string
+	 */
+	public String getStrTodateFunction()
+	{
+
+		return null;
+	}
+
+	/**
+	 * @return string
+	 */
+	public String getTimeFormatFunction()
+	{
+
+		return null;
+	}
+
+	/**
+	 * @return string
+	 */
+	public String getTimePattern()
+	{
+
+		return null;
+	}
+
+
+	/**
+	 * @param sqlFormatter :
+	 * @param sequenceName :
+	 * @param columnName :
+	 * @param columnTpe :
+	 * @throws DAOException :Generic DAOException.
+	 */
+	public void insert(SQLFormatter sqlFormatter, String sequenceName,
+			String columnName, int columnTpe) throws DAOException
+	{
+
+		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
+		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
+
+	}
+
+	/**
+	 * @param query :
+	 * @param clobContent :
+	 * @throws DAOException :Generic DAOException.
+	 */
+	public void updateClob(String query, String clobContent)
+			throws DAOException
+	{
+
+		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
+		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
+
+	}
+
+	/**
+	 * @param obj : object
+	 * @throws DAOException :Generic DAOException.
+	 */
+	public void delete(Object obj) throws DAOException
+	{
+
+		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
+		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
+
+	}
+
+
 }

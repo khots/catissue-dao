@@ -996,7 +996,50 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 		}
 		catch(Exception exp)
 		{
-			assertFalse(true);
+			assertFalse("Problem executing default methods :",true);
+		}
+	}
+
+	/**
+	 * This test will assert the batch insert
+	 */
+	@Test
+	public void testBatchInsert()
+	{
+		try
+		{
+			jdbcDAO.openSession(null);
+			jdbcDAO.setBatchSize(2);
+			String insertStr1 = "insert into test_user " +
+					"(IDENTIFIER,EMAIL_ADDRESS,FIRST_NAME,LAST_NAME,ACTIVITY_STATUS)" +
+					"VALUES ("+100+",'john@per.co.in','JOHN','REBER','Active')";
+
+			jdbcDAO.addDMLToBatch(insertStr1);
+
+			insertStr1 = "insert into test_user " +
+					"(IDENTIFIER,EMAIL_ADDRESS,FIRST_NAME,LAST_NAME,ACTIVITY_STATUS)" +
+			"VALUES ("+101+",'kal@per.co.in','kalpana','thakur','Active')";
+
+			jdbcDAO.addDMLToBatch(insertStr1);
+			jdbcDAO.batchUpdate();
+			jdbcDAO.commit();
+			jdbcDAO.closeBatch();
+
+		}
+		catch(Exception exp)
+		{
+			assertFalse("Problem executing batch insert :",true);
+		}
+		finally
+		{
+			try
+			{
+				jdbcDAO.closeSession();
+			}
+			catch (DAOException e)
+			{
+				e.printStackTrace();
+			}
 		}
 	}
 

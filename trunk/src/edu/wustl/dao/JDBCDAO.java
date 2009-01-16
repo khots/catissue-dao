@@ -240,4 +240,30 @@ public interface JDBCDAO extends DAO
 	 */
 	String getMaxLabelCol();
 
+	/**
+	 * This method will be called to set the size of the batch.
+	 * @param batchSize batchSize
+	 * @throws DAOException : Generic database exception.
+	 */
+	void setBatchSize(int batchSize)throws DAOException;
+
+	/**
+	 * This method will be called to set the DML object to batch.
+	 * @param obj :DML object
+	 * @throws DAOException : Generic database exception.
+	 */
+	void addDMLToBatch(String obj) throws DAOException;
+
+	/**
+	 * This method will be called for batch update insert.
+	 * @throws DAOException :Generic DAOException.
+	 */
+	void batchUpdate() throws DAOException;
+
+	/**
+	 * This method will be called to clear the batch.
+	 * @throws DAOException :Generic DAOException.
+	 */
+	void closeBatch() throws DAOException;
+
 }
