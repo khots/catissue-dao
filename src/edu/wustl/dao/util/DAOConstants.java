@@ -152,6 +152,19 @@ public final class DAOConstants
 	 */
 	public static final String RS_METADATA_ERROR =
 		" Problem Occurred while obtaining database ResultSetMetaData. ";
+
+	/**
+	 * Problem while batch update insert.
+	 */
+	public static final String BATCH_UPDATE_ERROR =
+		" Problem Occurred while batch update. ";
+
+	/**
+	 * Problem while batch update insert.
+	 */
+	public static final String BATCH_SIZE_ERROR =
+		" Batch size exceeded then specified. ";
+
 	/**
 	 * Database prepared statement creation error.
 	 */
