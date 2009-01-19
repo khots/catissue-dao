@@ -16,6 +16,10 @@ public class JDBCBatchUpdate
 {
 
 	/**
+	 * Default size of batch.
+	 */
+	private final int DEFAULT_BATCH_SIZE = 1;
+	/**
 	 * It holds the batch size.
 	 */
 	private int batchCounter = 0;
@@ -23,7 +27,7 @@ public class JDBCBatchUpdate
 	/**
 	 * Batch size.
 	 */
-	private int batchSize = 1;
+	private int batchSize = DEFAULT_BATCH_SIZE;
 
 	/**
 	 * Connection.
@@ -56,12 +60,6 @@ public class JDBCBatchUpdate
 	{
 		try
 		{
-			if(statement == null)
-			{
-				statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
-						ResultSet.CONCUR_UPDATABLE);
-			}
-
 			if(batchCounter < batchSize)
 			{
 				statement.addBatch(dmlObject);
@@ -69,9 +67,8 @@ public class JDBCBatchUpdate
 			}
 			else
 			{
-				ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-				throw new DAOException(errorKey,new Exception(),"DAOFactory.java :"+
-						DAOConstants.BATCH_SIZE_ERROR);
+				ErrorKey errorKey = ErrorKey.getErrorKey("dao.batch.size.error");
+				throw new DAOException(errorKey,new Exception(),"DAOFactory.java :");
 			}
 		}
 		catch (SQLException exp)
@@ -110,11 +107,10 @@ public class JDBCBatchUpdate
 
 		try
 		{
-			batchCounter = 0;
+			batchCounter = DEFAULT_BATCH_SIZE;
 			if(statement != null)
 			{
 				statement.clearBatch();
-				statement = null;
 			}
 		}
 		catch (SQLException exp)
@@ -126,13 +122,46 @@ public class JDBCBatchUpdate
 	}
 
 	/**
+	 * This method will be called to set the database connection.
 	 * @param connection :connection
+	 * @throws DAOException : Database exception.
 	 */
-	public void setConnection(Connection connection)
+	public void setConnection(Connection connection) throws DAOException
 	{
 		this.connection = connection;
+		initializeBatchstmt();
+
 	}
 
+	/**
+	 * This method will be called to set the batch statement.
+	 * @throws DAOException : Database exception.
+	 */
+	private void initializeBatchstmt() throws DAOException
+	{
+		try
+		{
+			statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
+			ResultSet.CONCUR_UPDATABLE);
+
+		}
+		catch (SQLException exp)
+		{
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
+			throw new DAOException(errorKey,exp,"DatabaseConnectionParams.java :"+
+				DAOConstants.STMT_CREATION_ERROR);
+		}
+	}
+
+
+	/**
+	 * This method will be called to close the connection.
+	 */
+	public void cleanConnection()
+	{
+		connection = null;
+		statement = null;
+	}
 
 
 }
