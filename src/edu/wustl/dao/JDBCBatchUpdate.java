@@ -6,15 +6,13 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import edu.wustl.common.exception.ErrorKey;
-import edu.wustl.common.util.PagenatedResultData;
-import edu.wustl.common.util.QueryParams;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.DAOConstants;
 /**
  * @author kalpana_thakur
- * This class with handle JDBC batch updates.
+ * This class will handle JDBC batch updates.
  */
-public class JDBCBatchUpdate 
+public class JDBCBatchUpdate
 {
 
 	/**

@@ -806,7 +806,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 			{
 				dao.closeSession();
 			}
-			catch (DAOException e) 
+			catch (DAOException e)
 			{
 				e.printStackTrace();
 			}
@@ -814,7 +814,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 
 	}
 
-	
+
 
 	/**
 	 * This test will ensure that second application can open session
