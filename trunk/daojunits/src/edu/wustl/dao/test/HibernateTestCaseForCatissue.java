@@ -893,7 +893,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 			{
 				dao.closeSession();
 			}
-			catch (DAOException e) 
+			catch (DAOException e)
 			{
 				e.printStackTrace();
 			}
@@ -930,19 +930,19 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 			Object object = HibernateMetaData.getProxyObjectImpl(user);
 				assertNotNull("Proxy Object retrieved is null :"+object);
 
-			String tableName = HibernateMetaData.getTableName(user.getClass());
+			String tableName = HibernateMetaData.getTableName(object.getClass());
 				assertTrue("Table name is empty",
 						!tableName.equals(DAOConstants.TAILING_SPACES));
 
-			String rootTableName = HibernateMetaData.getRootTableName(user.getClass());
+			String rootTableName = HibernateMetaData.getRootTableName(object.getClass());
 			assertTrue("Root Table name is empty",
 						!rootTableName.equals(DAOConstants.TAILING_SPACES));
 
-			String columnName = HibernateMetaData.getColumnName(user.getClass(),"lastName");
+			String columnName = HibernateMetaData.getColumnName(object.getClass(),"lastName");
 				assertTrue("Column Name is empty",
 						!columnName.equals(DAOConstants.TAILING_SPACES));
 
-			int colWidth = HibernateMetaData.getColumnWidth(user.getClass(),"lastName");
+			int colWidth = HibernateMetaData.getColumnWidth(object.getClass(),"lastName");
 			assertTrue("colWidth  is 0",colWidth > 0);
 
 			String className = HibernateMetaData.getClassName("Test_user");
@@ -951,11 +951,13 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 
 
 			//dao.closeSession();
-			assertNotNull("Object is null ",user);
+			assertNotNull("Object is null ",object);
 		}
 		catch(Exception exp)
 		{
+			logger.fatal(exp);
 			assertFalse("Failed in HibernateMetaData ::", true);
+
 		}
 		finally
 		{
@@ -963,7 +965,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 			{
 				dao.closeSession();
 			}
-			catch (DAOException e) 
+			catch (DAOException e)
 			{
 				e.printStackTrace();
 			}
@@ -1032,8 +1034,8 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 
 	  }
 
-	
-	
+
+
 
 
 
