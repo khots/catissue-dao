@@ -76,6 +76,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	{
 		try
 		{
+			logger.debug("Open the session");
 			initializeAuditManager(sessionDataBean);
 			connection = connectionManager.getConnection();
 			connection.setAutoCommit(false);
@@ -99,13 +100,18 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	{
 		try
 		{
+			logger.debug("Close the session");
 			auditManager = null;
 			connectionManager.closeConnection();
-			jdbcBatchUpdate.clearBatch();
-			jdbcBatchUpdate = null;
+			if(jdbcBatchUpdate != null)
+			{
+				jdbcBatchUpdate.clearBatch();
+				jdbcBatchUpdate = null;
+			}
 		}
 		catch(Exception dbex)
 		{
+			logger.error(dbex.getMessage(), dbex);
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
 			throw new DAOException(errorKey,dbex,"AbstractJDBCDAOImpl.java :"
 					+DAOConstants.CLOSE_SESSION_ERROR);
@@ -122,6 +128,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	{
 		try
 		{
+			logger.debug("Session commit");
 			auditManager.insert(this);
 			connectionManager.commit();
 		}
@@ -140,6 +147,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	 */
 	public void rollback() throws DAOException
 	{
+		logger.debug("Session rollback");
 		connectionManager.rollback();
 	}
 
@@ -150,6 +158,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	 */
 	private void initializeAuditManager(SessionDataBean sessionDataBean)
 	{
+		logger.debug("Initialize audit manager");
 		auditManager = new AuditManager();
 		if (sessionDataBean == null)
 		{
@@ -170,6 +179,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	 */
 	public void executeUpdate(String query) throws DAOException
 	{
+		logger.debug("Execute query.");
 		DatabaseConnectionParams databaseConnectionParams = new DatabaseConnectionParams();
 		databaseConnectionParams.setConnection(connection);
 		databaseConnectionParams.executeUpdate(query);
@@ -185,6 +195,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 
 	public void createTable(String tableName, String[] columnNames) throws DAOException
 	{
+		logger.debug("Create table.");
 		String query = createTableQuery(tableName,columnNames);
 		executeUpdate(query);
 	}
@@ -196,6 +207,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	 */
 	public void createTable(String query) throws DAOException
 	{
+		logger.debug("Create table.");
 		executeUpdate(query);
 	}
 
@@ -208,6 +220,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	 */
 	private String createTableQuery(String tableName, String[] columnNames) throws DAOException
 	{
+		logger.debug("Prepared query for create table.");
 		StringBuffer query = new StringBuffer("CREATE TABLE").append(DAOConstants.TAILING_SPACES).
 		append(tableName).append(" (");
 		int index;
@@ -245,6 +258,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	*/
 	public List<Object> retrieve(String sourceObjectName, String[] selectColumnName) throws DAOException
 	{
+		logger.debug("Inside retrieve method");
 		return retrieve(sourceObjectName, selectColumnName,null,false);
 	}
 
@@ -261,6 +275,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	public List<Object> retrieve(String sourceObjectName, String[] selectColumnName,
 			boolean onlyDistinctRows) throws DAOException
 	{
+		logger.debug("Inside retrieve method");
 		return retrieve(sourceObjectName, selectColumnName,null,
 				onlyDistinctRows);
 	}
@@ -280,6 +295,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 			String[] selectColumnName, QueryWhereClause queryWhereClause)
 			throws DAOException
 	{
+		logger.debug("Inside retrieve method");
 		return retrieve(sourceObjectName, selectColumnName,queryWhereClause,false);
 	}
 
@@ -297,6 +313,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	public List<Object> retrieve(String sourceObjectName, String whereColumnName, Object whereColumnValue)
 			throws DAOException
 	{
+		logger.debug("Inside retrieve method");
 		String[] selectColumnName = null;
 
 		QueryWhereClause queryWhereClause = new QueryWhereClause(sourceObjectName);
@@ -326,6 +343,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 			 boolean onlyDistinctRows) throws DAOException
 	{
 
+		logger.debug("Inside retrieve method");
 		List<Object> list = null;
 		try
 		{
@@ -360,6 +378,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	private StringBuffer getSelectPartOfQuery(String[] selectColumnName,
 			boolean onlyDistinctRows)
 	{
+		logger.debug("Prepare select part of query");
 		StringBuffer query = new StringBuffer("SELECT ");
 		if ((selectColumnName != null) && (selectColumnName.length > 0))
 		{
@@ -388,6 +407,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	 */
 	private void getFromPartOfQuery(String sourceObjectName, StringBuffer queryStrBuff)
 	{
+		logger.debug("Prepare from part of the query");
 		queryStrBuff.append("FROM ").append(sourceObjectName);
 	}
 
@@ -431,6 +451,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	 * */
 	public PagenatedResultData executeQuery(QueryParams  queryParams) throws DAOException
 	{
+		logger.debug("execute query");
 		PagenatedResultData pagenatedResultData = null;
 		if (!(DAOConstants.SWITCH_SECURITY && queryParams.isSecureToExecute() &&
 				queryParams.getSessionDataBean() == null))
@@ -460,7 +481,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	public void insertHashedValues(String tableName, List<Object> columnValues, List<String> columnNames)
 	throws DAOException, SQLException
 	{
-
+		logger.debug("Insert hashed data to database");
 		HashedDataHandler hashedDataHandler = new HashedDataHandler();
 		hashedDataHandler.insertHashedValues(tableName, columnValues, columnNames, connection);
 	}
@@ -480,6 +501,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	 */
 	protected Connection getConnection()
 	{
+		logger.debug("Get the connection");
 		return connection;
 	}
 
@@ -489,6 +511,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	 */
 	public void setConnectionManager(IConnectionManager connectionManager)
 	{
+		logger.debug("Setting the connection manager");
 		this.connectionManager = connectionManager;
 	}
 
@@ -498,6 +521,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	 */
 	public void closeCleanConnection() throws DAOException
 	{
+		logger.debug("Close clean connection");
 		try
 		{
 			cleanConnection.close();
@@ -548,6 +572,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	 */
 	public void setBatchSize(int batchSize) throws DAOException
 	{
+		logger.debug("Set the batch size");
 		jdbcBatchUpdate = new JDBCBatchUpdate();
 		jdbcBatchUpdate.setConnection(connection);
 		jdbcBatchUpdate.setBatchSize(batchSize);
@@ -560,6 +585,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	 */
 	public void addDMLToBatch(String dmlObject) throws DAOException
 	{
+		logger.debug("Add DML to batch");
 		jdbcBatchUpdate.addDMLToBatch(dmlObject);
 	}
 
@@ -569,6 +595,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	 */
 	public void batchUpdate() throws DAOException
 	{
+		logger.debug("Update the batch");
 		jdbcBatchUpdate.batchUpdate();
 	}
 
@@ -578,6 +605,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	 */
 	public void clearBatch() throws DAOException
 	{
+		logger.debug("Clear the batch");
 		jdbcBatchUpdate.clearBatch();
 	}
 
