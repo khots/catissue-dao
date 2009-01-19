@@ -87,6 +87,7 @@ public class HibernateDAOImpl implements HibernateDAO
 	 */
 	public void openSession(SessionDataBean sessionDataBean) throws DAOException
 	{
+		logger.debug("Open the session");
 		session = connectionManager.currentSession();
 		auditManager = new AuditManager();
 		if (sessionDataBean != null)
@@ -110,6 +111,7 @@ public class HibernateDAOImpl implements HibernateDAO
 	 */
 	public void closeSession() throws DAOException
 	{
+		logger.debug("Close the session");
 		connectionManager.closeSession();
 		auditManager = null;
 	}
@@ -121,6 +123,7 @@ public class HibernateDAOImpl implements HibernateDAO
 	 */
 	public void commit() throws DAOException
 	{
+		logger.debug("Session commit");
 		try
 		{
 			auditManager.insert(this);
@@ -150,6 +153,7 @@ public class HibernateDAOImpl implements HibernateDAO
 		 * Because of this roll back is not happening on parent object.
 		 *
 		 */
+		logger.debug("Session rollback");
 		if (updated)
 		{
 			connectionManager.rollback();
@@ -167,6 +171,7 @@ public class HibernateDAOImpl implements HibernateDAO
 	public void insert(Object obj, SessionDataBean sessionDataBean, boolean isAuditable,
 			boolean isSecureInsert) throws DAOException
 	{
+		logger.debug("Insert Object");
 		try
 		{
 			session.save(obj);
@@ -196,6 +201,7 @@ public class HibernateDAOImpl implements HibernateDAO
 	private void isObjectAuditable(Object obj, boolean isAuditable)
 			throws AuditException
 	{
+		logger.debug("Inside isObjectAuditable method.");
 
 		if (obj instanceof Auditable && isAuditable)
 		{
@@ -211,6 +217,7 @@ public class HibernateDAOImpl implements HibernateDAO
 	 */
 	public void update(Object obj) throws DAOException
 	{
+		logger.debug("Update Object");
 		try
 		{
 			session.update(obj);
@@ -236,6 +243,7 @@ public class HibernateDAOImpl implements HibernateDAO
 	public void audit(Object obj, Object oldObj, SessionDataBean sessionDataBean,
 			boolean isAuditable) throws DAOException
 	{
+		logger.debug("Inside Audit method");
 		try
 		{
 			if (obj instanceof Auditable && isAuditable)
@@ -258,6 +266,7 @@ public class HibernateDAOImpl implements HibernateDAO
 	 */
 	public void addAuditEventLogs(Collection<AuditEventLog> auditEventDetailsCollection)
 	{
+		logger.debug("Add audit event logs");
 		auditManager.addAuditEventLogs(auditEventDetailsCollection);
 	}
 
@@ -268,6 +277,7 @@ public class HibernateDAOImpl implements HibernateDAO
 	 */
 	public void delete(Object obj) throws DAOException
 	{
+		logger.debug("Delete Object");
 		try
 		{
 			session.delete(obj);
@@ -290,6 +300,7 @@ public class HibernateDAOImpl implements HibernateDAO
 	 */
 	public List<Object> retrieve(String sourceObjectName) throws DAOException
 	{
+		logger.debug("Inside retrieve method");
 		String[] selectColumnName = null;
 		return retrieve(sourceObjectName, selectColumnName, null);
 	}
@@ -305,6 +316,7 @@ public class HibernateDAOImpl implements HibernateDAO
 	public List<Object> retrieve(String sourceObjectName, String whereColumnName, Object whereColumnValue)
 			throws DAOException
 	{
+		logger.debug("Inside retrieve method");
 		String[] selectColumnName = null;
 
 		QueryWhereClause queryWhereClause = new QueryWhereClause(sourceObjectName);
@@ -322,7 +334,7 @@ public class HibernateDAOImpl implements HibernateDAO
 	public List<Object> retrieve(String sourceObjectName, String[] selectColumnName)
 	throws DAOException
 	{
-
+		logger.debug("Inside retrieve method");
 		return retrieve(sourceObjectName, selectColumnName,null);
 	}
 
@@ -338,6 +350,7 @@ public class HibernateDAOImpl implements HibernateDAO
 	public List<Object> retrieve(String sourceObjectName,String[] selectColumnName,
 			QueryWhereClause queryWhereClause) throws DAOException
 	{
+		logger.debug("Inside retrieve method");
 		List<Object> list;
 		try
 		{
@@ -376,6 +389,7 @@ public class HibernateDAOImpl implements HibernateDAO
 	private void generateFromPartOfQuery(String sourceObjectName,
 			StringBuffer sqlBuff, String className)
 	{
+		logger.debug("Prepare from part of query");
 		sqlBuff.append("from " + sourceObjectName
 		        + " " + className);
 	}
@@ -390,6 +404,7 @@ public class HibernateDAOImpl implements HibernateDAO
 	public Object retrieve(String sourceObjectName, Long identifier)
 	 throws DAOException
 	 {
+		logger.debug("Inside retrieve method");
 		try
 		{
 			Object object = session.load(Class.forName(sourceObjectName), identifier);
@@ -419,6 +434,7 @@ public class HibernateDAOImpl implements HibernateDAO
 	public Object loadCleanObj(String sourceObjectName, Long identifier)
 	 throws DAOException
 	{
+		logger.debug("Inside retrieve method");
 		Object obj = retrieve(sourceObjectName, identifier);
 		session.evict(obj);
 		return obj;
@@ -431,6 +447,7 @@ public class HibernateDAOImpl implements HibernateDAO
 	 */
 	public List executeQuery(String query)
 	{
+		logger.debug("Execute query");
 		List < Object > returner;
 		Query hibernateQuery = session.createQuery(query);
 		returner = hibernateQuery.list();
@@ -449,6 +466,7 @@ public class HibernateDAOImpl implements HibernateDAO
 	public Object retrieveAttribute(Class objClass, Long identifier,
 			String attributeName,String columnName) throws DAOException
 	 {
+		logger.debug("Retrieve attributes");
 		try
 		{
 			String objClassName = objClass.getName();
@@ -485,6 +503,7 @@ public class HibernateDAOImpl implements HibernateDAO
 	 */
 	private void generateSelectPartOfQuery(String[] selectColumnName, StringBuffer sqlBuff, String className)
 	 {
+		logger.debug("Prepare select part of query.");
 		if (selectColumnName != null && selectColumnName.length > 0)
 		 {
 		    sqlBuff.append("Select ");
@@ -506,7 +525,8 @@ public class HibernateDAOImpl implements HibernateDAO
 	 * @param connectionManager : Connection Manager
 	 */
 	public void setConnectionManager(IConnectionManager connectionManager)
-	 {
+	{
+		logger.debug("Set the connection manager");
 		this.connectionManager = connectionManager;
 
 	}
@@ -517,6 +537,7 @@ public class HibernateDAOImpl implements HibernateDAO
 	 */
 	private IConnectionManager getConnectionManager()
 	{
+		logger.debug("Get the connection manager");
 		return connectionManager;
 	}
 
@@ -529,6 +550,7 @@ public class HibernateDAOImpl implements HibernateDAO
 	 */
 	public Connection getCleanConnection() throws DAOException
 	{
+		logger.debug("Get clean connection");
 		cleanConnection =  connectionManager.getCleanSession().connection();
 		return cleanConnection;
 	}
@@ -539,6 +561,7 @@ public class HibernateDAOImpl implements HibernateDAO
 	 */
 	public void closeCleanConnection() throws DAOException
 	{
+		logger.debug("Close clean connection");
 		try
 		{
 			cleanConnection.close();
@@ -559,6 +582,7 @@ public class HibernateDAOImpl implements HibernateDAO
 	 */
 	public Session getCleanSession() throws DAOException
 	{
+		logger.debug("Get clean session");
 		cleanSession = connectionManager.getCleanSession();
 		return cleanSession;
 	}
@@ -569,7 +593,8 @@ public class HibernateDAOImpl implements HibernateDAO
 	 */
 	public void closeCleanSession() throws DAOException
 	{
-			cleanSession.close();
+		logger.debug("Close clean session");
+		cleanSession.close();
 	}
 
 	/**
@@ -583,7 +608,8 @@ public class HibernateDAOImpl implements HibernateDAO
 	 * Have to remove this method::::
 	 */
 	public Object loadCleanObj(Class objectClass, Long identifier)
-	 {
+	{
+		logger.debug("Load clean object");
 		Session session = null;
 		try
 		{
@@ -608,6 +634,7 @@ public class HibernateDAOImpl implements HibernateDAO
 	 */
 	public String formatMessage(Exception excp,String applicationName) throws DAOException
 	{
+		logger.debug("Format error message");
 		String formatMessage = DAOConstants.TAILING_SPACES;
 		IDAOFactory daoFactory = DAOConfigFactory.getInstance().getDAOFactory(applicationName);
 		JDBCDAO jdbcDAO = daoFactory.getJDBCDAO();
