@@ -107,7 +107,8 @@ public class JDBCBatchUpdate
 
 		try
 		{
-			batchCounter = DEFAULT_BATCH_SIZE;
+			batchCounter = 0;
+			batchSize = DEFAULT_BATCH_SIZE;
 			if(statement != null)
 			{
 				statement.clearBatch();
