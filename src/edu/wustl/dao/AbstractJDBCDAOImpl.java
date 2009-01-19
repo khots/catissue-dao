@@ -63,7 +63,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	/**
 	 * JDBCBatchUpdate instance.
 	 */
-	private JDBCBatchUpdate jdbcBatchUpdate= null;
+	private JDBCBatchUpdate jdbcBatchUpdate= new JDBCBatchUpdate();
 
 	/**
 	 * This method will be used to establish the session with the database.
@@ -80,6 +80,8 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 			initializeAuditManager(sessionDataBean);
 			connection = connectionManager.getConnection();
 			connection.setAutoCommit(false);
+
+			jdbcBatchUpdate.setConnection(connection);
 
 		}
 		catch (Exception sqlExp)
@@ -103,11 +105,10 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 			logger.debug("Close the session");
 			auditManager = null;
 			connectionManager.closeConnection();
-			if(jdbcBatchUpdate != null)
-			{
-				jdbcBatchUpdate.clearBatch();
-				jdbcBatchUpdate = null;
-			}
+
+			jdbcBatchUpdate.clearBatch();
+			jdbcBatchUpdate.cleanConnection();
+
 		}
 		catch(Exception dbex)
 		{
@@ -573,8 +574,6 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	public void setBatchSize(int batchSize) throws DAOException
 	{
 		logger.debug("Set the batch size");
-		jdbcBatchUpdate = new JDBCBatchUpdate();
-		jdbcBatchUpdate.setConnection(connection);
 		jdbcBatchUpdate.setBatchSize(batchSize);
 	}
 
