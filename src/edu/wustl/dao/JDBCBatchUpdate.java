@@ -116,6 +116,7 @@ public class JDBCBatchUpdate
 			if(statement != null)
 			{
 				statement.clearBatch();
+				statement = null;
 			}
 		}
 		catch (SQLException exp)

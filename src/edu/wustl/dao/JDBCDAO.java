@@ -264,6 +264,6 @@ public interface JDBCDAO extends DAO
 	 * This method will be called to clear the batch.
 	 * @throws DAOException :Generic DAOException.
 	 */
-	void closeBatch() throws DAOException;
+	void clearBatch() throws DAOException;
 
 }
