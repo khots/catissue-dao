@@ -28,7 +28,7 @@ import edu.wustl.dao.connectionmanager.IConnectionManager;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.DAOConstants;
 import edu.wustl.dao.util.DatabaseConnectionParams;
-import edu.wustl.security.exception.SMException;
+
 
 /**
  * @author kalpana_thakur
