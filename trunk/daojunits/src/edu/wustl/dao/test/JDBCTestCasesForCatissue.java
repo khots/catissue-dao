@@ -1023,7 +1023,7 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 			jdbcDAO.addDMLToBatch(insertStr1);
 			jdbcDAO.batchUpdate();
 			jdbcDAO.commit();
-			jdbcDAO.closeBatch();
+			jdbcDAO.clearBatch();
 
 		}
 		catch(Exception exp)

@@ -237,9 +237,4 @@ public class MySQLDAOImpl extends AbstractJDBCDAOImpl
 
 	}
 
-
-
-
-
-
 }

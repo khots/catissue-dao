@@ -10,6 +10,7 @@
 package edu.wustl.dao.util;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -19,7 +20,6 @@ import java.sql.Statement;
 import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.exception.DAOException;
-import java.sql.DatabaseMetaData;
 
 /**
  * @author kalpana_thakur
