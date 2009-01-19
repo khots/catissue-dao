@@ -192,8 +192,16 @@ public class OracleDAOImpl extends AbstractJDBCDAOImpl
 	}
 
 
+	/**
+	 * This method fires a query to insert auditing details into audit tables.
+	 * @param sql SQL to be fired
+	 * @param sessionData session data to get userId and ip address
+	 * @param comments comments to be inserted in the table
+	 * @throws DAOException DaoException
+	 */
 	public void executeAuditSql(String sql, SessionDataBean sessionData,
-			String comments) throws DAOException {
+			String comments) throws DAOException
+	{
 		// TODO Auto-generated method stub
 
 	}
