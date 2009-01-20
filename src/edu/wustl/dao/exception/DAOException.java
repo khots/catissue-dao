@@ -41,9 +41,9 @@ public class DAOException extends ApplicationException
 	 * @param throwable :
 	 * @param msgValues : message displayed when error occurred
 	 */
-	public DAOException(final ErrorKey errorKey, final Throwable throwable, final String msgValues)
+	public DAOException(final ErrorKey errorKey, final Exception exception, final String msgValues)
 	{
-		super(errorKey, throwable, msgValues);
+		super(errorKey, exception, msgValues);
 	}
 
 	/**
