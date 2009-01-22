@@ -643,4 +643,14 @@ public class HibernateDAOImpl implements HibernateDAO
 		return formatMessage;
 	}
 
+	/**
+	 *This method will return some object which will implement IDAOExtention.
+	 *@throws DAOException :Generic DAOException.
+	 *@return object which will implement IDAOExtention.
+	 */
+	public IDAOExtention getDAOExtention() throws DAOException
+	{
+		return null;
+	}
+
 }
