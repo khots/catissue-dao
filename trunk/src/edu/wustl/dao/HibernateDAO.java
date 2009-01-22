@@ -8,6 +8,8 @@ package edu.wustl.dao;
 
 import java.util.Collection;
 
+import org.hibernate.Query;
+
 import edu.wustl.common.domain.AuditEventLog;
 import edu.wustl.dao.exception.DAOException;
 
@@ -40,4 +42,17 @@ public interface HibernateDAO extends DAO
 	 */
 	Object loadCleanObj(Class objectClass, Long identifier) throws DAOException;
 
+	/**
+	 * This method executes named query and returns list of objects as result.
+	 * @param queryName handle to get named query.
+	 * @return list of objects.
+	 */
+	Collection executeNamedQuery(String queryName);
+
+	/**
+	 * This method returns named query.
+	 * @param queryName handle to get named query.
+	 * @return Query named Query object.
+	 */
+	Query getNamedQuery(String queryName);
 }
