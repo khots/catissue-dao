@@ -237,4 +237,15 @@ public class MySQLDAOImpl extends AbstractJDBCDAOImpl
 
 	}
 
+	/**
+	 *This method will return some object which will implement IDAOExtention.
+	 *@throws DAOException :Generic DAOException.
+	 *@return object which will implement IDAOExtention.
+	 */
+	public IDAOExtention getDAOExtention() throws DAOException
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
