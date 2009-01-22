@@ -228,5 +228,10 @@ public interface DAO
 	 */
 	void closeCleanSession() throws DAOException;
 
-
+	/**
+	 *This method will return object which will implement IDAOExtention.
+	 *@throws DAOException :Generic DAOException.
+	 *@return object which will implement IDAOExtention.
+	 */
+	IDAOExtention getDAOExtention() throws DAOException;
 }
