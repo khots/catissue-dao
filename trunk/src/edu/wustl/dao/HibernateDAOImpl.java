@@ -653,4 +653,25 @@ public class HibernateDAOImpl implements HibernateDAO
 		return null;
 	}
 
+	/**
+	 * This method executes the named query and returns the results.
+	 * @param queryName : handle for named query.
+	 * @return result as list of Object
+	 */
+	public List executeNamedQuery(String queryName)
+	{
+		Query query=session.getNamedQuery(queryName);
+		return query.list();
+	}
+
+	/**
+	 * This method returns named query.
+	 * @param queryName : handle for named query.
+	 * @return Query named query
+	 */
+	public Query getNamedQuery(String queryName)
+	{
+		return session.getNamedQuery(queryName);
+	}
+
 }
