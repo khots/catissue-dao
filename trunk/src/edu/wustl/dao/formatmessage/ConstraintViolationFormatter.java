@@ -9,6 +9,7 @@ package edu.wustl.dao.formatmessage;
 
 import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.exceptionformatter.ExceptionFormatter;
+import edu.wustl.common.util.global.CommonServiceLocator;
 import edu.wustl.dao.DAO;
 import edu.wustl.dao.daofactory.DAOConfigFactory;
 import edu.wustl.dao.daofactory.IDAOFactory;
@@ -24,18 +25,18 @@ public class ConstraintViolationFormatter implements ExceptionFormatter
 	/**
 	 * This will be called to format constraint violation exception messages.
 	 * @param objExcp : Exception thrown.
-	 * @param applicationName :Name of the application
 	 * @throws DAOException : Database exception
 	 * @return string : It return the formatted error messages.
 	 */
-	public String formatMessage(Exception objExcp ,String applicationName) throws DAOException
+	public String formatMessage(Exception objExcp) throws DAOException
 	{
 		String formatedMessage ;
 		try
 		{
-			IDAOFactory daoFactory = DAOConfigFactory.getInstance().getDAOFactory(applicationName);
+			String appName = CommonServiceLocator.getInstance().getAppName();
+			IDAOFactory daoFactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
 			DAO dao = daoFactory.getDAO();
-			formatedMessage = dao.formatMessage(objExcp,applicationName);
+			formatedMessage = dao.formatMessage(objExcp);
 		}
 		catch(Exception exp)
 		{

@@ -1,6 +1,7 @@
 /*
- * TODO
+ * This will hold the implementation specific to MySQL.
  */
+
 package edu.wustl.dao;
 
 import edu.wustl.common.util.logger.Logger;
@@ -42,7 +43,6 @@ public class MySQLDAOImpl extends AbstractJDBCDAOImpl
 	 */
 	public SQLFormatter getSQLFormatter(String tableName) throws DAOException
 	{
-
 		return new SQLFormatterMySQL(tableName);
 	}
 

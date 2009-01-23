@@ -42,11 +42,6 @@ import edu.wustl.security.exception.SMException;
 public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 {
 
-	 /**
-   	 * specify clean connection instance.
-   	 */
-     private Connection cleanConnection = null;
-
 	/**
 	 * Audit Manager.
 	 */
@@ -508,32 +503,6 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		return pagenatedResultData;
 	}
 
-
-	/**
-	 * This method will be called to insert hashed data values.
-	 * @param tableName :Name of the table
-	 * @param columnValues :List of column values
-	 * @param columnNames  :List of column names.
-	 * @throws DAOException  :DAOException
-	 * @throws SQLException : SQLException
-	 */
-	public void insertHashedValues(String tableName, List<Object> columnValues, List<String> columnNames)
-	throws DAOException, SQLException
-	{
-		logger.debug("Insert hashed data to database");
-		HashedDataHandler hashedDataHandler = new HashedDataHandler();
-		hashedDataHandler.insertHashedValues(tableName, columnValues, columnNames, connection);
-	}
-
-	/**
-	 * This method will be called to get connection Manager object.
-	 * @return IConnectionManager: Connection Manager.
-	 */
-/*	protected IConnectionManager getConnectionManager()
-	{
-		return connectionManager;
-	}
-*/
 	/**
 	 * This method will be called to get connection Manager object.
 	 * @return IConnectionManager: Connection Manager.
@@ -553,56 +522,6 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		logger.debug("Setting the connection manager");
 		this.connectionManager = connectionManager;
 	}
-
-	/**
-	 *This method will be called to close current connection.
-	 *@throws DAOException :Generic DAOException.
-	 */
-	public void closeCleanConnection() throws DAOException
-	{
-		logger.debug("Close clean connection");
-		try
-		{
-			cleanConnection.close();
-
-		}
-		catch (SQLException sqlExp)
-		{
-			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,sqlExp,"AbstractJDBCDAOImpl.java :"+
-					DAOConstants.CLOSE_CONN_ERR);
-		}
-	}
-
-
-
-	/**
-	 * Gets Query Number of given SQL.
-	 * @param sql SQL query.
-	 * @return queryNo.
-	 * @throws DAOException generic DAOException.
-	 *//*
-	protected Long getSequenceNumber(String sql) throws DAOException
-	{
-		List<Object> list = executeQuery(sql, null, false, null);
-		long queryNo = 1;
-		if (!list.isEmpty())
-		{
-
-			List<Object> columnList = (List) list.get(0);
-			if (!columnList.isEmpty())
-			{
-				String str = (String) columnList.get(0);
-				if (!"".equals(str))
-				{
-					queryNo = Long.parseLong(str);
-
-				}
-			}
-		}
-		return queryNo;
-	}
-*/
 
 	/**
 	 * This method will be called to set the size of the batch.
@@ -898,6 +817,16 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
 	}
 
+
+	/**
+	 *This method will be called to close current connection.
+	 *@throws DAOException :Generic DAOException.
+	 */
+	public void closeCleanConnection() throws DAOException
+	{
+		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
+		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
+	}
 
 	/**
 	 *This method will be called to close current connection.

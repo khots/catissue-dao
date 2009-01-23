@@ -1,6 +1,7 @@
 /*
- * TODO
+ * This will hold the implementation specific to Oracle.
  */
+
 package edu.wustl.dao;
 
 import edu.wustl.common.exception.ErrorKey;
