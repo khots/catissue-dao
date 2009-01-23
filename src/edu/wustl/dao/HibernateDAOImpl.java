@@ -151,7 +151,6 @@ public class HibernateDAOImpl implements HibernateDAO
 		 * is violating then in insert() method session.save() is throwing exception
 		 * and isUpdated is not getting set to true.
 		 * Because of this roll back is not happening on parent object.
-		 *
 		 */
 		logger.debug("Session rollback");
 		if (updated)
@@ -408,7 +407,7 @@ public class HibernateDAOImpl implements HibernateDAO
 		try
 		{
 			Object object = session.load(Class.forName(sourceObjectName), identifier);
-		//	HibernateProxy hibernatProxy = (HibernateProxy) object;
+			//HibernateProxy hibernatProxy = (HibernateProxy) object;
 			//return (Object)hibernatProxy.getHibernateLazyInitializer().getImplementation();
 			//return HibernateMetaData.getProxyObjectImpl(object);
 			return object;
@@ -642,16 +641,6 @@ public class HibernateDAOImpl implements HibernateDAO
 		formatMessage = jdbcDAO.formatMessage(excp,getCleanConnection());
 		getConnectionManager().closeConnection();
 		return formatMessage;
-	}
-
-	/**
-	 *This method will return some object which will implement IDAOExtention.
-	 *@throws DAOException :Generic DAOException.
-	 *@return object which will implement IDAOExtention.
-	 */
-	public IDAOExtention getDAOExtention() throws DAOException
-	{
-		return null;
 	}
 
 	/**

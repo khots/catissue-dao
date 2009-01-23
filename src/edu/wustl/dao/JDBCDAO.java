@@ -7,7 +7,6 @@
 package edu.wustl.dao;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -146,25 +145,6 @@ public interface JDBCDAO extends DAO
 	void setBatchSize(int batchSize)throws DAOException;
 
 	/**
-	 * This method will be called to set the DML object to batch.
-	 * @param obj :DML object
-	 * @throws DAOException : Generic database exception.
-	 */
-	//void addDMLToBatch(String obj) throws DAOException;
-
-	/**
-	 * This method will be called for batch update insert.
-	 * @throws DAOException :Generic DAOException.
-	 */
-	//void batchUpdate() throws DAOException;
-
-	/**
-	 * This method will be called to clear the batch.
-	 * @throws DAOException :Generic DAOException.
-	 */
-	//void clearBatch() throws DAOException;
-
-	/**
 	 * Deletes the table from the database.
 	 * @param tableName The table to be deleted.
 	 * @throws DAOException generic DAOException.
@@ -204,84 +184,5 @@ public interface JDBCDAO extends DAO
 	 * @param databaseProperties : database properties.
 	 */
 	void setDatabaseProperties(DatabaseProperties databaseProperties);
-
-	/**
-	 * Inserts records in given table.
-	 * @param tableName Name of the table in which record to be inserted
-	 * @param columnValues column data
-	 * @param columnNames (optional)column names- if not not provided,
-	 * @throws DAOException generic DAOException
-	 * @throws SQLException SQL Exception.
-	 */
-	void insertHashedValues(String tableName, List<Object> columnValues,List<String>
-	columnNames) throws DAOException, SQLException;
-
-	/**
-	 * This method will be called to obtained max barcode.
-	 * @return max Barcode column.
-	 *//*
-	String getMaxBarcodeCol();
-
-	*//**
-	 * This method will be called to obtained max Label.
-	 * @return max Label column.
-	 *//*
-	    String getMaxLabelCol();
-	  */
-
-	/**
-	 * @param columnCount count of the columns in results
-	 * @param getSublistOfResult boolean for getting sublist
-	 * @return int column count
-	 *//*
-	int getColumnCount(int columnCount,boolean getSublistOfResult);
-	*//**
-	 * Gets SQL for Like operator.
-	 * @param attributeName name of the attribute
-	 * @param value value
-	 * @return String SQL
-	 *//*
-	String getSQLForLikeOperator(String attributeName, String value);
-	*//**
-	 * Required for temporal query.
-	 * @return Object of type either MySQL or Oracle Primitive operation processor.
-	 *//*
-	Object getPrimitiveOperationProcessor();
-	*//**
-	 * This method fires a query to insert auditing details into audit tables.
-	 * @param sql SQL to be fired
-	 * @param sessionData session data to get userId and ip address
-	 * @param comments comments to be inserted in the table
-	 * @throws DAOException DaoException
-	 *//*
-	void executeAuditSql(String sql, SessionDataBean sessionData, String comments) throws DAOException;*/
-
-	/**
-	   * Deletes the specified table.
-	   * @param tableName Name of the table to delete.
-	   * @throws DAOException generic DAOException.
-	   */
-	//void delete(String tableName) throws DAOException;
-
-	/**
-	 * This method gets Activity Status.
-	 * @param sourceObjectName The table name.
-	 * @param identifier identifier
-	 * @return Activity Status.
-	 * @throws DAOException generic DAOException.
-	 *//*
-	String getActivityStatus(String sourceObjectName, Long identifier) throws DAOException;*/
-
-	/**
-	* Inserts records in given table.
-	* @param tableName Name of the table in which record to be inserted
-	* @param columnValues column data
-	* @param columnNames (optional)column names- if not not provided,
-	* all column names of the table are added to the list of column names
-	* @throws DAOException generic DAOException
-	* @throws SQLException SQL Exception.
-	*/
-	/*void insert(String tableName, List<Object> columnValues, List<String>... columnNames)
-			throws DAOException, SQLException;*/
 
 }
