@@ -25,8 +25,8 @@ import edu.wustl.dao.util.HibernateMetaData;
  * @author kalpana_thakur
  *
  */
-public class MysqlFormatter implements
-IDBFormatter
+public class MysqlExceptionFormatter implements
+IDBExceptionFormatter
 {
 	/**
 	 * Index name.
@@ -35,7 +35,7 @@ IDBFormatter
 	/**
 	 * Class Logger.
 	 */
-	private static org.apache.log4j.Logger logger = Logger.getLogger(MysqlFormatter.class);
+	private static org.apache.log4j.Logger logger = Logger.getLogger(MysqlExceptionFormatter.class);
 
 	/**
 	 * This will generate the formatted error messages.

@@ -11,6 +11,7 @@
 package edu.wustl.dao.daofactory;
 
 import edu.wustl.dao.DAO;
+import edu.wustl.dao.DatabaseProperties;
 import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.exception.DAOException;
 
@@ -142,14 +143,9 @@ public interface IDAOFactory
 	 void setJdbcConnMangrName(String jdbcConnMangrName);
 
 	 /**
-	 * This method will be called to get the data source.
-	 * @return dataSource
-	 */
-	 String getDataSource();
+	  * This method will be called to set all database properties.
+	  * @param databaseProperties :database properties.
+	  */
+	 void setDatabaseProperties(DatabaseProperties databaseProperties);
 
-	 /**
-	 * This method will be called to set the data source.
-	 * @param dataSource : JDBC connection name.
-	 */
-	 void setDataSource(String dataSource);
 }

@@ -192,7 +192,6 @@ public class DatabaseConnectionParams
 		{
 			stmt = getPreparedStatement(query);
 			stmt.executeUpdate();
-		//	connection.commit();
 		}
 		catch (SQLException sqlExp)
 		{
@@ -222,7 +221,32 @@ public class DatabaseConnectionParams
 	public void setConnection(Connection connection)
 	{
 			this.connection = connection;
+	}
 
+	/**
+	 * This method will be called to execute query.
+	 * @param query :query string.
+	 * @throws DAOException :Generic Exception
+	 */
+	public void executeQuery(String query) throws DAOException
+	{
+		PreparedStatement stmt = null;
+		try
+		{
+			stmt = getPreparedStatement(query);
+			stmt.executeQuery();
+		}
+		catch (SQLException exp)
+		{
+			logger.fatal(exp);
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
+			throw new DAOException(errorKey,exp,"DatabaseConnectionParams.java :"
+					+DAOConstants.EXECUTE_QUERY_ERROR+"   "+query);
+		}
+		finally
+		{
+			closeConnectionParams();
+		}
 	}
 
 	/**

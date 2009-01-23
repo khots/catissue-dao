@@ -24,6 +24,7 @@ import org.xml.sax.InputSource;
 import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.DAO;
+import edu.wustl.dao.DatabaseProperties;
 import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.connectionmanager.IConnectionManager;
 import edu.wustl.dao.exception.DAOException;
@@ -91,6 +92,11 @@ public class DAOFactory implements IDAOFactory
 	 */
 	private Boolean isDefaultDAOFactory;
 
+	/**
+	 * Database properties.
+	 */
+	private DatabaseProperties databaseProperties;
+
 
 	/**
 	 * Class logger.
@@ -136,12 +142,13 @@ public class DAOFactory implements IDAOFactory
 	 */
 	public JDBCDAO getJDBCDAO()throws DAOException
 	{
-		JDBCDAO dao = null;
+		JDBCDAO jdbcDAO = null;
 
 		try
 		{
-			   dao = (JDBCDAO) Class.forName(jdbcDAOClassName).newInstance();
-			   dao.setConnectionManager(getJdbcConnectionManager());
+			   jdbcDAO = (JDBCDAO) Class.forName(jdbcDAOClassName).newInstance();
+			   jdbcDAO.setConnectionManager(getJdbcConnectionManager());
+			   jdbcDAO.setDatabaseProperties(databaseProperties);
 			   HibernateMetaData.initHibernateMetaData(getJdbcConnectionManager().
 					   getConfiguration());
 		}
@@ -152,7 +159,7 @@ public class DAOFactory implements IDAOFactory
 			throw new DAOException(errorKey,excp,"DAOFactory.java :"+
 					DAOConstants.JDBCDAO_INIT_ERR);
 		}
-		return dao;
+		return jdbcDAO;
 	}
 
 
@@ -458,6 +465,15 @@ public class DAOFactory implements IDAOFactory
 	public void setJdbcConnectionManager(IConnectionManager jdbcConnectionManager)
 	{
 		this.jdbcConnectionManager = jdbcConnectionManager;
+	}
+
+	/**
+	  * This method will be called to set all database properties.
+	  * @param databaseProperties :database properties.
+	  */
+	public void setDatabaseProperties(DatabaseProperties databaseProperties)
+	{
+		this.databaseProperties = databaseProperties;
 	}
 
 

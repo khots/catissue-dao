@@ -9,7 +9,7 @@ import java.sql.Connection;
  * @author kalpana_thakur
  *
  */
-public interface IDBFormatter
+public interface IDBExceptionFormatter
 {
 	/**
 	 * @param objExcp :Exception.

@@ -17,13 +17,13 @@ import edu.wustl.dao.util.DatabaseConnectionParams;
  * @author kalpana_thakur
  *
  */
-public class OracleFormatter implements IDBFormatter
+public class OracleExceptionFormatter implements IDBExceptionFormatter
 {
 
 	/**
 	 * Class Logger.
 	 */
-	private static org.apache.log4j.Logger logger = Logger.getLogger(OracleFormatter.class);
+	private static org.apache.log4j.Logger logger = Logger.getLogger(OracleExceptionFormatter.class);
 
 	/**
 	 * This will generate the formatted error messages.
