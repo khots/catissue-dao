@@ -100,6 +100,7 @@ public class JDBCBatchUpdate
 	}
 
 	/**
+	 * This method will be called to clear the batch.
 	 * @throws DAOException :Generic DAOException.
 	 */
 	public void clearBatch() throws DAOException
