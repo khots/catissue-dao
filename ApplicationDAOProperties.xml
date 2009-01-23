@@ -12,6 +12,7 @@
 			<JDBCDAO>
 				<Class-name name = "edu.wustl.dao.MySQLDAOImpl"/>
 				<DatabaseType name = "MySQL"/>
+				<DefaultBatchSize value = "5"/>
 				<DataSource name = ""/>
 				<JDBCConnectionManager name = "edu.wustl.dao.connectionmanager.JDBCConnectionManager"/>
 				<DatePattern name = "%m-%d-%Y"/>
@@ -23,7 +24,7 @@
 				<ExceptionFormater name = "edu.wustl.dao.formatmessage.MysqlExceptionFormatter"/>
 				<QueryExecutor name = "edu.wustl.query.executor.MysqlQueryExecutor"/>
 			</JDBCDAO>
-			<DefaultBatchSize value = "5"/>
+			
 	
 		</DAOFactory>
 	 </Application>
@@ -39,6 +40,7 @@
 			<JDBCDAO>
 				<Class-name name = "edu.wustl.dao.OracleDAOImpl"/>
 				<DatabaseType name = "Oracle"/>
+				<DefaultBatchSize value = "5"/>
 				<DataSource name = ""/>
 				<JDBCConnectionManager name = "edu.wustl.dao.connectionmanager.JDBCConnectionManager"/>
 				<DatePattern name = "mm-dd-yyyy"/>
@@ -49,8 +51,9 @@
 				<StrTodateFunction name = "TO_DATE"/>
 				<ExceptionFormater name = "edu.wustl.dao.formatmessage.OracleExceptionFormatter"/>
 				<QueryExecutor name = "edu.wustl.query.executor.OracleQueryExecutor"/>
+				
 			</JDBCDAO>
-			<DefaultBatchSize value = "5"/>
+			
 		</DAOFactory>
 	 </Application>
 </Applications>

@@ -259,11 +259,7 @@ public class ApplicationDAOPropertiesParser
 			{
 				setJDBCDAOProperties(childrenDAOFactory);
 			}
-			if(childrenDAOFactory.getNodeName().equals("DefaultBatchSize"))
-			{
-				Node attNode = getNextnode(childrenDAOFactory);
-				defaultBatchSize = attNode.getNodeValue();
-			}
+			
 		}
 
 	}
@@ -312,53 +308,58 @@ public class ApplicationDAOPropertiesParser
 			}
 			if (childnode.getNodeName().equals("JDBCConnectionManager"))
 			{
-				Node defaultConnMangrNode = getNextnode(childnode);
-				jdbcConnManager = defaultConnMangrNode.getNodeValue();
+				Node attNode = getNextnode(childnode);
+				jdbcConnManager = attNode.getNodeValue();
 			}
 			if (childnode.getNodeName().equals("DatabaseType"))
 			{
-				Node defaultConnMangrNode = getNextnode(childnode);
-				databaseType = defaultConnMangrNode.getNodeValue();
+				Node attNode = getNextnode(childnode);
+				databaseType = attNode.getNodeValue();
 			}
 			if (childnode.getNodeName().equals("DatePattern"))
 			{
-				Node defaultConnMangrNode = getNextnode(childnode);
-				datePattern = defaultConnMangrNode.getNodeValue();
+				Node attNode = getNextnode(childnode);
+				datePattern = attNode.getNodeValue();
 			}
 			if (childnode.getNodeName().equals("TimePattern"))
 			{
-				Node defaultConnMangrNode = getNextnode(childnode);
-				timePattern = defaultConnMangrNode.getNodeValue();
+				Node attNode = getNextnode(childnode);
+				timePattern = attNode.getNodeValue();
 			}
 			if (childnode.getNodeName().equals("DateFormatFunction"))
 			{
-				Node defaultConnMangrNode = getNextnode(childnode);
-				dateFormatFunction = defaultConnMangrNode.getNodeValue();
+				Node attNode = getNextnode(childnode);
+				dateFormatFunction = attNode.getNodeValue();
 			}
 			if (childnode.getNodeName().equals("TimeFormatFunction"))
 			{
-				Node defaultConnMangrNode = getNextnode(childnode);
-				timeFormatFunction = defaultConnMangrNode.getNodeValue();
+				Node attNode = getNextnode(childnode);
+				timeFormatFunction = attNode.getNodeValue();
 			}
 			if (childnode.getNodeName().equals("DateToStrFunction"))
 			{
-				Node defaultConnMangrNode = getNextnode(childnode);
-				dateTostrFunction = defaultConnMangrNode.getNodeValue();
+				Node attNode = getNextnode(childnode);
+				dateTostrFunction = attNode.getNodeValue();
 			}
 			if (childnode.getNodeName().equals("StrTodateFunction"))
 			{
-				Node defaultConnMangrNode = getNextnode(childnode);
-				strTodateFunction = defaultConnMangrNode.getNodeValue();
+				Node attNode = getNextnode(childnode);
+				strTodateFunction = attNode.getNodeValue();
 			}
 			if (childnode.getNodeName().equals("ExceptionFormater"))
 			{
-				Node defaultConnMangrNode = getNextnode(childnode);
-				exceptionFormatterName = defaultConnMangrNode.getNodeValue();
+				Node attNode = getNextnode(childnode);
+				exceptionFormatterName = attNode.getNodeValue();
 			}
 			if (childnode.getNodeName().equals("QueryExecutor"))
 			{
-				Node defaultConnMangrNode = getNextnode(childnode);
-				queryExecutorName = defaultConnMangrNode.getNodeValue();
+				Node attNode = getNextnode(childnode);
+				queryExecutorName = attNode.getNodeValue();
+			}
+			if(childnode.getNodeName().equals("DefaultBatchSize"))
+			{
+				Node attNode = getNextnode(childnode);
+				defaultBatchSize = attNode.getNodeValue();
 			}
 		}
 
