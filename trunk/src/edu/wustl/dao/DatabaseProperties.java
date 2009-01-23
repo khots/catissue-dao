@@ -14,7 +14,10 @@ public class DatabaseProperties
 	private String dateTostrFunction;
 	private String strTodateFunction;
 	private String dataSource;
-	
+	private int defaultBatchSize;
+
+
+
 	private String exceptionFormatterName;
 	
 
@@ -144,4 +147,21 @@ public class DatabaseProperties
 	 {
 		 this.dataSource = dataSource;
 	 }
+	 /**
+	 * This method will be called to set the default batch size.
+	 * @param batchSize : batch size
+	 */
+	public void setDefaultBatchSize(int batchSize)
+	{
+		this.defaultBatchSize = batchSize;
+	}
+
+	/**
+	 * This will be called to get the default batch size.
+	 * @return batch size
+	 */
+	public int getDefaultBatchSize()
+	{
+		return defaultBatchSize;
+	}
 }

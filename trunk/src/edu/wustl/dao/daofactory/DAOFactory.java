@@ -97,7 +97,6 @@ public class DAOFactory implements IDAOFactory
 	 */
 	private DatabaseProperties databaseProperties;
 
-
 	/**
 	 * Class logger.
 	 */
@@ -149,6 +148,7 @@ public class DAOFactory implements IDAOFactory
 			   jdbcDAO = (JDBCDAO) Class.forName(jdbcDAOClassName).newInstance();
 			   jdbcDAO.setConnectionManager(getJdbcConnectionManager());
 			   jdbcDAO.setDatabaseProperties(databaseProperties);
+			   jdbcDAO.setBatchSize(databaseProperties.getDefaultBatchSize());
 			   HibernateMetaData.initHibernateMetaData(getJdbcConnectionManager().
 					   getConfiguration());
 		}

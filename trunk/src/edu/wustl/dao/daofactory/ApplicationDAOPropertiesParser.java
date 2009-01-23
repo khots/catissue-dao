@@ -52,7 +52,7 @@ public class ApplicationDAOPropertiesParser
 	/**
 	 * Database specific properties.
 	 */
-	private String databaseType,dataSource,datePattern,timePattern,dateFormatFunction,timeFormatFunction,
+	private String databaseType,dataSource,defaultBatchSize,datePattern,timePattern,dateFormatFunction,timeFormatFunction,
 	dateTostrFunction,strTodateFunction,exceptionFormatterName,queryExecutorName;
 
 	/**
@@ -172,6 +172,7 @@ public class ApplicationDAOPropertiesParser
 		databaseProperties.setTimePattern(timePattern);
 		databaseProperties.setExceptionFormatterName(exceptionFormatterName);
 		databaseProperties.setQueryExecutorName(queryExecutorName);
+		databaseProperties.setDefaultBatchSize(Integer.valueOf(defaultBatchSize));
 	}
 
 	/**
@@ -199,6 +200,7 @@ public class ApplicationDAOPropertiesParser
 		strTodateFunction= "";
 		exceptionFormatterName="";
 		queryExecutorName="";
+		defaultBatchSize="";
 	}
 
 	/**
@@ -256,6 +258,11 @@ public class ApplicationDAOPropertiesParser
 			if (childrenDAOFactory.getNodeName().equals("JDBCDAO"))
 			{
 				setJDBCDAOProperties(childrenDAOFactory);
+			}
+			if(childrenDAOFactory.getNodeName().equals("DefaultBatchSize"))
+			{
+				Node attNode = getNextnode(childrenDAOFactory);
+				defaultBatchSize = attNode.getNodeValue();
 			}
 		}
 
