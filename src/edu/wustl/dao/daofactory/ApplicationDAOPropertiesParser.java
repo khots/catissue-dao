@@ -52,8 +52,9 @@ public class ApplicationDAOPropertiesParser
 	/**
 	 * Database specific properties.
 	 */
-	private String databaseType,dataSource,defaultBatchSize,datePattern,timePattern,dateFormatFunction,timeFormatFunction,
-	dateTostrFunction,strTodateFunction,exceptionFormatterName,queryExecutorName;
+	private String databaseType,dataSource,defaultBatchSize,datePattern,timePattern,
+	dateFormatFunction,timeFormatFunction,dateTostrFunction,strTodateFunction,
+	exceptionFormatterName,queryExecutorName;
 
 	/**
 	 * This method gets DAO Factory Map.
@@ -222,24 +223,9 @@ public class ApplicationDAOPropertiesParser
 			{
 				setDAOFactoryProperties(applicationChildNode);
 			}
-			/*if (applicationChildNode.getNodeName().equals("ConnectionManager"))
-			{
-				setConnectionManagerProperties(applicationChildNode);
-			}*/
 		}
 	}
 
-	/**
-	 * This method sets Connection Manager Properties.
-	 * @param applicationChildNode application Child Node.
-	 */
-	/*private void setConnectionManagerProperties(Node applicationChildNode)
-	{
-		NamedNodeMap attMap = applicationChildNode.getAttributes();
-		Node attNode = attMap.item(0);
-		defaultConnManager = attNode.getNodeValue();
-	}
-*/
 	/**
 	 * This method sets DAOFactory Properties.
 	 * @param childNode DAOFactory child Node.
@@ -259,7 +245,6 @@ public class ApplicationDAOPropertiesParser
 			{
 				setJDBCDAOProperties(childrenDAOFactory);
 			}
-			
 		}
 
 	}

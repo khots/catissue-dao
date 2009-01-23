@@ -102,8 +102,6 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 			connection.setAutoCommit(false);
 
 			initializeBatchstmt();
-			//jdbcBatchUpdate.setConnection(connection);
-
 		}
 		catch (Exception sqlExp)
 		{
@@ -495,8 +493,8 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		PagenatedResultData pagenatedResultData = null;
 		try
 		{
-			AbstractQueryExecutor queryExecutor = (AbstractQueryExecutor)Class.forName
-			(databaseProperties.getQueryExecutorName()).newInstance();
+			Class clsObj = Class.forName(databaseProperties.getQueryExecutorName());
+			AbstractQueryExecutor queryExecutor = (AbstractQueryExecutor)clsObj.newInstance();
 			pagenatedResultData = queryExecutor.getQueryResultList(queryParams);
 
 		}
@@ -626,9 +624,8 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		try
 		{
 			batchStatement.addBatch(dmlObject);
-			batchCounter++;
 
-			if(batchCounter >= batchSize)
+			if(++batchCounter >= batchSize)
 			{
 				batchStatement.executeBatch();
 				clearBatch();
@@ -678,7 +675,6 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		try
 		{
 			batchCounter = 0;
-			//batchSize = DEFAULT_BATCH_SIZE;
 			if(batchStatement != null)
 			{
 				batchStatement.clearBatch();
@@ -801,8 +797,8 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		String formattedMsg;
 		try
 		{
-			IDBExceptionFormatter formatter =  (IDBExceptionFormatter)Class.forName
-			(databaseProperties.getExceptionFormatterName()).newInstance();
+			Class clsObj = Class.forName(databaseProperties.getExceptionFormatterName());
+			IDBExceptionFormatter formatter =  (IDBExceptionFormatter)clsObj.newInstance();
 			formattedMsg =  formatter.getFormatedMessage(excp,connection);
 		}
 		catch(Exception exp)
