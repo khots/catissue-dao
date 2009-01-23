@@ -22,8 +22,8 @@
 				<StrTodateFunction name = "STR_TO_DATE"/>
 				<ExceptionFormater name = "edu.wustl.dao.formatmessage.MysqlExceptionFormatter"/>
 				<QueryExecutor name = "edu.wustl.query.executor.MysqlQueryExecutor"/>
-				
 			</JDBCDAO>
+			<DefaultBatchSize value = "5"/>
 	
 		</DAOFactory>
 	 </Application>
@@ -50,7 +50,7 @@
 				<ExceptionFormater name = "edu.wustl.dao.formatmessage.OracleExceptionFormatter"/>
 				<QueryExecutor name = "edu.wustl.query.executor.OracleQueryExecutor"/>
 			</JDBCDAO>
-			
+			<DefaultBatchSize value = "5"/>
 		</DAOFactory>
 	 </Application>
 </Applications>

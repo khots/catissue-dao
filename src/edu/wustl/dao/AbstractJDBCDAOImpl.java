@@ -71,34 +71,19 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	private DatabaseProperties databaseProperties = null;
 
 	/**
-	 * JDBCBatchUpdate instance.
-	 */
-	//private JDBCBatchUpdate jdbcBatchUpdate= new JDBCBatchUpdate();
-
-	/**
 	 * batch statement.
 	 */
 	private Statement batchStatement;
 
-
-	/**
-	 * Default size of batch.
-	 */
-	private final int DEFAULT_BATCH_SIZE = 1;
 	/**
 	 * It holds the batch size.
 	 */
-	private int batchCounter = 0;
+	private transient int  batchCounter = 0;
 
 	/**
 	 * Batch size.
 	 */
-	private int batchSize = DEFAULT_BATCH_SIZE;
-
-	/**
-	 * Required batch size.
-	 */
-	private int requiredBatchSize;
+	private int batchSize = 1;
 
 	/**
 	 * This method will be used to establish the session with the database.
@@ -142,10 +127,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 			auditManager = null;
 			connectionManager.closeConnection();
 
-			clearBatch();
 			batchStatement = null;
-			requiredBatchSize = 0;
-
 		}
 		catch(Exception dbex)
 		{
@@ -186,7 +168,9 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	public void rollback() throws DAOException
 	{
 		logger.debug("Session rollback");
+		clearBatch();
 		connectionManager.rollback();
+
 	}
 
 
@@ -629,9 +613,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	 */
 	public void setBatchSize(int batchSize) throws DAOException
 	{
-		clearBatch();
 		this.batchSize = batchSize;
-		this.requiredBatchSize = batchSize;
 	}
 
 	/**
@@ -643,19 +625,17 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	{
 		try
 		{
-			if(batchCounter < batchSize)
+			batchStatement.addBatch(dmlObject);
+			batchCounter++;
+
+			if(batchCounter >= batchSize)
 			{
-				batchStatement.addBatch(dmlObject);
-				batchCounter++;
-			}
-			else
-			{
-				commitUpdate();
+				batchStatement.executeBatch();
+				clearBatch();
 			}
 		}
 		catch (SQLException exp)
 		{
-			clearBatch();
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
 			throw new DAOException(errorKey,exp,"DatabaseConnectionParams.java :"+
 				DAOConstants.BATCH_UPDATE_ERROR);
@@ -698,7 +678,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		try
 		{
 			batchCounter = 0;
-			setBatchSize();
+			//batchSize = DEFAULT_BATCH_SIZE;
 			if(batchStatement != null)
 			{
 				batchStatement.clearBatch();
@@ -710,25 +690,6 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 			throw new DAOException(errorKey,exp,"DatabaseConnectionParams.java :");
 		}
 	}
-
-	/**
-	 * This method will be called to set the batch size.
-	 * requiredBatchSize is the user defined batch size
-	 * DEFAULT_BATCH_SIZE : Default size
-	 */
-	private void setBatchSize()
-	{
-		if(requiredBatchSize > 0)
-		{
-			batchSize = DEFAULT_BATCH_SIZE;
-		}
-		else
-		{
-			batchSize = requiredBatchSize;
-		}
-	}
-
-
 	/**
 	 * This method will be called to set the DML object to batch.
 	 * @param dmlObject :DML object
@@ -764,8 +725,6 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 				DAOConstants.STMT_CREATION_ERROR);
 		}
 	}
-
-
 
 	/**
 	 *This method will be called to get all database properties.
@@ -867,8 +826,6 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
 		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
 	}
-
-	
 
 	/**
 	 * @see edu.wustl.common.dao.DAO#retrieveAttribute(java.lang.Class, java.lang.Long, java.lang.String)
