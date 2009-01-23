@@ -21,6 +21,7 @@ import org.w3c.dom.NodeList;
 
 import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.logger.Logger;
+import edu.wustl.dao.DatabaseProperties;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.DAOConstants;
 
@@ -46,7 +47,13 @@ public class ApplicationDAOPropertiesParser
 	 * Specifies application variables.
 	 */
 	private String defaultConnManager,jdbcConnManager,applicationName, daoFactoryName,
-	defaultDaoName,isDefaultDAOFactory,	configFile, jdbcDAOName,dataSource;
+	defaultDaoName,isDefaultDAOFactory,	configFile, jdbcDAOName;
+
+	/**
+	 * Database specific properties.
+	 */
+	private String databaseType,dataSource,datePattern,timePattern,dateFormatFunction,timeFormatFunction,
+	dateTostrFunction,strTodateFunction,exceptionFormatterName,queryExecutorName;
 
 	/**
 	 * This method gets DAO Factory Map.
@@ -122,6 +129,7 @@ public class ApplicationDAOPropertiesParser
 			}
 
 			IDAOFactory daoFactory = (IDAOFactory) Class.forName(daoFactoryName).newInstance();
+			DatabaseProperties databaseProperties = new DatabaseProperties();
 
 			daoFactory.setApplicationName(applicationName);
 			daoFactory.setIsDefaultDAOFactory(Boolean.parseBoolean(isDefaultDAOFactory));
@@ -131,14 +139,39 @@ public class ApplicationDAOPropertiesParser
 			daoFactory.setDefaultConnMangrName(defaultConnManager);
 
 			daoFactory.setJdbcDAOClassName(jdbcDAOName);
-			daoFactory.setDataSource(dataSource);
 			daoFactory.setJdbcConnMangrName(jdbcConnManager);
 
 			daoFactory.buildSessionFactory();
+
+			setDatabaseProperties(databaseProperties);
+			daoFactory.setDatabaseProperties(databaseProperties);
+
 			daoFactoryMap.put(daoFactory.getApplicationName(), daoFactory);
 			resetApplicationProperties();
+			databaseProperties = null;
+
 		}
 
+	}
+
+
+	/**
+	 * This method will be called to set all database specific properties like database name
+	 * database source.
+	 * @param databaseProperties : database properties
+	 */
+	private void setDatabaseProperties(DatabaseProperties databaseProperties)
+	{
+		databaseProperties.setDataBaseName(databaseType);
+		databaseProperties.setDataSource(dataSource);
+		databaseProperties.setDateFormatFunction(dateFormatFunction);
+		databaseProperties.setDatePattern(datePattern);
+		databaseProperties.setDateTostrFunction(dateTostrFunction);
+		databaseProperties.setStrTodateFunction(strTodateFunction);
+		databaseProperties.setTimeFormatFunction(timeFormatFunction);
+		databaseProperties.setTimePattern(timePattern);
+		databaseProperties.setExceptionFormatterName(exceptionFormatterName);
+		databaseProperties.setQueryExecutorName(queryExecutorName);
 	}
 
 	/**
@@ -157,6 +190,15 @@ public class ApplicationDAOPropertiesParser
 		jdbcDAOName = "";
 		dataSource = "";
 		jdbcConnManager = "";
+		databaseType ="";
+		datePattern = "";
+		timePattern= "";
+		dateFormatFunction= "";
+		timeFormatFunction= "";
+		dateTostrFunction= "";
+		strTodateFunction= "";
+		exceptionFormatterName="";
+		queryExecutorName="";
 	}
 
 	/**
@@ -247,36 +289,84 @@ public class ApplicationDAOPropertiesParser
 	 */
 	private void setJDBCDAOProperties(Node childrenDAOFactory)
 	{
-		//NamedNodeMap attMap = childrenDAOFactory.getAttributes();
-		//Node attNode = attMap.item(0);
-		//jdbcDAOName = attNode.getNodeValue();
-
-
 		NodeList childJDBCDAO = childrenDAOFactory.getChildNodes();
 		for (int l = 0; l < childJDBCDAO.getLength(); l++)
 		{
 			Node childnode = childJDBCDAO.item(l);
-
 			if (childnode.getNodeName().equals("Class-name"))
 			{
-				NamedNodeMap attMap = childnode.getAttributes();
-				Node attNode = attMap.item(0);
+				Node attNode = getNextnode(childnode);
 				jdbcDAOName = attNode.getNodeValue();
 			}
 			if (childnode.getNodeName().equals("DataSource"))
 			{
-				NamedNodeMap configFileMap = childnode.getAttributes();
-				Node configFileMapNode = configFileMap.item(0);
+				Node configFileMapNode = getNextnode(childnode);
 				dataSource = configFileMapNode.getNodeValue();
 			}
 			if (childnode.getNodeName().equals("JDBCConnectionManager"))
 			{
-				NamedNodeMap defaultConnMangrMap = childnode.getAttributes();
-				Node defaultConnMangrNode = defaultConnMangrMap.item(0);
+				Node defaultConnMangrNode = getNextnode(childnode);
 				jdbcConnManager = defaultConnMangrNode.getNodeValue();
+			}
+			if (childnode.getNodeName().equals("DatabaseType"))
+			{
+				Node defaultConnMangrNode = getNextnode(childnode);
+				databaseType = defaultConnMangrNode.getNodeValue();
+			}
+			if (childnode.getNodeName().equals("DatePattern"))
+			{
+				Node defaultConnMangrNode = getNextnode(childnode);
+				datePattern = defaultConnMangrNode.getNodeValue();
+			}
+			if (childnode.getNodeName().equals("TimePattern"))
+			{
+				Node defaultConnMangrNode = getNextnode(childnode);
+				timePattern = defaultConnMangrNode.getNodeValue();
+			}
+			if (childnode.getNodeName().equals("DateFormatFunction"))
+			{
+				Node defaultConnMangrNode = getNextnode(childnode);
+				dateFormatFunction = defaultConnMangrNode.getNodeValue();
+			}
+			if (childnode.getNodeName().equals("TimeFormatFunction"))
+			{
+				Node defaultConnMangrNode = getNextnode(childnode);
+				timeFormatFunction = defaultConnMangrNode.getNodeValue();
+			}
+			if (childnode.getNodeName().equals("DateToStrFunction"))
+			{
+				Node defaultConnMangrNode = getNextnode(childnode);
+				dateTostrFunction = defaultConnMangrNode.getNodeValue();
+			}
+			if (childnode.getNodeName().equals("StrTodateFunction"))
+			{
+				Node defaultConnMangrNode = getNextnode(childnode);
+				strTodateFunction = defaultConnMangrNode.getNodeValue();
+			}
+			if (childnode.getNodeName().equals("ExceptionFormater"))
+			{
+				Node defaultConnMangrNode = getNextnode(childnode);
+				exceptionFormatterName = defaultConnMangrNode.getNodeValue();
+			}
+			if (childnode.getNodeName().equals("QueryExecutor"))
+			{
+				Node defaultConnMangrNode = getNextnode(childnode);
+				queryExecutorName = defaultConnMangrNode.getNodeValue();
 			}
 		}
 
+	}
+
+	/**
+	 * This will return the next node details.
+	 * @param childnode :next node
+	 * @return : next node
+	 */
+	private Node getNextnode(Node childnode)
+	{
+		NamedNodeMap defaultConnMangrMap = childnode.getAttributes();
+		Node defaultConnMangrNode = defaultConnMangrMap.item(0);
+		return defaultConnMangrNode;
 	}
 
 	/**
@@ -293,20 +383,17 @@ public class ApplicationDAOPropertiesParser
 
 			if (childnode.getNodeName().equals("Class-name"))
 			{
-				NamedNodeMap attMap = childnode.getAttributes();
-				Node attNode = attMap.item(0);
+				Node attNode = getNextnode(childnode);
 				defaultDaoName = attNode.getNodeValue();
 			}
 			if (childnode.getNodeName().equals("Config-file"))
 			{
-				NamedNodeMap configFileMap = childnode.getAttributes();
-				Node configFileMapNode = configFileMap.item(0);
+				Node configFileMapNode = getNextnode(childnode);
 				configFile = configFileMapNode.getNodeValue();
 			}
 			if (childnode.getNodeName().equals("DefaultConnectionManager"))
 			{
-				NamedNodeMap defaultConnMangrMap = childnode.getAttributes();
-				Node defaultConnMangrNode = defaultConnMangrMap.item(0);
+				Node defaultConnMangrNode = getNextnode(childnode);
 				defaultConnManager = defaultConnMangrNode.getNodeValue();
 			}
 		}

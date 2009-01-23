@@ -26,6 +26,7 @@ import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.domain.AuditEventLog;
 import edu.wustl.common.exception.AuditException;
 import edu.wustl.common.exception.ErrorKey;
+import edu.wustl.common.util.global.CommonServiceLocator;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.condition.EqualClause;
 import edu.wustl.dao.connectionmanager.IConnectionManager;
@@ -628,14 +629,14 @@ public class HibernateDAOImpl implements HibernateDAO
 	/**
 	 * @param excp : Exception Object.
 	 * @return : It will return the formated messages.
-	 * @param applicationName :
 	 * @throws DAOException :
 	 */
-	public String formatMessage(Exception excp,String applicationName) throws DAOException
+	public String formatMessage(Exception excp) throws DAOException
 	{
 		logger.debug("Format error message");
 		String formatMessage = DAOConstants.TAILING_SPACES;
-		IDAOFactory daoFactory = DAOConfigFactory.getInstance().getDAOFactory(applicationName);
+		String appName = CommonServiceLocator.getInstance().getAppHome();
+		IDAOFactory daoFactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
 		JDBCDAO jdbcDAO = daoFactory.getJDBCDAO();
 		//HibernateMetaData.initHibernateMetaData(jdbcDAO.getConnectionManager().getConfiguration());
 		formatMessage = jdbcDAO.formatMessage(excp,getCleanConnection());

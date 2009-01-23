@@ -88,28 +88,6 @@ public interface JDBCDAO extends DAO
 	PagenatedResultData executeQuery(QueryParams  queryParams)
 	throws ClassNotFoundException, DAOException;
 
-	/**
-	 * Inserts records in given table.
-	 * @param tableName Name of the table in which record to be inserted
-	 * @param columnValues column data
-	 * @param columnNames (optional)column names- if not not provided,
-	 * @throws DAOException generic DAOException
-	 * @throws SQLException SQL Exception.
-	 */
-	void insertHashedValues(String tableName, List<Object> columnValues,List<String>
-	columnNames) throws DAOException, SQLException;
-
-	/**
-	* Inserts records in given table.
-	* @param tableName Name of the table in which record to be inserted
-	* @param columnValues column data
-	* @param columnNames (optional)column names- if not not provided,
-	* all column names of the table are added to the list of column names
-	* @throws DAOException generic DAOException
-	* @throws SQLException SQL Exception.
-	*/
-	/*void insert(String tableName, List<Object> columnValues, List<String>... columnNames)
-			throws DAOException, SQLException;*/
 
 	/**
 	   * Creates a table with the name and columns specified.
@@ -119,21 +97,6 @@ public interface JDBCDAO extends DAO
 	   */
 	void createTable(String tableName, String[] columnNames) throws DAOException;
 
-	/**
-	   * Deletes the specified table.
-	   * @param tableName Name of the table to delete.
-	   * @throws DAOException generic DAOException.
-	   */
-	//void delete(String tableName) throws DAOException;
-
-	/**
-	 * This method gets Activity Status.
-	 * @param sourceObjectName The table name.
-	 * @param identifier identifier
-	 * @return Activity Status.
-	 * @throws DAOException generic DAOException.
-	 *//*
-	String getActivityStatus(String sourceObjectName, Long identifier) throws DAOException;*/
 
 	/**
 	 * This method will execute the SQL and modifies the database.
@@ -141,67 +104,14 @@ public interface JDBCDAO extends DAO
 	 * @throws DAOException generic DAOException.
 	 */
 	void executeUpdate(String sql) throws DAOException;
-	/**
-	 *@return :This will return the Date Pattern.
-	 */
-	String getDatePattern();
-
-	/**
-	 * @return :This will return the Time Pattern.
-	 */
-	String getTimePattern();
-	/**
-	 * @return :This will return the Date Format Function.
-	 */
-	String getDateFormatFunction();
-
-	/**
-	 * @return :This will return the Time Format Function.
-	 */
-	String getTimeFormatFunction();
-
-	/**
-	 * @return :This will return the Date to string function
-	 */
-	String getDateTostrFunction();
-
-	/**
-	 * @return :This will return the string to Date function
-	 */
-	String getStrTodateFunction();
 
 	/**
 	 * @param excp : Exception Object.
 	 * @param connection :
 	 * @return : It will return the formated messages.
+	 * @throws DAOException :Generic DAOException.
 	 */
-	String formatMessage(Exception excp,Connection connection);
-	/**
-	 * @param columnCount count of the columns in results
-	 * @param getSublistOfResult boolean for getting sublist
-	 * @return int column count
-	 */
-	int getColumnCount(int columnCount,boolean getSublistOfResult);
-	/**
-	 * Gets SQL for Like operator.
-	 * @param attributeName name of the attribute
-	 * @param value value
-	 * @return String SQL
-	 */
-	String getSQLForLikeOperator(String attributeName, String value);
-	/**
-	 * Required for temporal query.
-	 * @return Object of type either MySQL or Oracle Primitive operation processor.
-	 */
-	Object getPrimitiveOperationProcessor();
-	/**
-	 * This method fires a query to insert auditing details into audit tables.
-	 * @param sql SQL to be fired
-	 * @param sessionData session data to get userId and ip address
-	 * @param comments comments to be inserted in the table
-	 * @throws DAOException DaoException
-	 */
-	void executeAuditSql(String sql, SessionDataBean sessionData, String comments) throws DAOException;
+	String formatMessage(Exception excp,Connection connection)throws DAOException;
 
 	/**
 	 *This method will be called to format the SQL.
@@ -229,18 +139,6 @@ public interface JDBCDAO extends DAO
 	void updateClob(String query,String clobContent)throws DAOException;
 
 	/**
-	 * This method will be called to obtained max barcode.
-	 * @return max Barcode column.
-	 */
-	String getMaxBarcodeCol();
-
-	/**
-	 * This method will be called to obtained max Label.
-	 * @return max Label column.
-	 */
-	String getMaxLabelCol();
-
-	/**
 	 * This method will be called to set the size of the batch.
 	 * @param batchSize batchSize
 	 * @throws DAOException : Generic database exception.
@@ -252,18 +150,138 @@ public interface JDBCDAO extends DAO
 	 * @param obj :DML object
 	 * @throws DAOException : Generic database exception.
 	 */
-	void addDMLToBatch(String obj) throws DAOException;
+	//void addDMLToBatch(String obj) throws DAOException;
 
 	/**
 	 * This method will be called for batch update insert.
 	 * @throws DAOException :Generic DAOException.
 	 */
-	void batchUpdate() throws DAOException;
+	//void batchUpdate() throws DAOException;
 
 	/**
 	 * This method will be called to clear the batch.
 	 * @throws DAOException :Generic DAOException.
 	 */
-	void clearBatch() throws DAOException;
+	//void clearBatch() throws DAOException;
+
+	/**
+	 * Deletes the table from the database.
+	 * @param tableName The table to be deleted.
+	 * @throws DAOException generic DAOException.
+	 */
+	void deleteTable(String tableName) throws DAOException;
+
+	/**
+	 * @return :This will return the Date Pattern.
+	 */
+	String getDatePattern();
+
+	/**
+	 * @return :This will return the Time Pattern.
+	 */
+	String getTimePattern();
+
+	/**
+	 * @return :This will return the Date Format Function.
+	 */
+	String getDateFormatFunction();
+	/**
+	 * @return :This will return the Time Format Function.
+	 */
+	String getTimeFormatFunction();
+
+	/**
+	 * @return :This will return the Date to string function
+	 */
+	String getDateTostrFunction();
+	/**
+	 * @return :This will return the string to Date function
+	 */
+	String getStrTodateFunction();
+
+	/**
+	 * This method will be called to set all the database specific properties.
+	 * @param databaseProperties : database properties.
+	 */
+	void setDatabaseProperties(DatabaseProperties databaseProperties);
+
+	/**
+	 * Inserts records in given table.
+	 * @param tableName Name of the table in which record to be inserted
+	 * @param columnValues column data
+	 * @param columnNames (optional)column names- if not not provided,
+	 * @throws DAOException generic DAOException
+	 * @throws SQLException SQL Exception.
+	 */
+	void insertHashedValues(String tableName, List<Object> columnValues,List<String>
+	columnNames) throws DAOException, SQLException;
+
+	/**
+	 * This method will be called to obtained max barcode.
+	 * @return max Barcode column.
+	 *//*
+	String getMaxBarcodeCol();
+
+	*//**
+	 * This method will be called to obtained max Label.
+	 * @return max Label column.
+	 *//*
+	    String getMaxLabelCol();
+	  */
+
+	/**
+	 * @param columnCount count of the columns in results
+	 * @param getSublistOfResult boolean for getting sublist
+	 * @return int column count
+	 *//*
+	int getColumnCount(int columnCount,boolean getSublistOfResult);
+	*//**
+	 * Gets SQL for Like operator.
+	 * @param attributeName name of the attribute
+	 * @param value value
+	 * @return String SQL
+	 *//*
+	String getSQLForLikeOperator(String attributeName, String value);
+	*//**
+	 * Required for temporal query.
+	 * @return Object of type either MySQL or Oracle Primitive operation processor.
+	 *//*
+	Object getPrimitiveOperationProcessor();
+	*//**
+	 * This method fires a query to insert auditing details into audit tables.
+	 * @param sql SQL to be fired
+	 * @param sessionData session data to get userId and ip address
+	 * @param comments comments to be inserted in the table
+	 * @throws DAOException DaoException
+	 *//*
+	void executeAuditSql(String sql, SessionDataBean sessionData, String comments) throws DAOException;*/
+
+	/**
+	   * Deletes the specified table.
+	   * @param tableName Name of the table to delete.
+	   * @throws DAOException generic DAOException.
+	   */
+	//void delete(String tableName) throws DAOException;
+
+	/**
+	 * This method gets Activity Status.
+	 * @param sourceObjectName The table name.
+	 * @param identifier identifier
+	 * @return Activity Status.
+	 * @throws DAOException generic DAOException.
+	 *//*
+	String getActivityStatus(String sourceObjectName, Long identifier) throws DAOException;*/
+
+	/**
+	* Inserts records in given table.
+	* @param tableName Name of the table in which record to be inserted
+	* @param columnValues column data
+	* @param columnNames (optional)column names- if not not provided,
+	* all column names of the table are added to the list of column names
+	* @throws DAOException generic DAOException
+	* @throws SQLException SQL Exception.
+	*/
+	/*void insert(String tableName, List<Object> columnValues, List<String>... columnNames)
+			throws DAOException, SQLException;*/
 
 }

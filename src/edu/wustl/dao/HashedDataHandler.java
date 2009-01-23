@@ -332,7 +332,7 @@ public class HashedDataHandler
 			 * Recheck if some issues occurs.
 			 */
 			Timestamp timestampInner = new Timestamp(date.getTime());
-			if (obj != null && !obj.toString().equals(""))
+			if (obj != null && !DAOConstants.TAILING_SPACES.equals(obj.toString()))
 			{
 				timestamp = timestampInner;
 			}
