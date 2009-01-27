@@ -439,8 +439,8 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		PagenatedResultData pagenatedResultData = null;
 		try
 		{
-			Class clsObj = Class.forName(databaseProperties.getQueryExecutorName());
-			AbstractQueryExecutor queryExecutor = (AbstractQueryExecutor)clsObj.newInstance();
+			Class queryExeClass = Class.forName(databaseProperties.getQueryExecutorName());
+			AbstractQueryExecutor queryExecutor = (AbstractQueryExecutor)queryExeClass.newInstance();
 			pagenatedResultData = queryExecutor.getQueryResultList(queryParams);
 
 		}
@@ -676,8 +676,8 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		String formattedMsg;
 		try
 		{
-			Class clsObj = Class.forName(databaseProperties.getExceptionFormatterName());
-			IDBExceptionFormatter formatter =  (IDBExceptionFormatter)clsObj.newInstance();
+			Class formatterClass = Class.forName(databaseProperties.getExceptionFormatterName());
+			IDBExceptionFormatter formatter =  (IDBExceptionFormatter)formatterClass.newInstance();
 			formattedMsg =  formatter.getFormatedMessage(excp,connection);
 		}
 		catch(Exception exp)
