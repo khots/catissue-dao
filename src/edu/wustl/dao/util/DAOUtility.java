@@ -20,7 +20,10 @@ import org.hibernate.Session;
 import edu.wustl.common.audit.AuditManager;
 import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.exception.ErrorKey;
+import edu.wustl.common.util.global.CommonServiceLocator;
 import edu.wustl.common.util.logger.Logger;
+import edu.wustl.dao.DAO;
+import edu.wustl.dao.HibernateDAO;
 import edu.wustl.dao.daofactory.DAOConfigFactory;
 import edu.wustl.dao.exception.DAOException;
 
@@ -198,20 +201,21 @@ public final class DAOUtility
 	/** This method add details of query in a list.
 	 * @param queryName String name of query.
 	 * @param values List of type Object object list.
-	 * @param applicationName : applicationName
 	 * @return Collection containing details of query.
 	 * @throws DAOException :
+	 * TODO : need to check this method.have to remove this
 	 */
 
-	public static Collection<Object> executeHQL(String queryName, List<Object> values,
-			String applicationName) throws DAOException
+	public static Collection<Object> executeHQL(String queryName, List<Object> values) throws DAOException
 	{
-		Session session = null;
+		DAO dao = null;
 		try
 		{
-			DAOConfigFactory.getInstance().
-				getDAOFactory(applicationName).getDAO().openSession(null);
-			Query query = session.getNamedQuery(queryName);
+			String appName = CommonServiceLocator.getInstance().getAppName();
+			dao = DAOConfigFactory.getInstance().
+			getDAOFactory(appName).getDAO();
+			dao.openSession(null);
+			Query query = (Query)((HibernateDAO)dao).getNamedQuery(queryName);
 
 			/*if (values != null)
 			{
@@ -243,21 +247,19 @@ public final class DAOUtility
 		}
 		finally
 		{
-			DAOConfigFactory.getInstance().
-			getDAOFactory(applicationName).getDAO().closeSession();
+			dao.closeSession();
 		}
 	}
 	/**
 	 * Return the output of execution of query.
 	 * @param queryName String name of query.
-	 * @param applicationName : applicationName
 	 * @return Collection containing output of execution of query.
 	 * @throws DAOException :
 	 */
-	public static Collection executeHQL(String queryName,String applicationName)
+	public static Collection executeHQL(String queryName)
 	throws DAOException
 	{
-		return executeHQL(queryName, null,applicationName);
+		return executeHQL(queryName, null);
 	}
 
 	/**
