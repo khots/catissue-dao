@@ -6,55 +6,110 @@ package edu.wustl.dao;
 public class DatabaseProperties
 {
 
+	/**
+	 * Database Name.
+	 */
 	private String dataBaseName;
+
+	/**
+	 * Database specific date pattern.
+	 */
 	private String datePattern;
+
+	/**
+	 * Database specific time pattern.
+	 */
 	private String timePattern;
+	/**
+	 * Database specific date format function.
+	 */
 	private String dateFormatFunction;
+	/**
+	 * Database specific time format function.
+	 */
 	private String timeFormatFunction;
+	/**
+	 * Database specific date to string function.
+	 */
 	private String dateTostrFunction;
+	/**
+	 * Database specific string to date function.
+	 */
 	private String strTodateFunction;
+	/**
+	 * Database data source name.
+	 */
 	private String dataSource;
+	/**
+	 * Database default batch size.
+	 */
 	private int defaultBatchSize;
 
-
-
+	/**
+	 * Exception formatter name.
+	 */
 	private String exceptionFormatterName;
-	
 
+    /**
+     * Query executor name.
+     */
 	private String queryExecutorName;
 
+	/**
+	 * This method will be called to get the database name.
+	 * @return database name.
+	 */
 	public String getDataBaseName()
 	{
 		return dataBaseName;
 	}
 
+	/**
+	 * This method will be called to set the database name.
+	 * @param dataBaseName : database name.
+	 */
 	public void setDataBaseName(String dataBaseName)
 	{
 		this.dataBaseName = dataBaseName;
 	}
 
-	
-	public String getExceptionFormatterName() 
+
+	/**
+	 * This method will be called to get the exception formatter name.
+	 * @return exception formatter name.
+	 */
+	public String getExceptionFormatterName()
 	{
 		return exceptionFormatterName;
 	}
 
+	/**
+	 * This method will be called to get the query executor name.
+	 * @return query executor name.
+	 */
 	public String getQueryExecutorName()
 	{
 		return queryExecutorName;
 	}
 
+	/**
+	 * This method will be called to set the exception formatter name.
+	 * @param exceptionFormatterName exception formatter name.
+	 */
 	public void setExceptionFormatterName(String exceptionFormatterName)
 	{
 		this.exceptionFormatterName = exceptionFormatterName;
 	}
 
+	/**
+	 * This method will be called to set the query executor name.
+	 * @param queryExecutorName query executor name.
+	 */
 	public void setQueryExecutorName(String queryExecutorName)
 	{
 		this.queryExecutorName = queryExecutorName;
 	}
-	
-	
+
 	/**
 	 * @return :This will return the Date Pattern.
 	 */
@@ -101,31 +156,55 @@ public class DatabaseProperties
 		return strTodateFunction;
 	}
 
-	public void setDatePattern(String datePattern) 
+	/**
+	 * This method will set the date pattern.
+	 * @param datePattern  date pattern.
+	 */
+	public void setDatePattern(String datePattern)
 	{
 		this.datePattern = datePattern;
 	}
 
+	/**
+	 * This method will set the time pattern.
+	 * @param timePattern time pattern.
+	 */
 	public void setTimePattern(String timePattern)
 	{
 		this.timePattern = timePattern;
 	}
 
+	/**
+	 * This method will set the date format function.
+	 * @param dateFormatFunction date format function.
+	 */
 	public void setDateFormatFunction(String dateFormatFunction)
 	{
 		this.dateFormatFunction = dateFormatFunction;
 	}
 
+	/**
+	 * This method will set the time format function.
+	 * @param timeFormatFunction time format function
+	 */
 	public void setTimeFormatFunction(String timeFormatFunction)
 	{
 		this.timeFormatFunction = timeFormatFunction;
 	}
 
+	/**
+	 * This method will set the date to string function.
+	 * @param dateTostrFunction date to string function
+	 */
 	public void setDateTostrFunction(String dateTostrFunction)
 	{
 		this.dateTostrFunction = dateTostrFunction;
 	}
 
+	/**
+	 * This method will set the string to date function.
+	 * @param strTodateFunction string to date function.
+	 */
 	public void setStrTodateFunction(String strTodateFunction)
 	{
 		this.strTodateFunction = strTodateFunction;

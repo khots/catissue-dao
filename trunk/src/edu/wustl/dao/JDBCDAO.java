@@ -168,4 +168,10 @@ public interface JDBCDAO extends DAO
 	 */
 	void setDatabaseProperties(DatabaseProperties databaseProperties);
 
+	/**
+	 * This method will be called to get the database name.
+	 * @return database name.
+	 */
+	String getDataBaseName();
+
 }
