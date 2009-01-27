@@ -17,6 +17,8 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
+import edu.wustl.common.audit.AuditManager;
+import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.daofactory.DAOConfigFactory;
@@ -256,6 +258,27 @@ public final class DAOUtility
 	throws DAOException
 	{
 		return executeHQL(queryName, null,applicationName);
+	}
+
+	/**
+	 * This will be called to initialized the Audit Manager.
+	 * @param sessionDataBean : This will holds the session data.
+	 * @return AuditManager : instance of AuditManager
+	 */
+	public static AuditManager getAuditManager(SessionDataBean sessionDataBean)
+	{
+		logger.debug("Initialize audit manager");
+		AuditManager auditManager = new AuditManager();
+		if (sessionDataBean == null)
+		{
+			auditManager.setUserId(null);
+		}
+		else
+		{
+			auditManager.setUserId(sessionDataBean.getUserId());
+			auditManager.setIpAddress(sessionDataBean.getIpAddress());
+		}
+		return auditManager;
 	}
 
 }
