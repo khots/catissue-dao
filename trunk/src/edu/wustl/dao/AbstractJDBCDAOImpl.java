@@ -465,15 +465,18 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	}
 
 	/**
-	 * This method will be called to set the DML object to batch.
-	 * @param dmlObject :DML object
+	 * Adds the given SQL command to the current list of commands for
+     * batchStatement object. The commands in this list can be
+     * executed as a batch by calling the method executeBatch
+	 @param sql typically this is a static SQL INSERT or
+     * UPDATE statement
 	 * @throws DAOException : Generic database exception.
 	 */
-	private void addDMLToBatch(String dmlObject) throws DAOException
+	private void addSQLToBatch(String sql) throws DAOException
 	{
 		try
 		{
-			batchStatement.addBatch(dmlObject);
+			batchStatement.addBatch(sql);
 
 			if(++batchCounter >= batchSize)
 			{
@@ -537,19 +540,21 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		}
 	}
 	/**
-	 * This method will be called to set the DML object to batch.
-	 * @param dmlObject :DML object
+	 * Adds the given SQL command to the current list of commands for
+     * batchStatement object.
+	 *@param sql typically this is a static SQL INSERT or
+     * UPDATE statement
 	 * @param sessionDataBean : session data bean
 	 * @param isAuditable : is auditable.
 	 * @param isSecureInsert : is secure to insert
 	 * @throws DAOException : Generic database exception.
 	 */
-	public void insert(Object dmlObject, SessionDataBean sessionDataBean,
+	public void insert(Object sql, SessionDataBean sessionDataBean,
 			boolean isAuditable, boolean isSecureInsert)
 			throws DAOException
 	{
 		logger.debug("Add DML to batch");
-		addDMLToBatch((String)dmlObject);
+		addSQLToBatch((String)sql);
 	}
 
 	/**
