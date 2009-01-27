@@ -30,6 +30,7 @@ import edu.wustl.dao.connectionmanager.IConnectionManager;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.formatmessage.IDBExceptionFormatter;
 import edu.wustl.dao.util.DAOConstants;
+import edu.wustl.dao.util.DAOUtility;
 import edu.wustl.dao.util.DatabaseConnectionParams;
 import edu.wustl.query.executor.AbstractQueryExecutor;
 import edu.wustl.security.exception.SMException;
@@ -92,7 +93,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		try
 		{
 			logger.debug("Open the session");
-			initializeAuditManager(sessionDataBean);
+			auditManager = DAOUtility.getAuditManager(sessionDataBean);
 			connection = connectionManager.getConnection();
 			connection.setAutoCommit(false);
 
@@ -165,27 +166,6 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		connectionManager.rollback();
 
 	}
-
-
-	/**
-	 * This will be called to initialized the Audit Manager.
-	 * @param sessionDataBean : This will holds the session data.
-	 */
-	private void initializeAuditManager(SessionDataBean sessionDataBean)
-	{
-		logger.debug("Initialize audit manager");
-		auditManager = new AuditManager();
-		if (sessionDataBean == null)
-		{
-			auditManager.setUserId(null);
-		}
-		else
-		{
-			auditManager.setUserId(sessionDataBean.getUserId());
-			auditManager.setIpAddress(sessionDataBean.getIpAddress());
-		}
-	}
-
 	/**
 	 * This method will be called for executing a static SQL statement.
 	 * @see edu.wustl.dao.JDBCDAO#executeUpdate(java.lang.String)

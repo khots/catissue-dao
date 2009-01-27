@@ -89,19 +89,7 @@ public class HibernateDAOImpl implements HibernateDAO
 	{
 		logger.debug("Open the session");
 		session = connectionManager.currentSession();
-		auditManager = new AuditManager();
-		if (sessionDataBean != null)
-		{
-			auditManager.setUserId(sessionDataBean.getUserId());
-			auditManager.setIpAddress(sessionDataBean.getIpAddress());
-		}
-		/*
-		 * TODO Removed ..check if some issues occur because of this
-		 * 	else
-			 {
-				auditManager.setUserId(null);
-			}
-		 */
+		auditManager = DAOUtility.getAuditManager(sessionDataBean);
 	}
 
 	/**
@@ -167,7 +155,7 @@ public class HibernateDAOImpl implements HibernateDAO
 		try
 		{
 			session.save(obj);
-			isObjectAuditable(obj, isAuditable);
+			auditManager.compare(obj, null, "INSERT",isAuditable);
 			updated = true;
 		}
 		catch (HibernateException hibExp)
@@ -184,23 +172,6 @@ public class HibernateDAOImpl implements HibernateDAO
 
 
 	}
-
-	/**
-	 * @param obj :Object
-	 * @param isAuditable : This will be true if object will be Auditable.
-	 * @throws AuditException :Exception thrown
-	 */
-	private void isObjectAuditable(Object obj, boolean isAuditable)
-			throws AuditException
-	{
-		logger.debug("Inside isObjectAuditable method.");
-
-		if (obj instanceof Auditable && isAuditable)
-		{
-			auditManager.compare((Auditable) obj, null, "INSERT");
-		}
-	}
-
 
 	/**
 	 * Updates the persistent object in the database.
@@ -238,11 +209,7 @@ public class HibernateDAOImpl implements HibernateDAO
 		logger.debug("Inside Audit method");
 		try
 		{
-			if (obj instanceof Auditable && isAuditable)
-			{
-				auditManager.compare((Auditable) obj, (Auditable) oldObj, "UPDATE");
-			}
-
+			auditManager.compare(obj, (Auditable) oldObj, "UPDATE",isAuditable);
 		}
 		catch (AuditException auditExp)
 		{
