@@ -593,6 +593,15 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	}
 
 	/**
+	 * This method will be called to get the database name.
+	 * @return database name.
+	 */
+	public String getDataBaseName()
+	{
+		return databaseProperties.getDataBaseName();
+	}
+
+	/**
 	 *This method will be called to get all database properties.
 	 * @return database properties.
 	 */
