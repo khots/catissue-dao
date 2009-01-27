@@ -476,5 +476,13 @@ public class DAOFactory implements IDAOFactory
 		this.databaseProperties = databaseProperties;
 	}
 
+	/**
+	 * This method will be called to get the database name.
+	 * @return database name.
+	 */
+	public String getDataBaseType()
+	{
+		return databaseProperties.getDataBaseType();
+	}
 
 }

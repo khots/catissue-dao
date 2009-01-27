@@ -147,5 +147,10 @@ public interface IDAOFactory
 	  * @param databaseProperties :database properties.
 	  */
 	 void setDatabaseProperties(DatabaseProperties databaseProperties);
+	 /**
+	 * This method will be called to get the database name.
+	 * @return database name.
+	 */
+	String getDataBaseType();
 
 }
