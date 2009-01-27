@@ -145,13 +145,6 @@ public class HibernateDAOImpl implements HibernateDAO
 	 */
 	public void rollback() throws DAOException
 	{
-		/**
-		 * the isUpdated==true is removed because if there is cascade save-update
-		 * and the association collection objects
-		 * is violating then in insert() method session.save() is throwing exception
-		 * and isUpdated is not getting set to true.
-		 * Because of this roll back is not happening on parent object.
-		 */
 		logger.debug("Session rollback");
 		if (updated)
 		{

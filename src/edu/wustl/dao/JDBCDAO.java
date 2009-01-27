@@ -22,13 +22,6 @@ public interface JDBCDAO extends DAO
 {
 
 	/**
-	 * Creates a table with the query specified.
-	 * @param query Query create table.
-	 * @throws DAOException generic DAOException.
-	 */
-	void createTable(String query) throws DAOException;
-
-	/**
 	* Returns the ResultSet containing all the rows according to the columns specified
 	* from the table represented in sourceObjectName.
 	* @param sourceObjectName The table name.
@@ -86,16 +79,6 @@ public interface JDBCDAO extends DAO
 	 */
 	PagenatedResultData executeQuery(QueryParams  queryParams)
 	throws ClassNotFoundException, DAOException;
-
-
-	/**
-	   * Creates a table with the name and columns specified.
-	   * @param tableName Name of the table to create.
-	   * @param columnNames Columns in the table.
-	   * @throws DAOException generic DAOException
-	   */
-	void createTable(String tableName, String[] columnNames) throws DAOException;
-
 
 	/**
 	 * This method will execute the SQL and modifies the database.

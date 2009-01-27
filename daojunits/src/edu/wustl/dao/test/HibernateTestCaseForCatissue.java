@@ -913,7 +913,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 		assertNotNull("Connection Manager Name not exists", daoFactory.getDefaultConnMangrName());
 		assertNotNull("JDBC class name Name does not exists", daoFactory.getJdbcDAOClassName());
 		assertNotNull("JDBC Connection Manager Name not exists", daoFactory.getJdbcConnMangrName());
-		assertNotNull("Data source not exists", daoFactory.getDataSource());
+		//assertNotNull("Data source not exists", daoFactory.getDataSource());
 
 	}
 
@@ -996,8 +996,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 			try
 			{
 				ApplicationException appExp = (ApplicationException)exp;
-				String messagethrown = formatter.formatMessage(appExp.getWrapException(),
-						"caTissuecore");
+				String messagethrown = formatter.formatMessage(appExp.getWrapException());
 				assertTrue("Message thrown is not correct!! ",
 						messagethrown.contains("Submission failed since"));
 

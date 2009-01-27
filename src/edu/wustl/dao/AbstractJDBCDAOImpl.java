@@ -201,55 +201,6 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	}
 
 	/**
-	 * @see edu.wustl.common.dao.JDBCDAO#createTable(java.lang.String, java.lang.String[])
-	 * This method will Create and execute a table with the name and columns specified
-	 * @param tableName : Table Name
-	 * @param columnNames : Columns of the table
-	 * @throws DAOException DAOException
-	 * */
-
-	public void createTable(String tableName, String[] columnNames) throws DAOException
-	{
-		logger.debug("Create table.");
-		String query = createTableQuery(tableName,columnNames);
-		executeUpdate(query);
-	}
-
-	/**
-	 * Creates a table with the query specified.
-	 * @param query Query create table.
-	 * @throws DAOException DAOException
-	 */
-	public void createTable(String query) throws DAOException
-	{
-		logger.debug("Create table.");
-		executeUpdate(query);
-	}
-
-	/**
-	 * Generates the Create Table Query.
-	 * @param tableName Name of the table to create.
-	 * @param columnNames Columns in the table.
-	 * @return Create Table Query
-	 * @throws DAOException : It will throw DAOException
-	 */
-	private String createTableQuery(String tableName, String[] columnNames) throws DAOException
-	{
-		logger.debug("Prepared query for create table.");
-		StringBuffer query = new StringBuffer("CREATE TABLE").append(DAOConstants.TAILING_SPACES).
-		append(tableName).append(" (");
-		int index;
-
-		for ( index=0; index < (columnNames.length - 1); index++)
-		{
-
-			query = query.append(columnNames[index]).append(" VARCHAR(50),");
-		}
-		query.append(columnNames[index]).append(" VARCHAR(50))");
-
-		return  query.toString();
-	}
-	/**
 	 * Returns the ResultSet containing all the rows in the table represented in sourceObjectName.
 	 * @param sourceObjectName The table name.
 	 * @return The ResultSet containing all the rows in the table represented in sourceObjectName.
