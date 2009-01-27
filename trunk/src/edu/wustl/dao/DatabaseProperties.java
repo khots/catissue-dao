@@ -49,7 +49,8 @@ public class DatabaseProperties
 		this.exceptionFormatterName = exceptionFormatterName;
 	}
 
-	public void setQueryExecutorName(String queryExecutorName) {
+	public void setQueryExecutorName(String queryExecutorName)
+	{
 		this.queryExecutorName = queryExecutorName;
 	}
 	

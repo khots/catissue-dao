@@ -982,8 +982,7 @@ public class HibernateTestCaseForCider extends BaseTestCase
 			try
 			{
 				ApplicationException appExp = (ApplicationException)exp;
-				String messagethrown = formatter.formatMessage(appExp.getWrapException(),
-						"cider");
+				String messagethrown = formatter.formatMessage(appExp.getWrapException());
 				assertTrue("Message thrown is not correct!! ",
 						messagethrown.contains("Submission failed since"));
 
