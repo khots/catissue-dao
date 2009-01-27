@@ -9,7 +9,7 @@ public class DatabaseProperties
 	/**
 	 * Database Name.
 	 */
-	private String dataBaseName;
+	private String dataBaseType;
 
 	/**
 	 * Database specific date pattern.
@@ -59,18 +59,18 @@ public class DatabaseProperties
 	 * This method will be called to get the database name.
 	 * @return database name.
 	 */
-	public String getDataBaseName()
+	public String getDataBaseType()
 	{
-		return dataBaseName;
+		return dataBaseType;
 	}
 
 	/**
 	 * This method will be called to set the database name.
-	 * @param dataBaseName : database name.
+	 * @param dataBaseType : database Type.
 	 */
-	public void setDataBaseName(String dataBaseName)
+	public void setDataBaseType(String dataBaseType)
 	{
-		this.dataBaseName = dataBaseName;
+		this.dataBaseType = dataBaseType;
 	}
 
 

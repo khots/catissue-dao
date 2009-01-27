@@ -163,7 +163,7 @@ public class ApplicationDAOPropertiesParser
 	 */
 	private void setDatabaseProperties(DatabaseProperties databaseProperties)
 	{
-		databaseProperties.setDataBaseName(databaseType);
+		databaseProperties.setDataBaseType(databaseType);
 		databaseProperties.setDataSource(dataSource);
 		databaseProperties.setDateFormatFunction(dateFormatFunction);
 		databaseProperties.setDatePattern(datePattern);
