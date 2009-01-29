@@ -7,8 +7,6 @@ package edu.wustl.dao;
 import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.exception.DAOException;
-import edu.wustl.dao.sqlformatter.SQLFormatter;
-import edu.wustl.dao.sqlformatter.SQLFormatterOracle;
 import edu.wustl.dao.util.DAOConstants;
 import edu.wustl.dao.util.DatabaseConnectionParams;
 
@@ -72,9 +70,9 @@ public class OracleDAOImpl extends AbstractJDBCDAOImpl
 	 * @param query :
 	 * @param clobContent :
 	 * @throws DAOException :Generic DAOException.
-	 */
+	 *//*
 	public void updateClob(String query, String clobContent) throws DAOException
-	{/*
+	{
 		try
 		{
 
@@ -110,19 +108,19 @@ public class OracleDAOImpl extends AbstractJDBCDAOImpl
 					DAOConstants.EXECUTE_QUERY_ERROR);
 		}
 
-	*/}
+	}
 
-	/**
+	*//**
 	 * TODO later.
 	 *@param sqlFormatter :
 	 *@param sequenceName :
 	 *@param columnName :
 	 *@param columnTpe :
 	 * @throws DAOException :
-	 */
+	 *//*
 	public void insert(SQLFormatter sqlFormatter,String sequenceName,String columnName,
 			int columnTpe) throws DAOException
-	{/*
+	{
 		StringBuffer sqlBuff = new StringBuffer(DAOConstants.TAILING_SPACES);
 		sqlBuff.append("select").append(DAOConstants.TAILING_SPACES).append(sequenceName).
 		append(DAOConstants.DOT_OPERATOR).append("nextVal from dual");
@@ -133,18 +131,18 @@ public class OracleDAOImpl extends AbstractJDBCDAOImpl
 		executeUpdate(sqlFormatter.getInsertQuery());
 
 
-	*/}
+	}
 
-	/**
+	*//**
 	 * TODO later.
 	 *This method will be called to format the SQL.
 	 *@param tableName :
 	 *@throws DAOException :Generic DAOException.
 	 *@return SQLFormatter :
-	 */
+	 *//*
 	public SQLFormatter getSQLFormatter(String tableName) throws DAOException
 	{
 		return new SQLFormatterOracle(tableName);
 	}
-
+*/
 }

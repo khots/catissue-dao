@@ -32,9 +32,16 @@ public class JDBCConnectionManager extends ConnectionManager
 		try
 		{
 			connection = sessionFactory.openSession().connection();
+			connection.setAutoCommit(false);
 			return connection;
 		}
 		catch (HibernateException exp)
+		{
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
+			throw new DAOException(errorKey,exp,"JDBCConnectionManager.java :"+
+					DAOConstants.NEW_SESSION_ERROR);
+		}
+		catch (SQLException exp)
 		{
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
 			throw new DAOException(errorKey,exp,"JDBCConnectionManager.java :"+

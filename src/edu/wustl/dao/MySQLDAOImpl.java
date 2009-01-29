@@ -6,8 +6,6 @@ package edu.wustl.dao;
 
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.exception.DAOException;
-import edu.wustl.dao.sqlformatter.SQLFormatter;
-import edu.wustl.dao.sqlformatter.SQLFormatterMySQL;
 
 
 /**
@@ -40,33 +38,33 @@ public class MySQLDAOImpl extends AbstractJDBCDAOImpl
 	 *@param tableName :
 	 *@throws DAOException :Generic DAOException.
 	 *@return SQLFormatter :
-	 */
+	 *//*
 	public SQLFormatter getSQLFormatter(String tableName) throws DAOException
 	{
 		return new SQLFormatterMySQL(tableName);
 	}
 
 
-	/**
+	*//**
 	 * TODO Later.
 	 * @param query :
 	 * @param clobContent :
-	 */
+	 *//*
 	public void updateClob(String query, String clobContent)
 	{}
 
 
-	/**
+	*//**
 	 * TODO : Later.
 	 *@param sqlFormatter :
 	 *@param sequenceName :
 	 *@param columnName :
 	 *@param columnTpe :
 	 * @throws DAOException :
-	 */
+	 *//*
 	public void insert(SQLFormatter sqlFormatter,String sequenceName,String columnName,
 			int columnTpe) throws DAOException
-	{/*
+	{
 		executeUpdate(sqlFormatter.getInsertQuery());
 		StringBuffer sqlBuff = new StringBuffer(DAOConstants.TAILING_SPACES);
 		sqlBuff.append("select max(").append(columnName).append(") from").
@@ -74,6 +72,7 @@ public class MySQLDAOImpl extends AbstractJDBCDAOImpl
 
 		Object sequenceNo = getSequenceNumber(sqlBuff.toString());
 		sqlFormatter.addColValBean(new ColumnValueBean(columnName,sequenceNo,columnTpe));
-	*/}
+	}
 
+*/
 }

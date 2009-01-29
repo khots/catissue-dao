@@ -38,7 +38,7 @@ public class DAOException extends ApplicationException
 	 * initializing mandatory members.
 	 * It will called on occurrence of database related exception.
 	 * @param errorKey : key assigned to the error
-	 * @param throwable :
+	 * @param exception :exception
 	 * @param msgValues : message displayed when error occurred
 	 */
 	public DAOException(final ErrorKey errorKey, final Exception exception, final String msgValues)

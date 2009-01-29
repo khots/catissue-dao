@@ -13,23 +13,17 @@ package edu.wustl.dao;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Collection;
 import java.util.List;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
-import edu.wustl.common.audit.AuditManager;
-import edu.wustl.common.audit.Auditable;
 import edu.wustl.common.beans.SessionDataBean;
-import edu.wustl.common.domain.AuditEventLog;
 import edu.wustl.common.exception.AuditException;
 import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.global.CommonServiceLocator;
 import edu.wustl.common.util.logger.Logger;
-import edu.wustl.dao.condition.EqualClause;
-import edu.wustl.dao.connectionmanager.IConnectionManager;
 import edu.wustl.dao.daofactory.DAOConfigFactory;
 import edu.wustl.dao.daofactory.IDAOFactory;
 import edu.wustl.dao.exception.DAOException;
@@ -41,7 +35,7 @@ import edu.wustl.dao.util.DAOUtility;
  * Default implementation of DAO through Hibernate ORM tool.
  * @author kapil_kaveeshwar
  */
-public class HibernateDAOImpl implements HibernateDAO
+public class HibernateDAOImpl extends AbstractDAOImpl
 {
 
     /**
@@ -61,23 +55,9 @@ public class HibernateDAOImpl implements HibernateDAO
      private Connection cleanConnection = null;
 
 	/**
-	 * specify AuditManager instance.
-	 */
-      private AuditManager auditManager;
-	/**
-	 * specify isUpdated.
-	 */
-	private boolean updated = false;
-
-	/**
-	 * specify Connection Manager.
-	 */
-	private IConnectionManager connectionManager;
-
-	/**
 	 * specify Session instance.
 	 */
-      private Session session = null;
+     private Session session = null;
 
 	/**
 	 * This method will be used to establish the session with the database.
@@ -87,9 +67,8 @@ public class HibernateDAOImpl implements HibernateDAO
 	 */
 	public void openSession(SessionDataBean sessionDataBean) throws DAOException
 	{
-		logger.debug("Open the session");
+		super.openSession(sessionDataBean);
 		session = connectionManager.currentSession();
-		auditManager = DAOUtility.getAuditManager(sessionDataBean);
 	}
 
 	/**
@@ -99,9 +78,8 @@ public class HibernateDAOImpl implements HibernateDAO
 	 */
 	public void closeSession() throws DAOException
 	{
-		logger.debug("Close the session");
+		super.closeSession();
 		connectionManager.closeSession();
-		auditManager = null;
 	}
 
 	/**
@@ -111,19 +89,8 @@ public class HibernateDAOImpl implements HibernateDAO
 	 */
 	public void commit() throws DAOException
 	{
-		logger.debug("Session commit");
-		try
-		{
-			auditManager.insert(this);
-			connectionManager.commit();
-		}
-		catch (Exception exp)
-		{
-			//TODO
-			ErrorKey errorKey = ErrorKey.getErrorKey("db.audit.error");
-			throw new DAOException(errorKey,exp,"HibernateDAOImpl.java :"+
-					DAOConstants.COMMIT_DATA_ERROR);
-		}
+		super.commit();
+		connectionManager.commit();
 	}
 
 	/**
@@ -134,29 +101,22 @@ public class HibernateDAOImpl implements HibernateDAO
 	public void rollback() throws DAOException
 	{
 		logger.debug("Session rollback");
-		if (updated)
-		{
-			connectionManager.rollback();
-		}
+		connectionManager.rollback();
 	}
 
 	/**
 	 * Saves the persistent object in the database.
 	 * @param obj The object to be saved.
-	 * @param sessionDataBean The session in which the object is saved.
 	 * @param isAuditable is Auditable.
-	 * @param isSecureInsert is Secure Insert.
 	 * @throws DAOException generic DAOException.
 	 */
-	public void insert(Object obj, SessionDataBean sessionDataBean, boolean isAuditable,
-			boolean isSecureInsert) throws DAOException
+	public void insert(Object obj,boolean isAuditable) throws DAOException
 	{
 		logger.debug("Insert Object");
 		try
 		{
 			session.save(obj);
 			auditManager.compare(obj, null, "INSERT",isAuditable);
-			updated = true;
 		}
 		catch (HibernateException hibExp)
 		{
@@ -184,8 +144,6 @@ public class HibernateDAOImpl implements HibernateDAO
 		try
 		{
 			session.update(obj);
-			updated = true;
-
 		}
 		catch (HibernateException hibExp)
 		{
@@ -193,40 +151,6 @@ public class HibernateDAOImpl implements HibernateDAO
 			throw new DAOException(errorKey,hibExp,"HibernateDAOImpl.java :"+
 					DAOConstants.UPDATE_OBJ_ERROR);
 		}
-	}
-
-	/**
-	 * Audit.
-	 * @param obj The object to be audited.
-	 * @param oldObj old Object.
-	 * @param sessionDataBean session Data.
-	 * @param isAuditable is Auditable.
-	 * @throws DAOException generic DAOException.
-	 */
-	public void audit(Object obj, Object oldObj, SessionDataBean sessionDataBean,
-			boolean isAuditable) throws DAOException
-	{
-		logger.debug("Inside Audit method");
-		try
-		{
-			auditManager.compare(obj, (Auditable) oldObj, "UPDATE",isAuditable);
-		}
-		catch (AuditException auditExp)
-		{
-			ErrorKey errorKey = ErrorKey.getErrorKey("db.audit.error");
-			throw new DAOException(errorKey,auditExp,"HibernateDAOImpl.java :"+
-					DAOConstants.AUDIT_ERROR);
-		}
-	}
-
-	/**
-	 * add Audit Event Logs.
-	 * @param auditEventDetailsCollection audit Event Details Collection.
-	 */
-	public void addAuditEventLogs(Collection<AuditEventLog> auditEventDetailsCollection)
-	{
-		logger.debug("Add audit event logs");
-		auditManager.addAuditEventLogs(auditEventDetailsCollection);
 	}
 
 	/**
@@ -240,7 +164,6 @@ public class HibernateDAOImpl implements HibernateDAO
 		try
 		{
 			session.delete(obj);
-
 		}
 		catch (HibernateException hibExp)
 		{
@@ -252,62 +175,17 @@ public class HibernateDAOImpl implements HibernateDAO
 	}
 
 	/**
-	 * Retrieves all the records for class name in sourceObjectName.
-	 * @param sourceObjectName Contains the class Name whose records are to be retrieved.
-	 * @return List.
-	 * @throws DAOException generic DAOException.
-	 */
-	public List<Object> retrieve(String sourceObjectName) throws DAOException
-	{
-		logger.debug("Inside retrieve method");
-		String[] selectColumnName = null;
-		return retrieve(sourceObjectName, selectColumnName, null);
-	}
-
-	/**
-	 * Retrieves all the records for class name in sourceObjectName.
-	 * @param sourceObjectName Contains the class Name whose records are to be retrieved.
-	 * @param whereColumnName Column name to be included in where clause.
-	 * @param whereColumnValue Value of the Column name that included in where clause.
-	 * @return List.
-	 * @throws DAOException generic DAOException.
-	 */
-	public List<Object> retrieve(String sourceObjectName, String whereColumnName, Object whereColumnValue)
-			throws DAOException
-	{
-		logger.debug("Inside retrieve method");
-		String[] selectColumnName = null;
-
-		QueryWhereClause queryWhereClause = new QueryWhereClause(sourceObjectName);
-		queryWhereClause.addCondition(new EqualClause(whereColumnName,whereColumnValue));
-
-		return retrieve(sourceObjectName, selectColumnName,queryWhereClause);
-	}
-
-	/**
-	 * @param sourceObjectName Contains the class Name whose records are to be retrieved.
-	 * @param selectColumnName select Column Name.
-	 * @return List.
-	 * @throws DAOException generic DAOException.
-	 */
-	public List<Object> retrieve(String sourceObjectName, String[] selectColumnName)
-	throws DAOException
-	{
-		logger.debug("Inside retrieve method");
-		return retrieve(sourceObjectName, selectColumnName,null);
-	}
-
-	/**
 	 * Retrieves the records for class name in sourceObjectName according
 	 * to field values passed in the passed session.
 	 * @param sourceObjectName source Object Name.
 	 * @param selectColumnName select Column Name.
 	 * @param queryWhereClause where column conditions
+	 * @param onlyDistinctRows true if only distinct rows should be selected.
 	 * @return List.
 	 * @throws DAOException generic DAOException.
 	 */
 	public List<Object> retrieve(String sourceObjectName,String[] selectColumnName,
-			QueryWhereClause queryWhereClause) throws DAOException
+			QueryWhereClause queryWhereClause,boolean onlyDistinctRows) throws DAOException
 	{
 		logger.debug("Inside retrieve method");
 		List<Object> list;
@@ -360,7 +238,7 @@ public class HibernateDAOImpl implements HibernateDAO
 	 * @return object.
 	 * @throws DAOException generic DAOException.
 	 */
-	public Object retrieve(String sourceObjectName, Long identifier)
+	public Object retrieveById(String sourceObjectName, Long identifier)
 	 throws DAOException
 	 {
 		logger.debug("Inside retrieve method");
@@ -370,6 +248,7 @@ public class HibernateDAOImpl implements HibernateDAO
 			//HibernateProxy hibernatProxy = (HibernateProxy) object;
 			//return (Object)hibernatProxy.getHibernateLazyInitializer().getImplementation();
 			//return HibernateMetaData.getProxyObjectImpl(object);
+			//session.evict(object);
 			return object;
 		}
 		catch (Exception exp)
@@ -383,23 +262,6 @@ public class HibernateDAOImpl implements HibernateDAO
 	}
 
 	/**
-	 * Loads Clean Object.
-	 * @param sourceObjectName source Object Name.
-	 * @param identifier identifier.
-	 * @return object.
-	 * @throws DAOException It will throw the DAOException
-	 * Do we need to remove this.
-	 */
-	public Object loadCleanObj(String sourceObjectName, Long identifier)
-	 throws DAOException
-	{
-		logger.debug("Inside retrieve method");
-		Object obj = retrieve(sourceObjectName, identifier);
-		session.evict(obj);
-		return obj;
-	}
-
-	/**
 	 * Executes the HQL query.
 	 * @param query HQL query to execute.
 	 * @return List.
@@ -407,9 +269,8 @@ public class HibernateDAOImpl implements HibernateDAO
 	public List executeQuery(String query)
 	{
 		logger.debug("Execute query");
-		List < Object > returner;
 		Query hibernateQuery = session.createQuery(query);
-		returner = hibernateQuery.list();
+		List <Object> returner = hibernateQuery.list();
 		return returner;
 	}
 
@@ -479,29 +340,6 @@ public class HibernateDAOImpl implements HibernateDAO
 		}
 	}
 
-	/** (non-Javadoc).
-	 * @see edu.wustl.dao.DAO#setConnectionManager(edu.wustl.dao.connectionmanager.IConnectionManager)
-	 * @param connectionManager : Connection Manager
-	 */
-	public void setConnectionManager(IConnectionManager connectionManager)
-	{
-		logger.debug("Set the connection manager");
-		this.connectionManager = connectionManager;
-
-	}
-
-	/**(non-Javadoc).
-	 * @see edu.wustl.dao.DAO#getConnectionManager()
-	 * @return : It returns the Connection Manager
-	 */
-	private IConnectionManager getConnectionManager()
-	{
-		logger.debug("Get the connection manager");
-		return connectionManager;
-	}
-
-
-
 	/**
 	 *This method will be called to retrieved the current connection object.
 	 *@return Connection object
@@ -556,33 +394,6 @@ public class HibernateDAOImpl implements HibernateDAO
 		cleanSession.close();
 	}
 
-	/**
-	 * This method opens a new session, loads an object with given class and Id,
-	 * and closes the session. This method should be used only when an object is
-	 * to be opened in separate session.
-	 *
-	 * @param objectClass class of the object
-	 * @param identifier id of the object
-	 * @return object
-	 * Have to remove this method::::
-	 */
-	public Object loadCleanObj(Class objectClass, Long identifier)
-	{
-		logger.debug("Load clean object");
-		Session session = null;
-		try
-		{
-			session = getConnectionManager().getSessionFactory().openSession();
-			return session.load(objectClass, identifier);
-		}
-		finally
-		{
-			if(session != null)
-			{
-				session.close();
-			}
-		}
-	}
 
 
 	/**
