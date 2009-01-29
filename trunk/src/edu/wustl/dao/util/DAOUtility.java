@@ -15,7 +15,6 @@ import java.util.List;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
-import org.hibernate.Session;
 
 import edu.wustl.common.audit.AuditManager;
 import edu.wustl.common.beans.SessionDataBean;
@@ -23,7 +22,6 @@ import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.global.CommonServiceLocator;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.DAO;
-import edu.wustl.dao.HibernateDAO;
 import edu.wustl.dao.daofactory.DAOConfigFactory;
 import edu.wustl.dao.exception.DAOException;
 
@@ -215,7 +213,7 @@ public final class DAOUtility
 			dao = DAOConfigFactory.getInstance().
 			getDAOFactory(appName).getDAO();
 			dao.openSession(null);
-			Query query = (Query)((HibernateDAO)dao).getNamedQuery(queryName);
+			Query query = (Query)dao.getNamedQuery(queryName);
 
 			/*if (values != null)
 			{

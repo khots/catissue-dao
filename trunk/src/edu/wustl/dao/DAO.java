@@ -9,11 +9,14 @@
 package edu.wustl.dao;
 
 import java.sql.Connection;
+import java.util.Collection;
 import java.util.List;
 
+import org.hibernate.Query;
 import org.hibernate.Session;
 
 import edu.wustl.common.beans.SessionDataBean;
+import edu.wustl.common.domain.AuditEventLog;
 import edu.wustl.dao.connectionmanager.IConnectionManager;
 import edu.wustl.dao.exception.DAOException;
 
@@ -28,13 +31,10 @@ public interface DAO
 	/**
 	 * Insert the Object in the database.
 	 * @param obj Object to be inserted in database
-	 * @param sessionDataBean session Data
 	 * @param isAuditable is Auditable.
-	 * @param isSecureInsert is Secure Insert
 	 * @throws DAOException generic DAOException
 	 */
-	void insert(Object obj, SessionDataBean sessionDataBean, boolean isAuditable,
-			boolean isSecureInsert) throws DAOException;
+	void insert(Object obj,boolean isAuditable) throws DAOException;
 
 	/**
 	 * updates the persisted object in the database.
@@ -73,46 +73,14 @@ public interface DAO
 	 * e.g. "=", "<", ">", "=<", ">=" etc
 	 * 3. whereColumnValue Value of the column name that included in where clause.
 	 * 4.joinCondition join condition between two columns. (AND, OR)
+	 * @param onlyDistinctRows true if only distinct rows should be selected.
 	 * @return the list of all source objects that satisfy the search conditions.
 	 * @throws DAOException generic DAOException.
 	 */
 
-	List<Object> retrieve(String sourceObjectName,
-			String[] selectColumnName,QueryWhereClause queryWhereClause) throws DAOException;
+	List<Object> retrieve(String sourceObjectName,String[] selectColumnName,
+			QueryWhereClause queryWhereClause,boolean onlyDistinctRows) throws DAOException;
 
-	/*List<Object> retrieve(String sourceObjectName, String[] selectColumnName,
-			String[] whereColumnName, String[] whereColumnCondition, Object[] whereColumnValue,
-			String joinCondition) throws DAOException;*/
-
-	/**
-	 * Retrieve and returns the list of all source objects for given
-	 * condition on a single column. The condition value
-	 * @param sourceObjectName Source object's name to be retrieved from database.
-	 * @param whereColumnName Column name to be included in where clause.
-	 * @param whereColumnValue Value of the Column name that included in where clause.
-	 * @return the list of all source objects for given condition on a single column.
-	 * @throws DAOException generic DAOException.
-	 */
-	List<Object> retrieve(String sourceObjectName, String whereColumnName,
-			Object whereColumnValue) throws DAOException;
-
-	/**
-	 * Returns the list of all source objects available in database.
-	 * @param sourceObjectName Source object's name to be retrieved from database.
-	 * @return the list of all source objects available in database.
-	 * @throws DAOException generic DAOException.
-	 */
-	List<Object> retrieve(String sourceObjectName) throws DAOException;
-
-	/**
-	 * Returns the list of all objects with the select columns specified.
-	 * @param sourceObjectName Source object in the Database.
-	 * @param selectColumnName column names in the select clause.
-	 * @return the list of all objects with the select columns specified.
-	 * @throws DAOException generic DAOException.
-	 */
-	List<Object> retrieve(String sourceObjectName, String[] selectColumnName)
-			throws DAOException;
 
 	/**
 	 * Retrieve and returns the source object for given id.
@@ -121,17 +89,7 @@ public interface DAO
 	 * @return object
 	 * @throws DAOException generic DAOException.
 	 */
-	Object retrieve(String sourceObjectName, Long identifier) throws DAOException;
-
-	/**
-	 * Disabled Related Objects.
-	 * @param tableName table Name
-	 * @param whereColumnName Column name to be included in where clause.
-	 * @param whereColumnValues Value of the Column name that included in where clause.
-	 * @throws DAOException generic DAOException.
-	 *//*
-	void disableRelatedObjects(String tableName, String whereColumnName,
-			Long [] whereColumnValues) throws DAOException;*/
+	Object retrieveById(String sourceObjectName, Long identifier) throws DAOException;
 
 	/**
 	 * Execute Query.
@@ -226,4 +184,27 @@ public interface DAO
 	 *@throws DAOException :Generic DAOException.
 	 */
 	void closeCleanSession() throws DAOException;
+
+	/**
+	 * Add AuditEvent Logs.
+	 * @param auditEventDetailsCollection audit Event Details Collection.
+	 */
+	void addAuditEventLogs(Collection<AuditEventLog> auditEventDetailsCollection);
+
+	/**
+	 * This method executes named query and returns list of objects as result.
+	 * @param queryName handle to get named query.
+	 * @return list of objects.
+	 *@throws DAOException :Generic DAOException.
+	 */
+	Collection executeNamedQuery(String queryName)throws DAOException;
+
+	/**
+	 * This method returns named query.
+	 * @param queryName handle to get named query.
+	 * @return Query named Query object.
+	  *@throws DAOException :Generic DAOException.
+	 */
+	Query getNamedQuery(String queryName)throws DAOException;
+
 }

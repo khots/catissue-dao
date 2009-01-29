@@ -15,43 +15,10 @@ import edu.wustl.common.querydatabean.QueryDataBean;
 import edu.wustl.common.util.PagenatedResultData;
 import edu.wustl.common.util.QueryParams;
 import edu.wustl.dao.exception.DAOException;
-import edu.wustl.dao.sqlformatter.SQLFormatter;
 
 /** This interface defines methods which are specific to JDBC operations.*/
 public interface JDBCDAO extends DAO
 {
-
-	/**
-	* Returns the ResultSet containing all the rows according to the columns specified
-	* from the table represented in sourceObjectName.
-	* @param sourceObjectName The table name.
-	* @param selectColumnName The column names in select clause.
-	* @param onlyDistinctRows true if only distict rows should be selected
-	* @return The ResultSet containing all the rows according to the columns specified
-	* from the table represented in sourceObjectName.
-	* @throws DAOException generic DAOException.
-	*/
-	List<Object> retrieve(String sourceObjectName, String[] selectColumnName, boolean onlyDistinctRows)
-			throws DAOException;
-
-	/**
-	   * Retrieves the records for class name in sourceObjectName
-	   * according to field values passed in the passed session.
-	   * @param sourceObjectName The table name.
-	   * @param selectColumnName An array of field names in select clause.
-	   * @param queryWhereClauseImpl : This will hold following :
-	   * 1.whereColumnName An array of field names in where clause.
-	   * 2.whereColumnCondition The comparison condition for the field values.
-	   * 3.whereColumnValue An array of field values.
-	   * 4.joinCondition The join condition.
-	   * @param onlyDistinctRows true if only distinct rows should be selected.
-	   * @return The ResultSet containing all the rows according to the columns specified
-	   * from the table represented in sourceObjectName.
-	   * @throws DAOException generic DAOException.
-	   */
-	List<Object> retrieve(String sourceObjectName,
-			String[] selectColumnName, QueryWhereClause queryWhereClauseImpl,
-			boolean onlyDistinctRows) throws DAOException;
 
 	/**
 	   * Executes the query.
@@ -100,25 +67,25 @@ public interface JDBCDAO extends DAO
 	 *@param tableName :
 	 *@throws DAOException :Generic DAOException.
 	 *@return SQLFormatter :
-	 */
+	 *//*
 	SQLFormatter getSQLFormatter(String tableName) throws DAOException;
 
-	/**
+	*//**
 	 * @param sqlFormatter :
 	 * @param sequenceName :
 	 * @param columnName :
 	 * @param columnTpe :
 	 * @throws DAOException :Generic DAOException.
-	 */
+	 *//*
 	void insert(SQLFormatter sqlFormatter,String sequenceName,String columnName,
 			int columnTpe) throws DAOException;
 
-	/**
+	*//**
 	 * @param query :
 	 * @param clobContent :
 	 * @throws DAOException :Generic DAOException.
-	 */
-	void updateClob(String query,String clobContent)throws DAOException;
+	 *//*
+	void updateClob(String query,String clobContent)throws DAOException;*/
 
 	/**
 	 * This method will be called to set the size of the batch.
@@ -167,6 +134,14 @@ public interface JDBCDAO extends DAO
 	 * @param databaseProperties : database properties.
 	 */
 	void setDatabaseProperties(DatabaseProperties databaseProperties);
+
+	/**
+	 * Insert the Object in the database.
+	 * @param sql Object to be inserted in database
+	 * @param isAuditable is Auditable.
+	 * @throws DAOException generic DAOException
+	 */
+	void insert(String sql,boolean isAuditable) throws DAOException;
 
 
 }

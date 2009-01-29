@@ -13,24 +13,22 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import org.hibernate.Query;
 import org.hibernate.Session;
 
-import edu.wustl.common.audit.AuditManager;
 import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.querydatabean.QueryDataBean;
 import edu.wustl.common.util.PagenatedResultData;
 import edu.wustl.common.util.QueryParams;
 import edu.wustl.common.util.logger.Logger;
-import edu.wustl.dao.condition.EqualClause;
-import edu.wustl.dao.connectionmanager.IConnectionManager;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.formatmessage.IDBExceptionFormatter;
 import edu.wustl.dao.util.DAOConstants;
-import edu.wustl.dao.util.DAOUtility;
 import edu.wustl.dao.util.DatabaseConnectionParams;
 import edu.wustl.query.executor.AbstractQueryExecutor;
 import edu.wustl.security.exception.SMException;
@@ -40,21 +38,12 @@ import edu.wustl.security.exception.SMException;
  * @author kalpana_thakur
  *
  */
-public abstract class AbstractJDBCDAOImpl implements JDBCDAO
+public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDBCDAO
 {
-
-	/**
-	 * Audit Manager.
-	 */
-	private AuditManager auditManager;
 	/**
 	 * Class Logger.
 	 */
 	private static org.apache.log4j.Logger logger = Logger.getLogger(AbstractJDBCDAOImpl.class);
-	/**
-	 * Connection Manager.
-	 */
-	private IConnectionManager connectionManager = null ;
 
 	/**
 	 * Connection.
@@ -64,7 +53,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	/**
 	 * This will hold all database specific properties.
 	 */
-	private DatabaseProperties databaseProperties = null;
+	private DatabaseProperties databaseProperties;
 
 	/**
 	 * batch statement.
@@ -92,11 +81,8 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	{
 		try
 		{
-			logger.debug("Open the session");
-			auditManager = DAOUtility.getAuditManager(sessionDataBean);
+			super.openSession(sessionDataBean);
 			connection = connectionManager.getConnection();
-			connection.setAutoCommit(false);
-
 			initializeBatchstmt();
 		}
 		catch (Exception sqlExp)
@@ -117,10 +103,8 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	{
 		try
 		{
-			logger.debug("Close the session");
-			auditManager = null;
+			super.closeSession();
 			connectionManager.closeConnection();
-
 			batchStatement = null;
 		}
 		catch(Exception dbex)
@@ -142,8 +126,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	{
 		try
 		{
-			logger.debug("Session commit");
-			auditManager.insert(this);
+			super.commit();
 			commitUpdate();
 		}
 		catch (Exception exp)
@@ -179,95 +162,6 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		databaseConnectionParams.setConnection(connection);
 		databaseConnectionParams.executeUpdate(query);
 	}
-
-	/**
-	 * Returns the ResultSet containing all the rows in the table represented in sourceObjectName.
-	 * @param sourceObjectName The table name.
-	 * @return The ResultSet containing all the rows in the table represented in sourceObjectName.
-	 * @throws ClassNotFoundException
-	 * @throws DAOException generic DAOException
-	 */
-	public List<Object> retrieve(String sourceObjectName) throws DAOException
-	{
-		logger.debug("Inside retrieve method");
-		return retrieve(sourceObjectName, null, null,false);
-	}
-
-	/**
-	 * Returns the ResultSet containing all the rows according to the columns specified
-	 * from the table represented in sourceObjectName.
-	 * @param sourceObjectName The table name.
-	 * @param selectColumnName The column names in select clause.
-	 * @return The ResultSet containing all the rows according to the columns specified
-	 * from the table represented in sourceObjectName.
-	 * @throws DAOException : DAOException
-	*/
-	public List<Object> retrieve(String sourceObjectName, String[] selectColumnName) throws DAOException
-	{
-		logger.debug("Inside retrieve method");
-		return retrieve(sourceObjectName, selectColumnName,null,false);
-	}
-
-	/**
-	 * Returns the ResultSet containing all the rows according to the columns specified
-	 * from the table represented in sourceObjectName.
-	 * @param sourceObjectName The table name.
-	 * @param selectColumnName The column names in select clause.
-	 * @param onlyDistinctRows true if only distinct rows should be selected.
-	 * @return The ResultSet containing all the rows according to the columns specified
-	 * from the table represented in sourceObjectName.
-	 * @throws DAOException DAOException.
-	 */
-	public List<Object> retrieve(String sourceObjectName, String[] selectColumnName,
-			boolean onlyDistinctRows) throws DAOException
-	{
-		logger.debug("Inside retrieve method");
-		return retrieve(sourceObjectName, selectColumnName,null,
-				onlyDistinctRows);
-	}
-
-	/**
-	 * Returns the ResultSet containing all the rows according to the columns specified
-	 * from the table represented in sourceObjectName as per the where clause.
-	 * @param sourceObjectName The table name.
-	 * @param selectColumnName The column names in select clause.
-	 * @param queryWhereClause The where condition clause which holds the where column name,
-	 * value and conditions applied
-	 * @return The ResultSet containing all the rows according to the columns specified
-	 * from the table represented in sourceObjectName which satisfies the where condition
-	 * @throws DAOException : DAOException
-	 */
-	public List<Object> retrieve(String sourceObjectName,
-			String[] selectColumnName, QueryWhereClause queryWhereClause)
-			throws DAOException
-	{
-		logger.debug("Inside retrieve method");
-		return retrieve(sourceObjectName, selectColumnName,queryWhereClause,false);
-	}
-
-	/**
-	 * Returns the ResultSet containing all the rows from the table represented in sourceObjectName
-	 * according to the where clause.It will create the where condition clause which holds where column name,
-	 * value and conditions applied.
-	 * @param sourceObjectName The table name.
-	 * @param whereColumnName The column names in where clause.
-	 * @param whereColumnValue The column values in where clause.
-	 * @return The ResultSet containing all the rows from the table represented
-	 * in sourceObjectName which satisfies the where condition
-	 * @throws DAOException : DAOException
-	 */
-	public List<Object> retrieve(String sourceObjectName, String whereColumnName, Object whereColumnValue)
-			throws DAOException
-	{
-		logger.debug("Inside retrieve method");
-		String[] selectColumnName = null;
-
-		QueryWhereClause queryWhereClause = new QueryWhereClause(sourceObjectName);
-		queryWhereClause.addCondition(new EqualClause(whereColumnName,whereColumnValue,sourceObjectName));
-
-		return retrieve(sourceObjectName, selectColumnName,queryWhereClause,false);
-	}
-
 
 	/**
 	 * Retrieves the records for class name in sourceObjectName according to
@@ -444,15 +338,6 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		return connection;
 	}
 
-	/**
-	 * This method will be called to set connection Manager object.
-	 * @param connectionManager : Connection Manager.
-	 */
-	public void setConnectionManager(IConnectionManager connectionManager)
-	{
-		logger.debug("Setting the connection manager");
-		this.connectionManager = connectionManager;
-	}
 
 	/**
 	 * This method will be called to set the size of the batch.
@@ -487,7 +372,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		catch (SQLException exp)
 		{
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,exp,"DatabaseConnectionParams.java :"+
+			throw new DAOException(errorKey,exp,"AbstractJDBCDAOImpl.java :"+
 				DAOConstants.BATCH_UPDATE_ERROR);
 		}
 
@@ -512,7 +397,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		catch (SQLException exp)
 		{
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,exp,"DatabaseConnectionParams.java :"+
+			throw new DAOException(errorKey,exp,"AbstractJDBCDAOImpl.java :"+
 					DAOConstants.BATCH_UPDATE_ERROR);
 		}
 	}
@@ -536,7 +421,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		catch (SQLException exp)
 		{
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,exp,"DatabaseConnectionParams.java :");
+			throw new DAOException(errorKey,exp,"AbstractJDBCDAOImpl.java :");
 		}
 	}
 	/**
@@ -544,17 +429,31 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
      * batchStatement object.
 	 *@param sql typically this is a static SQL INSERT or
      * UPDATE statement
-	 * @param sessionDataBean : session data bean
 	 * @param isAuditable : is auditable.
-	 * @param isSecureInsert : is secure to insert
 	 * @throws DAOException : Generic database exception.
 	 */
-	public void insert(Object sql, SessionDataBean sessionDataBean,
-			boolean isAuditable, boolean isSecureInsert)
+	public void insert(String sql,boolean isAuditable)
 			throws DAOException
 	{
 		logger.debug("Add DML to batch");
-		addSQLToBatch((String)sql);
+		validate(sql);
+		addSQLToBatch(sql);
+
+	}
+
+	/**
+	 * This method will be called to validate batch query.
+	 * @param sql : This is a static SQL INSERT or
+     * UPDATE statement
+	 * @throws DAOException : database exception
+	 */
+	private void validate(String sql) throws DAOException
+	{
+		if(!(sql.contains("insert") || sql.contains("update")))
+		{
+			ErrorKey errorKey = ErrorKey.getErrorKey("dao.batch.query.error");
+			throw new DAOException(errorKey,null,"AbstractJDBCDAOImpl.java :");
+		}
 	}
 
 	/**
@@ -563,6 +462,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	 */
 	private void initializeBatchstmt() throws DAOException
 	{
+		logger.debug("Initialize batch statement");
 		try
 		{
 			batchStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
@@ -572,7 +472,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 		catch (SQLException exp)
 		{
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,exp,"DatabaseConnectionParams.java :"+
+			throw new DAOException(errorKey,exp,"AbstractJDBCDAOImpl.java :"+
 				DAOConstants.STMT_CREATION_ERROR);
 		}
 	}
@@ -665,6 +565,18 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	}
 
 	/**
+	 *This method will be called to close current connection.
+	 *@param query :
+	 *@throws DAOException :Generic DAOException.
+	 *@return list
+	 */
+	public List executeQuery(String query) throws DAOException
+	{
+		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
+		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
+	}
+
+	/**
 	 * @param obj :
 	 * @param oldObj :
 	 * @param sessionDataBean :
@@ -711,7 +623,7 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	 * @return Object :
 	 * @throws DAOException :
 	 */
-	public Object retrieve(String sourceObjectName, Long identifier)
+	public Object retrieveById(String sourceObjectName, Long identifier)
 			throws DAOException
 	{
 		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
@@ -765,18 +677,6 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	}
 
 	/**
-	 *This method will be called to close current connection.
-	 *@param query :
-	 *@throws DAOException :Generic DAOException.
-	 *@return list
-	 */
-	public List executeQuery(String query) throws DAOException
-	{
-		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
-		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
-	}
-
-	/**
 	 *This method will be called to retrieved the current connection object.
 	 *@return Connection object
 	 *@throws DAOException :Generic DAOException.
@@ -792,6 +692,42 @@ public abstract class AbstractJDBCDAOImpl implements JDBCDAO
 	 * @throws DAOException : daoExp
 	 */
 	public void delete(Object obj) throws DAOException
+	{
+		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
+		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
+	}
+
+	/**
+	 * Insert the Object in the database.
+	 * @param obj Object to be inserted in database
+	 * @param isAuditable is Auditable.
+	 * @throws DAOException generic DAOException
+	 */
+	public void insert(Object obj, boolean isAuditable) throws DAOException
+	{
+		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
+		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
+	}
+
+	/**
+	 * This method executes the named query and returns the results.
+	 * @param queryName : handle for named query.
+	 * @return result as list of Object
+	 * @throws DAOException : daoExp
+	 */
+	public Collection executeNamedQuery(String queryName)throws DAOException
+	{
+		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
+		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
+	}
+
+	/**
+	 * This method returns named query.
+	 * @param queryName : handle for named query.
+	 * @return Query named query
+	 * @throws DAOException : daoExp
+	 */
+	public Query getNamedQuery(String queryName)throws DAOException
 	{
 		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
 		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
