@@ -19,44 +19,56 @@ import edu.wustl.dao.exception.DAOException;
 
 /**
  * @author kalpana_thakur
- *TODO
+ * Manages connection (session) with a specific
+ * database.
  */
 public interface IConnectionManager
 {
 
-
 	/**
-	 * @return :
-	 * @throws DAOException :
+	 * A connection (session) with a specific database.
+	 * connection having auto-commit mode as disabled.
+	 * call commit to update the changes.
+	 * @return : the connection.
+	 * @throws DAOException :database exception.
 	 */
 	Connection getConnection() throws DAOException;
 
 	/**
-	 * @throws DAOException :
+	 * Releases a Connection's database and JDBC resources.
+	 * @throws DAOException :database exception.
 	 */
 	void closeConnection() throws DAOException;
 
 	/**
-	 * @return :
+	 * Create database connection.
+	 * Open a Session on the given connection.
+	 * connection having auto-commit mode as disabled.
+	 * call commit to update the changes.
+	 * @return : the session
 	 * @throws DAOException :
 	 */
 	Session newSession() throws DAOException;
 
 	/**
-	 * @throws DAOException :
-	 *TODO
+	 * End the session by releasing the JDBC connection and cleaning up.
+	 * It is not strictly necessary to close the session
+	 * @throws DAOException : database exception.
 	 */
 	void closeSession() throws DAOException;
 
 	/**
-	 * @return :
-	 * @throws DAOException :
+	 * Obtains the current session.
+	 * connection having auto-commit mode as disabled.
+	 * call commit to update the changes.
+	 * @return : the session.
+	 * @throws DAOException : database exception.
 	 */
 	Session currentSession() throws DAOException;
 
 	/**
+	 * Set the application name.
 	 * @param applicationName : Name of the Application
-	 * TODO
 	 */
 	void setApplicationName(String applicationName);
 
@@ -66,21 +78,26 @@ public interface IConnectionManager
 	String getApplicationName();
 
 	/**
-	 * @param sessionFactory :
+	 * Set the sessionFactory.
+	 * Application obtain Sessions from the factory.
+	 * @param sessionFactory :sessionFactory
 	 */
 	void setSessionFactory(SessionFactory sessionFactory);
 
 	/**
+	 * It will returns the sessionFactory.
 	 * @return SessionFactory
 	 */
 	SessionFactory getSessionFactory();
 
 	/**
+	 * Set the configuration.
 	 * @param cfg : Configuration
 	 */
 	void setConfiguration(Configuration cfg);
 
 	/**
+	 * Get the configuration.
 	 * @return Configuration.
 	 */
 	Configuration getConfiguration();
@@ -98,20 +115,23 @@ public interface IConnectionManager
 	 void setDataSource(String dataSource);
 
 	 /**
-	 * Commit the database level changes.
+	 * Makes all changes made since the previous
+     * commit/rollback.
+     * This method should be used only when auto-commit mode has been disabled.
 	 * @throws DAOException : It will throw DAOException.
 	 */
 	 void commit() throws DAOException;
 
 	 /**
-	 * RollBack all the changes after last commit.
-	 * Declared in DAO class.
+	 * Undoes all changes made in the current transaction
+	 * This method should be used only when auto-commit mode has been disabled.
 	 * @throws DAOException : It will throw DAOException.
 	 */
 	 void rollback() throws DAOException;
 
 	 /**
 	 *This method will be called to retrieved the current connection object.
+	 *connections will be in auto-commit mode.
 	 *@return Connection object
 	 *@throws DAOException :Generic DAOException.
 	 */
@@ -130,7 +150,9 @@ public interface IConnectionManager
 	void closeCleanSession() throws DAOException;
 
 	/**
-	 * @return :
+	 * Create database connection and open the new session on the given connection.
+	 * connections will be in auto-commit mode.
+	 * @return : clean session.
 	 * @throws DAOException :
 	 */
 	Session getCleanSession() throws DAOException;
