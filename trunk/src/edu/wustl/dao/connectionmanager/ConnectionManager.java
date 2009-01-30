@@ -24,7 +24,6 @@ import org.hibernate.cfg.Configuration;
 
 import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.logger.Logger;
-import edu.wustl.dao.HibernateDAOImpl;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.DAOConstants;
 
@@ -353,7 +352,6 @@ public class ConnectionManager implements IConnectionManager
 	 */
 	public Session getCleanSession() throws DAOException
 	{
-
 		try
 		{
 			return sessionFactory.openSession();

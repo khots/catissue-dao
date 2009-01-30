@@ -1,5 +1,6 @@
 package edu.wustl.dao;
 
+import java.sql.Connection;
 import java.util.Collection;
 
 import edu.wustl.common.audit.AuditManager;
@@ -153,6 +154,27 @@ public abstract class AbstractDAOImpl implements DAO
 	{
 		logger.debug("Get the connection manager");
 		return connectionManager;
+	}
+
+	/**
+	 *This method will be called to retrieved the current connection object.
+	 *@return Connection object
+	 *@throws DAOException :Generic DAOException.
+	 */
+	public Connection getCleanConnection() throws DAOException
+	{
+		logger.debug("Get clean connection");
+		return 	connectionManager.getCleanConnection();
+	}
+
+	/**
+	 *This method will be called to close current connection.
+	 *@throws DAOException :Generic DAOException.
+	 */
+	public void closeCleanConnection() throws DAOException
+	{
+		logger.debug("Close clean connection");
+		connectionManager.closeCleanConnection();
 	}
 
 

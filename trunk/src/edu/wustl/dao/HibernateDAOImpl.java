@@ -11,8 +11,6 @@
 package edu.wustl.dao;
 
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 
 import org.hibernate.HibernateException;
@@ -329,28 +327,6 @@ public class HibernateDAOImpl extends AbstractDAOImpl
 		    sqlBuff.append("   ");
 		}
 	}
-
-	/**
-	 *This method will be called to retrieved the current connection object.
-	 *@return Connection object
-	 *@throws DAOException :Generic DAOException.
-	 */
-	public Connection getCleanConnection() throws DAOException
-	{
-		logger.debug("Get clean connection");
-		return 	connectionManager.getCleanConnection();
-	}
-
-	/**
-	 *This method will be called to close current connection.
-	 *@throws DAOException :Generic DAOException.
-	 */
-	public void closeCleanConnection() throws DAOException
-	{
-		logger.debug("Close clean connection");
-		connectionManager.closeCleanConnection();
-	}
-
 	/**
 	 * This method will be called to obtain clean session.
 	 * @return session object.

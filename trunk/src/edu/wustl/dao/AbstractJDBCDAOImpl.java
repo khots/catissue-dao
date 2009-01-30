@@ -621,29 +621,6 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
 		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
 	}
-
-
-	/**
-	 *This method will be called to close current connection.
-	 *@throws DAOException :Generic DAOException.
-	 */
-	public void closeCleanConnection() throws DAOException
-	{
-		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
-		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
-	}
-
-	/**
-	 *This method will be called to retrieved the current connection object.
-	 *@return Connection object
-	 *@throws DAOException :Generic DAOException.
-	 */
-	public Connection getCleanConnection() throws DAOException
-	{
-		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
-		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
-	}
-
 	/**
 	 * @param obj : object to be deleted
 	 * @throws DAOException : daoExp
