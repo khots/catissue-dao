@@ -129,7 +129,7 @@ public interface IConnectionManager
 	 void rollback() throws DAOException;
 
 	 /**
-	 *This method will be called to retrieved the current connection object.
+	 *This method will be called to retrieved the clean connection.
 	 *connections will be in auto-commit mode.
 	 *@return Connection object
 	 *@throws DAOException :Generic DAOException.
@@ -137,13 +137,13 @@ public interface IConnectionManager
 	 Connection getCleanConnection() throws DAOException;
 
 	 /**
-	 *This method will be called to close current connection.
+	 *Releases this Connection object's database and JDBC resources.
 	 *@throws DAOException :Generic DAOException.
 	 */
 	void closeCleanConnection() throws DAOException;
 
 	/**
-	 *This method will be called to close current connection.
+	 *End the session by releasing the JDBC connection and cleaning up.
 	 *@throws DAOException :Generic DAOException.
 	 */
 	void closeCleanSession() throws DAOException;
