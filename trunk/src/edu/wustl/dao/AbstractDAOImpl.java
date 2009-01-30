@@ -1,18 +1,9 @@
 package edu.wustl.dao;
 
-import java.sql.Connection;
-import java.util.Collection;
-
-import edu.wustl.common.audit.AuditManager;
-import edu.wustl.common.audit.Auditable;
 import edu.wustl.common.beans.SessionDataBean;
-import edu.wustl.common.domain.AuditEventLog;
-import edu.wustl.common.exception.AuditException;
-import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.connectionmanager.IConnectionManager;
 import edu.wustl.dao.exception.DAOException;
-import edu.wustl.dao.util.DAOConstants;
 
 /**
  * @author kalpana_thakur
@@ -20,11 +11,6 @@ import edu.wustl.dao.util.DAOConstants;
  */
 public abstract class AbstractDAOImpl implements DAO
 {
-
-	/**
-	 * Audit Manager.
-	 */
-	protected AuditManager auditManager;
 
 	/**
 	 * Connection Manager.
@@ -37,64 +23,25 @@ public abstract class AbstractDAOImpl implements DAO
 	protected int batchSize = 1;
 
 	/**
+	 * It holds the batch size.
+	 */
+	protected transient int  batchCounter = 0;
+
+
+	/**
 	 * Class Logger.
 	 */
 	private static org.apache.log4j.Logger logger = Logger.getLogger(AbstractDAOImpl.class);
-	/**
-	 * Audit.
-	 * @param obj The object to be audited.
-	 * @param oldObj old Object.
-	 * @param sessionDataBean session Data.
-	 * @param isAuditable is Auditable.
-	 * @throws DAOException generic DAOException.
-	 *//*
-	public void audit(Object obj, Object oldObj,
-			SessionDataBean sessionDataBean, boolean isAuditable)
-			throws DAOException
-	{
-		logger.debug("Inside Audit method");
-		try
-		{
-			auditManager.compare(obj, (Auditable) oldObj, "UPDATE",isAuditable);
-		}
-		catch (AuditException auditExp)
-		{
-			ErrorKey errorKey = ErrorKey.getErrorKey("db.audit.error");
-			throw new DAOException(errorKey,auditExp,"AbstractDAOImpl.java :"+
-					DAOConstants.AUDIT_ERROR);
-		}
 
-	}
-*/
-	/**
-	 * add Audit Event Logs.
-	 * @param auditEventDetailsCollection audit Event Details Collection.
-	 */
-	public void addAuditEventLogs(Collection<AuditEventLog> auditEventDetailsCollection)
-	{
-		logger.debug("Add audit event logs");
-		auditManager.addAuditEventLogs(auditEventDetailsCollection);
-	}
 
 	/**
-	 * This will be called to initialized the Audit Manager.
-	 * @param sessionDataBean : This will holds the session data.
-	 * @return AuditManager : instance of AuditManager
+	 * This method will be called to set the size of the batch.
+	 * @param batchSize batchSize
+	 * @throws DAOException : Generic database exception.
 	 */
-	private static AuditManager getAuditManager(SessionDataBean sessionDataBean)
+	public void setBatchSize(int batchSize) throws DAOException
 	{
-		logger.debug("Initialize audit manager");
-		AuditManager auditManager = new AuditManager();
-		if (sessionDataBean == null)
-		{
-			auditManager.setUserId(null);
-		}
-		else
-		{
-			auditManager.setUserId(sessionDataBean.getUserId());
-			auditManager.setIpAddress(sessionDataBean.getIpAddress());
-		}
-		return auditManager;
+		this.batchSize = batchSize;
 	}
 
 	/**
@@ -103,36 +50,23 @@ public abstract class AbstractDAOImpl implements DAO
 	 * @param sessionDataBean session Data.
 	 * @throws DAOException generic DAOException.
 	 */
-	public void openSession(SessionDataBean sessionDataBean)
-	throws DAOException
-	{
-		logger.debug("Open the session");
-	    auditManager = getAuditManager(sessionDataBean);
+	public abstract void openSession(SessionDataBean sessionDataBean)
+	throws DAOException;
 
-	}
 
 	/**
 	 * This method will be used to close the session with the database.
 	 * Declared in DAO class.
 	 * @throws DAOException : It will throw DAOException.
 	 */
-	public void closeSession() throws DAOException
-	{
-		logger.debug("Close the session");
-		auditManager = null;
-	}
+	public abstract void closeSession() throws DAOException;
 
 	/**
 	 * Commit the database level changes.
 	 * Declared in  class.
 	 * @throws DAOException generic DAOException.
 	 */
-	public void commit() throws DAOException
-	{
-		logger.debug("Session commit");
-		auditManager.insert(this);
-
-	}
+	public abstract void commit() throws DAOException;
 
 	/**
 	 * RollBack all the changes after last commit.
@@ -165,31 +99,49 @@ public abstract class AbstractDAOImpl implements DAO
 	 *This method will be called to retrieved the current connection object.
 	 *@return Connection object
 	 *@throws DAOException :Generic DAOException.
-	 */
+	 *//*
 	public Connection getCleanConnection() throws DAOException
 	{
 		logger.debug("Get clean connection");
 		return 	connectionManager.getCleanConnection();
 	}
 
-	/**
+	*//**
 	 *This method will be called to close current connection.
 	 *@throws DAOException :Generic DAOException.
-	 */
+	 *//*
 	public void closeCleanConnection() throws DAOException
 	{
 		logger.debug("Close clean connection");
 		connectionManager.closeCleanConnection();
-	}
+	}*/
+
 	/**
-	 * This method will be called to set the size of the batch.
-	 * @param batchSize batchSize
-	 * @throws DAOException : Generic database exception.
-	 */
-	public void setBatchSize(int batchSize) throws DAOException
+	 * Audit.
+	 * @param obj The object to be audited.
+	 * @param oldObj old Object.
+	 * @param sessionDataBean session Data.
+	 * @param isAuditable is Auditable.
+	 * @throws DAOException generic DAOException.
+	 *//*
+	public void audit(Object obj, Object oldObj,
+			SessionDataBean sessionDataBean, boolean isAuditable)
+			throws DAOException
 	{
-		this.batchSize = batchSize;
+		logger.debug("Inside Audit method");
+		try
+		{
+			auditManager.compare(obj, (Auditable) oldObj, "UPDATE",isAuditable);
+		}
+		catch (AuditException auditExp)
+		{
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.audit.error");
+			throw new DAOException(errorKey,auditExp,"AbstractDAOImpl.java :"+
+					DAOConstants.AUDIT_ERROR);
+		}
+
 	}
+*/
 
 
 }
