@@ -55,12 +55,6 @@ public interface IConnectionManager
 	Session currentSession() throws DAOException;
 
 	/**
-	 * @return :
-	 * @throws DAOException :
-	 */
-	Session getCleanSession() throws DAOException;
-
-	/**
 	 * @param applicationName : Name of the Application
 	 * TODO
 	 */
@@ -115,5 +109,30 @@ public interface IConnectionManager
 	 * @throws DAOException : It will throw DAOException.
 	 */
 	 void rollback() throws DAOException;
+
+	 /**
+	 *This method will be called to retrieved the current connection object.
+	 *@return Connection object
+	 *@throws DAOException :Generic DAOException.
+	 */
+	 Connection getCleanConnection() throws DAOException;
+
+	 /**
+	 *This method will be called to close current connection.
+	 *@throws DAOException :Generic DAOException.
+	 */
+	void closeCleanConnection() throws DAOException;
+
+	/**
+	 *This method will be called to close current connection.
+	 *@throws DAOException :Generic DAOException.
+	 */
+	void closeCleanSession() throws DAOException;
+
+	/**
+	 * @return :
+	 * @throws DAOException :
+	 */
+	Session getCleanSession() throws DAOException;
 
 }

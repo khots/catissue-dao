@@ -44,16 +44,6 @@ public class HibernateDAOImpl extends AbstractDAOImpl
       private static org.apache.log4j.Logger logger =
            Logger.getLogger(HibernateDAOImpl.class);
 
-     /**
-  	 * specify clean Session instance.
-  	 */
-     private Session cleanSession = null;
-
-     /**
-   	 * specify clean connection instance.
-   	 */
-     private Connection cleanConnection = null;
-
 	/**
 	 * specify Session instance.
 	 */
@@ -348,8 +338,7 @@ public class HibernateDAOImpl extends AbstractDAOImpl
 	public Connection getCleanConnection() throws DAOException
 	{
 		logger.debug("Get clean connection");
-		cleanConnection =  connectionManager.getCleanSession().connection();
-		return cleanConnection;
+		return 	connectionManager.getCleanConnection();
 	}
 
 	/**
@@ -359,17 +348,7 @@ public class HibernateDAOImpl extends AbstractDAOImpl
 	public void closeCleanConnection() throws DAOException
 	{
 		logger.debug("Close clean connection");
-		try
-		{
-			cleanConnection.close();
-
-		}
-		catch (SQLException sqlExp)
-		{
-			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,sqlExp,"DAOFactory.java :"+
-					DAOConstants.CLOSE_CONN_ERR);
-		}
+		connectionManager.closeCleanConnection();
 	}
 
 	/**
@@ -380,8 +359,7 @@ public class HibernateDAOImpl extends AbstractDAOImpl
 	public Session getCleanSession() throws DAOException
 	{
 		logger.debug("Get clean session");
-		cleanSession = connectionManager.getCleanSession();
-		return cleanSession;
+		return connectionManager.getCleanSession();
 	}
 
 	/**
@@ -391,7 +369,7 @@ public class HibernateDAOImpl extends AbstractDAOImpl
 	public void closeCleanSession() throws DAOException
 	{
 		logger.debug("Close clean session");
-		cleanSession.close();
+		connectionManager.closeCleanSession();
 	}
 
 

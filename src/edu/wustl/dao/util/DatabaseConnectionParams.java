@@ -16,10 +16,15 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.exception.DAOException;
+import edu.wustl.query.util.global.AQConstants;
 
 /**
  * @author kalpana_thakur
@@ -226,15 +231,18 @@ public class DatabaseConnectionParams
 	/**
 	 * This method will be called to execute query.
 	 * @param query :query string.
+	 * @return ResultSet result set
 	 * @throws DAOException :Generic Exception
 	 */
-	public void executeQuery(String query) throws DAOException
+	public ResultSet getQueryRS(String query) throws DAOException
 	{
+		logger.debug("Get Query RS");
 		PreparedStatement stmt = null;
 		try
 		{
-			stmt = getPreparedStatement(query);
-			stmt.executeQuery();
+			stmt = connection.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE,
+				ResultSet.CONCUR_READ_ONLY);
+			resultSet = stmt.executeQuery();
 		}
 		catch (SQLException exp)
 		{
@@ -243,10 +251,7 @@ public class DatabaseConnectionParams
 			throw new DAOException(errorKey,exp,"DatabaseConnectionParams.java :"
 					+DAOConstants.EXECUTE_QUERY_ERROR+"   "+query);
 		}
-		finally
-		{
-			closeConnectionParams();
-		}
+		return resultSet;
 	}
 
 	/**
@@ -293,6 +298,83 @@ public class DatabaseConnectionParams
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
 			throw new DAOException(errorKey,exp,"DatabaseConnectionParams.java :"+
 					DAOConstants.RS_METADATA_ERROR);
+		}
+	}
+
+	/**
+	 *@return : list of data.
+	 * @throws DAOException : database exception
+	 */
+	public List getListFromRS() throws DAOException
+	{
+		logger.debug("get list from RS");
+		List list = new ArrayList();
+		try
+		{
+			
+			ResultSetMetaData metaData = resultSet.getMetaData();
+			int columnCount = metaData.getColumnCount();
+			while (resultSet.next())
+			{
+				updateList(list,columnCount,metaData);
+			}
+		}
+		catch(SQLException exp)
+		{
+			logger.fatal(exp);
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
+			throw new DAOException(errorKey,exp,"DatabaseConnectionParams.java :"+
+					DAOConstants.RS_METADATA_ERROR);
+		}
+		return list;
+	}
+
+	/**
+	 * This method will read the resultSet and update the list.
+	 * @param list :list of data
+	 * @param columnCount : number of columns
+	 * @param metaData : meta data
+	 * @throws SQLException : exception
+	 */
+	private void updateList(List list,int columnCount,ResultSetMetaData metaData) throws SQLException
+	{
+		for (int i = 1; i <= columnCount; i++)
+		{
+			logger.debug("Inside for "+i);
+			Object retObj;
+			switch (metaData.getColumnType(i))
+			{
+			case Types.CLOB :
+				retObj = resultSet.getObject(i);
+				break;
+			case Types.DATE :
+			case Types.TIMESTAMP :
+				retObj = resultSet.getTimestamp(i);
+				if (retObj == null)
+				{
+					break;
+				}
+				SimpleDateFormat formatter = new SimpleDateFormat(
+						DAOConstants.DATE_PATTERN_MM_DD_YYYY + " "
+						+ DAOConstants.TIME_PATTERN_HH_MM_SS);
+				retObj = formatter.format((java.util.Date) retObj);
+				break;
+			default :
+				retObj = resultSet.getObject(i);
+				if (retObj != null)
+				{
+					retObj = retObj.toString();
+				}
+			}
+			if (retObj == null)
+			{
+				list.add("");
+			}
+			else
+			{
+				list.add(retObj);
+			}
+			logger.debug("list size "+list.size());
 		}
 	}
 
