@@ -10,6 +10,7 @@
 package edu.wustl.dao;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -20,7 +21,6 @@ import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.DAOConstants;
-import edu.wustl.dao.util.DatabaseConnectionUtiliy;
 import edu.wustl.security.exception.SMException;
 
 
@@ -245,29 +245,6 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	}
 
 	/**
-	 * This method will be called for executing a static SQL statement.
-	 * @see edu.wustl.dao.JDBCDAO#executeUpdate(java.lang.String)
-	 * @return (1) the row count for INSERT,UPDATE or DELETE statements
-	 * or (2) 0 for SQL statements that return nothing
-	 * @param query :Holds the query string.
-	 * @throws DAOException : DAOException.
-	 */
-	public int executeUpdate(String query) throws DAOException
-	{
-		logger.debug("Execute query.");
-		DatabaseConnectionUtiliy databaseConnectionParams = new DatabaseConnectionUtiliy();
-		try
-		{
-		  databaseConnectionParams.setConnection(connection);
-		  return databaseConnectionParams.executeUpdate(query);
-		}
-		finally
-		{
-			databaseConnectionParams.closeConnectionParams();
-		}
-	}
-
-	/**
 	 * Retrieves the records for class name in sourceObjectName according to
 	 * field values passed in the passed session.
 	 * @param sourceObjectName This will holds the object name.
@@ -300,8 +277,6 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		}
 
 	}
-
-
 
 	/**
 	 * Retrieves the records for class name in sourceObjectName according to
@@ -399,6 +374,29 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 
 
 	/**
+	 * This method will be called for executing a static SQL statement.
+	 * @see edu.wustl.dao.JDBCDAO#executeUpdate(java.lang.String)
+	 * @return (1) the row count for INSERT,UPDATE or DELETE statements
+	 * or (2) 0 for SQL statements that return nothing
+	 * @param query :Holds the query string.
+	 * @throws DAOException : DAOException.
+	 */
+	public int executeUpdate(String query) throws DAOException
+	{
+		logger.debug("Execute query.");
+		DatabaseConnectionUtil databaseConnectionUtil = new DatabaseConnectionUtil();
+		try
+		{
+			databaseConnectionUtil.setConnection(connection);
+		  return databaseConnectionUtil.executeUpdate(query);
+		}
+		finally
+		{
+			databaseConnectionUtil.closeConnectionParams();
+		}
+	}
+
+	/**
 	 * This method will be called to get the result set.
 	 * @param sql sql statement.
 	 * @throws DAOException generic DAOException.
@@ -407,15 +405,15 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	public ResultSet getQueryResultSet(String sql) throws DAOException
 	{
 		logger.debug("Execute query.");
-		DatabaseConnectionUtiliy databaseConnectionParams = new DatabaseConnectionUtiliy();
+		DatabaseConnectionUtil databaseConnectionUtil = new DatabaseConnectionUtil();
 		try
 		{
-			databaseConnectionParams.setConnection(connection);
-			return databaseConnectionParams.getQueryRS(sql);
+			databaseConnectionUtil.setConnection(connection);
+			return databaseConnectionUtil.getQueryRS(sql);
 		}
 		finally
 		{
-			databaseConnectionParams.closeConnectionParams();
+			databaseConnectionUtil.closeConnectionParams();
 		}
 	}
 
@@ -428,19 +426,58 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	public List executeQuery(String query) throws DAOException
 	{
 		logger.debug("Execute query."+query);
-		DatabaseConnectionUtiliy databaseConnectionParams = new DatabaseConnectionUtiliy();
+		DatabaseConnectionUtil databaseConnectionUtil = new DatabaseConnectionUtil();
 		try
 		{
-			databaseConnectionParams.setConnection(connection);
-			return databaseConnectionParams.getListFromRS(query);
+			databaseConnectionUtil.setConnection(connection);
+			return databaseConnectionUtil.getListFromRS(query);
 		}
 		finally
 		{
-			databaseConnectionParams.closeConnectionParams();
+			databaseConnectionUtil.closeConnectionParams();
 		}
 	}
 
+	/**
+	 * This method will be called to execute query.
+	 * @param query :query string.
+	 * @param columnValues :list of values
+	 * @throws DAOException :Generic Exception
+	 */
+	public void executeUpdate(String query,List columnValues) throws DAOException
+	{
+		DatabaseConnectionUtil databaseConnectionUtil = new DatabaseConnectionUtil();
+		try
+		{
+			databaseConnectionUtil.setConnection(connection);
+			databaseConnectionUtil.executeUpdate(query, columnValues);
+		}
+		finally
+		{
+			databaseConnectionUtil.closeConnectionParams();
+		}
+	}
 
+	/**
+	 * This method will be called to execute query.
+	 * @param query :query string.
+	 * @return prepared statement
+	 * @throws DAOException :Generic Exception
+	 * @deprecated Do not use this method.
+	 */
+	public PreparedStatement getPreparedStmt(String query) throws DAOException
+	{
+		DatabaseConnectionUtil databaseConnectionUtil = new DatabaseConnectionUtil();
+		try
+		{
+			databaseConnectionUtil.setConnection(connection);
+			return databaseConnectionUtil.getPreparedStatement(query);
+		}
+		finally
+		{
+			databaseConnectionUtil.closeConnectionParams();
+		}
+	}
 
 	/**
 	 * This method will be called to get connection Manager object.
