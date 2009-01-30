@@ -26,9 +26,9 @@ public interface IConnectionManager
 {
 
 	/**
-	 * A connection (session) with a specific database.
-	 * connection having auto-commit mode as disabled.
-	 * call commit to update the changes.
+	 * A connection (session) with a specific database
+	 * having auto-commit mode as disabled.
+	 * mandatory to call commit to update the changes.
 	 * @return : the connection.
 	 * @throws DAOException :database exception.
 	 */
@@ -41,10 +41,9 @@ public interface IConnectionManager
 	void closeConnection() throws DAOException;
 
 	/**
-	 * Create database connection.
+	 * Create database connection having auto-commit mode as disabled.
 	 * Open a Session on the given connection.
-	 * connection having auto-commit mode as disabled.
-	 * call commit to update the changes.
+	 * mandatory to call commit to update the changes.
 	 * @return : the session
 	 * @throws DAOException :
 	 */
@@ -58,8 +57,8 @@ public interface IConnectionManager
 
 	/**
 	 * Obtains the current session.
-	 * connection having auto-commit mode as disabled.
-	 * call commit to update the changes.
+	 * connection associated to the session have auto-commit mode as disabled.
+	 * mandatory to call commit to update the changes.
 	 * @return : the session.
 	 * @throws DAOException : database exception.
 	 */
