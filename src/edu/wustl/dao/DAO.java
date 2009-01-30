@@ -28,7 +28,7 @@ import edu.wustl.dao.exception.DAOException;
 public interface DAO
 {
 	/**
-	 * Insert the Object in the database.
+	 * Insert the Object to the database.
 	 * @param obj Object to be inserted in database
 	 * @param isAuditable is Auditable.
 	 * @throws DAOException generic DAOException
@@ -36,7 +36,7 @@ public interface DAO
 	void insert(Object obj,boolean isAuditable) throws DAOException;
 
 	/**
-	 * updates the persisted object in the database.
+	 * updates the persisted object into the database.
 	 * @param obj Object to be updated in database
 	 * @throws DAOException : generic DAOException
 	 */
@@ -91,7 +91,8 @@ public interface DAO
 	Object retrieveById(String sourceObjectName, Long identifier) throws DAOException;
 
 	/**
-	 * Execute Query.
+	 * Create a new instance of Query for the given HQL query string.
+	 * Execute the Query and returns the list of data.
 	 * @param query query
 	 * @return List.
 	 * @throws DAOException generic DAOException.
@@ -111,10 +112,9 @@ public interface DAO
 	Object retrieveAttribute(Class objClass, Long identifier,
 			String attributeName,String columnName) throws DAOException;
 	/**
-	 * Create database connection.
+	 * Create database connection having auto-commit mode as disabled.
 	 * Open a Session on the given connection.
-	 * connection having auto-commit mode as disabled.
-	 * call commit to update the changes.
+	 * mandatory to call commit to update the changes.
 	 * @param sessionDataBean : This will hold the session related information.
 	 * @throws DAOException : generic DAOException
 	 */
@@ -148,6 +148,7 @@ public interface DAO
 	void setConnectionManager(IConnectionManager connectionManager);
 
 	/**
+	 * Format thrown SQL exception to user readable form.
 	 * @param excp : Exception Object.
 	 * @return : It will return the formated messages.
 	 * @throws DAOException : DAO exception.
@@ -192,6 +193,7 @@ public interface DAO
 	void addAuditEventLogs(Collection<AuditEventLog> auditEventDetailsCollection);
 
 	/**
+	 * Obtain an instance of Query for a named query string defined in the mapping file.
 	 * This method executes named query and returns list of objects as result.
 	 * @param queryName handle to get named query.
 	 * @return list of objects.
@@ -200,10 +202,10 @@ public interface DAO
 	Collection executeNamedQuery(String queryName)throws DAOException;
 
 	/**
-	 * This method returns named query.
+	 * Obtain an instance of Query for a named query string defined in the mapping file.
 	 * @param queryName handle to get named query.
 	 * @return Query named Query object.
-	  *@throws DAOException :Generic DAOException.
+	 *@throws DAOException :Generic DAOException.
 	 */
 	Query getNamedQuery(String queryName)throws DAOException;
 
