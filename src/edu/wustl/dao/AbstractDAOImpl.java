@@ -32,6 +32,11 @@ public abstract class AbstractDAOImpl implements DAO
 	protected IConnectionManager connectionManager ;
 
 	/**
+	 * Batch size.
+	 */
+	protected int batchSize = 1;
+
+	/**
 	 * Class Logger.
 	 */
 	private static org.apache.log4j.Logger logger = Logger.getLogger(AbstractDAOImpl.class);
@@ -42,7 +47,7 @@ public abstract class AbstractDAOImpl implements DAO
 	 * @param sessionDataBean session Data.
 	 * @param isAuditable is Auditable.
 	 * @throws DAOException generic DAOException.
-	 */
+	 *//*
 	public void audit(Object obj, Object oldObj,
 			SessionDataBean sessionDataBean, boolean isAuditable)
 			throws DAOException
@@ -60,7 +65,7 @@ public abstract class AbstractDAOImpl implements DAO
 		}
 
 	}
-
+*/
 	/**
 	 * add Audit Event Logs.
 	 * @param auditEventDetailsCollection audit Event Details Collection.
@@ -76,7 +81,7 @@ public abstract class AbstractDAOImpl implements DAO
 	 * @param sessionDataBean : This will holds the session data.
 	 * @return AuditManager : instance of AuditManager
 	 */
-	public static AuditManager getAuditManager(SessionDataBean sessionDataBean)
+	private static AuditManager getAuditManager(SessionDataBean sessionDataBean)
 	{
 		logger.debug("Initialize audit manager");
 		AuditManager auditManager = new AuditManager();
@@ -175,6 +180,15 @@ public abstract class AbstractDAOImpl implements DAO
 	{
 		logger.debug("Close clean connection");
 		connectionManager.closeCleanConnection();
+	}
+	/**
+	 * This method will be called to set the size of the batch.
+	 * @param batchSize batchSize
+	 * @throws DAOException : Generic database exception.
+	 */
+	public void setBatchSize(int batchSize) throws DAOException
+	{
+		this.batchSize = batchSize;
 	}
 
 

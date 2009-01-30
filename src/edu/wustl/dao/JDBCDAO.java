@@ -18,9 +18,11 @@ public interface JDBCDAO extends DAO
 	/**
 	 * This method will execute the SQL and modifies the database.
 	 * @param sql sql statement.
+	 * @return (1) the row count for INSERT,UPDATE or DELETE statements
+	 * or (2) 0 for SQL statements that return nothing
 	 * @throws DAOException generic DAOException.
 	 */
-	void executeUpdate(String sql) throws DAOException;
+	int executeUpdate(String sql) throws DAOException;
 
 	/**
 	 * This method will be called to get the result set.

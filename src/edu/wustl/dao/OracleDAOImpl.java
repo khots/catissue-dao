@@ -8,7 +8,7 @@ import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.DAOConstants;
-import edu.wustl.dao.util.DatabaseConnectionParams;
+import edu.wustl.dao.util.DatabaseConnectionUtiliy;
 
 
 /**
@@ -30,7 +30,7 @@ public class OracleDAOImpl extends AbstractJDBCDAOImpl
 	 */
 	public void deleteTable(String tableName) throws DAOException
 	{
-		DatabaseConnectionParams databaseConnectionParams = new DatabaseConnectionParams();
+		DatabaseConnectionUtiliy databaseConnectionParams = new DatabaseConnectionUtiliy();
 		try
 		{
 

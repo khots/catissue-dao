@@ -19,7 +19,7 @@ import edu.wustl.common.util.Utility;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.DAOConstants;
-import edu.wustl.dao.util.DatabaseConnectionParams;
+import edu.wustl.dao.util.DatabaseConnectionUtiliy;
 
 /**
  * @author kalpana_thakur
@@ -41,7 +41,7 @@ public class HashedDataHandler
 	 * @throws DAOException : DAOException
 	 */
 	protected final ResultSetMetaData getMetaData(String tableName,List<String> columnNames,
-			DatabaseConnectionParams dbConnParamForMetadata)throws DAOException
+			DatabaseConnectionUtiliy dbConnParamForMetadata)throws DAOException
 	{
 
 		ResultSetMetaData metaData;
@@ -73,7 +73,7 @@ public class HashedDataHandler
 	 * @throws DAOException : DAOException
 	 */
 	protected final ResultSetMetaData getMetaDataAndUpdateColumns(String tableName,
-			List<String> columnNames,DatabaseConnectionParams dbConnParamForMetadata)
+			List<String> columnNames,DatabaseConnectionUtiliy dbConnParamForMetadata)
 	throws DAOException
 	{
 		ResultSetMetaData metaData;
@@ -362,10 +362,10 @@ public class HashedDataHandler
 		List<String>columnNamesList = new ArrayList<String>();
 		ResultSetMetaData metaData;
 
-		DatabaseConnectionParams dbConnParamForMetadata = new DatabaseConnectionParams();
+		DatabaseConnectionUtiliy dbConnParamForMetadata = new DatabaseConnectionUtiliy();
 		dbConnParamForMetadata.setConnection(connection);
 
-		DatabaseConnectionParams dbConnParamForInsertQuery = new DatabaseConnectionParams();
+		DatabaseConnectionUtiliy dbConnParamForInsertQuery = new DatabaseConnectionUtiliy();
 		dbConnParamForInsertQuery.setConnection(connection);
 
 		PreparedStatement stmt = null;
