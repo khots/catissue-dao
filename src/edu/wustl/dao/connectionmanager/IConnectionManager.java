@@ -35,7 +35,7 @@ public interface IConnectionManager
 	Connection getConnection() throws DAOException;
 
 	/**
-	 * Releases a connection (session) by releasing the JDBC connection and cleaning up.
+	 * Releases a Connection's database and JDBC resources.
 	 * @throws DAOException :database exception.
 	 */
 	void closeConnection() throws DAOException;
