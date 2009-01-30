@@ -33,14 +33,12 @@ import edu.wustl.dao.util.DAOConstants;
  */
 public class ConnectionManager implements IConnectionManager
 {
-	
 	/**
      * logger Logger - Generic logger.
      */
       private static org.apache.log4j.Logger logger =
            Logger.getLogger(ConnectionManager.class);
 
-	
 	/**
 	 * This member will store the name of the application.
 	 */

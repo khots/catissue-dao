@@ -12,7 +12,7 @@ import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.DAOConstants;
 import edu.wustl.dao.util.DAOUtility;
-import edu.wustl.dao.util.DatabaseConnectionParams;
+import edu.wustl.dao.util.DatabaseConnectionUtiliy;
 /**
  * @author kalpana_thakur
  *
@@ -87,7 +87,7 @@ public class OracleExceptionFormatter implements IDBExceptionFormatter
 		String formattedErrMsg = "";
 		String tableName = "";
 
-		DatabaseConnectionParams databaseConnectionParams = new DatabaseConnectionParams();
+		DatabaseConnectionUtiliy databaseConnectionParams = new DatabaseConnectionUtiliy();
 		try
 		{
 			databaseConnectionParams.setConnection(connection);

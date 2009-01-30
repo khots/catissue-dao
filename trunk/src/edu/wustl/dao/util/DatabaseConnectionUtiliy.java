@@ -24,14 +24,13 @@ import java.util.List;
 import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.exception.DAOException;
-import edu.wustl.query.util.global.AQConstants;
 
 /**
  * @author kalpana_thakur
  * This class will handles all database specific parameters.
  */
 
-public class DatabaseConnectionParams
+public class DatabaseConnectionUtiliy
 {
 
 	/**
@@ -54,7 +53,7 @@ public class DatabaseConnectionParams
 	/**
 	 * class logger.
 	 */
-	private static org.apache.log4j.Logger logger = Logger.getLogger(DatabaseConnectionParams.class);
+	private static org.apache.log4j.Logger logger = Logger.getLogger(DatabaseConnectionUtiliy.class);
 
 	/**
 	 * This method will be called to create new connection statement.
@@ -188,15 +187,18 @@ public class DatabaseConnectionParams
 	/**
 	 * This method will be called to execute query.
 	 * @param query :query string.
+	 * @return (1) the row count for INSERT,UPDATE or DELETE statements
+	 * or (2) 0 for SQL statements that return nothing
 	 * @throws DAOException :Generic Exception
 	 */
-	public void executeUpdate(String query) throws DAOException
+	public int executeUpdate(String query) throws DAOException
 	{
-		PreparedStatement stmt = null;
+
 		try
 		{
+			PreparedStatement stmt = null;
 			stmt = getPreparedStatement(query);
-			stmt.executeUpdate();
+			return stmt.executeUpdate();
 		}
 		catch (SQLException sqlExp)
 		{
@@ -302,16 +304,17 @@ public class DatabaseConnectionParams
 	}
 
 	/**
-	 *@return : list of data.
+	 * @param  query : sql string.
+	 * @return : list of data.
 	 * @throws DAOException : database exception
 	 */
-	public List getListFromRS() throws DAOException
+	public List getListFromRS(String query) throws DAOException
 	{
 		logger.debug("get list from RS");
 		List list = new ArrayList();
 		try
 		{
-			
+			getQueryRS(query);
 			ResultSetMetaData metaData = resultSet.getMetaData();
 			int columnCount = metaData.getColumnCount();
 			while (resultSet.next())
@@ -379,15 +382,25 @@ public class DatabaseConnectionParams
 	}
 
 	/**
-	 *For tempory use ..
+	 *For temporary use ..
 	 *TODO will be removed when getCleanConnection get removed.
-	 * @throws SQLException :
+	 * @throws DAOException :database exception.
 	 */
-	public void commit() throws SQLException
+	public void commit() throws DAOException
 	{
 		if(connection != null)
 		{
-			connection.commit();
+			try
+			{
+				connection.commit();
+			}
+			catch (SQLException exp)
+			{
+				logger.fatal(exp);
+				ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
+				throw new DAOException(errorKey,exp,"DatabaseConnectionParams.java :"+
+						DAOConstants.COMMIT_DATA_ERROR);
+			}
 		}
 	}
 

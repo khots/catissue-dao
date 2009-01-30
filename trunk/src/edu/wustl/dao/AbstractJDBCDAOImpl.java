@@ -25,7 +25,7 @@ import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.formatmessage.IDBExceptionFormatter;
 import edu.wustl.dao.util.DAOConstants;
-import edu.wustl.dao.util.DatabaseConnectionParams;
+import edu.wustl.dao.util.DatabaseConnectionUtiliy;
 import edu.wustl.security.exception.SMException;
 
 
@@ -59,11 +59,6 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * It holds the batch size.
 	 */
 	private transient int  batchCounter = 0;
-
-	/**
-	 * Batch size.
-	 */
-	private int batchSize = 1;
 
 	/**
 	 * This method will be used to establish the session with the database.
@@ -122,7 +117,12 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		try
 		{
 			super.commit();
-			commitUpdate();
+			if(batchCounter != 0 )
+			{
+				batchStatement.executeBatch();
+			}
+			connectionManager.commit();
+			clearBatch();
 		}
 		catch (Exception exp)
 		{
@@ -139,25 +139,36 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 */
 	public void rollback() throws DAOException
 	{
-		logger.debug("Session rollback");
-		clearBatch();
-		connectionManager.rollback();
+		try
+		{
+			logger.debug("Session rollback");
+			clearBatch();
+			connectionManager.rollback();
+		}
+		catch (Exception exp)
+		{
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.audit.error");
+			throw new DAOException(errorKey,exp,"AbstractJDBCDAOImpl.java :"+
+					DAOConstants.ROLLBACK_ERROR);
+		}
 
 	}
 	/**
 	 * This method will be called for executing a static SQL statement.
 	 * @see edu.wustl.dao.JDBCDAO#executeUpdate(java.lang.String)
+	 * @return (1) the row count for INSERT,UPDATE or DELETE statements
+	 * or (2) 0 for SQL statements that return nothing
 	 * @param query :Holds the query string.
 	 * @throws DAOException : DAOException.
 	 */
-	public void executeUpdate(String query) throws DAOException
+	public int executeUpdate(String query) throws DAOException
 	{
 		logger.debug("Execute query.");
-		DatabaseConnectionParams databaseConnectionParams = new DatabaseConnectionParams();
+		DatabaseConnectionUtiliy databaseConnectionParams = new DatabaseConnectionUtiliy();
 		try
 		{
 		  databaseConnectionParams.setConnection(connection);
-		  databaseConnectionParams.executeUpdate(query);
+		  return databaseConnectionParams.executeUpdate(query);
 		}
 		finally
 		{
@@ -220,7 +231,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	public ResultSet getQueryResultSet(String sql) throws DAOException
 	{
 		logger.debug("Execute query.");
-		DatabaseConnectionParams databaseConnectionParams = new DatabaseConnectionParams();
+		DatabaseConnectionUtiliy databaseConnectionParams = new DatabaseConnectionUtiliy();
 		try
 		{
 			databaseConnectionParams.setConnection(connection);
@@ -241,12 +252,11 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	public List executeQuery(String query) throws DAOException
 	{
 		logger.debug("Execute query."+query);
-		DatabaseConnectionParams databaseConnectionParams = new DatabaseConnectionParams();
+		DatabaseConnectionUtiliy databaseConnectionParams = new DatabaseConnectionUtiliy();
 		try
 		{
 			databaseConnectionParams.setConnection(connection);
-			ResultSet resultSet = databaseConnectionParams.getQueryRS(query);
-			return databaseConnectionParams.getListFromRS();
+			return databaseConnectionParams.getListFromRS(query);
 		}
 		finally
 		{
@@ -307,17 +317,6 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		return connection;
 	}
 
-
-	/**
-	 * This method will be called to set the size of the batch.
-	 * @param batchSize batchSize
-	 * @throws DAOException : Generic database exception.
-	 */
-	public void setBatchSize(int batchSize) throws DAOException
-	{
-		this.batchSize = batchSize;
-	}
-
 	/**
 	 * Adds the given SQL command to the current list of commands for
      * batchStatement object. The commands in this list can be
@@ -350,7 +349,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	/**
 	 * This method will be called for batch update insert.
 	 * @throws DAOException :Generic DAOException.
-	 */
+	 *//*
 	private void commitUpdate() throws DAOException
 	{
 		try
@@ -370,7 +369,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 					DAOConstants.BATCH_UPDATE_ERROR);
 		}
 	}
-
+*/
 
 	/**
 	 * This method will be called to clear the batch.
@@ -565,10 +564,13 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 
 
 	/**
-	 * @param obj :
-	 * @throws DAOException :
+	 * updates the persisted object into the database.
+	 * @param obj Object to be updated in database
+	 * @param oldObj old object.
+	 * @param isAuditable is auditable or not.
+	 * @throws DAOException : generic DAOException
 	 */
-	public void update(Object obj) throws DAOException
+	public void update(Object obj, Object oldObj,boolean isAuditable) throws DAOException
 	{
 		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
 		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");

@@ -18,7 +18,7 @@ import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.DAOConstants;
 import edu.wustl.dao.util.DAOUtility;
-import edu.wustl.dao.util.DatabaseConnectionParams;
+import edu.wustl.dao.util.DatabaseConnectionUtiliy;
 import edu.wustl.dao.util.HibernateMetaData;
 
 /**
@@ -99,7 +99,7 @@ IDBExceptionFormatter
 			Connection connection) throws DAOException, SQLException
 	{
 		String columnNames = DAOConstants.TAILING_SPACES;
-		DatabaseConnectionParams databaseConnectionParams = new DatabaseConnectionParams();
+		DatabaseConnectionUtiliy databaseConnectionParams = new DatabaseConnectionUtiliy();
 		databaseConnectionParams.setConnection(connection);
 		ResultSet resultSet = null;
 		try

@@ -17,6 +17,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
+import edu.wustl.common.audit.Auditable;
 import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.exception.AuditException;
 import edu.wustl.common.exception.ErrorKey;
@@ -126,18 +127,24 @@ public class HibernateDAOImpl extends AbstractDAOImpl
 	 * @param obj The object to be updated.
 	 * @throws DAOException generic DAOException.
 	 */
-	public void update(Object obj) throws DAOException
+	public void update(Object obj, Object oldObj,boolean isAuditable) throws DAOException
 	{
 		logger.debug("Update Object");
 		try
 		{
 			session.update(obj);
+			auditManager.compare(obj, (Auditable) oldObj, "UPDATE",isAuditable);
 		}
 		catch (HibernateException hibExp)
 		{
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
 			throw new DAOException(errorKey,hibExp,"HibernateDAOImpl.java :"+
 					DAOConstants.UPDATE_OBJ_ERROR);
+		}
+		catch (AuditException exp)
+		{
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.audit.error");
+			throw new DAOException(errorKey,exp,"HibernateDAOImpl.java :");
 		}
 	}
 

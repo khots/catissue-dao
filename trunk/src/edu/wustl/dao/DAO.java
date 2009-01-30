@@ -38,9 +38,11 @@ public interface DAO
 	/**
 	 * updates the persisted object into the database.
 	 * @param obj Object to be updated in database
+	 * @param oldObj old object.
+	 * @param isAuditable is auditable or not.
 	 * @throws DAOException : generic DAOException
 	 */
-	void update(Object obj) throws DAOException;
+	void update(Object obj, Object oldObj,boolean isAuditable) throws DAOException;
 
 
 	/**
@@ -58,8 +60,8 @@ public interface DAO
 	 * @param isAuditable is Auditable.
 	 * @throws DAOException generic DAOException.
 	 */
-	void audit(Object obj, Object oldObj, SessionDataBean sessionDataBean,
-			boolean isAuditable) throws DAOException;
+	//void audit(Object obj, Object oldObj, SessionDataBean sessionDataBean,
+		//	boolean isAuditable) throws DAOException;
 
 	/**
 	 * Retrieve and returns the list of all source objects that satisfy the
@@ -69,7 +71,7 @@ public interface DAO
 	 * @param queryWhereClause : This will hold following:
 	 * 1.whereColumnName Array of column name to be included in where clause.
 	 * 2.whereColumnCondition condition to be satisfy between column and its value.
-	 * e.g. "=", "<", ">", "=<", ">=" etc
+	 * e.g. "=", "!=", "<", ">", "in", "null" etc
 	 * 3. whereColumnValue Value of the column name that included in where clause.
 	 * 4.joinCondition join condition between two columns. (AND, OR)
 	 * @param onlyDistinctRows true if only distinct rows should be selected.

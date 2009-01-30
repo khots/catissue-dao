@@ -134,7 +134,7 @@ public final class DAOUtility
 	 */
 	public String getDisplayName(String tableName,Connection connection) throws DAOException
 	{
-		DatabaseConnectionParams databaseConnectionParams = new DatabaseConnectionParams();
+		DatabaseConnectionUtiliy databaseConnectionParams = new DatabaseConnectionUtiliy();
 		String displayName="";
 		String sql = "select DISPLAY_NAME from CATISSUE_QUERY_TABLE_DATA where TABLE_NAME='"+tableName+"'";
 		try
@@ -260,25 +260,5 @@ public final class DAOUtility
 		return executeHQL(queryName, null);
 	}
 
-	/**
-	 * This will be called to initialized the Audit Manager.
-	 * @param sessionDataBean : This will holds the session data.
-	 * @return AuditManager : instance of AuditManager
-	 */
-	public static AuditManager getAuditManager(SessionDataBean sessionDataBean)
-	{
-		logger.debug("Initialize audit manager");
-		AuditManager auditManager = new AuditManager();
-		if (sessionDataBean == null)
-		{
-			auditManager.setUserId(null);
-		}
-		else
-		{
-			auditManager.setUserId(sessionDataBean.getUserId());
-			auditManager.setIpAddress(sessionDataBean.getIpAddress());
-		}
-		return auditManager;
-	}
 
 }
