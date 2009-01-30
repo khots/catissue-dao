@@ -277,6 +277,17 @@ public final class DAOConstants
 	 */
 	public static final boolean SWITCH_SECURITY = true;
 
+
+	/**
+	 * Time pattern.
+	 * TODO : need to confirm.
+	 */
+	public static final String TIME_PATTERN_HH_MM_SS = "HH:mm:ss";
+	/**
+	 * Date pattern.
+	 */
+	public static final String DATE_PATTERN_MM_DD_YYYY = "MM-dd-yyyy";
+
 	/**
 	 * Opening bracket.
 	 *//*

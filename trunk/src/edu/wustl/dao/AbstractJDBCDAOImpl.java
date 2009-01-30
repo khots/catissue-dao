@@ -15,22 +15,17 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
 
 import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.exception.ErrorKey;
-import edu.wustl.common.querydatabean.QueryDataBean;
-import edu.wustl.common.util.PagenatedResultData;
-import edu.wustl.common.util.QueryParams;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.formatmessage.IDBExceptionFormatter;
 import edu.wustl.dao.util.DAOConstants;
 import edu.wustl.dao.util.DatabaseConnectionParams;
-import edu.wustl.query.executor.AbstractQueryExecutor;
 import edu.wustl.security.exception.SMException;
 
 
@@ -159,8 +154,15 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	{
 		logger.debug("Execute query.");
 		DatabaseConnectionParams databaseConnectionParams = new DatabaseConnectionParams();
-		databaseConnectionParams.setConnection(connection);
-		databaseConnectionParams.executeUpdate(query);
+		try
+		{
+		  databaseConnectionParams.setConnection(connection);
+		  databaseConnectionParams.executeUpdate(query);
+		}
+		finally
+		{
+			databaseConnectionParams.closeConnectionParams();
+		}
 	}
 
 	/**
@@ -196,7 +198,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 			}
 
 			logger.debug("JDBC Query " + queryStrBuff);
-			list = executeQuery(queryStrBuff.toString(), null, false, null);
+			list = executeQuery(queryStrBuff.toString());
 		}
 		catch (Exception exp)
 		{
@@ -208,6 +210,50 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 
 		return list;
 	}
+
+	/**
+	 * This method will be called to get the result set.
+	 * @param sql sql statement.
+	 * @throws DAOException generic DAOException.
+	 * @return ResultSet : ResultSet
+	 */
+	public ResultSet getQueryResultSet(String sql) throws DAOException
+	{
+		logger.debug("Execute query.");
+		DatabaseConnectionParams databaseConnectionParams = new DatabaseConnectionParams();
+		try
+		{
+			databaseConnectionParams.setConnection(connection);
+			return databaseConnectionParams.getQueryRS(sql);
+		}
+		finally
+		{
+			databaseConnectionParams.closeConnectionParams();
+		}
+	}
+
+	/**
+	 *This method will be called to close current connection.
+	 *@param query :
+	 *@throws DAOException :Generic DAOException.
+	 *@return list
+	 */
+	public List executeQuery(String query) throws DAOException
+	{
+		logger.debug("Execute query."+query);
+		DatabaseConnectionParams databaseConnectionParams = new DatabaseConnectionParams();
+		try
+		{
+			databaseConnectionParams.setConnection(connection);
+			ResultSet resultSet = databaseConnectionParams.getQueryRS(query);
+			return databaseConnectionParams.getListFromRS();
+		}
+		finally
+		{
+			databaseConnectionParams.closeConnectionParams();
+		}
+	}
+
 
 	/**
 	 * This method will return the select clause of Query.
@@ -249,83 +295,6 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	{
 		logger.debug("Prepare from part of the query");
 		queryStrBuff.append("FROM ").append(sourceObjectName);
-	}
-
-	/**
-	 * Executes the query.
-	 * @param query :Query to be executed.
-	 * @param sessionDataBean : Holds the data associated to the session.
-	 * @param isSecureExecute Query will be executed only if isSecureExecute is true.
-	 * @param queryResultObjectDataMap : queryResultObjectDataMap
-	 * @return This method executed query, parses the result and returns List of rows.
-	 * @throws DAOException : DAOException
-
-	 */
-	public List<Object> executeQuery(String query, SessionDataBean sessionDataBean,
-			boolean isSecureExecute, Map<Object,QueryDataBean>
-			queryResultObjectDataMap) throws
-			DAOException
-	{
-
-		logger.debug("Inside executeQuery method");
-		QueryParams queryParams = new QueryParams();
-		queryParams.setQuery(query);
-		queryParams.setSessionDataBean(sessionDataBean);
-		queryParams.setSecureToExecute(isSecureExecute);
-		queryParams.setHasConditionOnIdentifiedField(false);
-		queryParams.setQueryResultObjectDataMap(queryResultObjectDataMap);
-		queryParams.setStartIndex(-1);
-		queryParams.setNoOfRecords(-1);
-		queryParams.setConnection(connection);
-
-		return getQueryResultList(queryParams).getResult();
-	}
-
-
-	/**
-	 *Description: Query performance issue. Instead of saving complete query results in session,
-	 *results will be fetched for each page navigation.
-	 *@param queryParams : This object will hold all the Query related details.
-	 *@throws DAOException : DAOException
-	 *@return : It will return the pagenatedResultData.
-	 * */
-	public PagenatedResultData executeQuery(QueryParams  queryParams) throws DAOException
-	{
-		logger.debug("execute query");
-		PagenatedResultData pagenatedResultData = null;
-		if (!(DAOConstants.SWITCH_SECURITY && queryParams.isSecureToExecute() &&
-				queryParams.getSessionDataBean() == null))
-		{
-		  pagenatedResultData = (PagenatedResultData)getQueryResultList(queryParams);
-		}
-		return pagenatedResultData;
-	}
-
-	/**
-	 * This method executed query, parses the result and returns List of rows after doing security checks
-	 * for user's right to view a record/field.
-	 * @param queryParams : TODO
-	 * @return This will return the PagenatedResultData.
-	 * @throws DAOException :DAOException
-	 */
-	public PagenatedResultData getQueryResultList(QueryParams queryParams) throws DAOException
-	{
-		PagenatedResultData pagenatedResultData = null;
-		try
-		{
-			Class queryExeClass = Class.forName(databaseProperties.getQueryExecutorName());
-			AbstractQueryExecutor queryExecutor = (AbstractQueryExecutor)queryExeClass.newInstance();
-			pagenatedResultData = queryExecutor.getQueryResultList(queryParams);
-
-		}
-		catch(Exception exp)
-		{
-			logger.fatal(exp.getMessage(), exp);
-			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,exp,"AbstractJDBCDAOImpl.java :"+
-					DAOConstants.EXECUTE_QUERY_ERROR);
-		}
-		return pagenatedResultData;
 	}
 
 	/**
@@ -562,18 +531,6 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 			throw new DAOException(errorKey,exp,"AbstractJDBCDAOImpl.java :");
 		}
 		return formattedMsg;
-	}
-
-	/**
-	 *This method will be called to close current connection.
-	 *@param query :
-	 *@throws DAOException :Generic DAOException.
-	 *@return list
-	 */
-	public List executeQuery(String query) throws DAOException
-	{
-		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
-		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
 	}
 
 	/**

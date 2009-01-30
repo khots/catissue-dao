@@ -7,13 +7,8 @@
 package edu.wustl.dao;
 
 import java.sql.Connection;
-import java.util.List;
-import java.util.Map;
+import java.sql.ResultSet;
 
-import edu.wustl.common.beans.SessionDataBean;
-import edu.wustl.common.querydatabean.QueryDataBean;
-import edu.wustl.common.util.PagenatedResultData;
-import edu.wustl.common.util.QueryParams;
 import edu.wustl.dao.exception.DAOException;
 
 /** This interface defines methods which are specific to JDBC operations.*/
@@ -21,38 +16,19 @@ public interface JDBCDAO extends DAO
 {
 
 	/**
-	   * Executes the query.
-	   * @param query query to be execute.
-	   * @param sessionDataBean session specific Data.
-	   * @param isSecureExecute is Secure Execute.
-	   * @param queryResultObjectDataMap query Result Object Data Map.
-	   * @return list.
-	   * @throws ClassNotFoundException Class Not Found Exception.
-	   * @throws DAOException generic DAOException.
-	   */
-	List<Object> executeQuery(String query, SessionDataBean sessionDataBean, boolean isSecureExecute,
-			Map<Object,QueryDataBean> queryResultObjectDataMap)
-			throws ClassNotFoundException, DAOException;
-
-	/**
-	 * Description: Query performance issue. Instead of saving complete query results in session,
-	 * resulted will be fetched for each result page navigation.object of class
-	 * QuerySessionData will be saved session,which will contain the required information
-	 * for query execution while navigating through query result pages.
-	 * @param queryParams : This will hold the Query related information. TODO
-	 * @return PagenatedResultData : Paginated data.
-	 * @throws ClassNotFoundException :ClassNotFoundException
-	 * @throws DAOException generic DAOException
-	 */
-	PagenatedResultData executeQuery(QueryParams  queryParams)
-	throws ClassNotFoundException, DAOException;
-
-	/**
 	 * This method will execute the SQL and modifies the database.
 	 * @param sql sql statement.
 	 * @throws DAOException generic DAOException.
 	 */
 	void executeUpdate(String sql) throws DAOException;
+
+	/**
+	 * This method will be called to get the result set.
+	 * @param sql sql statement.
+	 * @throws DAOException generic DAOException.
+	 * @return ResultSet : ResultSet
+	 */
+	ResultSet getQueryResultSet(String sql)throws DAOException;
 
 	/**
 	 * @param excp : Exception Object.
