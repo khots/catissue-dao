@@ -65,6 +65,7 @@ public class DatabaseConnectionUtiliy
 		try
 		{
 			statement = connection.createStatement();
+			return statement;
 		}
 		catch (SQLException sqlExp)
 		{
@@ -73,7 +74,7 @@ public class DatabaseConnectionUtiliy
 			throw new DAOException(errorKey,sqlExp,"DatabaseConnectionParams.java :"+
 					DAOConstants.STMT_CREATION_ERROR);
 		}
-		return statement;
+
 
 	}
 
@@ -89,6 +90,7 @@ public class DatabaseConnectionUtiliy
 		{
 			statement = getDatabaseStatement();
 			resultSet = statement.executeQuery(query);
+			return resultSet;
 		}
 		catch (SQLException sqlExp)
 		{
@@ -97,7 +99,7 @@ public class DatabaseConnectionUtiliy
 			throw new DAOException(errorKey,sqlExp,"DatabaseConnectionParams.java :"+
 					DAOConstants.RESULTSET_CREATION_ERROR);
 		}
-		return resultSet;
+
 	}
 
 
@@ -109,13 +111,14 @@ public class DatabaseConnectionUtiliy
 	 */
 	public ResultSetMetaData getMetaData(String query)throws DAOException
 	{
-		ResultSetMetaData metaData = null;
+
 		try
 		{
 
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery(query);
-			metaData = resultSet.getMetaData();
+			ResultSetMetaData metaData = resultSet.getMetaData();
+			return metaData;
 		}
 		catch (SQLException sqlExp)
 		{
@@ -124,8 +127,6 @@ public class DatabaseConnectionUtiliy
 			throw new DAOException(errorKey,sqlExp,"DatabaseConnectionParams.java :"+
 					DAOConstants.RS_METADATA_ERROR);
 		}
-
-		return metaData;
 	}
 
 	/**
@@ -196,8 +197,7 @@ public class DatabaseConnectionUtiliy
 
 		try
 		{
-			PreparedStatement stmt = null;
-			stmt = getPreparedStatement(query);
+			PreparedStatement stmt = getPreparedStatement(query);
 			return stmt.executeUpdate();
 		}
 		catch (SQLException sqlExp)
@@ -207,10 +207,7 @@ public class DatabaseConnectionUtiliy
 			throw new DAOException(errorKey,sqlExp,"DatabaseConnectionParams.java :"
 					+DAOConstants.EXECUTE_QUERY_ERROR+"   "+query);
 		}
-		finally
-		{
-			closeConnectionParams();
-		}
+
 	}
 
 	/**
@@ -239,12 +236,11 @@ public class DatabaseConnectionUtiliy
 	public ResultSet getQueryRS(String query) throws DAOException
 	{
 		logger.debug("Get Query RS");
-		PreparedStatement stmt = null;
 		try
 		{
-			stmt = connection.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE,
-				ResultSet.CONCUR_READ_ONLY);
+			PreparedStatement stmt = getPreparedStatement(query);
 			resultSet = stmt.executeQuery();
+			return resultSet;
 		}
 		catch (SQLException exp)
 		{
@@ -253,7 +249,6 @@ public class DatabaseConnectionUtiliy
 			throw new DAOException(errorKey,exp,"DatabaseConnectionParams.java :"
 					+DAOConstants.EXECUTE_QUERY_ERROR+"   "+query);
 		}
-		return resultSet;
 	}
 
 	/**

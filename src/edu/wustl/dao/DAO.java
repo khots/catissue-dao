@@ -8,15 +8,9 @@
 
 package edu.wustl.dao;
 
-import java.sql.Connection;
-import java.util.Collection;
 import java.util.List;
 
-import org.hibernate.Query;
-import org.hibernate.Session;
-
 import edu.wustl.common.beans.SessionDataBean;
-import edu.wustl.common.domain.AuditEventLog;
 import edu.wustl.dao.connectionmanager.IConnectionManager;
 import edu.wustl.dao.exception.DAOException;
 
@@ -39,10 +33,9 @@ public interface DAO
 	 * updates the persisted object into the database.
 	 * @param obj Object to be updated in database
 	 * @param oldObj old object.
-	 * @param isAuditable is auditable or not.
 	 * @throws DAOException : generic DAOException
 	 */
-	void update(Object obj, Object oldObj,boolean isAuditable) throws DAOException;
+	void update(Object obj, Object oldObj) throws DAOException;
 
 
 	/**
@@ -51,17 +44,6 @@ public interface DAO
 	 * @throws DAOException generic DAOException.
 	 */
 	void delete(Object obj) throws DAOException;
-
-	/**
-	 * Audit the object.
-	 * @param obj Object to be audited.
-	 * @param oldObj old Object.
-	 * @param sessionDataBean session Data.
-	 * @param isAuditable is Auditable.
-	 * @throws DAOException generic DAOException.
-	 */
-	//void audit(Object obj, Object oldObj, SessionDataBean sessionDataBean,
-		//	boolean isAuditable) throws DAOException;
 
 	/**
 	 * Retrieve and returns the list of all source objects that satisfy the
@@ -155,7 +137,7 @@ public interface DAO
 	 * @return : It will return the formated messages.
 	 * @throws DAOException : DAO exception.
 	 */
-	String formatMessage(Exception excp)throws DAOException;
+	//String formatMessage(Exception excp)throws DAOException;
 
 
 	/**
@@ -163,52 +145,41 @@ public interface DAO
 	 *connections will be in auto-commit mode.
 	 *@return Connection object
 	 *@throws DAOException :Generic DAOException.
-	 */
+	 *//*
 	Connection getCleanConnection() throws DAOException;
 
 
-	/**
+	*//**
 	 *Releases this Connection object's database and JDBC resources.
 	 *@throws DAOException :Generic DAOException.
-	 */
+	 *//*
 	void closeCleanConnection() throws DAOException;
 
 
-	/**
+	*//**
 	 * Create database connection and open the new session on the given connection.
 	 * connections will be in auto-commit mode.
 	 * @return session object.
 	 *@throws DAOException :Generic DAOException.
-	 */
+	 *//*
 	Session getCleanSession() throws DAOException;
 
-	/**
+	*//**
 	 *End the session by releasing the JDBC connection and cleaning up.
 	 *@throws DAOException :Generic DAOException.
-	 */
-	void closeCleanSession() throws DAOException;
+	 *//*
+	void closeCleanSession() throws DAOException;*/
 
 	/**
-	 * Add AuditEvent Logs.
-	 * @param auditEventDetailsCollection audit Event Details Collection.
+	 * Audit the object.
+	 * @param obj Object to be audited.
+	 * @param oldObj old Object.
+	 * @param sessionDataBean session Data.
+	 * @param isAuditable is Auditable.
+	 * @throws DAOException generic DAOException.
 	 */
-	void addAuditEventLogs(Collection<AuditEventLog> auditEventDetailsCollection);
+	//void audit(Object obj, Object oldObj, SessionDataBean sessionDataBean,
+		//	boolean isAuditable) throws DAOException;
 
-	/**
-	 * Obtain an instance of Query for a named query string defined in the mapping file.
-	 * This method executes named query and returns list of objects as result.
-	 * @param queryName handle to get named query.
-	 * @return list of objects.
-	 *@throws DAOException :Generic DAOException.
-	 */
-	Collection executeNamedQuery(String queryName)throws DAOException;
-
-	/**
-	 * Obtain an instance of Query for a named query string defined in the mapping file.
-	 * @param queryName handle to get named query.
-	 * @return Query named Query object.
-	 *@throws DAOException :Generic DAOException.
-	 */
-	Query getNamedQuery(String queryName)throws DAOException;
 
 }

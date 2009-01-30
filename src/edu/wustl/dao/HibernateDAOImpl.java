@@ -11,20 +11,20 @@
 package edu.wustl.dao;
 
 
+import java.util.Collection;
 import java.util.List;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
+import edu.wustl.common.audit.AuditManager;
 import edu.wustl.common.audit.Auditable;
 import edu.wustl.common.beans.SessionDataBean;
+import edu.wustl.common.domain.AuditEventLog;
 import edu.wustl.common.exception.AuditException;
 import edu.wustl.common.exception.ErrorKey;
-import edu.wustl.common.util.global.CommonServiceLocator;
 import edu.wustl.common.util.logger.Logger;
-import edu.wustl.dao.daofactory.DAOConfigFactory;
-import edu.wustl.dao.daofactory.IDAOFactory;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.DAOConstants;
 import edu.wustl.dao.util.DAOUtility;
@@ -34,7 +34,7 @@ import edu.wustl.dao.util.DAOUtility;
  * Default implementation of DAO through Hibernate ORM tool.
  * @author kapil_kaveeshwar
  */
-public class HibernateDAOImpl extends AbstractDAOImpl
+public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 {
 
     /**
@@ -48,6 +48,11 @@ public class HibernateDAOImpl extends AbstractDAOImpl
 	 */
      private Session session = null;
 
+     /**
+ 	 * Audit Manager.
+ 	 */
+ 	private AuditManager auditManager;
+
 	/**
 	 * This method will be used to establish the session with the database.
 	 * Declared in  class.
@@ -56,7 +61,9 @@ public class HibernateDAOImpl extends AbstractDAOImpl
 	 */
 	public void openSession(SessionDataBean sessionDataBean) throws DAOException
 	{
-		super.openSession(sessionDataBean);
+		//super.openSession(sessionDataBean);
+		logger.debug("Open the session");
+	    auditManager = getAuditManager(sessionDataBean);
 		session = connectionManager.currentSession();
 	}
 
@@ -67,7 +74,9 @@ public class HibernateDAOImpl extends AbstractDAOImpl
 	 */
 	public void closeSession() throws DAOException
 	{
-		super.closeSession();
+		//super.closeSession();
+		logger.debug("Close the session");
+		auditManager = null;
 		connectionManager.closeSession();
 	}
 
@@ -78,7 +87,9 @@ public class HibernateDAOImpl extends AbstractDAOImpl
 	 */
 	public void commit() throws DAOException
 	{
-		super.commit();
+		//super.commit();
+		logger.debug("Session commit");
+		auditManager.insert(this);
 		connectionManager.commit();
 	}
 
@@ -105,7 +116,10 @@ public class HibernateDAOImpl extends AbstractDAOImpl
 		try
 		{
 			session.save(obj);
-			auditManager.compare(obj, null, "INSERT",isAuditable);
+			if (obj instanceof Auditable && isAuditable)
+			{
+				auditManager.audit((Auditable)obj, null, "INSERT");
+			}
 		}
 		catch (HibernateException hibExp)
 		{
@@ -123,23 +137,37 @@ public class HibernateDAOImpl extends AbstractDAOImpl
 	}
 
 	/**
-	 * Updates the persistent object in the database.
-	 * @param obj The object to be updated.
-	 * @throws DAOException generic DAOException.
+	 * updates the object into the database.
+	 * @param obj Object to be updated in database
+	 * @throws DAOException : generic DAOException
 	 */
-	public void update(Object obj, Object oldObj,boolean isAuditable) throws DAOException
+	public void update(Object obj) throws DAOException
 	{
 		logger.debug("Update Object");
 		try
 		{
 			session.update(obj);
-			auditManager.compare(obj, (Auditable) oldObj, "UPDATE",isAuditable);
 		}
 		catch (HibernateException hibExp)
 		{
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
 			throw new DAOException(errorKey,hibExp,"HibernateDAOImpl.java :"+
 					DAOConstants.UPDATE_OBJ_ERROR);
+		}
+	}
+
+	/**
+	 * update and audit the object to the database.
+	 * @param obj Object to be updated in database
+	 * @param oldObj old object.
+	 * @throws DAOException : generic DAOException
+	 */
+	public void update(Object obj, Object oldObj) throws DAOException
+	{
+		try
+		{
+			update(obj);
+			auditManager.audit((Auditable)obj, (Auditable) oldObj, "UPDATE");
 		}
 		catch (AuditException exp)
 		{
@@ -212,6 +240,30 @@ public class HibernateDAOImpl extends AbstractDAOImpl
 		return list;
 	}
 
+	/**
+	 * Generate Select Block.
+	 * @param selectColumnName select Column Name.
+	 * @param sqlBuff sqlBuff
+	 * @param className class Name.
+	 */
+	private void generateSelectPartOfQuery(String[] selectColumnName, StringBuffer sqlBuff, String className)
+	 {
+		logger.debug("Prepare select part of query.");
+		if (selectColumnName != null && selectColumnName.length > 0)
+		 {
+		    sqlBuff.append("Select ");
+		    for (int i = 0; i < selectColumnName.length; i++)
+		     {
+		        sqlBuff.append(DAOUtility.getInstance().
+		        		createAttributeNameForHQL(className, selectColumnName[i]));
+		        if (i != selectColumnName.length - 1)
+		        {
+		            sqlBuff.append(", ");
+		        }
+		    }
+		    sqlBuff.append("   ");
+		}
+	}
 
 	/**
 	 * @param sourceObjectName source Object Name.
@@ -311,71 +363,6 @@ public class HibernateDAOImpl extends AbstractDAOImpl
 	}
 
 	/**
-	 * Generate Select Block.
-	 * @param selectColumnName select Column Name.
-	 * @param sqlBuff sqlBuff
-	 * @param className class Name.
-	 */
-	private void generateSelectPartOfQuery(String[] selectColumnName, StringBuffer sqlBuff, String className)
-	 {
-		logger.debug("Prepare select part of query.");
-		if (selectColumnName != null && selectColumnName.length > 0)
-		 {
-		    sqlBuff.append("Select ");
-		    for (int i = 0; i < selectColumnName.length; i++)
-		     {
-		        sqlBuff.append(DAOUtility.getInstance().
-		        		createAttributeNameForHQL(className, selectColumnName[i]));
-		        if (i != selectColumnName.length - 1)
-		        {
-		            sqlBuff.append(", ");
-		        }
-		    }
-		    sqlBuff.append("   ");
-		}
-	}
-	/**
-	 * This method will be called to obtain clean session.
-	 * @return session object.
-	 *@throws DAOException :Generic DAOException.
-	 */
-	public Session getCleanSession() throws DAOException
-	{
-		logger.debug("Get clean session");
-		return connectionManager.getCleanSession();
-	}
-
-	/**
-	 *This method will be called to close current connection.
-	 *@throws DAOException :Generic DAOException.
-	 */
-	public void closeCleanSession() throws DAOException
-	{
-		logger.debug("Close clean session");
-		connectionManager.closeCleanSession();
-	}
-
-
-
-	/**
-	 * @param excp : Exception Object.
-	 * @return : It will return the formated messages.
-	 * @throws DAOException :
-	 */
-	public String formatMessage(Exception excp) throws DAOException
-	{
-		logger.debug("Format error message");
-		String formatMessage = DAOConstants.TAILING_SPACES;
-		String appName = CommonServiceLocator.getInstance().getAppHome();
-		IDAOFactory daoFactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
-		JDBCDAO jdbcDAO = daoFactory.getJDBCDAO();
-		//HibernateMetaData.initHibernateMetaData(jdbcDAO.getConnectionManager().getConfiguration());
-		formatMessage = jdbcDAO.formatMessage(excp,getCleanConnection());
-		getConnectionManager().closeConnection();
-		return formatMessage;
-	}
-
-	/**
 	 * This method executes the named query and returns the results.
 	 * @param queryName : handle for named query.
 	 * @return result as list of Object
@@ -396,4 +383,74 @@ public class HibernateDAOImpl extends AbstractDAOImpl
 		return session.getNamedQuery(queryName);
 	}
 
+	/**
+	 * add Audit Event Logs.
+	 * @param auditEventDetailsCollection audit Event Details Collection.
+	 */
+	public void addAuditEventLogs(Collection<AuditEventLog> auditEventDetailsCollection)
+	{
+		logger.debug("Add audit event logs");
+		auditManager.addAuditEventLogs(auditEventDetailsCollection);
+	}
+
+	/**
+	 * This will be called to initialized the Audit Manager.
+	 * @param sessionDataBean : This will holds the session data.
+	 * @return AuditManager : instance of AuditManager
+	 */
+	private static AuditManager getAuditManager(SessionDataBean sessionDataBean)
+	{
+		logger.debug("Initialize audit manager");
+		AuditManager auditManager = new AuditManager();
+		if (sessionDataBean == null)
+		{
+			auditManager.setUserId(null);
+		}
+		else
+		{
+			auditManager.setUserId(sessionDataBean.getUserId());
+			auditManager.setIpAddress(sessionDataBean.getIpAddress());
+		}
+		return auditManager;
+	}
+
+	/**
+	 * @param excp : Exception Object.
+	 * @return : It will return the formated messages.
+	 * @throws DAOException :
+	 *//*
+	public String formatMessage(Exception excp) throws DAOException
+	{
+		logger.debug("Format error message");
+		String formatMessage = DAOConstants.TAILING_SPACES;
+		String appName = CommonServiceLocator.getInstance().getAppHome();
+		IDAOFactory daoFactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
+		JDBCDAO jdbcDAO = daoFactory.getJDBCDAO();
+		//HibernateMetaData.initHibernateMetaData(jdbcDAO.getConnectionManager().getConfiguration());
+		formatMessage = jdbcDAO.formatMessage(excp,getCleanConnection());
+		getConnectionManager().closeConnection();
+		return formatMessage;
+	}*/
+
+	/**
+	 * This method will be called to obtain clean session.
+	 * @return session object.
+	 *@throws DAOException :Generic DAOException.
+	 *//*
+	public Session getCleanSession() throws DAOException
+	{
+		logger.debug("Get clean session");
+		return connectionManager.getCleanSession();
+	}
+
+	*//**
+	 *This method will be called to close current connection.
+	 *@throws DAOException :Generic DAOException.
+	 *//*
+	public void closeCleanSession() throws DAOException
+	{
+		logger.debug("Close clean session");
+		connectionManager.closeCleanSession();
+	}
+*/
 }

@@ -13,17 +13,12 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Collection;
 import java.util.List;
-
-import org.hibernate.Query;
-import org.hibernate.Session;
 
 import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.exception.DAOException;
-import edu.wustl.dao.formatmessage.IDBExceptionFormatter;
 import edu.wustl.dao.util.DAOConstants;
 import edu.wustl.dao.util.DatabaseConnectionUtiliy;
 import edu.wustl.security.exception.SMException;
@@ -56,11 +51,6 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	private Statement batchStatement;
 
 	/**
-	 * It holds the batch size.
-	 */
-	private transient int  batchCounter = 0;
-
-	/**
 	 * This method will be used to establish the session with the database.
 	 * Declared in DAO class.
 	 * @param sessionDataBean : holds the data associated to the session.
@@ -71,7 +61,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	{
 		try
 		{
-			super.openSession(sessionDataBean);
+			//super.openSession(sessionDataBean);
 			connection = connectionManager.getConnection();
 			initializeBatchstmt();
 		}
@@ -93,7 +83,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	{
 		try
 		{
-			super.closeSession();
+			//super.closeSession();
 			connectionManager.closeConnection();
 			batchStatement = null;
 		}
@@ -116,7 +106,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	{
 		try
 		{
-			super.commit();
+			//super.commit();
 			if(batchCounter != 0 )
 			{
 				batchStatement.executeBatch();
@@ -153,6 +143,107 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		}
 
 	}
+	/**
+	 * This method will be called to set the batch statement.
+	 * @throws DAOException : Database exception.
+	 */
+	private void initializeBatchstmt() throws DAOException
+	{
+		logger.debug("Initialize batch statement");
+		try
+		{
+			batchStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
+			ResultSet.CONCUR_UPDATABLE);
+
+		}
+		catch (SQLException exp)
+		{
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
+			throw new DAOException(errorKey,exp,"AbstractJDBCDAOImpl.java :"+
+				DAOConstants.STMT_CREATION_ERROR);
+		}
+	}
+	/**
+	 * Adds the given SQL command to the current list of commands for
+     * batchStatement object. The commands in this list can be
+     * executed as a batch by calling the method executeBatch
+	 @param sql typically this is a static SQL INSERT or
+     * UPDATE statement
+	 * @throws DAOException : Generic database exception.
+	 */
+	private void addSQLToBatch(String sql) throws DAOException
+	{
+		try
+		{
+			batchStatement.addBatch(sql);
+
+			if(++batchCounter >= batchSize)
+			{
+				batchStatement.executeBatch();
+				clearBatch();
+			}
+		}
+		catch (SQLException exp)
+		{
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
+			throw new DAOException(errorKey,exp,"AbstractJDBCDAOImpl.java :"+
+				DAOConstants.BATCH_UPDATE_ERROR);
+		}
+
+	}
+
+	/**
+	 * This method will be called to clear the batch.
+	 * @throws DAOException :Generic DAOException.
+	 */
+	private void clearBatch() throws DAOException
+	{
+		logger.debug("Clear the batch");
+		try
+		{
+			batchCounter = 0;
+			if(batchStatement != null)
+			{
+				batchStatement.clearBatch();
+			}
+		}
+		catch (SQLException exp)
+		{
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
+			throw new DAOException(errorKey,exp,"AbstractJDBCDAOImpl.java :");
+		}
+	}
+	/**
+	 * Adds the given SQL command to the current list of commands for
+     * batchStatement object.
+	 * @param sql typically this is a static SQL INSERT or
+     * UPDATE statement
+	 * @throws DAOException : Generic database exception.
+	 */
+	public void insert(String sql)
+			throws DAOException
+	{
+		logger.debug("Add DML to batch");
+		validate(sql);
+		addSQLToBatch(sql);
+
+	}
+
+	/**
+	 * This method will be called to validate batch query.
+	 * @param sql : This is a static SQL INSERT or
+     * UPDATE statement
+	 * @throws DAOException : database exception
+	 */
+	private void validate(String sql) throws DAOException
+	{
+		if(!(sql.contains("insert") || sql.contains("update")))
+		{
+			ErrorKey errorKey = ErrorKey.getErrorKey("dao.batch.query.error");
+			throw new DAOException(errorKey,null,"AbstractJDBCDAOImpl.java :");
+		}
+	}
+
 	/**
 	 * This method will be called for executing a static SQL statement.
 	 * @see edu.wustl.dao.JDBCDAO#executeUpdate(java.lang.String)
@@ -191,25 +282,49 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * in sourceObjectName which satisfies the where condition
 	 * @throws DAOException : DAOException
 	 */
+	public ResultSet retrieveResultSet(String sourceObjectName, String[] selectColumnName,
+			QueryWhereClause queryWhereClause,
+			 boolean onlyDistinctRows) throws DAOException
+	{
+		try
+		{
+			StringBuffer queryStrBuff = generateSQL(sourceObjectName,
+				selectColumnName, queryWhereClause, onlyDistinctRows);
+			return getQueryResultSet(queryStrBuff.toString());
+		}
+		catch (Exception exp)
+		{
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
+			throw new DAOException(errorKey, exp,"AbstractJDBCDAOImpl.java :"+
+					DAOConstants.RETRIEVE_ERROR);
+		}
+
+	}
+
+
+
+	/**
+	 * Retrieves the records for class name in sourceObjectName according to
+	 * field values passed in the passed session.
+	 * @param sourceObjectName This will holds the object name.
+	 * @param selectColumnName An array of field names in select clause.
+	 * @param queryWhereClause This will hold the where clause.
+	 * @param onlyDistinctRows True if only distinct rows should be selected
+	 * @return The list containing all the rows from the table represented
+	 * in sourceObjectName which satisfies the where condition
+	 * @throws DAOException : DAOException
+	 */
 	public List<Object> retrieve(String sourceObjectName, String[] selectColumnName,
 			QueryWhereClause queryWhereClause,
 			 boolean onlyDistinctRows) throws DAOException
 	{
-
 		logger.debug("Inside retrieve method");
-		List<Object> list = null;
 		try
 		{
-			StringBuffer queryStrBuff = getSelectPartOfQuery(selectColumnName, onlyDistinctRows);
-			getFromPartOfQuery(sourceObjectName, queryStrBuff);
-
-			if(queryWhereClause != null)
-			{
-				queryStrBuff.append(queryWhereClause.toWhereClause());
-			}
-
-			logger.debug("JDBC Query " + queryStrBuff);
-			list = executeQuery(queryStrBuff.toString());
+			StringBuffer queryStrBuff = generateSQL(sourceObjectName,
+					selectColumnName, queryWhereClause, onlyDistinctRows);
+			List<Object> list  = executeQuery(queryStrBuff.toString());
+			return list;
 		}
 		catch (Exception exp)
 		{
@@ -219,8 +334,69 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 
 		}
 
-		return list;
 	}
+
+	/**
+	 * Retrieves the records for class name in sourceObjectName according to
+	 * field values passed in the passed session.
+	 * @param sourceObjectName This will holds the object name.
+	 * @param selectColumnName An array of field names in select clause.
+	 * @param queryWhereClause This will hold the where clause.It holds following:
+	 * 1.whereColumnName : An array of field names in where clause.
+	 * 2.whereColumnCondition : The comparison condition for the field values.
+	 * 3.whereColumnValue : An array of field values.
+	 * 4.joinCondition : The join condition.
+	 * @param onlyDistinctRows True if only distinct rows should be selected
+	 * @return The ResultSet containing all the rows from the table represented
+	 * in sourceObjectName which satisfies the where condition
+	 */
+	private StringBuffer generateSQL(String sourceObjectName,
+			String[] selectColumnName, QueryWhereClause queryWhereClause,
+			boolean onlyDistinctRows)
+	{
+		StringBuffer queryStrBuff = getSelectPartOfQuery(selectColumnName, onlyDistinctRows);
+		logger.debug("Prepare from part of the query");
+		queryStrBuff.append("FROM ").append(sourceObjectName);
+
+		if(queryWhereClause != null)
+		{
+			queryStrBuff.append(queryWhereClause.toWhereClause());
+		}
+
+		logger.debug("JDBC Query " + queryStrBuff);
+		return queryStrBuff;
+	}
+	/**
+	 * This method will return the select clause of Query.
+	 * @param selectColumnName An array of field names in select clause.
+	 * @param onlyDistinctRows true if only distinct rows should be selected
+	 * @return It will return the select clause of Query.
+	 */
+	private StringBuffer getSelectPartOfQuery(String[] selectColumnName,
+			boolean onlyDistinctRows)
+	{
+		logger.debug("Prepare select part of query");
+		StringBuffer query = new StringBuffer("SELECT ");
+		if ((selectColumnName != null) && (selectColumnName.length > 0))
+		{
+			if (onlyDistinctRows)
+			{
+				query.append(" DISTINCT ");
+			}
+			int index;
+			for (index = 0; index < (selectColumnName.length - 1); index++)
+			{
+				query.append(selectColumnName[index]).append("  ,");
+			}
+			query.append(selectColumnName[index]).append("  ");
+		}
+		else
+		{
+			query.append("* ");
+		}
+		return query;
+	}
+
 
 	/**
 	 * This method will be called to get the result set.
@@ -265,47 +441,6 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	}
 
 
-	/**
-	 * This method will return the select clause of Query.
-	 * @param selectColumnName An array of field names in select clause.
-	 * @param onlyDistinctRows true if only distinct rows should be selected
-	 * @return It will return the select clause of Query.
-	 */
-	private StringBuffer getSelectPartOfQuery(String[] selectColumnName,
-			boolean onlyDistinctRows)
-	{
-		logger.debug("Prepare select part of query");
-		StringBuffer query = new StringBuffer("SELECT ");
-		if ((selectColumnName != null) && (selectColumnName.length > 0))
-		{
-			if (onlyDistinctRows)
-			{
-				query.append(" DISTINCT ");
-			}
-			int index;
-			for (index = 0; index < (selectColumnName.length - 1); index++)
-			{
-				query.append(selectColumnName[index]).append("  ,");
-			}
-			query.append(selectColumnName[index]).append("  ");
-		}
-		else
-		{
-			query.append("* ");
-		}
-		return query;
-	}
-
-	/**
-	 * This will generate the from clause of Query.
-	 * @param sourceObjectName The table name.
-	 * @param queryStrBuff Query buffer
-	 */
-	private void getFromPartOfQuery(String sourceObjectName, StringBuffer queryStrBuff)
-	{
-		logger.debug("Prepare from part of the query");
-		queryStrBuff.append("FROM ").append(sourceObjectName);
-	}
 
 	/**
 	 * This method will be called to get connection Manager object.
@@ -316,135 +451,6 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		logger.debug("Get the connection");
 		return connection;
 	}
-
-	/**
-	 * Adds the given SQL command to the current list of commands for
-     * batchStatement object. The commands in this list can be
-     * executed as a batch by calling the method executeBatch
-	 @param sql typically this is a static SQL INSERT or
-     * UPDATE statement
-	 * @throws DAOException : Generic database exception.
-	 */
-	private void addSQLToBatch(String sql) throws DAOException
-	{
-		try
-		{
-			batchStatement.addBatch(sql);
-
-			if(++batchCounter >= batchSize)
-			{
-				batchStatement.executeBatch();
-				clearBatch();
-			}
-		}
-		catch (SQLException exp)
-		{
-			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,exp,"AbstractJDBCDAOImpl.java :"+
-				DAOConstants.BATCH_UPDATE_ERROR);
-		}
-
-	}
-
-	/**
-	 * This method will be called for batch update insert.
-	 * @throws DAOException :Generic DAOException.
-	 *//*
-	private void commitUpdate() throws DAOException
-	{
-		try
-		{
-			if(batchCounter != 0 )
-			{
-				batchStatement.executeBatch();
-			}
-			connectionManager.commit();
-			clearBatch();
-
-		}
-		catch (SQLException exp)
-		{
-			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,exp,"AbstractJDBCDAOImpl.java :"+
-					DAOConstants.BATCH_UPDATE_ERROR);
-		}
-	}
-*/
-
-	/**
-	 * This method will be called to clear the batch.
-	 * @throws DAOException :Generic DAOException.
-	 */
-	private void clearBatch() throws DAOException
-	{
-		logger.debug("Clear the batch");
-		try
-		{
-			batchCounter = 0;
-			if(batchStatement != null)
-			{
-				batchStatement.clearBatch();
-			}
-		}
-		catch (SQLException exp)
-		{
-			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,exp,"AbstractJDBCDAOImpl.java :");
-		}
-	}
-	/**
-	 * Adds the given SQL command to the current list of commands for
-     * batchStatement object.
-	 *@param sql typically this is a static SQL INSERT or
-     * UPDATE statement
-	 * @param isAuditable : is auditable.
-	 * @throws DAOException : Generic database exception.
-	 */
-	public void insert(String sql,boolean isAuditable)
-			throws DAOException
-	{
-		logger.debug("Add DML to batch");
-		validate(sql);
-		addSQLToBatch(sql);
-
-	}
-
-	/**
-	 * This method will be called to validate batch query.
-	 * @param sql : This is a static SQL INSERT or
-     * UPDATE statement
-	 * @throws DAOException : database exception
-	 */
-	private void validate(String sql) throws DAOException
-	{
-		if(!(sql.contains("insert") || sql.contains("update")))
-		{
-			ErrorKey errorKey = ErrorKey.getErrorKey("dao.batch.query.error");
-			throw new DAOException(errorKey,null,"AbstractJDBCDAOImpl.java :");
-		}
-	}
-
-	/**
-	 * This method will be called to set the batch statement.
-	 * @throws DAOException : Database exception.
-	 */
-	private void initializeBatchstmt() throws DAOException
-	{
-		logger.debug("Initialize batch statement");
-		try
-		{
-			batchStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
-			ResultSet.CONCUR_UPDATABLE);
-
-		}
-		catch (SQLException exp)
-		{
-			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,exp,"AbstractJDBCDAOImpl.java :"+
-				DAOConstants.STMT_CREATION_ERROR);
-		}
-	}
-
 	/**
 	 *This method will be called to get all database properties.
 	 * @return database properties.
@@ -509,42 +515,6 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		return databaseProperties.getStrTodateFunction();
 	}
 
-	/**
-	 * @param excp : Exception Object.
-	 * @param connection :
-	 * @return : It will return the formated messages.
-	 * @throws DAOException : database exception
-	 */
-	public String formatMessage(Exception excp,Connection connection)throws DAOException
-	{
-		String formattedMsg;
-		try
-		{
-			Class formatterClass = Class.forName(databaseProperties.getExceptionFormatterName());
-			IDBExceptionFormatter formatter =  (IDBExceptionFormatter)formatterClass.newInstance();
-			formattedMsg =  formatter.getFormatedMessage(excp,connection);
-		}
-		catch(Exception exp)
-		{
-			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,exp,"AbstractJDBCDAOImpl.java :");
-		}
-		return formattedMsg;
-	}
-
-	/**
-	 * @param obj :
-	 * @param oldObj :
-	 * @param sessionDataBean :
-	 * @param isAuditable :
-	 * @throws DAOException :
-	 */
-	public void audit(Object obj, Object oldObj, SessionDataBean sessionDataBean,
-			boolean isAuditable) throws DAOException
-	{
-		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
-		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
-	}
 
 	/**
 	 * @see edu.wustl.common.dao.DAO#retrieveAttribute(java.lang.Class, java.lang.Long, java.lang.String)
@@ -566,11 +536,9 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	/**
 	 * updates the persisted object into the database.
 	 * @param obj Object to be updated in database
-	 * @param oldObj old object.
-	 * @param isAuditable is auditable or not.
 	 * @throws DAOException : generic DAOException
 	 */
-	public void update(Object obj, Object oldObj,boolean isAuditable) throws DAOException
+	public void update(Object obj) throws DAOException
 	{
 		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
 		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
@@ -589,40 +557,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
 	}
 
-	/**
-	 * @param excp : Exception Object. Refactoring
-	 * @return : It will return the formated messages.
-	 * @throws DAOException : DAO exception.
-	 */
-	public String formatMessage(Exception excp)
-	throws DAOException
-	{
-		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
-		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
-	}
-
-	/**
-	 * This method will be called to obtain clean session.
-	 * @return session object.
-	 *@throws DAOException :Generic DAOException.
-	 */
-	public Session getCleanSession() throws DAOException
-	{
-
-		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
-		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
-
-	}
-
-	/**
-	 *This method will be called to close current connection.
-	 *@throws DAOException :Generic DAOException.
-	 */
-	public void closeCleanSession() throws DAOException
-	{
-		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
-		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
-	}
+	
 	/**
 	 * @param obj : object to be deleted
 	 * @throws DAOException : daoExp
@@ -645,28 +580,40 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
 	}
 
+
 	/**
-	 * This method executes the named query and returns the results.
-	 * @param queryName : handle for named query.
-	 * @return result as list of Object
-	 * @throws DAOException : daoExp
-	 */
-	public Collection executeNamedQuery(String queryName)throws DAOException
+	 * @param excp : Exception Object.
+	 * @param connection :
+	 * @return : It will return the formated messages.
+	 * @throws DAOException : database exception
+	 *//*
+	public String formatMessage(Exception excp,Connection connection)throws DAOException
+	{
+		String formattedMsg;
+		try
+		{
+			Class formatterClass = Class.forName(databaseProperties.getExceptionFormatterName());
+			IDBExceptionFormatter formatter =  (IDBExceptionFormatter)formatterClass.newInstance();
+			formattedMsg =  formatter.getFormatedMessage(excp,connection);
+		}
+		catch(Exception exp)
+		{
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
+			throw new DAOException(errorKey,exp,"AbstractJDBCDAOImpl.java :");
+		}
+		return formattedMsg;
+	}*/
+
+	/**
+	 * @param excp : Exception Object. Refactoring
+	 * @return : It will return the formated messages.
+	 * @throws DAOException : DAO exception.
+	 *//*
+	public String formatMessage(Exception excp)
+	throws DAOException
 	{
 		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
 		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
 	}
-
-	/**
-	 * This method returns named query.
-	 * @param queryName : handle for named query.
-	 * @return Query named query
-	 * @throws DAOException : daoExp
-	 */
-	public Query getNamedQuery(String queryName)throws DAOException
-	{
-		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
-		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
-	}
-
+*/
 }

@@ -6,7 +6,6 @@
 
 package edu.wustl.dao;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 
 import edu.wustl.dao.exception.DAOException;
@@ -31,39 +30,6 @@ public interface JDBCDAO extends DAO
 	 * @return ResultSet : ResultSet
 	 */
 	ResultSet getQueryResultSet(String sql)throws DAOException;
-
-	/**
-	 * @param excp : Exception Object.
-	 * @param connection :
-	 * @return : It will return the formated messages.
-	 * @throws DAOException :Generic DAOException.
-	 */
-	String formatMessage(Exception excp,Connection connection)throws DAOException;
-
-	/**
-	 *This method will be called to format the SQL.
-	 *@param tableName :
-	 *@throws DAOException :Generic DAOException.
-	 *@return SQLFormatter :
-	 *//*
-	SQLFormatter getSQLFormatter(String tableName) throws DAOException;
-
-	*//**
-	 * @param sqlFormatter :
-	 * @param sequenceName :
-	 * @param columnName :
-	 * @param columnTpe :
-	 * @throws DAOException :Generic DAOException.
-	 *//*
-	void insert(SQLFormatter sqlFormatter,String sequenceName,String columnName,
-			int columnTpe) throws DAOException;
-
-	*//**
-	 * @param query :
-	 * @param clobContent :
-	 * @throws DAOException :Generic DAOException.
-	 *//*
-	void updateClob(String query,String clobContent)throws DAOException;*/
 
 	/**
 	 * This method will be called to set the size of the batch.
@@ -116,10 +82,62 @@ public interface JDBCDAO extends DAO
 	/**
 	 * Insert the Object in the database.
 	 * @param sql Object to be inserted in database
-	 * @param isAuditable is Auditable.
 	 * @throws DAOException generic DAOException
 	 */
-	void insert(String sql,boolean isAuditable) throws DAOException;
+	void insert(String sql) throws DAOException;
+
+	/**
+	 * Retrieves the records for class name in sourceObjectName according to
+	 * field values passed in the passed session.
+	 * @param sourceObjectName This will holds the object name.
+	 * @param selectColumnName An array of field names in select clause.
+	 * @param queryWhereClause This will hold the where clause.It holds following:
+	 * 1.whereColumnName : An array of field names in where clause.
+	 * 2.whereColumnCondition : The comparison condition for the field values.
+	 * 3.whereColumnValue : An array of field values.
+	 * 4.joinCondition : The join condition.
+	 * @param onlyDistinctRows True if only distinct rows should be selected
+	 * @return The ResultSet containing all the rows from the table represented
+	 * in sourceObjectName which satisfies the where condition
+	 * @throws DAOException : DAOException
+	 */
+	ResultSet retrieveResultSet(String sourceObjectName, String[] selectColumnName,
+			QueryWhereClause queryWhereClause,
+			 boolean onlyDistinctRows) throws DAOException;
+
+	/**
+	 * @param excp : Exception Object.
+	 * @param connection :
+	 * @return : It will return the formated messages.
+	 * @throws DAOException :Generic DAOException.
+	 *//*
+	String formatMessage(Exception excp,Connection connection)throws DAOException;
+*/
+	/**
+	 *This method will be called to format the SQL.
+	 *@param tableName :
+	 *@throws DAOException :Generic DAOException.
+	 *@return SQLFormatter :
+	 *//*
+	SQLFormatter getSQLFormatter(String tableName) throws DAOException;
+
+	*//**
+	 * @param sqlFormatter :
+	 * @param sequenceName :
+	 * @param columnName :
+	 * @param columnTpe :
+	 * @throws DAOException :Generic DAOException.
+	 *//*
+	void insert(SQLFormatter sqlFormatter,String sequenceName,String columnName,
+			int columnTpe) throws DAOException;
+
+	*//**
+	 * @param query :
+	 * @param clobContent :
+	 * @throws DAOException :Generic DAOException.
+	 *//*
+	void updateClob(String query,String clobContent)throws DAOException;*/
+
 
 
 }
