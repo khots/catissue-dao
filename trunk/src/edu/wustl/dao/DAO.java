@@ -22,9 +22,8 @@ import edu.wustl.dao.exception.DAOException;
 
 
 /**
- * @author kapil_kaveeshwar
- *
- * This interface defines methods for insertion, updation, deletion and retrieval of data.
+ * @author kalpana_thakur
+ * Handles database operations like insertion, updation, deletion and retrieval of data.
  */
 public interface DAO
 {
@@ -100,8 +99,6 @@ public interface DAO
 	List executeQuery(String query)
 		throws DAOException;
 
-
-
 	/**
 	 * Retrieves attribute value for given class name and identifier.
 	 * @param objClass source Class object
@@ -114,26 +111,32 @@ public interface DAO
 	Object retrieveAttribute(Class objClass, Long identifier,
 			String attributeName,String columnName) throws DAOException;
 	/**
-	 * This method will be used to establish the session with the database.
+	 * Create database connection.
+	 * Open a Session on the given connection.
+	 * connection having auto-commit mode as disabled.
+	 * call commit to update the changes.
 	 * @param sessionDataBean : This will hold the session related information.
 	 * @throws DAOException : generic DAOException
 	 */
 	void openSession(SessionDataBean sessionDataBean) throws DAOException;
 
 	/**
-	 * This method will be used to close the session with the database.
+	 * End the session by releasing the JDBC connection and cleaning up.
 	 * @throws DAOException :generic DAOException
 	 */
 	void closeSession() throws DAOException;
 
 	/**
-	 * Commit the database level changes.
+	 * Makes all changes made since the previous
+     * commit/rollback.
+     * This method should be used only when auto-commit mode has been disabled.
 	 * @throws DAOException : generic DAOException
 	 */
 	void commit() throws DAOException;
 
 	/**
-	 * Roll back all the changes after last commit.
+	 * Undoes all changes made in the current transaction
+	 * This method should be used only when auto-commit mode has been disabled.
 	 * @throws DAOException : generic DAOException
 	 */
 	void rollback() throws DAOException;
@@ -143,11 +146,6 @@ public interface DAO
 	 * @param connectionManager : Connection Manager.
 	 */
 	void setConnectionManager(IConnectionManager connectionManager);
-	/**
-	 *This method will be called to get connection Manager Object.
-	 * @return It will return the Connection Manager Object.
-	 */
-	//IConnectionManager getConnectionManager();
 
 	/**
 	 * @param excp : Exception Object.
@@ -159,6 +157,7 @@ public interface DAO
 
 	/**
 	 *This method will be called to retrieved the clean connection object.
+	 *connections will be in auto-commit mode.
 	 *@return Connection object
 	 *@throws DAOException :Generic DAOException.
 	 */
@@ -166,21 +165,22 @@ public interface DAO
 
 
 	/**
-	 *This method will be called to close connection.
+	 *Releases this Connection object's database and JDBC resources.
 	 *@throws DAOException :Generic DAOException.
 	 */
 	void closeCleanConnection() throws DAOException;
 
 
 	/**
-	 * This method will be called to obtain clean session.
+	 * Create database connection and open the new session on the given connection.
+	 * connections will be in auto-commit mode.
 	 * @return session object.
 	 *@throws DAOException :Generic DAOException.
 	 */
 	Session getCleanSession() throws DAOException;
 
 	/**
-	 *This method will be called to close session.
+	 *End the session by releasing the JDBC connection and cleaning up.
 	 *@throws DAOException :Generic DAOException.
 	 */
 	void closeCleanSession() throws DAOException;
