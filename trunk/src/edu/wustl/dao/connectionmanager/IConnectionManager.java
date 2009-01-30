@@ -52,7 +52,6 @@ public interface IConnectionManager
 
 	/**
 	 * End the session by releasing the JDBC connection and cleaning up.
-	 * It is not strictly necessary to close the session
 	 * @throws DAOException : database exception.
 	 */
 	void closeSession() throws DAOException;
