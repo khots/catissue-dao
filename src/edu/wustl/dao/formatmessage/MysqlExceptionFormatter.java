@@ -3,7 +3,6 @@
  */
 package edu.wustl.dao.formatmessage;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.MessageFormat;
@@ -15,10 +14,10 @@ import org.hibernate.exception.ConstraintViolationException;
 import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.global.Constants;
 import edu.wustl.common.util.logger.Logger;
+import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.DAOConstants;
 import edu.wustl.dao.util.DAOUtility;
-import edu.wustl.dao.util.DatabaseConnectionUtiliy;
 import edu.wustl.dao.util.HibernateMetaData;
 
 /**
@@ -40,10 +39,10 @@ IDBExceptionFormatter
 	/**
 	 * This will generate the formatted error messages.
 	 * @param objExp :Exception.
-	 * @param connection : Connection to database.
+	 * @param jdbcDAO : jdbcDAO.
 	 * @return the formated messages.
 	 */
-	public String getFormatedMessage(Exception objExp,Connection connection)
+	public String getFormatedMessage(Exception objExp,JDBCDAO jdbcDAO)
 	{
 
 		Exception objExcp = objExp ;
@@ -60,12 +59,12 @@ IDBExceptionFormatter
 		try
 	     {
 			tableName = getTableName(objExcp);
-			columnNames = getColumnNames(objExcp, tableName,connection);
+			columnNames = getColumnNames(objExcp, tableName,jdbcDAO);
 
 
         	// Create arrays of object containing data to insert in CONSTRAINT_VOILATION_ERROR
         	Object[] arguments = new Object[2];
-        	dispTableName = DAOUtility.getInstance().getDisplayName(tableName,connection);
+        	dispTableName = DAOUtility.getInstance().getDisplayName(tableName,jdbcDAO);
 			arguments[0]=dispTableName;
 			columnNames=columnNames.substring(0,columnNames.length());
 			arguments[1] = columnNames;
@@ -90,29 +89,20 @@ IDBExceptionFormatter
 	  and the column names are stored as value.
 	 * @param objExcp :
 	 * @param tableName :
-	 * @param connection :
+	 * @param jdbcDAO :
 	 * @return columnNames :
 	 * @throws DAOException :
 	 * @throws SQLException :
 	 */
 	private String getColumnNames(Exception objExcp, String tableName,
-			Connection connection) throws DAOException, SQLException
+			JDBCDAO jdbcDAO) throws DAOException, SQLException
 	{
 		String columnNames = DAOConstants.TAILING_SPACES;
-		DatabaseConnectionUtiliy databaseConnectionParams = new DatabaseConnectionUtiliy();
-		databaseConnectionParams.setConnection(connection);
 		ResultSet resultSet = null;
 		try
 		{
-			if(connection == null)
-			{
-				logger.fatal("Error Message: Connection object not given");
-			}
-
 			int key = getErrorKey(objExcp);
-			resultSet = databaseConnectionParams.getDatabaseMetaData().
-			getIndexInfo(connection.getCatalog(), null,tableName, true, false);
-
+			resultSet = jdbcDAO.getDBMetaDataResultSet(tableName);
 			columnNames = getColumnNames( resultSet, key);
 		}
 		catch(SQLException sqlExp)
@@ -126,11 +116,7 @@ IDBExceptionFormatter
 			{
 				resultSet.close();
 			}
-			if(connection != null)
-			{
-				connection.close();
-			}
-			databaseConnectionParams.closeConnectionParams();
+
 		}
 		return columnNames;
 	}

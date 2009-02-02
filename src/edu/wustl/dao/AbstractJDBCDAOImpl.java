@@ -21,6 +21,7 @@ import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.DAOConstants;
+import edu.wustl.dao.util.DAOUtility;
 import edu.wustl.security.exception.SMException;
 
 
@@ -49,6 +50,20 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * batch statement.
 	 */
 	private Statement batchStatement;
+
+	/**
+	 * Connection statement.
+	 */
+	private Statement statement;
+	/**
+	 * Query resultSet.
+	 */
+	private ResultSet resultSet;
+
+	/**
+	 * Query preparedStatement.
+	 */
+	private PreparedStatement preparedStatement;
 
 	/**
 	 * This method will be used to establish the session with the database.
@@ -86,6 +101,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 			//super.closeSession();
 			connectionManager.closeConnection();
 			batchStatement = null;
+			closeConnectionParams();
 		}
 		catch(Exception dbex)
 		{
@@ -384,36 +400,50 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	public int executeUpdate(String query) throws DAOException
 	{
 		logger.debug("Execute query.");
-		DatabaseConnectionUtil databaseConnectionUtil = new DatabaseConnectionUtil();
 		try
 		{
-			databaseConnectionUtil.setConnection(connection);
-		  return databaseConnectionUtil.executeUpdate(query);
+			createStatement();
+			return statement.executeUpdate(query);
+		}
+		catch (SQLException sqlExp)
+		{
+			logger.fatal(sqlExp);
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
+			throw new DAOException(errorKey,sqlExp,"DatabaseConnectionParams.java :"
+					+DAOConstants.EXECUTE_QUERY_ERROR+"   "+query);
 		}
 		finally
 		{
-			databaseConnectionUtil.closeConnectionParams();
+			closeConnectionParams();
 		}
 	}
 
 	/**
 	 * This method will be called to get the result set.
-	 * @param sql sql statement.
+	 * @param sql SQL statement.
 	 * @throws DAOException generic DAOException.
 	 * @return ResultSet : ResultSet
 	 */
 	public ResultSet getQueryResultSet(String sql) throws DAOException
 	{
-		logger.debug("Execute query.");
-		DatabaseConnectionUtil databaseConnectionUtil = new DatabaseConnectionUtil();
+
+		logger.debug("Get Query RS");
 		try
 		{
-			databaseConnectionUtil.setConnection(connection);
-			return databaseConnectionUtil.getQueryRS(sql);
+			closeResultSet();
+			resultSet = statement.executeQuery(sql);
+			return resultSet;
+		}
+		catch (SQLException exp)
+		{
+			logger.fatal(exp);
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
+			throw new DAOException(errorKey,exp,"DatabaseConnectionParams.java :"
+					+DAOConstants.EXECUTE_QUERY_ERROR+"   "+sql);
 		}
 		finally
 		{
-			databaseConnectionUtil.closeConnectionParams();
+			closeConnectionParams();
 		}
 	}
 
@@ -425,16 +455,24 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 */
 	public List executeQuery(String query) throws DAOException
 	{
-		logger.debug("Execute query."+query);
-		DatabaseConnectionUtil databaseConnectionUtil = new DatabaseConnectionUtil();
+
+		logger.debug("get list from RS");
+
 		try
 		{
-			databaseConnectionUtil.setConnection(connection);
-			return databaseConnectionUtil.getListFromRS(query);
+			ResultSet resultSet = getQueryResultSet(query);
+			return DAOUtility.getListFromRS(resultSet);
+		}
+		catch(SQLException exp)
+		{
+			logger.fatal(exp);
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
+			throw new DAOException(errorKey,exp,"DatabaseConnectionParams.java :"+
+					DAOConstants.RS_METADATA_ERROR);
 		}
 		finally
 		{
-			databaseConnectionUtil.closeConnectionParams();
+			closeConnectionParams();
 		}
 	}
 
@@ -442,42 +480,159 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * This method will be called to execute query.
 	 * @param query :query string.
 	 * @param columnValues :list of values
+	 * @return (1) the row count for INSERT,UPDATE or DELETE statements
+	 * or (2) 0 for SQL statements that return nothing
 	 * @throws DAOException :Generic Exception
 	 */
-	public void executeUpdate(String query,List columnValues) throws DAOException
+	public int executeUpdate(String query,List columnValues) throws DAOException
 	{
-		DatabaseConnectionUtil databaseConnectionUtil = new DatabaseConnectionUtil();
 		try
 		{
-			databaseConnectionUtil.setConnection(connection);
-			databaseConnectionUtil.executeUpdate(query, columnValues);
+			PreparedStatement stmt = getPreparedStatement(query);
+			for (int index = 0; index < columnValues.size(); index++)
+			{
+				stmt.setObject(index, columnValues.get(index));
+			}
+			return stmt.executeUpdate();
+		}
+		catch (SQLException sqlExp)
+		{
+			logger.fatal(sqlExp);
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
+			throw new DAOException(errorKey,sqlExp,"DatabaseConnectionParams.java :"
+					+DAOConstants.EXECUTE_QUERY_ERROR+"   "+query);
 		}
 		finally
 		{
-			databaseConnectionUtil.closeConnectionParams();
+			closeConnectionParams();
 		}
 	}
 
 	/**
-	 * This method will be called to execute query.
-	 * @param query :query string.
-	 * @return prepared statement
+	 * This method will return the Query prepared statement.
+	 * @throws DAOException :Generic Exception
+	 */
+	private void createStatement()throws DAOException
+	{
+		try
+		{
+			closeStmt();
+			statement = (Statement)connection.createStatement();
+		}
+		catch (SQLException sqlExp)
+		{
+			logger.fatal(sqlExp);
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.conn.para.creation.error");
+			throw new DAOException(errorKey,sqlExp,"DatabaseConnectionParams.java :"+
+					DAOConstants.PRPD_STMT_ERROR);
+		}
+	}
+
+	/**
+	 * This method will return the Query prepared statement.
+	 * @param query :Query String
+	 * @return PreparedStatement.
 	 * @throws DAOException :Generic Exception
 	 * @deprecated Do not use this method.
 	 */
-	public PreparedStatement getPreparedStmt(String query) throws DAOException
+	public PreparedStatement getPreparedStatement(String query) throws DAOException
 	{
-		DatabaseConnectionUtil databaseConnectionUtil = new DatabaseConnectionUtil();
 		try
 		{
-			databaseConnectionUtil.setConnection(connection);
-			return databaseConnectionUtil.getPreparedStatement(query);
+			closePreparedStmt();
+			preparedStatement = (PreparedStatement) connection.prepareStatement(query);
 		}
-		finally
+		catch (SQLException sqlExp)
 		{
-			databaseConnectionUtil.closeConnectionParams();
+			logger.fatal(sqlExp);
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.conn.para.creation.error");
+			throw new DAOException(errorKey,sqlExp,"DatabaseConnectionParams.java :"+
+					DAOConstants.PRPD_STMT_ERROR);
+		}
+		return preparedStatement;
+	}
+
+	/**
+     * Retrieves a DatabaseMetaData object that contains
+     * metadata about the database to which this
+     * Connection  object represents a connection.
+     * The metadata includes information about the database's
+     * tables, its supported SQL grammar, its stored
+     * procedures, the capabilities of this connection, and so on.
+     *@param tableName : table name must match the table name as it is stored
+     *in this database
+     * @return a  ResultSet  for this
+     *          Connection  object
+     * @exception SQLException if a database access error occurs
+     */
+   public ResultSet getDBMetaDataResultSet(String tableName) throws SQLException
+   {
+	   closeResultSet();
+	   resultSet = connection.getMetaData().
+	     getIndexInfo(connection.getCatalog(), null,tableName, true, false);
+	   return resultSet;
+   }
+	/**
+	 * This method will be called to close all the Database connections.
+	 * @throws DAOException :Generic Exception
+	 */
+	protected void closeConnectionParams()throws DAOException
+	{
+		try
+		{
+			closeResultSet();
+			closeStmt();
+			closePreparedStmt();
+
+		}
+		catch(SQLException sqlExp)
+		{
+			logger.fatal(sqlExp);
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.close.conn.error");
+			throw new DAOException(errorKey,sqlExp,"DatabaseConnectionParams.java :"+
+					DAOConstants.CLOSE_CONN_ERR);
 		}
 	}
+
+	/**
+	 * Closes the prepared statement if open.
+	 * @throws SQLException : SQL exception
+	 */
+	private void closePreparedStmt() throws SQLException
+	{
+		if (preparedStatement != null)
+		{
+			preparedStatement.close();
+			preparedStatement = null;
+		}
+	}
+
+	/**
+	 * Closes the statement if open.
+	 * @throws SQLException : SQL exception
+	 */
+	private void closeStmt() throws SQLException
+	{
+		if(statement != null)
+		{
+			statement.close();
+			statement = null;
+		}
+	}
+
+	/**
+	 * Closes the result Set.
+	 * @throws SQLException SQL exception
+	 */
+	private void closeResultSet() throws SQLException
+	{
+		if(resultSet != null )
+		{
+			resultSet.close();
+			resultSet = null;
+		}
+	}
+
 
 	/**
 	 * This method will be called to get connection Manager object.
@@ -552,72 +707,6 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		return databaseProperties.getStrTodateFunction();
 	}
 
-
-	/**
-	 * @see edu.wustl.common.dao.DAO#retrieveAttribute(java.lang.Class, java.lang.Long, java.lang.String)
-	 * @param objClass : Class name
-	 * @param identifier : Identifier of object
-	 * @param attributeName : Attribute Name to be fetched
-	 * @param columnName : where clause column field.
-	 * @return It will return the Attribute of the object having given identifier
-	 * @throws DAOException : DAOException
-	 */
-	public Object retrieveAttribute(Class objClass, Long identifier,
-			String attributeName,String columnName) throws DAOException
-	{
-		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
-		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
-	}
-
-
-	/**
-	 * updates the persisted object into the database.
-	 * @param obj Object to be updated in database
-	 * @throws DAOException : generic DAOException
-	 */
-	public void update(Object obj) throws DAOException
-	{
-		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
-		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
-	}
-
-	/**
-	 * @param sourceObjectName :
-	 * @param identifier :
-	 * @return Object :
-	 * @throws DAOException :
-	 */
-	public Object retrieveById(String sourceObjectName, Long identifier)
-			throws DAOException
-	{
-		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
-		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
-	}
-
-	
-	/**
-	 * @param obj : object to be deleted
-	 * @throws DAOException : daoExp
-	 */
-	public void delete(Object obj) throws DAOException
-	{
-		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
-		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
-	}
-
-	/**
-	 * Insert the Object in the database.
-	 * @param obj Object to be inserted in database
-	 * @param isAuditable is Auditable.
-	 * @throws DAOException generic DAOException
-	 */
-	public void insert(Object obj, boolean isAuditable) throws DAOException
-	{
-		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
-		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
-	}
-
-
 	/**
 	 * @param excp : Exception Object.
 	 * @param connection :
@@ -653,4 +742,21 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
 	}
 */
+	/**
+	 * @see edu.wustl.common.dao.DAO#retrieveAttribute(java.lang.Class, java.lang.Long, java.lang.String)
+	 * @param objClass : Class name
+	 * @param identifier : Identifier of object
+	 * @param attributeName : Attribute Name to be fetched
+	 * @param columnName : where clause column field.
+	 * @return It will return the Attribute of the object having given identifier
+	 * @throws DAOException : DAOException
+	 *//*
+	public List retrieveAttribute(Class objClass, Long identifier,
+			String attributeName,String columnName) throws DAOException
+	{
+		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
+		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
+	}
+*/
+
 }

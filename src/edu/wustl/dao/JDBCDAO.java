@@ -6,7 +6,11 @@
 
 package edu.wustl.dao;
 
+import java.sql.DatabaseMetaData;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
 
 import edu.wustl.dao.exception.DAOException;
 
@@ -77,7 +81,7 @@ public interface JDBCDAO extends DAO
 	 * This method will be called to set all the database specific properties.
 	 * @param databaseProperties : database properties.
 	 */
-	void setDatabaseProperties(DatabaseProperties databaseProperties);
+	//void setDatabaseProperties(DatabaseProperties databaseProperties);
 
 	/**
 	 * Insert the Object in the database.
@@ -104,6 +108,42 @@ public interface JDBCDAO extends DAO
 	ResultSet retrieveResultSet(String sourceObjectName, String[] selectColumnName,
 			QueryWhereClause queryWhereClause,
 			 boolean onlyDistinctRows) throws DAOException;
+
+
+	/**
+	 * This method will be called to execute query.
+	 * @param query :query string.
+	 * @param columnValues :list of values
+	 * @return (1) the row count for INSERT,UPDATE or DELETE statements
+	 * or (2) 0 for SQL statements that return nothing
+	 * @throws DAOException :Generic Exception
+	 */
+	int executeUpdate(String query,List columnValues) throws DAOException;
+
+
+	/**
+	 * This method will be called to execute query.
+	 * @param query :query string.
+	 * @return prepared statement
+	 * @throws DAOException :Generic Exception
+	 * @deprecated Do not use this method.
+	 */
+	PreparedStatement getPreparedStatement(String query) throws DAOException;
+
+	/**
+     * Retrieves a DatabaseMetaData object that contains
+     * metadata about the database to which this
+     * Connection  object represents a connection.
+     * The metadata includes information about the database's
+     * tables, its supported SQL grammar, its stored
+     * procedures, the capabilities of this connection, and so on.
+     *@param tableName : table name must match the table name as it is stored
+     *in this database
+     * @return a  ResultSet  object for this
+     *          Connection  object
+     * @exception SQLException if a database access error occurs
+     */
+    ResultSet getDBMetaDataResultSet(String tableName) throws SQLException;
 
 	/**
 	 * @param excp : Exception Object.

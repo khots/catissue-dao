@@ -8,7 +8,7 @@ import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.DAOConstants;
-import edu.wustl.dao.util.DatabaseConnectionUtiliy;
+import edu.wustl.dao.util.DAOUtility;
 
 
 /**
@@ -30,15 +30,12 @@ public class OracleDAOImpl extends AbstractJDBCDAOImpl
 	 */
 	public void deleteTable(String tableName) throws DAOException
 	{
-		DatabaseConnectionUtiliy databaseConnectionParams = new DatabaseConnectionUtiliy();
 		try
 		{
 
-			databaseConnectionParams.setConnection(getConnection());
-
 			StringBuffer query = new StringBuffer("select tname from tab where tname='"
 					+ tableName.toString() + "'");
-			boolean isTableExists = databaseConnectionParams.isResultSetExists(query.toString());
+			boolean isTableExists = DAOUtility.isResultSetExists(getQueryResultSet(query.toString()));
 
 			logger.debug("ORACLE :" + query.toString() + isTableExists);
 
@@ -46,7 +43,7 @@ public class OracleDAOImpl extends AbstractJDBCDAOImpl
 			{
 
 				logger.debug("Drop Table");
-				databaseConnectionParams.executeUpdate("DROP TABLE " +
+				executeUpdate("DROP TABLE " +
 						tableName.toString() + " cascade constraints");
 			}
 
@@ -61,7 +58,7 @@ public class OracleDAOImpl extends AbstractJDBCDAOImpl
 		}
 		finally
 		{
-			databaseConnectionParams.closeConnectionParams();
+			closeConnectionParams();
 		}
 	}
 

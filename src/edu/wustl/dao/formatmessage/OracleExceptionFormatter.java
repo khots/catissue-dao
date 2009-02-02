@@ -3,16 +3,15 @@
  */
 package edu.wustl.dao.formatmessage;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.MessageFormat;
 
 import edu.wustl.common.util.logger.Logger;
+import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.DAOConstants;
 import edu.wustl.dao.util.DAOUtility;
-import edu.wustl.dao.util.DatabaseConnectionUtiliy;
 /**
  * @author kalpana_thakur
  *
@@ -28,10 +27,10 @@ public class OracleExceptionFormatter implements IDBExceptionFormatter
 	/**
 	 * This will generate the formatted error messages.
 	 * @param excp :Exception.
-	 * @param connection : connection.
+	 * @param jdbcDAO : jdbcDAO.
 	 * @return the formated messages.
 	 */
-	public String getFormatedMessage(Exception excp,Connection connection)
+	public String getFormatedMessage(Exception excp,JDBCDAO jdbcDAO )
 	{
 
 		Exception objExcp = excp;
@@ -43,12 +42,6 @@ public class OracleExceptionFormatter implements IDBExceptionFormatter
         }
         try
         {
-
-        	if(connection == null)
-            {
-        		logger.fatal(DAOConstants.NO_CONNECTION_TO_DB);
-            }
-
         	// Get Constraint Name from messages
         	String sqlMessage = DAOUtility.getInstance().generateErrorMessage(objExcp);
         	int tempstartIndexofMsg = sqlMessage.indexOf('(');
@@ -61,7 +54,7 @@ public class OracleExceptionFormatter implements IDBExceptionFormatter
             String key =strKey.substring((startIndexofMsg+1));
 
             formattedErrMsg = getFormatedMessage(
-					columnNameBuff, connection,
+					columnNameBuff, jdbcDAO,
 					key);
 
          }
@@ -74,27 +67,25 @@ public class OracleExceptionFormatter implements IDBExceptionFormatter
 
 /**
  * @param columnNameBuff ;
- * @param connection :
+ * @param jdbcdao :
  * @param key :
  * @return :
  * @throws DAOException :
  * @throws SQLException :
  */
 	private String getFormatedMessage(StringBuffer columnNameBuff,
-			Connection connection, String key)throws DAOException, SQLException
+			JDBCDAO jdbcdao, String key)throws DAOException, SQLException
 
 	{
 		String formattedErrMsg = "";
 		String tableName = "";
 
-		DatabaseConnectionUtiliy databaseConnectionParams = new DatabaseConnectionUtiliy();
 		try
 		{
-			databaseConnectionParams.setConnection(connection);
 			String query = "select COLUMN_NAME,TABLE_NAME from user_cons_columns" +
 			" where constraint_name = '"+key+"'";
 
-			ResultSet resultSet = databaseConnectionParams.getResultSet(query);
+			ResultSet resultSet = jdbcdao.getQueryResultSet(query);
 			while(resultSet.next())
 			{
 				columnNameBuff.append(resultSet.getString("COLUMN_NAME")).
@@ -105,7 +96,7 @@ public class OracleExceptionFormatter implements IDBExceptionFormatter
 			{
 				String columnName = columnNameBuff.toString().
 				substring(0,columnNameBuff.toString().length()-1);
-				String displayName = DAOUtility.getInstance().getDisplayName(tableName,connection);
+				String displayName = DAOUtility.getInstance().getDisplayName(tableName,jdbcdao);
 				Object[] arguments = new Object[]{displayName,columnName};
 				formattedErrMsg = MessageFormat.format(DAOConstants.
 						CONSTRAINT_VOILATION_ERROR,arguments);
@@ -114,10 +105,6 @@ public class OracleExceptionFormatter implements IDBExceptionFormatter
 		catch (Exception exp)
 		{
 			logger.fatal(exp.getMessage(), exp);
-		}
-		finally
-		{
-			databaseConnectionParams.closeConnectionParams();
 		}
 		return formattedErrMsg;
 	}

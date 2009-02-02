@@ -8,20 +8,24 @@
  */
 package edu.wustl.dao.util;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Types;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 
-import edu.wustl.common.audit.AuditManager;
-import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.global.CommonServiceLocator;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.DAO;
+import edu.wustl.dao.HibernateDAO;
+import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.daofactory.DAOConfigFactory;
 import edu.wustl.dao.exception.DAOException;
 
@@ -128,19 +132,17 @@ public final class DAOUtility
 
     /**
 	 * @param tableName :
-	 * @param connection :
+	 * @param jdbcDAO :
 	 * @return :
      * @throws DAOException :
 	 */
-	public String getDisplayName(String tableName,Connection connection) throws DAOException
+	public String getDisplayName(String tableName,JDBCDAO jdbcDAO) throws DAOException
 	{
-		DatabaseConnectionUtiliy databaseConnectionParams = new DatabaseConnectionUtiliy();
 		String displayName="";
 		String sql = "select DISPLAY_NAME from CATISSUE_QUERY_TABLE_DATA where TABLE_NAME='"+tableName+"'";
 		try
 		{
-			databaseConnectionParams.setConnection(connection);
-			ResultSet resultSet = databaseConnectionParams.getResultSet(sql);
+			ResultSet resultSet = jdbcDAO.getQueryResultSet(sql);
 			while(resultSet.next())
 			{
 				displayName=resultSet.getString("DISPLAY_NAME");
@@ -151,10 +153,6 @@ public final class DAOUtility
 		catch(Exception ex)
 		{
 			logger.error(ex.getMessage(),ex);
-		}
-		finally
-		{
-			databaseConnectionParams.closeConnectionParams();
 		}
 		return displayName;
 	}
@@ -213,7 +211,7 @@ public final class DAOUtility
 			dao = DAOConfigFactory.getInstance().
 			getDAOFactory(appName).getDAO();
 			dao.openSession(null);
-			Query query = (Query)dao.getNamedQuery(queryName);
+			Query query = (Query)((HibernateDAO)dao).getNamedQuery(queryName);
 
 			/*if (values != null)
 			{
@@ -258,6 +256,101 @@ public final class DAOUtility
 	throws DAOException
 	{
 		return executeHQL(queryName, null);
+	}
+
+	/**
+	 * Returns the list from RS.
+	 * @param resultSet :RS
+	 * @return :List
+	 * @throws SQLException :
+	 */
+	public static List getListFromRS(ResultSet resultSet)throws SQLException
+	{
+		ResultSetMetaData metaData = resultSet.getMetaData();
+		int columnCount = metaData.getColumnCount();
+		List list = new ArrayList();
+		while (resultSet.next())
+		{
+			updateList(resultSet,list,columnCount,metaData);
+		}
+		return list;
+	}
+
+	/**
+	 * This method will read the resultSet and update the list.
+	 * @param list :list of data
+	 * @param columnCount : number of columns
+	 * @param metaData : meta data
+	 * @param resultSet : resultSet
+	 * @throws SQLException : exception
+	 */
+	private static void updateList(ResultSet resultSet,List list,
+			int columnCount,ResultSetMetaData metaData) throws SQLException
+	{
+		for (int i = 1; i <= columnCount; i++)
+		{
+			logger.debug("Inside for "+i);
+			Object retObj;
+			switch (metaData.getColumnType(i))
+			{
+			case Types.CLOB :
+				retObj = resultSet.getObject(i);
+				break;
+			case Types.DATE :
+			case Types.TIMESTAMP :
+				retObj = resultSet.getTimestamp(i);
+				if (retObj == null)
+				{
+					break;
+				}
+				SimpleDateFormat formatter = new SimpleDateFormat(
+						DAOConstants.DATE_PATTERN_MM_DD_YYYY + " "
+						+ DAOConstants.TIME_PATTERN_HH_MM_SS);
+				retObj = formatter.format((java.util.Date) retObj);
+				break;
+			default :
+				retObj = resultSet.getObject(i);
+				if (retObj != null)
+				{
+					retObj = retObj.toString();
+				}
+			}
+			if (retObj == null)
+			{
+				list.add("");
+			}
+			else
+			{
+				list.add(retObj);
+			}
+			logger.debug("list size "+list.size());
+		}
+	}
+	/**
+	 * Checks result set.
+	 * @return :true if result set exists.
+	 * @param resultSet : query resultSet
+	 * @throws DAOException : DAOException
+	 */
+	public static boolean isResultSetExists(ResultSet resultSet)throws DAOException
+	{
+		boolean isResultSetExists = false;
+		try
+		{
+
+			if(resultSet.next())
+			{
+				isResultSetExists = true;
+			}
+
+		}
+		catch(SQLException exp)
+		{
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
+			throw new DAOException(errorKey,exp,"DatabaseConnectionParams.java :"+
+					DAOConstants.RS_METADATA_ERROR);
+		}
+		return isResultSetExists;
 	}
 
 

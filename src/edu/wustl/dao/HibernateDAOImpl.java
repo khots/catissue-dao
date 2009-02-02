@@ -61,7 +61,6 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 	 */
 	public void openSession(SessionDataBean sessionDataBean) throws DAOException
 	{
-		//super.openSession(sessionDataBean);
 		logger.debug("Open the session");
 	    auditManager = getAuditManager(sessionDataBean);
 		session = connectionManager.currentSession();
@@ -74,7 +73,6 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 	 */
 	public void closeSession() throws DAOException
 	{
-		//super.closeSession();
 		logger.debug("Close the session");
 		auditManager = null;
 		connectionManager.closeSession();
@@ -87,7 +85,6 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 	 */
 	public void commit() throws DAOException
 	{
-		//super.commit();
 		logger.debug("Session commit");
 		auditManager.insert(this);
 		connectionManager.commit();
@@ -291,7 +288,7 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		logger.debug("Inside retrieve method");
 		try
 		{
-			Object object = session.load(Class.forName(sourceObjectName), identifier);
+			Object object = session.get(Class.forName(sourceObjectName), identifier);
 			//HibernateProxy hibernatProxy = (HibernateProxy) object;
 			//return (Object)hibernatProxy.getHibernateLazyInitializer().getImplementation();
 			//return HibernateMetaData.getProxyObjectImpl(object);
@@ -312,55 +309,26 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 	 * Executes the HQL query.
 	 * @param query HQL query to execute.
 	 * @return List.
-	 */
-	public List executeQuery(String query)
-	{
-		logger.debug("Execute query");
-		Query hibernateQuery = session.createQuery(query);
-		List <Object> returner = hibernateQuery.list();
-		return returner;
-	}
-
-	/**
-	 * Retrieve Attribute.
-	 * @param objClass object.
-	 * @param identifier identifier.
-	 * @param attributeName attribute Name.
-	 * @param columnName Name of the column.
-	 * @return Object.
 	 * @throws DAOException generic DAOException.
 	 */
-	public Object retrieveAttribute(Class objClass, Long identifier,
-			String attributeName,String columnName) throws DAOException
-	 {
-		logger.debug("Retrieve attributes");
+	public List executeQuery(String query) throws DAOException
+	{
+		logger.debug("Execute query");
 		try
 		{
-			String objClassName = objClass.getName();
-			String simpleName = objClass.getSimpleName();
-			String nameOfAttribute = DAOUtility.getInstance().
-			createAttributeNameForHQL(simpleName, attributeName);
-			StringBuffer queryStringBuffer = new StringBuffer(DAOConstants.TAILING_SPACES);
-
-			queryStringBuffer.append("Select").append(DAOConstants.TAILING_SPACES).
-			append(nameOfAttribute).append(DAOConstants.TAILING_SPACES).
-			append("from").append(DAOConstants.TAILING_SPACES).
-			append(objClassName).append(DAOConstants.TAILING_SPACES).
-			append(simpleName).append(DAOConstants.TAILING_SPACES).
-			append("where").append(DAOConstants.TAILING_SPACES).
-			append(simpleName).append(DAOConstants.DOT_OPERATOR).append(columnName).
-			append(DAOConstants.EQUAL).append(DAOConstants.TAILING_SPACES).
-			append(identifier);
-
-			return session.createQuery(queryStringBuffer.toString()).list();
+	    	Query hibernateQuery = session.createQuery(query);
+		    List <Object> returner = hibernateQuery.list();
+		    return returner;
 		}
-		catch (HibernateException exception)
+		catch(HibernateException hiberExp)
 		{
+			logger.error(hiberExp.getMessage(), hiberExp);
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey, exception,"HibernateDAOImpl.java :"+
-					DAOConstants.RETRIEVE_ERROR);
+			throw new DAOException(errorKey, hiberExp,"HibernateDAOImpl.java :"+
+					DAOConstants.EXECUTE_QUERY_ERROR);
 		}
 	}
+
 
 	/**
 	 * This method executes the named query and returns the results.
@@ -453,4 +421,48 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		connectionManager.closeCleanSession();
 	}
 */
+
+/*	*//**
+	 * Retrieve Attribute.
+	 * @param objClass object.
+	 * @param identifier identifier.
+	 * @param attributeName attribute Name.
+	 * @param columnName Name of the column.
+	 * @return Object.
+	 * @throws DAOException generic DAOException.
+	 *//*
+	public List retrieveAttribute(Class objClass, Long identifier,
+			String attributeName,String columnName) throws DAOException
+	 {
+		logger.debug("Retrieve attributes");
+		try
+		{
+			String[] selectColumnName = {attributeName};
+			QueryWhereClause queryWhereClause = new QueryWhereClause(objClass.getName());
+			queryWhereClause.addCondition(new EqualClause(columnName,identifier));
+			return retrieve(objClass.getName(), selectColumnName, queryWhereClause, false);
+			String simpleName = objClass.getSimpleName();
+			String nameOfAttribute = DAOUtility.getInstance().
+			createAttributeNameForHQL(simpleName, attributeName);
+			StringBuffer queryStringBuffer = new StringBuffer(DAOConstants.TAILING_SPACES);
+
+			queryStringBuffer.append("Select").append(DAOConstants.TAILING_SPACES).
+			append(nameOfAttribute).append(DAOConstants.TAILING_SPACES).
+			append("from").append(DAOConstants.TAILING_SPACES).
+			append(objClassName).append(DAOConstants.TAILING_SPACES).
+			append(simpleName).append(DAOConstants.TAILING_SPACES).
+			append("where").append(DAOConstants.TAILING_SPACES).
+			append(simpleName).append(DAOConstants.DOT_OPERATOR).append(columnName).
+			append(DAOConstants.EQUAL).append(DAOConstants.TAILING_SPACES).
+			append(identifier);
+
+			//return session.createQuery(queryStringBuffer.toString()).list();
+		}
+		catch (HibernateException exception)
+		{
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
+			throw new DAOException(errorKey, exception,"HibernateDAOImpl.java :"+
+					DAOConstants.RETRIEVE_ERROR);
+		}
+	}*/
 }

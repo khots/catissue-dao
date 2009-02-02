@@ -23,6 +23,7 @@ import org.xml.sax.InputSource;
 
 import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.logger.Logger;
+import edu.wustl.dao.AbstractJDBCDAOImpl;
 import edu.wustl.dao.DAO;
 import edu.wustl.dao.DatabaseProperties;
 import edu.wustl.dao.JDBCDAO;
@@ -147,7 +148,7 @@ public class DAOFactory implements IDAOFactory
 		{
 			   jdbcDAO = (JDBCDAO) Class.forName(jdbcDAOClassName).newInstance();
 			   jdbcDAO.setConnectionManager(getJdbcConnectionManager());
-			   jdbcDAO.setDatabaseProperties(databaseProperties);
+			   ((AbstractJDBCDAOImpl)jdbcDAO).setDatabaseProperties(databaseProperties);
 			   jdbcDAO.setBatchSize(databaseProperties.getDefaultBatchSize());
 			   HibernateMetaData.initHibernateMetaData(getJdbcConnectionManager().
 					   getConfiguration());
