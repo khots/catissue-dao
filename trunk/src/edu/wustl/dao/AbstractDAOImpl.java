@@ -1,6 +1,7 @@
 package edu.wustl.dao;
 
 import edu.wustl.common.beans.SessionDataBean;
+import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.connectionmanager.IConnectionManager;
 import edu.wustl.dao.exception.DAOException;
@@ -95,26 +96,53 @@ public abstract class AbstractDAOImpl implements DAO
 		return connectionManager;
 	}
 
+
 	/**
-	 *This method will be called to retrieved the current connection object.
-	 *@return Connection object
-	 *@throws DAOException :Generic DAOException.
-	 *//*
-	public Connection getCleanConnection() throws DAOException
+	 * updates the persisted object into the database.
+	 * @param obj Object to be updated in database
+	 * @param oldObj Object to be updated in database
+	 * @throws DAOException : generic DAOException
+	 */
+	public void update(Object obj,Object oldObj) throws DAOException
 	{
-		logger.debug("Get clean connection");
-		return 	connectionManager.getCleanConnection();
+		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
+		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
 	}
 
-	*//**
-	 *This method will be called to close current connection.
-	 *@throws DAOException :Generic DAOException.
-	 *//*
-	public void closeCleanConnection() throws DAOException
+	/**
+	 * @param sourceObjectName :
+	 * @param identifier :
+	 * @return Object :
+	 * @throws DAOException :
+	 */
+	public Object retrieveById(String sourceObjectName, Long identifier)
+			throws DAOException
 	{
-		logger.debug("Close clean connection");
-		connectionManager.closeCleanConnection();
-	}*/
+		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
+		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
+	}
+
+	/**
+	 * @param obj : object to be deleted
+	 * @throws DAOException : daoExp
+	 */
+	public void delete(Object obj) throws DAOException
+	{
+		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
+		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
+	}
+
+	/**
+	 * Insert the Object in the database.
+	 * @param obj Object to be inserted in database
+	 * @param isAuditable is Auditable.
+	 * @throws DAOException generic DAOException
+	 */
+	public void insert(Object obj, boolean isAuditable) throws DAOException
+	{
+		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
+		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
+	}
 
 	/**
 	 * Audit.
@@ -142,6 +170,31 @@ public abstract class AbstractDAOImpl implements DAO
 
 	}
 */
+	
+	/*	*//**
+	 *This method will be called to retrieved the current connection object.
+	 *@return Connection object
+	 *@throws DAOException :Generic DAOException.
+	 *@deprecated
+	 *//*
+	public Connection getCleanConnection() throws DAOException
+	{
+		logger.debug("Get clean connection");
+		return 	connectionManager.getCleanConnection();
+	}
+
+	*//**
+	 *This method will be called to close current connection.
+	 *@throws DAOException :Generic DAOException.
+	 *@deprecated
+	 *//*
+	public void closeCleanConnection() throws DAOException
+	{
+		logger.debug("Close clean connection");
+		connectionManager.closeCleanConnection();
+	}
+	*/
+
 
 
 }

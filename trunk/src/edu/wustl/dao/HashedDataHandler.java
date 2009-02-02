@@ -19,7 +19,6 @@ import edu.wustl.common.util.Utility;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.DAOConstants;
-import edu.wustl.dao.util.DatabaseConnectionUtiliy;
 
 /**
  * @author kalpana_thakur
@@ -36,12 +35,13 @@ public class HashedDataHandler
 	 * This method returns the metaData associated to the table specified in tableName.
 	 * @param tableName Name of the table whose metaData is requested
 	 * @param columnNames Table columns
-	 * @param dbConnParamForMetadata : Database connections to retrieve meta data.
+	 * @param jdbcDAO : Database connections to retrieve meta data.
 	 * @return It will return the metaData associated to the table.
 	 * @throws DAOException : DAOException
+	 * @throws SQLException :
 	 */
 	protected final ResultSetMetaData getMetaData(String tableName,List<String> columnNames,
-			DatabaseConnectionUtiliy dbConnParamForMetadata)throws DAOException
+			JDBCDAO jdbcDAO)throws DAOException, SQLException
 	{
 
 		ResultSetMetaData metaData;
@@ -57,7 +57,7 @@ public class HashedDataHandler
 			}
 		}
 		sqlBuff.append(" from " + tableName + " where 1!=1");
-		metaData = dbConnParamForMetadata.getMetaData(sqlBuff.toString());
+		metaData = jdbcDAO.getQueryResultSet(sqlBuff.toString()).getMetaData();
 
 		return metaData;
 
@@ -68,12 +68,12 @@ public class HashedDataHandler
 	 * and update the list columnNames.
 	 * @param tableName Name of the table whose metaData is requested
 	 * @param columnNames Table columns
-	 * @param dbConnParamForMetadata : Database connections to retrieve meta data.
+	 * @param jdbcDAO : Database connections to retrieve meta data.
 	 * @return It will return the metaData associated to the table.
 	 * @throws DAOException : DAOException
 	 */
 	protected final ResultSetMetaData getMetaDataAndUpdateColumns(String tableName,
-			List<String> columnNames,DatabaseConnectionUtiliy dbConnParamForMetadata)
+			List<String> columnNames,JDBCDAO jdbcDAO)
 	throws DAOException
 	{
 		ResultSetMetaData metaData;
@@ -82,7 +82,7 @@ public class HashedDataHandler
 
 			StringBuffer sqlBuff = new StringBuffer(DAOConstants.TAILING_SPACES);
 			sqlBuff.append("Select * from " ).append(tableName).append(" where 1!=1");
-			metaData = dbConnParamForMetadata.getMetaData(sqlBuff.toString());
+			metaData = jdbcDAO.getQueryResultSet(sqlBuff.toString()).getMetaData();
 
 			for (int i = 1; i <= metaData.getColumnCount(); i++)
 			{
@@ -351,39 +351,33 @@ public class HashedDataHandler
 	 * @param tableName :Name of the table
 	 * @param columnValues :List of column values
 	 * @param columnNames  :List of column names.
-	 * @param connection : Database connection
+	 * @param jdbcDAO : Database jdbcDAO
 	 * @throws DAOException  :DAOException
 	 * @throws SQLException : SQLException
 	 */
 	public void insertHashedValues(String tableName, List<Object> columnValues, List<String> columnNames,
-			Connection connection)throws DAOException, SQLException
+			JDBCDAO jdbcDAO)throws DAOException, SQLException
 	{
 
 		List<String>columnNamesList = new ArrayList<String>();
 		ResultSetMetaData metaData;
-
-		DatabaseConnectionUtiliy dbConnParamForMetadata = new DatabaseConnectionUtiliy();
-		dbConnParamForMetadata.setConnection(connection);
-
-		DatabaseConnectionUtiliy dbConnParamForInsertQuery = new DatabaseConnectionUtiliy();
-		dbConnParamForInsertQuery.setConnection(connection);
 
 		PreparedStatement stmt = null;
 		try
 		{
 			if(columnNames != null && !columnNames.isEmpty())
 			{
-				metaData = getMetaData(tableName, columnNames,dbConnParamForMetadata);
+				metaData = getMetaData(tableName, columnNames,jdbcDAO);
 				columnNamesList = columnNames;
 			}
 			else
 			{
 				metaData = getMetaDataAndUpdateColumns(tableName,columnNamesList,
-						dbConnParamForMetadata);
+						jdbcDAO);
 			}
 
 			String insertQuery = createInsertQuery(tableName,columnNamesList);
-			stmt = dbConnParamForInsertQuery.getPreparedStatement(insertQuery);
+			stmt = jdbcDAO.getPreparedStatement(insertQuery);
 			setStmtIndexValue(columnValues, metaData, stmt);
 			stmt.executeUpdate();
 		}
@@ -394,11 +388,7 @@ public class HashedDataHandler
 			throw new DAOException(errorKey, sqlExp,"HashedDataHandler.java :"+
 					DAOConstants.INSERT_OBJ_ERROR);
 		}
-		finally
-		{
-			dbConnParamForMetadata.closeConnectionParams();
-			dbConnParamForInsertQuery.closeConnectionParams();
-		}
+
 	}
 
 }

@@ -90,11 +90,11 @@ public interface DAO
 	 * @param identifier identifier of the source object
 	 * @param attributeName attribute to be retrieved
 	 * @param columnName : where clause column field.
-	 * @return Object.
+	 * @return List.
 	 * @throws DAOException generic DAOException.
-	 */
-	Object retrieveAttribute(Class objClass, Long identifier,
-			String attributeName,String columnName) throws DAOException;
+	 *//*
+	List retrieveAttribute(Class objClass, Long identifier,
+			String attributeName,String columnName) throws DAOException;*/
 	/**
 	 * Create database connection having auto-commit mode as disabled.
 	 * Open a Session on the given connection.
@@ -132,6 +132,24 @@ public interface DAO
 	void setConnectionManager(IConnectionManager connectionManager);
 
 	/**
+	 *This method will be called to retrieved the clean connection object.
+	 *connections will be in auto-commit mode.
+	 *@return Connection object
+	 *@throws DAOException :Generic DAOException.
+	 *@deprecated
+	 *//*
+	Connection getCleanConnection() throws DAOException;
+
+
+	*//**
+	 *Releases this Connection object's database and JDBC resources.
+	 *@throws DAOException :Generic DAOException
+	 *@deprecated
+	 *//*
+	void closeCleanConnection() throws DAOException;*/
+
+
+	/**
 	 * Format thrown SQL exception to user readable form.
 	 * @param excp : Exception Object.
 	 * @return : It will return the formated messages.
@@ -139,24 +157,7 @@ public interface DAO
 	 */
 	//String formatMessage(Exception excp)throws DAOException;
 
-
-	/**
-	 *This method will be called to retrieved the clean connection object.
-	 *connections will be in auto-commit mode.
-	 *@return Connection object
-	 *@throws DAOException :Generic DAOException.
-	 *//*
-	Connection getCleanConnection() throws DAOException;
-
-
-	*//**
-	 *Releases this Connection object's database and JDBC resources.
-	 *@throws DAOException :Generic DAOException.
-	 *//*
-	void closeCleanConnection() throws DAOException;
-
-
-	*//**
+/**
 	 * Create database connection and open the new session on the given connection.
 	 * connections will be in auto-commit mode.
 	 * @return session object.

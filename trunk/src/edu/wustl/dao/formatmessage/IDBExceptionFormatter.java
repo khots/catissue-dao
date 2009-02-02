@@ -3,7 +3,7 @@
  */
 package edu.wustl.dao.formatmessage;
 
-import java.sql.Connection;
+import edu.wustl.dao.JDBCDAO;
 
 /**
  * @author kalpana_thakur
@@ -13,8 +13,8 @@ public interface IDBExceptionFormatter
 {
 	/**
 	 * @param objExcp :Exception.
-	 * @param connection : Connection to database.
+	 * @param jdbcDAO : jdbcDAO.
  	 * @return It will return the formatted messages.
 	 */
-	String getFormatedMessage(Exception objExcp,Connection connection);
+	String getFormatedMessage(Exception objExcp,JDBCDAO jdbcDAO);
 }

@@ -30,8 +30,8 @@ public class ConstraintViolationFormatter implements ExceptionFormatter
 	 */
 	public String formatMessage(Exception objExcp) throws DAOException
 	{
-		String formatedMessage ;
-		try
+		String formatedMessage = null ;
+		/*try
 		{
 			String appName = CommonServiceLocator.getInstance().getAppName();
 			IDAOFactory daoFactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
@@ -42,7 +42,7 @@ public class ConstraintViolationFormatter implements ExceptionFormatter
 		{
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
 			throw new DAOException(errorKey,exp,"ConstraintViolationFormatter.java :");
-		}
+		}*/
 		return formatedMessage;
 	}
 
