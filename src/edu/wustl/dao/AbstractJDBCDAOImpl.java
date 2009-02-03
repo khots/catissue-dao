@@ -19,6 +19,7 @@ import java.util.List;
 import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.logger.Logger;
+import edu.wustl.dao.condition.EqualClause;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.DAOConstants;
 import edu.wustl.dao.util.DAOUtility;
@@ -76,7 +77,6 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	{
 		try
 		{
-			//super.openSession(sessionDataBean);
 			connection = connectionManager.getConnection();
 			initializeBatchstmt();
 		}
@@ -98,7 +98,6 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	{
 		try
 		{
-			//super.closeSession();
 			connectionManager.closeConnection();
 			batchStatement = null;
 			closeConnectionParams();
@@ -122,7 +121,6 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	{
 		try
 		{
-			//super.commit();
 			if(batchCounter != 0 )
 			{
 				batchStatement.executeBatch();
@@ -430,7 +428,8 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		logger.debug("Get Query RS");
 		try
 		{
-			closeResultSet();
+			//closeResultSet();
+			createStatement();
 			resultSet = statement.executeQuery(sql);
 			return resultSet;
 		}
@@ -440,10 +439,6 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
 			throw new DAOException(errorKey,exp,"DatabaseConnectionParams.java :"
 					+DAOConstants.EXECUTE_QUERY_ERROR+"   "+sql);
-		}
-		finally
-		{
-			closeConnectionParams();
 		}
 	}
 
@@ -461,6 +456,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		try
 		{
 			ResultSet resultSet = getQueryResultSet(query);
+			logger.debug("RS"+resultSet);
 			return DAOUtility.getListFromRS(resultSet);
 		}
 		catch(SQLException exp)
@@ -583,7 +579,6 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 			closeResultSet();
 			closeStmt();
 			closePreparedStmt();
-
 		}
 		catch(SQLException sqlExp)
 		{
@@ -705,6 +700,94 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	{
 
 		return databaseProperties.getStrTodateFunction();
+	}
+
+	/**
+	 * Returns the ResultSet containing all the rows in the table represented in sourceObjectName.
+	 * @param sourceObjectName The table name.
+	 * @return The ResultSet containing all the rows in the table represented in sourceObjectName.
+	 * @throws ClassNotFoundException
+	 * @throws DAOException generic DAOException
+	 */
+	public List<Object> retrieve(String sourceObjectName) throws DAOException
+	{
+		logger.debug("Inside retrieve method");
+		return retrieve(sourceObjectName, null, null,false);
+	}
+
+	/**
+	 * Returns the ResultSet containing all the rows according to the columns specified
+	 * from the table represented in sourceObjectName.
+	 * @param sourceObjectName The table name.
+	 * @param selectColumnName The column names in select clause.
+	 * @return The ResultSet containing all the rows according to the columns specified
+	 * from the table represented in sourceObjectName.
+	 * @throws DAOException : DAOException
+	*/
+	public List<Object> retrieve(String sourceObjectName, String[] selectColumnName) throws DAOException
+	{
+		logger.debug("Inside retrieve method");
+		return retrieve(sourceObjectName, selectColumnName,null,false);
+	}
+
+	/**
+	 * Returns the ResultSet containing all the rows according to the columns specified
+	 * from the table represented in sourceObjectName.
+	 * @param sourceObjectName The table name.
+	 * @param selectColumnName The column names in select clause.
+	 * @param onlyDistinctRows true if only distinct rows should be selected.
+	 * @return The ResultSet containing all the rows according to the columns specified
+	 * from the table represented in sourceObjectName.
+	 * @throws DAOException DAOException.
+	 */
+	public List<Object> retrieve(String sourceObjectName, String[] selectColumnName,
+			boolean onlyDistinctRows) throws DAOException
+	{
+		logger.debug("Inside retrieve method");
+		return retrieve(sourceObjectName, selectColumnName,null,
+				onlyDistinctRows);
+	}
+
+	/**
+	 * Returns the ResultSet containing all the rows according to the columns specified
+	 * from the table represented in sourceObjectName as per the where clause.
+	 * @param sourceObjectName The table name.
+	 * @param selectColumnName The column names in select clause.
+	 * @param queryWhereClause The where condition clause which holds the where column name,
+	 * value and conditions applied
+	 * @return The ResultSet containing all the rows according to the columns specified
+	 * from the table represented in sourceObjectName which satisfies the where condition
+	 * @throws DAOException : DAOException
+	 */
+	public List<Object> retrieve(String sourceObjectName,
+			String[] selectColumnName, QueryWhereClause queryWhereClause)
+			throws DAOException
+	{
+		logger.debug("Inside retrieve method");
+		return retrieve(sourceObjectName, selectColumnName,queryWhereClause,false);
+	}
+
+	/**
+	 * Returns the ResultSet containing all the rows from the table represented in sourceObjectName
+	 * according to the where clause.It will create the where condition clause which holds where column name,
+	 * value and conditions applied.
+	 * @param sourceObjectName The table name.
+	 * @param whereColumnName The column names in where clause.
+	 * @param whereColumnValue The column values in where clause.
+	 * @return The ResultSet containing all the rows from the table represented
+	 * in sourceObjectName which satisfies the where condition
+	 * @throws DAOException : DAOException
+	 */
+	public List<Object> retrieve(String sourceObjectName, String whereColumnName, Object whereColumnValue)
+			throws DAOException
+	{
+		logger.debug("Inside retrieve method");
+		String[] selectColumnName = null;
+
+		QueryWhereClause queryWhereClause = new QueryWhereClause(sourceObjectName);
+		queryWhereClause.addCondition(new EqualClause(whereColumnName,whereColumnValue,sourceObjectName));
+
+		return retrieve(sourceObjectName, selectColumnName,queryWhereClause,false);
 	}
 
 	/**

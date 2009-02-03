@@ -25,6 +25,7 @@ import edu.wustl.common.domain.AuditEventLog;
 import edu.wustl.common.exception.AuditException;
 import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.logger.Logger;
+import edu.wustl.dao.condition.EqualClause;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.DAOConstants;
 import edu.wustl.dao.util.DAOUtility;
@@ -204,7 +205,7 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 	 * @return List.
 	 * @throws DAOException generic DAOException.
 	 */
-	public List<Object> retrieve(String sourceObjectName,String[] selectColumnName,
+	public List retrieve(String sourceObjectName,String[] selectColumnName,
 			QueryWhereClause queryWhereClause,boolean onlyDistinctRows) throws DAOException
 	{
 		logger.debug("Inside retrieve method");
@@ -383,6 +384,99 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 	}
 
 	/**
+	 * Retrieves the records for class name in sourceObjectName according
+	 * to field values passed in the passed session.
+	 * @param sourceObjectName source Object Name.
+	 * @param selectColumnName select Column Name.
+	 * @param queryWhereClause where column conditions
+	 * @return List.
+	 * @throws DAOException generic DAOException.
+	 */
+	public List retrieve(String sourceObjectName,
+			String[] selectColumnName, QueryWhereClause queryWhereClause)
+			throws DAOException
+	{
+		return retrieve(sourceObjectName, selectColumnName,queryWhereClause,false);
+	}
+
+	/**
+	 * Retrieves all the records for class name in sourceObjectName.
+	 * @param sourceObjectName Contains the class Name whose records are to be retrieved.
+	 * @return List.
+	 * @throws DAOException generic DAOException.
+	 */
+	public List retrieve(String sourceObjectName) throws DAOException
+	{
+		logger.debug("Inside retrieve method");
+		String[] selectColumnName = null;
+		return retrieve(sourceObjectName, selectColumnName, null,false);
+	}
+
+	/**
+	 * Retrieves all the records for class name in sourceObjectName.
+	 * @param sourceObjectName Contains the class Name whose records are to be retrieved.
+	 * @param whereColumnName Column name to be included in where clause.
+	 * @param whereColumnValue Value of the Column name that included in where clause.
+	 * @return List.
+	 * @throws DAOException generic DAOException.
+	 */
+	public List retrieve(String sourceObjectName, String whereColumnName, Object whereColumnValue)
+			throws DAOException
+	{
+		logger.debug("Inside retrieve method");
+		String[] selectColumnName = null;
+
+		QueryWhereClause queryWhereClause = new QueryWhereClause(sourceObjectName);
+		queryWhereClause.addCondition(new EqualClause(whereColumnName,whereColumnValue));
+
+		return retrieve(sourceObjectName, selectColumnName,queryWhereClause,false);
+	}
+
+	/**
+	 * @param sourceObjectName Contains the class Name whose records are to be retrieved.
+	 * @param selectColumnName select Column Name.
+	 * @return List.
+	 * @throws DAOException generic DAOException.
+	 */
+	public List retrieve(String sourceObjectName, String[] selectColumnName)
+	throws DAOException
+	{
+		logger.debug("Inside retrieve method");
+		return retrieve(sourceObjectName, selectColumnName,null,false);
+	}
+
+
+	/**
+	 * Retrieve Attribute.
+	 * @param objClass object.
+	 * @param identifier identifier.
+	 * @param attributeName attribute Name.
+	 * @param columnName Name of the column.
+	 * @return Object.
+	 * @throws DAOException generic DAOException.
+	 */
+	public List retrieveAttribute(Class objClass, Long identifier,
+			String attributeName,String columnName) throws DAOException
+	 {
+		logger.debug("Retrieve attributes");
+		try
+		{
+			String[] selectColumnName = {attributeName};
+			QueryWhereClause queryWhereClause = new QueryWhereClause(objClass.getName());
+			queryWhereClause.addCondition(new EqualClause(columnName,identifier));
+			return retrieve(objClass.getName(), selectColumnName, queryWhereClause, false);
+		}
+		catch (HibernateException exception)
+		{
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
+			throw new DAOException(errorKey, exception,"HibernateDAOImpl.java :"+
+					DAOConstants.RETRIEVE_ERROR);
+		}
+	}
+
+
+
+	/**
 	 * @param excp : Exception Object.
 	 * @return : It will return the formated messages.
 	 * @throws DAOException :
@@ -421,48 +515,4 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		connectionManager.closeCleanSession();
 	}
 */
-
-/*	*//**
-	 * Retrieve Attribute.
-	 * @param objClass object.
-	 * @param identifier identifier.
-	 * @param attributeName attribute Name.
-	 * @param columnName Name of the column.
-	 * @return Object.
-	 * @throws DAOException generic DAOException.
-	 *//*
-	public List retrieveAttribute(Class objClass, Long identifier,
-			String attributeName,String columnName) throws DAOException
-	 {
-		logger.debug("Retrieve attributes");
-		try
-		{
-			String[] selectColumnName = {attributeName};
-			QueryWhereClause queryWhereClause = new QueryWhereClause(objClass.getName());
-			queryWhereClause.addCondition(new EqualClause(columnName,identifier));
-			return retrieve(objClass.getName(), selectColumnName, queryWhereClause, false);
-			String simpleName = objClass.getSimpleName();
-			String nameOfAttribute = DAOUtility.getInstance().
-			createAttributeNameForHQL(simpleName, attributeName);
-			StringBuffer queryStringBuffer = new StringBuffer(DAOConstants.TAILING_SPACES);
-
-			queryStringBuffer.append("Select").append(DAOConstants.TAILING_SPACES).
-			append(nameOfAttribute).append(DAOConstants.TAILING_SPACES).
-			append("from").append(DAOConstants.TAILING_SPACES).
-			append(objClassName).append(DAOConstants.TAILING_SPACES).
-			append(simpleName).append(DAOConstants.TAILING_SPACES).
-			append("where").append(DAOConstants.TAILING_SPACES).
-			append(simpleName).append(DAOConstants.DOT_OPERATOR).append(columnName).
-			append(DAOConstants.EQUAL).append(DAOConstants.TAILING_SPACES).
-			append(identifier);
-
-			//return session.createQuery(queryStringBuffer.toString()).list();
-		}
-		catch (HibernateException exception)
-		{
-			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey, exception,"HibernateDAOImpl.java :"+
-					DAOConstants.RETRIEVE_ERROR);
-		}
-	}*/
 }

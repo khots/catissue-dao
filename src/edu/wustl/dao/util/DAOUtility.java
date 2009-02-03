@@ -289,7 +289,6 @@ public final class DAOUtility
 	{
 		for (int i = 1; i <= columnCount; i++)
 		{
-			logger.debug("Inside for "+i);
 			Object retObj;
 			switch (metaData.getColumnType(i))
 			{

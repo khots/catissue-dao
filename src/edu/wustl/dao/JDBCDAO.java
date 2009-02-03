@@ -145,6 +145,20 @@ public interface JDBCDAO extends DAO
      */
     ResultSet getDBMetaDataResultSet(String tableName) throws SQLException;
 
+    /**
+	* Returns the ResultSet containing all the rows according to the columns specified
+	* from the table represented in sourceObjectName.
+	* @param sourceObjectName The table name.
+	* @param selectColumnName The column names in select clause.
+	* @param onlyDistinctRows true if only distict rows should be selected
+	* @return The ResultSet containing all the rows according to the columns specified
+	* from the table represented in sourceObjectName.
+	* @throws DAOException generic DAOException.
+	*/
+	List<Object> retrieve(String sourceObjectName, String[] selectColumnName, boolean onlyDistinctRows)
+			throws DAOException;
+
+
 	/**
 	 * @param excp : Exception Object.
 	 * @param connection :
