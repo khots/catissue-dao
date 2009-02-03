@@ -47,8 +47,6 @@
 			<jar taskname="build_jar" jarfile="${build.dir}/DAO.jar">
 				<fileset dir="${target.dir}">
 					<include name="**/*" />
-					<exclude name="**/MySQLDAOImpl.class"/>
-					<exclude name="**/OracleDAOImpl.class"/>
 				</fileset>
 				<manifest>
 					<attribute name="Built-At-Time" value="${TODAY} ${TSTAMP}" />

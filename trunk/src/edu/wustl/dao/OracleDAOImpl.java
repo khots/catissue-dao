@@ -4,8 +4,6 @@
 
 package edu.wustl.dao;
 
-import java.util.List;
-
 import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.exception.DAOException;
