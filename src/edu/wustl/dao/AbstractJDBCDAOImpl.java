@@ -168,7 +168,6 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		{
 			batchStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
 			ResultSet.CONCUR_UPDATABLE);
-
 		}
 		catch (SQLException exp)
 		{
@@ -407,7 +406,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		{
 			logger.fatal(sqlExp);
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,sqlExp,"DatabaseConnectionParams.java :"
+			throw new DAOException(errorKey,sqlExp,"AbstractJDBCDAOImpl.java :"
 					+DAOConstants.EXECUTE_QUERY_ERROR+"   "+query);
 		}
 		finally
@@ -428,7 +427,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		logger.debug("Get Query RS");
 		try
 		{
-			//closeResultSet();
+			closeResultSet();
 			createStatement();
 			resultSet = statement.executeQuery(sql);
 			return resultSet;
@@ -437,7 +436,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		{
 			logger.fatal(exp);
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,exp,"DatabaseConnectionParams.java :"
+			throw new DAOException(errorKey,exp,"AbstractJDBCDAOImpl.java :"
 					+DAOConstants.EXECUTE_QUERY_ERROR+"   "+sql);
 		}
 	}
@@ -463,7 +462,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		{
 			logger.fatal(exp);
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,exp,"DatabaseConnectionParams.java :"+
+			throw new DAOException(errorKey,exp,"AbstractJDBCDAOImpl.java :"+
 					DAOConstants.RS_METADATA_ERROR);
 		}
 		finally
@@ -495,7 +494,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		{
 			logger.fatal(sqlExp);
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,sqlExp,"DatabaseConnectionParams.java :"
+			throw new DAOException(errorKey,sqlExp,"AbstractJDBCDAOImpl.java :"
 					+DAOConstants.EXECUTE_QUERY_ERROR+"   "+query);
 		}
 		finally
@@ -519,7 +518,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		{
 			logger.fatal(sqlExp);
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.conn.para.creation.error");
-			throw new DAOException(errorKey,sqlExp,"DatabaseConnectionParams.java :"+
+			throw new DAOException(errorKey,sqlExp,"AbstractJDBCDAOImpl.java :"+
 					DAOConstants.PRPD_STMT_ERROR);
 		}
 	}
@@ -543,7 +542,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		{
 			logger.fatal(sqlExp);
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.conn.para.creation.error");
-			throw new DAOException(errorKey,sqlExp,"DatabaseConnectionParams.java :"+
+			throw new DAOException(errorKey,sqlExp,"AbstractJDBCDAOImpl.java :"+
 					DAOConstants.PRPD_STMT_ERROR);
 		}
 	}
@@ -559,14 +558,24 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
      *in this database
      * @return a  ResultSet  for this
      *          Connection  object
-     * @exception SQLException if a database access error occurs
+     * @exception DAOException if a database access error occurs
      */
-   public ResultSet getDBMetaDataResultSet(String tableName) throws SQLException
+   public ResultSet getDBMetaDataResultSet(String tableName) throws DAOException
    {
-	   closeResultSet();
-	   resultSet = connection.getMetaData().
-	     getIndexInfo(connection.getCatalog(), null,tableName, true, false);
-	   return resultSet;
+	   try
+		{
+		   closeResultSet();
+		   resultSet = connection.getMetaData().
+		   getIndexInfo(connection.getCatalog(), null,tableName, true, false);
+		   return resultSet;
+		}
+	    catch (SQLException sqlExp)
+		{
+				logger.fatal(sqlExp);
+				ErrorKey errorKey = ErrorKey.getErrorKey("db.conn.para.creation.error");
+				throw new DAOException(errorKey,sqlExp,"AbstractJDBCDAOImpl.java :"+
+						DAOConstants.RESULTSET_CREATION_ERROR);
+		}
    }
 	/**
 	 * This method will be called to close all the Database connections.
@@ -584,7 +593,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		{
 			logger.fatal(sqlExp);
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.close.conn.error");
-			throw new DAOException(errorKey,sqlExp,"DatabaseConnectionParams.java :"+
+			throw new DAOException(errorKey,sqlExp,"AbstractJDBCDAOImpl.java :"+
 					DAOConstants.CLOSE_CONN_ERR);
 		}
 	}

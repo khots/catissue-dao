@@ -6,10 +6,8 @@
 
 package edu.wustl.dao;
 
-import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
 import edu.wustl.dao.exception.DAOException;
@@ -141,9 +139,9 @@ public interface JDBCDAO extends DAO
      *in this database
      * @return a  ResultSet  object for this
      *          Connection  object
-     * @exception SQLException if a database access error occurs
+     * @exception DAOException if a database access error occurs
      */
-    ResultSet getDBMetaDataResultSet(String tableName) throws SQLException;
+    ResultSet getDBMetaDataResultSet(String tableName) throws DAOException;
 
     /**
 	* Returns the ResultSet containing all the rows according to the columns specified
