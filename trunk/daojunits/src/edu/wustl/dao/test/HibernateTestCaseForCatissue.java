@@ -15,8 +15,6 @@ import test.User;
 import edu.wustl.common.exception.ApplicationException;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.DAO;
-import edu.wustl.dao.HibernateDAO;
-import edu.wustl.dao.HibernateDAOImpl;
 import edu.wustl.dao.QueryWhereClause;
 import edu.wustl.dao.condition.EqualClause;
 import edu.wustl.dao.condition.GreaterThenClause;
@@ -92,7 +90,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 
 			Address address = new Address();
 			address.setStreet("Street unknown");
-			dao.insert(address, null, false, false);
+			dao.insert(address,false);
 			person.setAddress(address);
 
 			Collection<Object> orderCol = new HashSet<Object>();
@@ -102,7 +100,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 			person.setName("Kalpana");
 			orderCol.add(order);
 			person.setOrderCollection(orderCol);
-			dao.insert(person, null, false, false);
+			dao.insert(person,false);
 			dao.commit();
 			//dao.closeSession();
 
@@ -119,7 +117,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 			{
 				dao.closeSession();
 			}
-			catch (DAOException e) 
+			catch (DAOException e)
 			{
 				e.printStackTrace();
 			}
@@ -127,8 +125,6 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 
 	}
 
-
-	
 /**
 	 * This test will assert that Object inserted successfully.
 	 */
@@ -139,7 +135,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 		{
 		  User user = (User)createUserObject();
 		  dao.openSession(null);
-		  dao.insert(user, null, false, false);
+		  dao.insert(user, false);
 		//  dao.commit();
 		 // dao.closeSession();
 
@@ -149,7 +145,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 		  	user2.setLastName("Lale");
 		  	user2.setEmailAddress("sach@lale.co.in");
 		//  dao.openSession(null);
-		  dao.insert(user2, null, false, false);
+		  dao.insert(user2, false);
 		  dao.commit();
 		//  dao.closeSession();
 		}
@@ -163,7 +159,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 			{
 				dao.closeSession();
 			}
-			catch (DAOException e) 
+			catch (DAOException e)
 			{
 				e.printStackTrace();
 			}
@@ -187,7 +183,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 		  user.setEmailAddress("sri.adiga@persistent.co.in");
 
 		  dao.openSession(null);
-		  	  dao.update(user);
+		  	  dao.update(user,null);
 		  	  dao.commit();
 		//  dao.closeSession();
 		}
@@ -231,7 +227,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 			QueryWhereClause queryWhereClause = new QueryWhereClause(sourceObjectName);
 			queryWhereClause.getWhereCondition(whereColNames, whereColConditions,
 					whereColValues, joinCondition);
-			list = dao.retrieve(sourceObjectName, selectColumnName,queryWhereClause);
+			list = dao.retrieve(sourceObjectName, selectColumnName,queryWhereClause,false);
 			assertNotNull("Object retrieved is null ",list);
 
 			String[] whereColNamesNew = {"identifier","lastName" };
@@ -242,7 +238,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 			queryWhereClause = new QueryWhereClause(sourceObjectName);
 			queryWhereClause.getWhereCondition(whereColNamesNew, whereColConditionsNew,
 					whereColValuesNew, joinCondition);
-			list = dao.retrieve(sourceObjectName, selectColumnName,queryWhereClause);
+			list = dao.retrieve(sourceObjectName, selectColumnName,queryWhereClause,false);
 			assertNotNull("Object retrieved is null ",list);
 		//	dao.closeSession();
 		}
@@ -273,7 +269,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 	  try
 	  {
 		  dao.openSession(null);
-	  	  List<Object> list = dao.retrieve("test.User");
+	  	  List<Object> list = dao.retrieve("test.User",null,null,false);
 	  	//  dao.closeSession();
 
 	  	  assertNotNull("No objects retrieved :",list);
@@ -307,7 +303,10 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 	  try
 	  {
 	    dao.openSession(null);
-	    List<Object> list = dao.retrieve("test.User","identifier" , Long.valueOf(1));
+	    QueryWhereClause queryWhereClause = new QueryWhereClause("test.User");
+	    queryWhereClause.addCondition(new EqualClause("identifier" , Long.valueOf(1)));
+	    List<Object> list = dao.retrieve("test.User",null , queryWhereClause,false);
+
 	  //	dao.closeSession();
 	  	assertNotNull("No objects retrieved",list);
 		//assertTrue("No object retrieved ::",!list.isEmpty());
@@ -341,7 +340,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 	  {
 		String[] selectColumnName = {"identifier","firstName","lastName","emailAddress"};
 		dao.openSession(null);
-	    List<Object> list = dao.retrieve("test.User", selectColumnName);
+	    List<Object> list = dao.retrieve("test.User", selectColumnName,null,false);
 	   // dao.closeSession();
 
 	    assertNotNull("No object retrieved ::",list);
@@ -375,7 +374,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 		try
 		{
 			dao.openSession(null);
-			User user  = (User)dao.retrieve("test.User", Long.valueOf(1));
+			User user  = (User)dao.retrieveById("test.User", Long.valueOf(1));
 			//dao.closeSession();
 			assertNotNull("Object is null ",user);
 		}
@@ -403,7 +402,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 	/**
 	 * This test will assert that object will given identifier
 	 * retrieved successfully.
-	 */
+	 *//*
 	@Test
 	public void testCaseLoadCleanObject()
 	{
@@ -434,7 +433,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 		}
 
 
-	}
+	}*/
 	
 	/**
 	 * This test will assert that requested objects deleted successfully.
@@ -491,7 +490,8 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 			addCondition(new NotEqualClause("identifier",Long.valueOf(1)));
 
 			dao.openSession(null);
-			List<Object> list = dao.retrieve(sourceObjectName, selectColumnName,queryWhereClause);
+			List<Object> list = dao.retrieve(sourceObjectName, selectColumnName,
+					queryWhereClause,false);
 			//dao.closeSession();
 
 			assertNotNull("No object retrieved ::",list);
@@ -534,7 +534,8 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 
 
 			dao.openSession(null);
-			List<Object> list = dao.retrieve(sourceObjectName, selectColumnName,queryWhereClause);
+			List<Object> list = dao.retrieve(sourceObjectName, selectColumnName,
+					queryWhereClause,false);
 		//	dao.closeSession();
 
 			assertNotNull(list);
@@ -576,7 +577,8 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 			queryWhereClause.addCondition(new NullClause("lastName"));
 
 			dao.openSession(null);
-			List<Object> list = dao.retrieve(sourceObjectName, selectColumnName,queryWhereClause);
+			List<Object> list = dao.retrieve(sourceObjectName, selectColumnName,
+					queryWhereClause,false);
 			//dao.closeSession();
 
 			assertNotNull(list);
@@ -680,7 +682,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 	public void testRetrieveAttribute()
 	{
 		try
-		{
+		{/*
 			dao.openSession(null);
 			Object obj = (Object)dao.retrieveAttribute(User.class,
 					Long.valueOf(1),"emailAddress","identifier");
@@ -690,7 +692,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 			List<String> list = (List<String>)obj;
 			assertNotNull("Object retrieved is null",list);
 			//assertTrue("Problem in retrieving attribute :", !list.isEmpty());
-		}
+		*/}
 		catch(Exception exp)
 		{
 			assertFalse("Problem in retrieving attribute ::", true);
@@ -713,7 +715,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 
 	/**
 	 * This method will use session.load to retrieve the object with the given identifier.
-	 */
+	 *//*
 	@Test
 	public void testLoadCleanObjects()
 	{
@@ -746,7 +748,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 		}
 		
 	}
-
+*/
 	
 
 	/**
@@ -758,7 +760,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 		Session session = null;
 		try
 		{
-			session = dao.getCleanSession();
+		//	session = dao.getCleanSession();
 			assertNotNull("session Object is null",session);
 		}
 		catch(Exception exp)
@@ -771,7 +773,6 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 		}
 
 	}
-	
 
 	/**
 	 * This test will open clean session with in a session.
@@ -779,7 +780,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 	 */
 	@Test
 	public void testCleanSessionWithinaSession()
-	{
+	{/*
 		try
 		{
 			dao.openSession(null);
@@ -792,7 +793,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 			session.close();
 
 			user.setEmailAddress("cruise_tom@persistent.co.in");
-			dao.update(user);
+			dao.update(user,null);
 			dao.commit();
 			//dao.closeSession();
 		}
@@ -812,7 +813,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 			}
 		}
 
-	}
+	*/}
 
 
 
@@ -878,7 +879,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 			addCondition(new GreaterThenClause("identifier",Long.valueOf(1)));
 
 			dao.openSession(null);
-			List<Object> list = dao.retrieve(sourceObjectName, selectColumnName,queryWhereClause);
+			List<Object> list = dao.retrieve(sourceObjectName, selectColumnName,queryWhereClause,false);
 			//dao.closeSession();
 			assertNotNull("No data retrieved :",list);
 			//assertTrue("No data retrieved :",!list.isEmpty());
@@ -926,7 +927,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 		try
 		{
 			dao.openSession(null);
-			User user  = (User)dao.retrieve("test.User", Long.valueOf(1));
+			User user  = (User)dao.retrieveById("test.User", Long.valueOf(1));
 			Object object = HibernateMetaData.getProxyObjectImpl(user);
 				assertNotNull("Proxy Object retrieved is null :"+object);
 
@@ -986,12 +987,14 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 			dao.openSession(null);
 			Address address = new Address();
 			address.setStreet("Street unknown");
-			dao.insert(address, null, false, false);
+			dao.insert(address, false);
 			dao.commit();
 			//dao.closeSession();
 		}
 		catch(Exception exp)
 		{
+			System.out.println("------------------------------------------------------------------------");
+			exp.printStackTrace();
 			ConstraintViolationFormatter formatter = new ConstraintViolationFormatter();
 			try
 			{
@@ -1048,7 +1051,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 		IDAOFactory daoFactory = daoConfigFactory.getInstance().getDAOFactory("DynamicExtensions");
 		DAO deDAO = daoFactory.getDAO();
 		deDAO.openSession(null);
-		deDAO.insert(user, null, false, false);
+		deDAO.insert(user, false);
 		deDAO.commit();
 		deDAO.closeSession();
 	}

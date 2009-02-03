@@ -92,9 +92,57 @@ public interface DAO
 	 * @param columnName : where clause column field.
 	 * @return List.
 	 * @throws DAOException generic DAOException.
-	 *//*
+	 */
 	List retrieveAttribute(Class objClass, Long identifier,
-			String attributeName,String columnName) throws DAOException;*/
+			String attributeName,String columnName) throws DAOException;
+
+	/**
+	 * Retrieve and returns the list of all source objects that satisfy the
+	 * for given conditions on a various columns.
+	 * @param sourceObjectName Source object's name to be retrieved from database.
+	 * @param selectColumnName Column names in SELECT clause of the query.
+	 * @param queryWhereClause : This will hold following:
+	 * 1.whereColumnName Array of column name to be included in where clause.
+	 * 2.whereColumnCondition condition to be satisfy between column and its value.
+	 * e.g. "=", "<", ">", "=<", ">=" etc
+	 * 3. whereColumnValue Value of the column name that included in where clause.
+	 * 4.joinCondition join condition between two columns. (AND, OR)
+	 * @return the list of all source objects that satisfy the search conditions.
+	 * @throws DAOException generic DAOException.
+	 */
+
+	List retrieve(String sourceObjectName,
+			String[] selectColumnName,QueryWhereClause queryWhereClause) throws DAOException;
+
+	/**
+	 * Retrieve and returns the list of all source objects for given
+	 * condition on a single column. The condition value
+	 * @param sourceObjectName Source object's name to be retrieved from database.
+	 * @param whereColumnName Column name to be included in where clause.
+	 * @param whereColumnValue Value of the Column name that included in where clause.
+	 * @return the list of all source objects for given condition on a single column.
+	 * @throws DAOException generic DAOException.
+	 */
+	List retrieve(String sourceObjectName, String whereColumnName,
+			Object whereColumnValue) throws DAOException;
+
+	/**
+	 * Returns the list of all source objects available in database.
+	 * @param sourceObjectName Source object's name to be retrieved from database.
+	 * @return the list of all source objects available in database.
+	 * @throws DAOException generic DAOException.
+	 */
+	List retrieve(String sourceObjectName) throws DAOException;
+
+	/**
+	 * Returns the list of all objects with the select columns specified.
+	 * @param sourceObjectName Source object in the Database.
+	 * @param selectColumnName column names in the select clause.
+	 * @return the list of all objects with the select columns specified.
+	 * @throws DAOException generic DAOException.
+	 */
+	List retrieve(String sourceObjectName, String[] selectColumnName)
+			throws DAOException;
 	/**
 	 * Create database connection having auto-commit mode as disabled.
 	 * Open a Session on the given connection.

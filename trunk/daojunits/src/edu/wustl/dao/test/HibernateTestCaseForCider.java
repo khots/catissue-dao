@@ -1,54 +1,26 @@
 package edu.wustl.dao.test;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.junit.Test;
-
-import test.Address;
-import test.Order;
-import test.Person;
-import test.User;
-import edu.wustl.common.exception.ApplicationException;
-import edu.wustl.common.util.logger.Logger;
-import edu.wustl.dao.DAO;
-import edu.wustl.dao.HibernateDAO;
-import edu.wustl.dao.HibernateDAOImpl;
-import edu.wustl.dao.QueryWhereClause;
-import edu.wustl.dao.condition.EqualClause;
-import edu.wustl.dao.condition.INClause;
-import edu.wustl.dao.condition.NotEqualClause;
-import edu.wustl.dao.condition.NotNullClause;
-import edu.wustl.dao.condition.NullClause;
-import edu.wustl.dao.daofactory.IDAOFactory;
-import edu.wustl.dao.exception.DAOException;
-import edu.wustl.dao.formatmessage.ConstraintViolationFormatter;
-import edu.wustl.dao.util.DAOConstants;
-import edu.wustl.dao.util.HibernateMetaData;
 
 public class HibernateTestCaseForCider extends BaseTestCase
-{
+{/*
 
 
-	/**
+	*//**
 	 * Logger.
-	 */
+	 *//*
 	private static org.apache.log4j.Logger logger = Logger.getLogger(HibernateTestCaseForCider.class);
-	/**
+	*//**
 	 * DAO instance.
-	 */
+	 *//*
 	private DAO dao;
 
 	{
 		setDAO();
 	}
 
-	/**
+	*//**
 	 * This method will be called to set the Default DAO.
-	 */
+	 *//*
 	public void setDAO()
 	{
 		IDAOFactory daoFactory = daoConfigFactory.getInstance().getDAOFactory("cider");
@@ -63,9 +35,9 @@ public class HibernateTestCaseForCider extends BaseTestCase
 	}
 
 
-	/**
+	*//**
 	 * This test will assert that DAO instance is not null.
-	 */
+	 *//*
 	@Test
 	public void testDAOInstance()
 	{
@@ -73,9 +45,9 @@ public class HibernateTestCaseForCider extends BaseTestCase
 	}
 
 
-	/**
+	*//**
 	 * This test will assert that Object inserted successfully.
-	 */
+	 *//*
 	@Test
 	public void testInsertPerson()
 	{
@@ -123,9 +95,9 @@ public class HibernateTestCaseForCider extends BaseTestCase
 
 
 	
-/**
+*//**
 	 * This test will assert that Object inserted successfully.
-	 */
+	 *//*
 	@Test
 	public void testCaseInsertObject()
 	{
@@ -165,9 +137,9 @@ public class HibernateTestCaseForCider extends BaseTestCase
 
 	}
 
-		/**
+		*//**
 	 * This test will assert that Object updated successfully.
-	 */
+	 *//*
 	@Test
 	public void testCaseUpdateObject()
 	{
@@ -204,9 +176,9 @@ public class HibernateTestCaseForCider extends BaseTestCase
 
 	  }
 
-	/**
+	*//**
 	 * This test will assert  the retrieve used by cider.
-	 */
+	 *//*
 	@Test
 	 public void testRetrieveForCatissue()
 	{
@@ -258,9 +230,9 @@ public class HibernateTestCaseForCider extends BaseTestCase
 
 	}
 
-	/**
+	*//**
 	 * This test will assert that all the objects are retrieved successfully.
-	 */
+	 *//*
 	@Test
 	public void testCaseRetriveAllObjects()
 	{
@@ -291,10 +263,10 @@ public class HibernateTestCaseForCider extends BaseTestCase
 
 	}
 
-	/**
+	*//**
 	 * This test will assert that the object with requested
 	 * column will be retrieved successfully.
-	 */
+	 *//*
 	@Test
 	public void testCaseRetriveObject()
 	{
@@ -324,10 +296,10 @@ public class HibernateTestCaseForCider extends BaseTestCase
 
 	}
 
-	/**
+	*//**
 	 * This test will assert that requested columns of the objects are
 	 * retrieved successfully.
-	 */
+	 *//*
 	@Test
 	public void testCaseRetrieveObjectColumns()
 	{
@@ -359,10 +331,10 @@ public class HibernateTestCaseForCider extends BaseTestCase
 
 	}
 
-	/**
+	*//**
 	 * This test will assert that object will given identifier
 	 * retrieved successfully.
-	 */
+	 *//*
 	@Test
 	public void testCaseRetrieveObjectAsPerID()
 	{
@@ -394,10 +366,10 @@ public class HibernateTestCaseForCider extends BaseTestCase
 
 	
 	
-	/**
+	*//**
 	 * This test will assert that object will given identifier
 	 * retrieved successfully.
-	 */
+	 *//*
 	@Test
 	public void testCaseLoadCleanObject()
 	{
@@ -430,9 +402,9 @@ public class HibernateTestCaseForCider extends BaseTestCase
 
 	}
 	
-	/**
+	*//**
 	 * This test will assert that requested objects deleted successfully.
-	 */
+	 *//*
 	@Test
 	public void testCaseDeleteObject()
 	{
@@ -466,10 +438,10 @@ public class HibernateTestCaseForCider extends BaseTestCase
 	}
 
 
-	/**
+	*//**
 	 * This test will assert that objects retrieved successfully
 	 * when where clause holds in condition.
-	 */
+	 *//*
 	@Test
 	public void testRetriveInCondition()
 	{
@@ -510,10 +482,10 @@ public class HibernateTestCaseForCider extends BaseTestCase
 	}
 
 
-	/**
+	*//**
 	 * This test will assert that objects retrieved successfully
 	 * when where clause holds not null condition.
-	 */
+	 *//*
 	@Test
 	public void testRetriveIsNotNullCondition()
 	{
@@ -553,10 +525,10 @@ public class HibernateTestCaseForCider extends BaseTestCase
 
 	}
 
-	/**
+	*//**
 	 * This test will assert that objects retrieved successfully
 	 * when where clause holds is null condition.
-	 */
+	 *//*
 	@Test
 	public void testRetriveIsNullCondition()
 	{
@@ -597,9 +569,9 @@ public class HibernateTestCaseForCider extends BaseTestCase
 
 	
 
-	/**
+	*//**
 	 * This test will assert that query will be executed successfully.
-	 */
+	 *//*
 	@Test
 	public void testCaseExecuteQuery()
 	{
@@ -632,10 +604,10 @@ public class HibernateTestCaseForCider extends BaseTestCase
 	}
 
 
-	/**
+	*//**
 	 * This test will assert that requested objects disabled successfully.
-	 */
-	/*@Test
+	 *//*
+	@Test
 	public void testDisableRelatedObjects()
 	{
 		String tableName = "test_user";
@@ -664,12 +636,12 @@ public class HibernateTestCaseForCider extends BaseTestCase
 			}
 		}
 
-	}*/
+	}
 
 
-	/**
+	*//**
 	 * This test will assert that attribute retrieved successfully.
-	 */
+	 *//*
 	@Test
 	public void testRetrieveAttribute()
 	{
@@ -705,9 +677,9 @@ public class HibernateTestCaseForCider extends BaseTestCase
 	
 	
 
-	/**
+	*//**
 	 * This method will use session.load to retrieve the object with the given identifier.
-	 */
+	 *//*
 	@Test
 	public void testLoadCleanObjects()
 	{
@@ -743,9 +715,9 @@ public class HibernateTestCaseForCider extends BaseTestCase
 
 	
 
-	/**
+	*//**
 	 * This test will assert that clean session retrieved.
-	 */
+	 *//*
 	@Test
 	public void testCleanSession()
 	{
@@ -767,10 +739,10 @@ public class HibernateTestCaseForCider extends BaseTestCase
 	}
 	
 
-	/**
+	*//**
 	 * This test will open clean session with in a session.
 	 * insert one object and in second session update the same object.
-	 */
+	 *//*
 	@Test
 	public void testCleanSessionWithinaSession()
 	{
@@ -810,14 +782,14 @@ public class HibernateTestCaseForCider extends BaseTestCase
 
 	
 
-	/**
+	*//**
 	 * This test will ensure that second application can open session
 	 * when first application session is not closed that means
 	 * opening and closing of session by one application do not affect other application session.
 	 * In this test application 'App1' and 'App2'insert object to their respective databases.
 	 * Pointing to same database type either MySQL , Oracle or any third type.
-	 */
-	/*@Test
+	 *//*
+	@Test
 	public void testMultAppInsertPointngRespectiveDBSameDBType()
 	{
 		try
@@ -846,13 +818,13 @@ public class HibernateTestCaseForCider extends BaseTestCase
 			}
 		}
 
-	}*/
+	}
 
 
-	/**
+	*//**
 	 * This test will create a complex retrieve query having multiple clause(IN,NOT NULL,IS NULL)
 	 * It will ensure that objects retrieved successfully.
-	 */
+	 *//*
 	@Test
 	public void testRetriveComplexQuery()
 	{
@@ -891,9 +863,9 @@ public class HibernateTestCaseForCider extends BaseTestCase
 
 	}
 
-	/**
+	*//**
 	 * This test will various factory members.
-	 * 	 */
+	 * 	 *//*
 	@Test
 	public void testDAOFactoryMembers()
 	{
@@ -905,9 +877,9 @@ public class HibernateTestCaseForCider extends BaseTestCase
 
 	}
 
-	/**
+	*//**
 	 * This test will test various methods of HibernateMetaData class.
-	 */
+	 *//*
 	@Test
 	public void testDifferentMethodsOfHibernateMetaData()
 	{
@@ -961,9 +933,9 @@ public class HibernateTestCaseForCider extends BaseTestCase
 	}
 
 
-	/**
+	*//**
 	 * This test will assert on constraint violation proper message is thrown.
-	 */
+	 *//*
 	@Test
 	public void testConstraintViolation()
 	{
@@ -1022,10 +994,10 @@ public class HibernateTestCaseForCider extends BaseTestCase
 
 
 
-	/**
+	*//**
 	 * @param user : user object
 	 * @throws DAOException : DAOExp
-	 */
+	 *//*
 	private void insertObjectByApp2(User user) throws DAOException
 
 	{
@@ -1038,10 +1010,10 @@ public class HibernateTestCaseForCider extends BaseTestCase
 	}
 
 
-	/**
+	*//**
 	 * This method will be called to create user object.
 	 * @return : It will returns the user object.
-	 */
+	 *//*
 	User createUserObject()
 	{
 	  User user = new User();
@@ -1056,4 +1028,4 @@ public class HibernateTestCaseForCider extends BaseTestCase
 
 
 
-}
+*/}

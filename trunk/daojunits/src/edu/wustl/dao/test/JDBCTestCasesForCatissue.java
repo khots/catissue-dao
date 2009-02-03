@@ -1,6 +1,5 @@
 package edu.wustl.dao.test;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
@@ -65,14 +64,93 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 		assertNotNull("DAO Object is null",jdbcDAO);
 	}
 
+	/**
+	 * This test will assert the batch insert
+	 *//*
+	@Test
+	public void testBatchInsert()
+	{
+		try
+		{
+			jdbcDAO.openSession(null);
+			jdbcDAO.setBatchSize(1);
+			String insertStr1 = "insert into test_user " +
+					"(IDENTIFIER,EMAIL_ADDRESS,FIRST_NAME,LAST_NAME,ACTIVITY_STATUS)" +
+					"VALUES ("+104+",'john@per.co.in','JOHN','REBER','Active')";
 
+			jdbcDAO.insert(insertStr1,false);
+
+			insertStr1 = "insert into test_user " +
+					"(IDENTIFIER,EMAIL_ADDRESS,FIRST_NAME,LAST_NAME,ACTIVITY_STATUS)" +
+			"VALUES ("+105+",'kal@per.co.in','kalpana','thakur','Active')";
+
+			jdbcDAO.insert(insertStr1,false);
+
+			jdbcDAO.commit();
+
+		}
+		catch(Exception exp)
+		{
+			System.out.println("---------------------------");
+			exp.printStackTrace();
+			assertFalse("Problem executing batch insert :",true);
+		}
+		finally
+		{
+			try
+			{
+				jdbcDAO.closeSession();
+			}
+			catch (DAOException e)
+			{
+				e.printStackTrace();
+			}
+		}
+	}*/
 
 	/**
-	 * This test will assert that table created successfully.
+	 * This test will assert that all the objects are retrieved successfully.
 	 */
 	@Test
+	public void testCaseRetriveAllObjectsJDBC()
+	{
+	  try
+	  {
+		  jdbcDAO.openSession(null);
+		  List list = jdbcDAO.retrieve("test_user",null,null,false);
+		  System.out.println("--------------------------------");
+		  System.out.println("Size of list :"+list);
+	  	 // jdbcDAO.closeSession();
+	  	  assertNotNull(list);
+
+	  }
+	  catch(Exception exp)
+	  {
+		  System.out.println("--------------------------------");
+		  exp.printStackTrace();
+		  assertFalse("Failed while retrieving object :", true);
+	  }
+	  finally
+		{
+			try 
+			{
+				jdbcDAO.closeSession();
+			} 
+			catch (DAOException e)
+			{
+		
+				e.printStackTrace();
+			}
+		}
+	}
+
+
+/*	*//**
+	 * This test will assert that table created successfully.
+	 *//*
+	@Test
 	public void testCreateTableJDBC()
-	{/*
+	{
 		try
 		{
 			String tableName = "Temp_Address";
@@ -99,14 +177,14 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 			}
 		}
 
-	*/}
+	}
 
-	/**
+	*//**
 	 * This test will assert that table created successfully.
-	 */
+	 *//*
 	@Test
 	public void testCreateTableQueryJDBC()
-	{/*
+	{
 		try
 		{
 			String query = "create table xyz_phoneNumber ( phone_number varchar(20) )";
@@ -132,12 +210,12 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 			}
 		}
 
-	*/}
+	}
 
 
-	/**
+	*//**
 	 * This test will assert that table deleted successfully.
-	 */
+	 *//*
 	@Test
 	public void testDropTableJDBC()
 	{
@@ -169,9 +247,9 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 		}
 	}
 
-	/**
+	*//**
 	 * This test will assert the execution of query.
-	 */
+	 *//*
 	@Test
 	public void testExecuteUpdateJDBC()
 	{
@@ -204,16 +282,16 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 		}
 	}
 
-	/**
+	*//**
 	 * This test will assert that all the objects are retrieved successfully.
-	 */
+	 *//*
 	@Test
 	public void testCaseRetriveAllObjectsJDBC()
 	{
 	  try
 	  {
 		  jdbcDAO.openSession(null);
-		  List list = jdbcDAO.retrieve("test_user");
+		  List list = jdbcDAO.retrieve("test_user",null,null,false);
 	  	 // jdbcDAO.closeSession();
 	  	  assertNotNull(list);
 
@@ -236,17 +314,20 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 		}
 	}
 
-	/**
+	*//**
 	 * This test will assert that the object with requested
 	 * column will be retrieved successfully.
-	 */
+	 *//*
 	@Test
 	public void testCaseRetriveObjectJDBC()
 	{
 	  try
 	  {
 		jdbcDAO.openSession(null);
-	    List<Object> list = jdbcDAO.retrieve("test_user","IDENTIFIER" , Long.valueOf(1));
+		QueryWhereClause queryWhereClause = new QueryWhereClause("test_user");
+		queryWhereClause.addCondition(new EqualClause("IDENTIFIER" , Long.valueOf(1)));
+	    List<Object> list = jdbcDAO.retrieve("test_user",null ,queryWhereClause,false);
+	    
 	 //   jdbcDAO.closeSession();
 	  	assertNotNull("No objects retrieved",list);
 		//assertTrue("No object retrieved ::",!list.isEmpty());
@@ -270,10 +351,10 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 	}
 
 
-	/**
+	*//**
 	 * This test will assert that requested columns of the objects are
 	 * retrieved successfully.
-	 */
+	 *//*
 	@Test
 	public void testCaseRetrieveObjectColumnsJDBC()
 	{
@@ -281,7 +362,7 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 	  {
 		String[] selectColumnName = {"IDENTIFIER","FIRST_NAME","LAST_NAME","EMAIL_ADDRESS"};
 		jdbcDAO.openSession(null);
-	    List<Object> list = jdbcDAO.retrieve("test_user", selectColumnName);
+	    List<Object> list = jdbcDAO.retrieve("test_user", selectColumnName,null,false);
 	  //  jdbcDAO.closeSession();
 
 	    assertNotNull("No object retrieved ::",list);
@@ -305,10 +386,10 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 		}
 	}
 
-	/**
+	*//**
 	 * This test will assert that only distinct rows
 	 * retrieved successfully.
-	 */
+	 *//*
 	@Test
 	public void testCaseRetrieveOnlyDistinctRowsJDBC()
 	{
@@ -316,7 +397,7 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 		  {
 			String[] selectColumnName = {"IDENTIFIER","FIRST_NAME","LAST_NAME","EMAIL_ADDRESS"};
 			jdbcDAO.openSession(null);
-		    List<Object> list = jdbcDAO.retrieve("test_user", selectColumnName,true);
+		    List<Object> list = jdbcDAO.retrieve("test_user", selectColumnName,null,true);
 		   // jdbcDAO.closeSession();
 
 		    assertNotNull("No object retrieved ::",list);
@@ -342,10 +423,10 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 	}
 
 
-	/**
+	*//**
 	 * This test will assert that objects retrieved successfully
 	 * when where clause holds in condition.
-	 */
+	 *//*
 	@Test
 	public void testRetriveInConditionJDBC()
 	{
@@ -361,7 +442,7 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 
 
 			jdbcDAO.openSession(null);
-			List<Object> list = jdbcDAO.retrieve(sourceObjectName, selectColumnName,queryWhereClause);
+			List<Object> list = jdbcDAO.retrieve(sourceObjectName, selectColumnName,queryWhereClause,false);
 			//jdbcDAO.closeSession();
 			assertNotNull("No value retrieved :",list);
 
@@ -385,10 +466,10 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 
 	}
 
-	/**
+	*//**
 	 * This test will assert that objects retrieved successfully
 	 * when where clause holds not null condition.
-	 */
+	 *//*
 	@Test
 	public void testRetriveIsNotNullConditionJDBC()
 	{
@@ -402,7 +483,7 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 			addCondition(new NotNullClause("LAST_NAME",sourceObjectName));
 
 			jdbcDAO.openSession(null);
-			List<Object> list = jdbcDAO.retrieve(sourceObjectName, selectColumnName,queryWhereClause);
+			List<Object> list = jdbcDAO.retrieve(sourceObjectName, selectColumnName,queryWhereClause,false);
 			//jdbcDAO.closeSession();
 
 			assertNotNull("No value retrieved :" + list);
@@ -427,10 +508,10 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 		}
 	}
 
-	/**
+	*//**
 	 * This test will assert that objects retrieved successfully
 	 * when where clause holds is null condition.
-	 */
+	 *//*
 	@Test
 	public void testRetriveIsNullConditionJDBC()
 	{
@@ -446,7 +527,7 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 
 			jdbcDAO.openSession(null);
 			List<Object> list = jdbcDAO.retrieve(sourceObjectName,
-					selectColumnName,queryWhereClause);
+					selectColumnName,queryWhereClause,false);
 			//jdbcDAO.closeSession();
 
 			assertNotNull("No object retrieved ::",list);
@@ -471,10 +552,10 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 
 	}
 
-	/**
+	*//**
 	 * This test will assert that objects retrieved successfully
 	 * when where clause holds is not equal condition.
-	 */
+	 *//*
 	@Test
 	public void testRetriveNotEqualConditionJDBC()
 	{
@@ -490,7 +571,7 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 					"NAIK",sourceObjectName));
 
 			jdbcDAO.openSession(null);
-			List<Object> list = jdbcDAO.retrieve(sourceObjectName, selectColumnName,queryWhereClause);
+			List<Object> list = jdbcDAO.retrieve(sourceObjectName, selectColumnName,queryWhereClause,false);
 			//jdbcDAO.closeSession();
 
 			assertNotNull("No object retrieved ::",list);
@@ -516,10 +597,10 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 	}
 
 
-	/**
+	*//**
 	 * This test will assert that objects retrieved successfully with given column value
 	 * Having equal (=)condition.
-	 */
+	 *//*
 	@Test
 	public void testRetriveEqualConditionJDBC()
 	{
@@ -532,7 +613,7 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 			queryWhereClause.addCondition(new EqualClause("LAST_NAME","NAIK",sourceObjectName));
 
 			jdbcDAO.openSession(null);
-			List<Object> list = jdbcDAO.retrieve(sourceObjectName, selectColumnName,queryWhereClause);
+			List<Object> list = jdbcDAO.retrieve(sourceObjectName, selectColumnName,queryWhereClause,false);
 			//jdbcDAO.closeSession();
 
 			assertNotNull("No object retrieved ::",list);
@@ -558,9 +639,9 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 	}
 
 
-	/**
+	*//**
 	 * This test will assert that date pattern retrieved successfully.
-	 */
+	 *//*
 	@Test
 	public void testDatePatternJDBC()
 	{
@@ -570,9 +651,9 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 
 	}
 
-	/**
+	*//**
 	 * This test will assert that time pattern retrieved successfully.
-	 */
+	 *//*
 	@Test
 	public void testTimePatternJDBC()
 	{
@@ -581,9 +662,9 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 
 	}
 
-	/**
+	*//**
 	 * This test will assert that date format function retrieved successfully.
-	 */
+	 *//*
 	@Test
 	public void testDateFormatFunctionJDBC()
 	{
@@ -593,9 +674,9 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 
 	}
 
-	/**
+	*//**
 	 * This test will assert that time format function retrieved successfully.
-	 */
+	 *//*
 	@Test
 	public void testTimeFormatFunctionJDBC()
 	{
@@ -605,9 +686,9 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 	}
 
 
-	/**
+	*//**
 	 * This test will assert that Date to string format function retrieved successfully.
-	 */
+	 *//*
 	@Test
 	public void testDateTostrFunctionJDBC()
 	{
@@ -617,9 +698,9 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 	}
 
 
-	/**
+	*//**
 	 * This test will assert that string to date function retrieved successfully.
-	 */
+	 *//*
 	@Test
 	public void testStrTodateFunctionJDBC()
 	{
@@ -628,9 +709,9 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 
 	}
 
-	/**
+	*//**
 	 * This test will assert that string to date function retrieved successfully.
-	 */
+	 *//*
 	@Test
 	public void testExecuteQueryJDBC()
 	{
@@ -670,10 +751,10 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 	}
 
 
-	/**
+	*//**
 	 * This test will create a complex retrieve query having multiple clause(IN,NOT NULL,IS NULL)
 	 * It will ensure that objects retrieved successfully.
-	 */
+	 *//*
 	@Test
 	public void testRetriveComplexQueryJDBC()
 	{
@@ -689,7 +770,7 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 			addCondition(new EqualClause("FIRST_NAME","naik",sourceObjectName));
 
 			jdbcDAO.openSession(null);
-			List<Object> list = jdbcDAO.retrieve(sourceObjectName, selectColumnName,queryWhereClause);
+			List<Object> list = jdbcDAO.retrieve(sourceObjectName, selectColumnName,queryWhereClause,false);
 			//jdbcDAO.closeSession();
 			assertNotNull("No data retrieved :",list);
 		//	assertTrue("No data retrieved :",!list.isEmpty());
@@ -712,9 +793,9 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 		}
 	}
 
-	/**
+	*//**
 	 * This test will assert the audit method implementation.
-	 */
+	 *//*
 	@Test
 	public void testAuditJDBC()
 	{
@@ -731,7 +812,7 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 
 	}
 
-/*
+
 	*//**
 	 * This test will delete method implementation.
 	 *//*
@@ -749,37 +830,20 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 			logger.fatal(exp.getLogMessage());
 		}
 
-	}*/
+	}
 
 
-	/**
-	 * This test will DisableRelatedObjects method implementation.
-	 */
-	/*@Test
-	public void testDisableRelatedObjectsJDBC()
-	{
-		try
-		{
-			jdbcDAO.disableRelatedObjects(null, null, null);
-		}
-		catch(ApplicationException exp)
-		{
-			assertTrue("Problem: exception should be thrown :",exp.getLogMessage().
-					contains("There is no implementation for this method"));
-			logger.fatal(exp.getLogMessage());
-		}
+	
 
-	}*/
-
-	/**
+	*//**
 	 * This test will insert method implementation.
-	 */
+	 *//*
 	@Test
 	public void testInsertJDBC()
 	{
 		try
 		{
-			jdbcDAO.insert(null, null, false, false);
+			jdbcDAO.insert(null, false);
 		}
 		catch(ApplicationException exp)
 		{
@@ -790,9 +854,9 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 
 	}
 
-	/**
+	*//**
 	 * This test will retrieveAttribute() method implementation.
-	 */
+	 *//*
 	@Test
 	public void testRetrieveAttributeJDBC()
 	{
@@ -810,9 +874,9 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 	}
 
 
-	/**
+	*//**
 	 * This test will Update() method implementation.
-	 */
+	 *//*
 	@Test
 	public void testUpdateJDBC()
 	{
@@ -829,15 +893,15 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 
 	}
 
-	/**
+	*//**
 	 * This test will retrieve() method implementation.
-	 */
+	 *//*
 	@Test
 	public void testRetrieveJDBC()
 	{
 		try
 		{
-			jdbcDAO.retrieve(null, Long.valueOf(0));
+			jdbcDAO.retrieveById(null, Long.valueOf(0));
 		}
 		catch(ApplicationException exp)
 		{
@@ -848,14 +912,14 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 
 	}
 
-	/**
+	*//**
 	 * This test will be called to insert default values in place of "##" column values.
-	 */
+	 *//*
 	@Test
 	public void testInsertHashedValues()
 	{
 		  try
-		  {/*
+		  {
 			  jdbcDAO.openSession(null);
 			  List<Object> columnValues = new ArrayList<Object>();
 			  columnValues.add(Long.valueOf(1));
@@ -865,7 +929,7 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 			  jdbcDAO.insertHashedValues("test_table_hashed", columnValues,null);
 			  jdbcDAO.commit();
 			//  jdbcDAO.closeSession();
-		  */}
+		  }
 		  catch(Exception exp)
 		  {
 			  exp.printStackTrace();
@@ -887,14 +951,14 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 			}
 	}
 
-	/**
+	*//**
 	 * This test will be called to insert default values in place of "##" column values.
-	 */
+	 *//*
 	@Test
 	public void testInsertHashedValuesGivenColumns()
 	{
 		  try
-		  {/*
+		  {
 			  jdbcDAO.openSession(null);
 			  List<String> columnNames = new ArrayList<String>();
 			  columnNames.add("IDENTIFIER");
@@ -910,7 +974,7 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 			  jdbcDAO.insertHashedValues("test_table_hashed", columnValues,columnNames);
 			  jdbcDAO.commit();
 			  jdbcDAO.closeSession();
-		  */}
+		  }
 		  catch(Exception exp)
 		  {
 			  exp.printStackTrace();
@@ -932,10 +996,10 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 			}
 	}
 
-	/**
+	*//**
 	 * This test will assert the creation of database parameters.
-	 */
-	/*@Test
+	 *//*
+	@Test
 	public void testDatabaseConnectionAndStmtAndResultSet()
 	{
 		DatabaseConnectionParams databaseConnectionParams = new DatabaseConnectionParams();
@@ -977,72 +1041,29 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 			}
 		}
 
-	}*/
+	}
 
-	/**
+	*//**
 	 * This test will assert the creation of database parameters.
-	 */
+	 *//*
 	@Test
 	public void testAllMethodsWithDefaultImplementation()
 	{
 		try
-		{/*
+		{
 		jdbcDAO.getSQLForLikeOperator(null, null);
 		jdbcDAO.getPrimitiveOperationProcessor();
 		jdbcDAO.getMaxBarcodeCol();
 		jdbcDAO.getMaxLabelCol();
 		jdbcDAO.executeAuditSql(null, null, null);
 		jdbcDAO.updateClob(null, null);
-		*/}
+		}
 		catch(Exception exp)
 		{
 			assertFalse("Problem executing default methods :",true);
 		}
 	}
 
-	/**
-	 * This test will assert the batch insert
-	 */
-	@Test
-	public void testBatchInsert()
-	{
-		try
-		{/*
-			jdbcDAO.openSession(null);
-			jdbcDAO.setBatchSize(2);
-			String insertStr1 = "insert into test_user " +
-					"(IDENTIFIER,EMAIL_ADDRESS,FIRST_NAME,LAST_NAME,ACTIVITY_STATUS)" +
-					"VALUES ("+100+",'john@per.co.in','JOHN','REBER','Active')";
 
-			jdbcDAO.addDMLToBatch(insertStr1);
-
-			insertStr1 = "insert into test_user " +
-					"(IDENTIFIER,EMAIL_ADDRESS,FIRST_NAME,LAST_NAME,ACTIVITY_STATUS)" +
-			"VALUES ("+101+",'kal@per.co.in','kalpana','thakur','Active')";
-
-			jdbcDAO.addDMLToBatch(insertStr1);
-			jdbcDAO.batchUpdate();
-			jdbcDAO.commit();
-			jdbcDAO.clearBatch();
-
-		*/}
-		catch(Exception exp)
-		{
-			assertFalse("Problem executing batch insert :",true);
-		}
-		finally
-		{
-			try
-			{
-				jdbcDAO.closeSession();
-			}
-			catch (DAOException e)
-			{
-				e.printStackTrace();
-			}
-		}
-	}
-
-
-
+*/
 }

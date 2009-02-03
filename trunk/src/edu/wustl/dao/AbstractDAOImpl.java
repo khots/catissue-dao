@@ -1,5 +1,7 @@
 package edu.wustl.dao;
 
+import java.util.List;
+
 import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.logger.Logger;
@@ -145,6 +147,22 @@ public abstract class AbstractDAOImpl implements DAO
 	}
 
 	/**
+	 * @see edu.wustl.common.dao.DAO#retrieveAttribute(java.lang.Class, java.lang.Long, java.lang.String)
+	 * @param objClass : Class name
+	 * @param identifier : Identifier of object
+	 * @param attributeName : Attribute Name to be fetched
+	 * @param columnName : where clause column field.
+	 * @return It will return the Attribute of the object having given identifier
+	 * @throws DAOException : DAOException
+	 */
+	public List retrieveAttribute(Class objClass, Long identifier,
+			String attributeName,String columnName) throws DAOException
+	{
+		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
+		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
+	}
+
+	/**
 	 * Audit.
 	 * @param obj The object to be audited.
 	 * @param oldObj old Object.
@@ -170,7 +188,6 @@ public abstract class AbstractDAOImpl implements DAO
 
 	}
 */
-	
 	/*	*//**
 	 *This method will be called to retrieved the current connection object.
 	 *@return Connection object
