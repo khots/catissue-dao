@@ -37,6 +37,13 @@ public interface DAO
 	 */
 	void update(Object obj, Object oldObj) throws DAOException;
 
+	/**
+	 * updates the object into the database.
+	 * @param obj Object to be updated in database
+	 * @throws DAOException : generic DAOException
+	 */
+	void update(Object obj) throws DAOException;
+
 
 	/**
 	 * Deletes the persistent object from the database.
