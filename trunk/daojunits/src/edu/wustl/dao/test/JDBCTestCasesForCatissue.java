@@ -66,7 +66,7 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 
 	/**
 	 * This test will assert the batch insert
-	 *//*
+	 */
 	@Test
 	public void testBatchInsert()
 	{
@@ -78,13 +78,13 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 					"(IDENTIFIER,EMAIL_ADDRESS,FIRST_NAME,LAST_NAME,ACTIVITY_STATUS)" +
 					"VALUES ("+104+",'john@per.co.in','JOHN','REBER','Active')";
 
-			jdbcDAO.insert(insertStr1,false);
+			jdbcDAO.insert(insertStr1);
 
 			insertStr1 = "insert into test_user " +
 					"(IDENTIFIER,EMAIL_ADDRESS,FIRST_NAME,LAST_NAME,ACTIVITY_STATUS)" +
 			"VALUES ("+105+",'kal@per.co.in','kalpana','thakur','Active')";
 
-			jdbcDAO.insert(insertStr1,false);
+			jdbcDAO.insert(insertStr1);
 
 			jdbcDAO.commit();
 
@@ -106,7 +106,7 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 				e.printStackTrace();
 			}
 		}
-	}*/
+	}
 
 	/**
 	 * This test will assert that all the objects are retrieved successfully.
