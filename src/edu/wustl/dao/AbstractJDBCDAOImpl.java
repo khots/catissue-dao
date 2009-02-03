@@ -537,6 +537,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		{
 			closePreparedStmt();
 			preparedStatement = (PreparedStatement) connection.prepareStatement(query);
+			return preparedStatement;
 		}
 		catch (SQLException sqlExp)
 		{
@@ -545,7 +546,6 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 			throw new DAOException(errorKey,sqlExp,"DatabaseConnectionParams.java :"+
 					DAOConstants.PRPD_STMT_ERROR);
 		}
-		return preparedStatement;
 	}
 
 	/**
