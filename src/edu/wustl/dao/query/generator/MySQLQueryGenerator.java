@@ -1,4 +1,7 @@
-package edu.wustl.dao.sqlformatter;
+package edu.wustl.dao.query.generator;
+
+import edu.wustl.dao.sqlformatter.AbstractSQLFormatter;
+import edu.wustl.dao.sqlformatter.ColumnValueBean;
 
 
 
@@ -6,14 +9,14 @@ package edu.wustl.dao.sqlformatter;
  * @author kalpana_thakur
  *
  */
-public class SQLFormatterMySQL extends AbstractSQLFormatter
+public class MySQLQueryGenerator extends AbstractSQLFormatter
 {
 
 
 	/**
 	 * @param tableName :
 	 */
-	public SQLFormatterMySQL(String tableName)
+	public MySQLQueryGenerator(String tableName)
 	{
 		super(tableName);
 	}

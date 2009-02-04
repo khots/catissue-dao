@@ -13,6 +13,7 @@ package edu.wustl.dao;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -29,6 +30,7 @@ import edu.wustl.dao.condition.EqualClause;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.DAOConstants;
 import edu.wustl.dao.util.DAOUtility;
+import edu.wustl.dao.util.NamedQueryParam;
 
 
 /**
@@ -64,7 +66,7 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 	{
 		logger.debug("Open the session");
 	    auditManager = getAuditManager(sessionDataBean);
-		session = connectionManager.currentSession();
+		session = connectionManager.getSession();
 	}
 
 	/**
@@ -290,10 +292,6 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		try
 		{
 			Object object = session.get(Class.forName(sourceObjectName), identifier);
-			//HibernateProxy hibernatProxy = (HibernateProxy) object;
-			//return (Object)hibernatProxy.getHibernateLazyInitializer().getImplementation();
-			//return HibernateMetaData.getProxyObjectImpl(object);
-			//session.evict(object);
 			return object;
 		}
 		catch (Exception exp)
@@ -332,24 +330,16 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 
 
 	/**
-	 * This method executes the named query and returns the results.
-	 * @param queryName : handle for named query.
-	 * @return result as list of Object
-	 */
-	public List executeNamedQuery(String queryName)
-	{
-		Query query=session.getNamedQuery(queryName);
-		return query.list();
-	}
-
-	/**
 	 * This method returns named query.
 	 * @param queryName : handle for named query.
-	 * @return Query named query
+	 * @param namedQueryParams : Map holding the parameter type and parameter value.
+	 * @return the list of data.
 	 */
-	public Query getNamedQuery(String queryName)
+	public List executeNamedQuery(String queryName,Map<String, NamedQueryParam> namedQueryParams)
 	{
-		return session.getNamedQuery(queryName);
+		Query query = session.getNamedQuery(queryName);
+		DAOUtility.substitutionParameterForQuery(query, namedQueryParams);
+		return query.list();
 	}
 
 	/**
@@ -473,46 +463,4 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 					DAOConstants.RETRIEVE_ERROR);
 		}
 	}
-
-
-
-	/**
-	 * @param excp : Exception Object.
-	 * @return : It will return the formated messages.
-	 * @throws DAOException :
-	 *//*
-	public String formatMessage(Exception excp) throws DAOException
-	{
-		logger.debug("Format error message");
-		String formatMessage = DAOConstants.TAILING_SPACES;
-		String appName = CommonServiceLocator.getInstance().getAppHome();
-		IDAOFactory daoFactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
-		JDBCDAO jdbcDAO = daoFactory.getJDBCDAO();
-		//HibernateMetaData.initHibernateMetaData(jdbcDAO.getConnectionManager().getConfiguration());
-		formatMessage = jdbcDAO.formatMessage(excp,getCleanConnection());
-		getConnectionManager().closeConnection();
-		return formatMessage;
-	}*/
-
-	/**
-	 * This method will be called to obtain clean session.
-	 * @return session object.
-	 *@throws DAOException :Generic DAOException.
-	 *//*
-	public Session getCleanSession() throws DAOException
-	{
-		logger.debug("Get clean session");
-		return connectionManager.getCleanSession();
-	}
-
-	*//**
-	 *This method will be called to close current connection.
-	 *@throws DAOException :Generic DAOException.
-	 *//*
-	public void closeCleanSession() throws DAOException
-	{
-		logger.debug("Close clean session");
-		connectionManager.closeCleanSession();
-	}
-*/
 }

@@ -163,55 +163,13 @@ public abstract class AbstractDAOImpl implements DAO
 	}
 
 	/**
-	 * Audit.
-	 * @param obj The object to be audited.
-	 * @param oldObj old Object.
-	 * @param sessionDataBean session Data.
-	 * @param isAuditable is Auditable.
-	 * @throws DAOException generic DAOException.
-	 *//*
-	public void audit(Object obj, Object oldObj,
-			SessionDataBean sessionDataBean, boolean isAuditable)
-			throws DAOException
+	 * updates the object into the database.
+	 * @param obj Object to be updated in database
+	 * @throws DAOException : generic DAOException
+	 */
+	public void update(Object obj) throws DAOException
 	{
-		logger.debug("Inside Audit method");
-		try
-		{
-			auditManager.compare(obj, (Auditable) oldObj, "UPDATE",isAuditable);
-		}
-		catch (AuditException auditExp)
-		{
-			ErrorKey errorKey = ErrorKey.getErrorKey("db.audit.error");
-			throw new DAOException(errorKey,auditExp,"AbstractDAOImpl.java :"+
-					DAOConstants.AUDIT_ERROR);
-		}
-
+		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
+		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
 	}
-*/
-	/*	*//**
-	 *This method will be called to retrieved the current connection object.
-	 *@return Connection object
-	 *@throws DAOException :Generic DAOException.
-	 *@deprecated
-	 *//*
-	public Connection getCleanConnection() throws DAOException
-	{
-		logger.debug("Get clean connection");
-		return 	connectionManager.getCleanConnection();
-	}
-
-	*//**
-	 *This method will be called to close current connection.
-	 *@throws DAOException :Generic DAOException.
-	 *@deprecated
-	 *//*
-	public void closeCleanConnection() throws DAOException
-	{
-		logger.debug("Close clean connection");
-		connectionManager.closeCleanConnection();
-	}
-	*/
-
-
-
 }

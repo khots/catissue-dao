@@ -7,11 +7,12 @@
 package edu.wustl.dao;
 
 import java.util.Collection;
-
-import org.hibernate.Query;
+import java.util.List;
+import java.util.Map;
 
 import edu.wustl.common.domain.AuditEventLog;
 import edu.wustl.dao.exception.DAOException;
+import edu.wustl.dao.util.NamedQueryParam;
 
 
 /** This interface defines methods which are specific to Hibernate operations .*/
@@ -27,21 +28,12 @@ public interface HibernateDAO extends DAO
 
 	/**
 	 * Obtain an instance of Query for a named query string defined in the mapping file.
-	 * This method executes named query and returns list of objects as result.
-	 * @param queryName handle to get named query.
-	 * @return list of objects.
-	 *@throws DAOException :Generic DAOException.
+	 * @param queryName : handle for named query.
+	 * @param namedQueryParams : Map holding the parameter type and parameter value.
+	 * @return the list of data.
+	 * @throws DAOException :Generic DAOException.
 	 */
-	Collection executeNamedQuery(String queryName)throws DAOException;
-
-	/**
-	 * Obtain an instance of Query for a named query string defined in the mapping file.
-	 * @param queryName handle to get named query.
-	 * @return Query named Query object.
-	 *@throws DAOException :Generic DAOException.
-	 */
-	Query getNamedQuery(String queryName)throws DAOException;
-
+	List executeNamedQuery(String queryName,Map<String, NamedQueryParam> namedQueryParams) throws DAOException;
 	/**
 	 * updates the persisted object into the database.
 	 * @param obj Object to be updated in database

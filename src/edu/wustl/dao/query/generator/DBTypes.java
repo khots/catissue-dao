@@ -1,4 +1,4 @@
-package edu.wustl.dao.sqlformatter;
+package edu.wustl.dao.query.generator;
 
 /**
  * <P>The class that defines the constants that are used to identify generic
@@ -7,13 +7,13 @@ package edu.wustl.dao.sqlformatter;
  * <p>
  * This class is never instantiated.
  */
- public final class Types
+ public final class DBTypes
  {
 
 	 /**
 	 * Private constructor.
 	 */
-	private Types()
+	private DBTypes()
 	{
 
 	}
@@ -172,5 +172,10 @@ package edu.wustl.dao.sqlformatter;
      */
     public static final  int STRING = 21;
 
+    /**
+     * The constant in the Java programming language.
+     * LONG
+     */
+    public static final int LONG = 22;
 
 }

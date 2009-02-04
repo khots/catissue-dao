@@ -39,16 +39,6 @@ public interface IConnectionManager
 	 * @throws DAOException :database exception.
 	 */
 	void closeConnection() throws DAOException;
-
-	/**
-	 * Create database connection having auto-commit mode as disabled.
-	 * Open a Session on the given connection.
-	 * mandatory to call commit to update the changes.
-	 * @return : the session
-	 * @throws DAOException :
-	 */
-	Session newSession() throws DAOException;
-
 	/**
 	 * End the session by releasing the JDBC connection and cleaning up.
 	 * @throws DAOException : database exception.
@@ -62,7 +52,7 @@ public interface IConnectionManager
 	 * @return : the session.
 	 * @throws DAOException : database exception.
 	 */
-	Session currentSession() throws DAOException;
+	Session getSession() throws DAOException;
 
 	/**
 	 * Set the application name.
@@ -126,33 +116,5 @@ public interface IConnectionManager
 	 * @throws DAOException : It will throw DAOException.
 	 */
 	 void rollback() throws DAOException;
-
-	 /**
-	 *This method will be called to retrieved the clean connection.
-	 *connections will be in auto-commit mode.
-	 *@return Connection object
-	 *@throws DAOException :Generic DAOException.
-	 */
-	 Connection getCleanConnection() throws DAOException;
-
-	 /**
-	 *Releases this Connection object's database and JDBC resources.
-	 *@throws DAOException :Generic DAOException.
-	 */
-	void closeCleanConnection() throws DAOException;
-
-	/**
-	 *End the session by releasing the JDBC connection and cleaning up.
-	 *@throws DAOException :Generic DAOException.
-	 */
-	void closeCleanSession() throws DAOException;
-
-	/**
-	 * Create database connection and open the new session on the given connection.
-	 * connections will be in auto-commit mode.
-	 * @return : clean session.
-	 * @throws DAOException :
-	 */
-	Session getCleanSession() throws DAOException;
 
 }

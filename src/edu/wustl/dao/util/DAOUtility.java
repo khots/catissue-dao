@@ -16,6 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -28,6 +29,7 @@ import edu.wustl.dao.HibernateDAO;
 import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.daofactory.DAOConfigFactory;
 import edu.wustl.dao.exception.DAOException;
+import edu.wustl.dao.query.generator.DBTypes;
 
 
 /**
@@ -211,7 +213,7 @@ public final class DAOUtility
 			dao = DAOConfigFactory.getInstance().
 			getDAOFactory(appName).getDAO();
 			dao.openSession(null);
-			Query query = (Query)((HibernateDAO)dao).getNamedQuery(queryName);
+			return((HibernateDAO)dao).executeNamedQuery(queryName,null);
 
 			/*if (values != null)
 			{
@@ -234,7 +236,6 @@ public final class DAOUtility
 
 				}
 			}*/
-			return query.list();
 		}
 		catch(HibernateException excp)
 		{
@@ -351,6 +352,42 @@ public final class DAOUtility
 		}
 		return isResultSetExists;
 	}
+
+	/**
+	 * @param query queryObject
+	 * @param namedQueryParams : Query parameters to set
+	 */
+	public static void substitutionParameterForQuery(Query query,
+		Map<String, NamedQueryParam> namedQueryParams)
+	{
+		if(namedQueryParams != null && !namedQueryParams.isEmpty())
+		{
+			for (int counter = 0; counter < namedQueryParams.size(); counter++)
+			{
+				NamedQueryParam queryParam = (NamedQueryParam) namedQueryParams
+						.get(counter + "");
+				int objectType = queryParam.getType();
+				if ( DBTypes.STRING == objectType)
+				{
+					query.setString(counter, queryParam.getValue() + "");
+				}
+				else if (DBTypes.INTEGER == objectType)
+				{
+					query.setInteger(counter, Integer.parseInt(queryParam.getValue() + ""));
+				}
+				else if (DBTypes.LONG == objectType)
+				{
+					query.setLong(counter, Long.parseLong(queryParam.getValue() + ""));
+				}
+				else if (DBTypes.BOOLEAN == objectType)
+				{
+					query.setBoolean(counter,
+							Boolean.parseBoolean(queryParam.getValue() + ""));
+				}
+			}
+		}
+	}
+
 
 
 }
