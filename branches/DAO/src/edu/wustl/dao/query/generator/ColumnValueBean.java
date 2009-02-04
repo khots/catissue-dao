@@ -1,4 +1,4 @@
-package edu.wustl.dao.sqlformatter;
+package edu.wustl.dao.query.generator;
 
 /**
  * @author kalpana_thakur

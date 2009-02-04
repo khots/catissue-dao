@@ -1,18 +1,20 @@
-package edu.wustl.dao.sqlformatter;
+package edu.wustl.dao.query.generator;
 
 import java.util.Collection;
+
+import edu.wustl.dao.sqlformatter.ColumnValueBean;
 
 /**
  * @author kalpana_thakur
  *
  */
-public interface SQLFormatter
+public interface QueryGenerator
 {
 	/**
 	 *@param columnValueBean :
 	 *@return SQLFormatter :
 	 */
-	SQLFormatter addColValBean(ColumnValueBean columnValueBean);
+	QueryGenerator addColValBean(ColumnValueBean columnValueBean);
 
 	/**
 	 *@return collection :

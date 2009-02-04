@@ -1,13 +1,16 @@
-package edu.wustl.dao.sqlformatter;
+package edu.wustl.dao.query.generator;
 
 import java.util.Collection;
 import java.util.HashSet;
+
+import edu.wustl.dao.sqlformatter.ColumnValueBean;
+import edu.wustl.dao.sqlformatter.SQLFormatter;
 
 /**
  * @author kalpana_thakur
  *
  */
-public abstract class AbstractSQLFormatter implements SQLFormatter
+public abstract class AbstractQueryGenerator implements SQLFormatter
 {
 
 
@@ -26,7 +29,7 @@ public abstract class AbstractSQLFormatter implements SQLFormatter
 	/**
 	 * @param tableName :
 	 */
-	public AbstractSQLFormatter(String tableName)
+	public AbstractQueryGenerator(String tableName)
 	{
 		this.tableName = tableName;
 	}
@@ -43,7 +46,7 @@ public abstract class AbstractSQLFormatter implements SQLFormatter
 	}
 
 	/**
-	 * @see edu.wustl.dao.sqlformatter.SQLFormatter#getInsertQuery(java.lang.String)
+	 * @see edu.wustl.dao.query.generator.QueryGenerator#getInsertQuery(java.lang.String)
 	 * @return :
 	 */
 	public String getInsertQuery()

@@ -1,18 +1,21 @@
-package edu.wustl.dao.sqlformatter;
+package edu.wustl.dao.query.generator;
+
+import edu.wustl.dao.sqlformatter.AbstractSQLFormatter;
+import edu.wustl.dao.sqlformatter.ColumnValueBean;
 
 
 /**
  * @author kalpana_thakur
  *
  */
-public class SQLFormatterOracle extends AbstractSQLFormatter
+public class OracleQueryGenerator extends AbstractSQLFormatter
 {
 
 
 	/**
 	 * @param tableName :
 	 */
-	public SQLFormatterOracle(String tableName)
+	public OracleQueryGenerator(String tableName)
 	{
 		super(tableName);
 	}
