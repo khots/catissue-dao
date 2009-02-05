@@ -14,7 +14,7 @@
 				<DatabaseType name = "MySQL"/>
 				<DefaultBatchSize value = "5"/>
 				<DataSource name = ""/>
-				<JDBCConnectionManager name = "edu.wustl.dao.connectionmanager.JDBCConnectionManager"/>
+				<JDBCConnectionManager name = "edu.wustl.dao.connectionmanager.ConnectionManager"/>
 				<DatePattern name = "%m-%d-%Y"/>
 				<TimePattern name = "%H:%i:%s"/>
 				<DateFormatFunction name ="DATE_FORMAT"/>
@@ -42,7 +42,7 @@
 				<DatabaseType name = "Oracle"/>
 				<DefaultBatchSize value = "5"/>
 				<DataSource name = ""/>
-				<JDBCConnectionManager name = "edu.wustl.dao.connectionmanager.JDBCConnectionManager"/>
+				<JDBCConnectionManager name = "edu.wustl.dao.connectionmanager.ConnectionManager"/>
 				<DatePattern name = "mm-dd-yyyy"/>
 				<TimePattern name = "hh-mi-ss"/>
 				<DateFormatFunction name ="TO_CHAR"/>
