@@ -78,15 +78,14 @@ public class DAOFactory implements IDAOFactory
 		XMLHelper.DEFAULT_DTD_RESOLVER;
 
 	/**
-	 * This member will store the default connectionManager instance.
+	 * This member will store the configuration instance.
 	 */
-	private IConnectionManager defaultConnectionManager;
+	private Configuration configuration;
 
 	/**
-	 * This member will store the JDBC connectionManager instance.
+	 * This member will store the sessionFactory instance.
 	 */
-	private IConnectionManager jdbcConnectionManager;
-
+	private SessionFactory sessionFactory;
 
 	/**
 	 * This will store the default setting for DAO factory(true / false).
@@ -118,8 +117,9 @@ public class DAOFactory implements IDAOFactory
 		try
 		{
 		   dao = (DAO)Class.forName(defaultDAOClassName).newInstance();
-		   dao.setConnectionManager(getDefaultConnectionManager());
-		   HibernateMetaData.initHibernateMetaData(getDefaultConnectionManager().getConfiguration());
+		   IConnectionManager connManager = getDefaultConnManager(sessionFactory,configuration);
+		   dao.setConnectionManager(connManager);
+		   HibernateMetaData.initHibernateMetaData(connManager.getConfiguration());
 
 		}
 		catch (Exception excp )
@@ -147,10 +147,11 @@ public class DAOFactory implements IDAOFactory
 		try
 		{
 			   jdbcDAO = (JDBCDAO) Class.forName(jdbcDAOClassName).newInstance();
-			   jdbcDAO.setConnectionManager(getJdbcConnectionManager());
+			   IConnectionManager connManager = getJDBCConnManager(sessionFactory,configuration);
+			   jdbcDAO.setConnectionManager(connManager);
 			   ((AbstractJDBCDAOImpl)jdbcDAO).setDatabaseProperties(databaseProperties);
 			   jdbcDAO.setBatchSize(databaseProperties.getDefaultBatchSize());
-			   HibernateMetaData.initHibernateMetaData(getJdbcConnectionManager().
+			   HibernateMetaData.initHibernateMetaData(connManager.
 					   getConfiguration());
 		}
 		catch (Exception excp )
@@ -174,9 +175,8 @@ public class DAOFactory implements IDAOFactory
 	{
 		try
 		{
-			Configuration configuration = setConfiguration(configurationFile);
-			SessionFactory sessionFactory = configuration.buildSessionFactory();
-			setConnectionManager(sessionFactory,configuration);
+			configuration = setConfiguration(configurationFile);
+			sessionFactory = configuration.buildSessionFactory();
 		}
 		catch (Exception exp)
 		{
@@ -190,36 +190,12 @@ public class DAOFactory implements IDAOFactory
 	}
 
 	/**
-	 * This method instantiate the Connection Manager.
-	 * It will read the concrete class for Connection Manager,
-	 * instantiate it and sets the application name ,session factory and configuration object to it.
-	 * @param sessionFactory session factory object
-	 * @param configuration configuration
-	 *@throws DAOException :Generic DAOException.
-	 */
-	private void setConnectionManager(SessionFactory sessionFactory,Configuration configuration)
-	throws DAOException
-	{
-		try
-		{
-			setDefaultConnManager(sessionFactory, configuration);
-			setJDBCConnManager(sessionFactory, configuration);
-		}
-		catch (Exception exp)
-		{
-			logger.error(exp.getMessage(),exp);
-			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,exp,"DAOFactory.java :"+
-					DAOConstants.CONN_MANAGER_INIT_ERR);
-
-		}
-	}
-	/**
 	 * @param sessionFactory :session factory object
 	 * @param configuration :configuration
 	 * @throws Exception : exception
+	 * @return IConnectionManager : connection manager.
 	 */
-	private void setDefaultConnManager(SessionFactory sessionFactory,
+	private IConnectionManager getDefaultConnManager(SessionFactory sessionFactory,
 			Configuration configuration) throws Exception
 	{
 		IConnectionManager connectionManager =
@@ -227,15 +203,19 @@ public class DAOFactory implements IDAOFactory
 		connectionManager.setApplicationName(applicationName);
 		connectionManager.setSessionFactory(sessionFactory);
 		connectionManager.setConfiguration(configuration);
-		setDefaultConnectionManager(connectionManager);
+
+		return connectionManager;
 	}
+
+
 
 	/**
 	 * @param sessionFactory  session factory object
 	 * @param configuration configuration
 	 * @throws Exception exception
+	 * @return IConnectionManager : connection manager.
 	 */
-	private void setJDBCConnManager(SessionFactory sessionFactory,
+	private IConnectionManager getJDBCConnManager(SessionFactory sessionFactory,
 			Configuration configuration) throws Exception
 	{
 		IConnectionManager connectionManager =
@@ -244,8 +224,7 @@ public class DAOFactory implements IDAOFactory
 		connectionManager.setDataSource(dataSource);
 		connectionManager.setSessionFactory(sessionFactory);
 		connectionManager.setConfiguration(configuration);
-		setJdbcConnectionManager(connectionManager);
-
+		return connectionManager;
 	}
 
 	 /**
@@ -380,23 +359,7 @@ public class DAOFactory implements IDAOFactory
 		this.configurationFile = configurationFile;
 	}
 
-	 /**
-	 * This will called to retrieve connectionManager object.
-	 * @return connectionManager
-	 */
-	private IConnectionManager getDefaultConnectionManager()
-	{
-		return defaultConnectionManager;
-	}
-
-	/**
-	 * This will called to set connectionManager object.
-	 * @param connectionManager :connectionManager
-	 */
-	private void setDefaultConnectionManager(IConnectionManager connectionManager)
-	{
-		this.defaultConnectionManager = connectionManager;
-	}
+	
 
 	/**
 	 * @return This will return true if DAO factory is default.
@@ -451,23 +414,7 @@ public class DAOFactory implements IDAOFactory
 	{
 		this.dataSource = dataSource;
 	}
-
-	/**
-	 * @return :
-	 */
-	public IConnectionManager getJdbcConnectionManager()
-	{
-		return jdbcConnectionManager;
-	}
-
-	/**
-	 * @param jdbcConnectionManager :
-	 */
-	public void setJdbcConnectionManager(IConnectionManager jdbcConnectionManager)
-	{
-		this.jdbcConnectionManager = jdbcConnectionManager;
-	}
-
+	
 	/**
 	  * This method will be called to set all database properties.
 	  * @param databaseProperties :database properties.
