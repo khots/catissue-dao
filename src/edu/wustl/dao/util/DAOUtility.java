@@ -272,20 +272,23 @@ public final class DAOUtility
 		List list = new ArrayList();
 		while (resultSet.next())
 		{
-			updateList(resultSet,list,columnCount,metaData);
+			List objectDataList = new ArrayList();
+			updateList(resultSet,objectDataList,columnCount,metaData);
+			list.add(objectDataList);
 		}
+
 		return list;
 	}
 
 	/**
 	 * This method will read the resultSet and update the list.
-	 * @param list :list of data
+	 * @param objectDataList :list of data
 	 * @param columnCount : number of columns
 	 * @param metaData : meta data
 	 * @param resultSet : resultSet
 	 * @throws SQLException : exception
 	 */
-	private static void updateList(ResultSet resultSet,List list,
+	private static void updateList(ResultSet resultSet,List objectDataList,
 			int columnCount,ResultSetMetaData metaData) throws SQLException
 	{
 		for (int i = 1; i <= columnCount; i++)
@@ -317,13 +320,12 @@ public final class DAOUtility
 			}
 			if (retObj == null)
 			{
-				list.add("");
+				objectDataList.add("");
 			}
 			else
 			{
-				list.add(retObj);
+				objectDataList.add(retObj);
 			}
-			logger.debug("list size "+list.size());
 		}
 	}
 	/**
