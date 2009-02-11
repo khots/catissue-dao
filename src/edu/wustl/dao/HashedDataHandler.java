@@ -145,6 +145,10 @@ public class HashedDataHandler
 		{
 			Object obj = columnValues.get(i);
 			int index = i;index++;
+			if(isTimeStampColumn(metaData,stmt,index,obj))
+			{
+				continue;
+			}
 			if(isDateColumn(metaData,index))
 			{
 				setDateColumns(stmt, index,obj);
@@ -155,10 +159,6 @@ public class HashedDataHandler
 				setTinyIntColumns(stmt, index, obj);
 				continue;
 			}
-			/*if(isTimeStampColumn(stmt,i,obj))
-			{
-				continue;
-			}*/
 			if(isNumberColumn(metaData,index))
 			{
 				setNumberColumns(stmt, index, obj);
@@ -244,17 +244,22 @@ public class HashedDataHandler
 	 * @param stmt :PreparedStatement
 	 * @param index :
 	 * @param obj :
+	 * @param metaData :
 	 * @return return true if column type is timeStamp.
 	 * @throws SQLException SQLException
 	 */
-	protected boolean isTimeStampColumn(PreparedStatement stmt, int index,Object obj) throws SQLException
+	protected boolean isTimeStampColumn(ResultSetMetaData metaData,
+			PreparedStatement stmt, int index,Object obj) throws SQLException
 	{
 		boolean isTimeStampColumn = false;
-		Timestamp date = isColumnValueDate(obj);
-		if (date != null)
+		if(obj instanceof Timestamp)
 		{
-			stmt.setObject(index , date);
-			isTimeStampColumn = true;
+			Timestamp date = isColumnValueDate(obj);
+			if (date != null)
+			{
+				stmt.setObject(index , date);
+				isTimeStampColumn = true;
+			}
 		}
 		return isTimeStampColumn;
 	}
@@ -323,7 +328,7 @@ public class HashedDataHandler
 		Timestamp timestamp = null;
 		try
 		{
-			DateFormat formatter = new SimpleDateFormat("MM-dd-yyyy",Locale.getDefault());
+			DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS",Locale.getDefault());
 			formatter.setLenient(false);
 			java.util.Date date;
 			date = formatter.parse(obj.toString());

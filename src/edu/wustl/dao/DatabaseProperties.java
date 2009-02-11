@@ -53,7 +53,7 @@ public class DatabaseProperties
     /**
      * Query executor name.
      */
-	private String queryExecutorName;
+	private String queryGeneratorName;
 
 	/**
 	 * This method will be called to get the database name.
@@ -87,9 +87,9 @@ public class DatabaseProperties
 	 * This method will be called to get the query executor name.
 	 * @return query executor name.
 	 */
-	public String getQueryExecutorName()
+	public String getQueryGeneratorName()
 	{
-		return queryExecutorName;
+		return queryGeneratorName;
 	}
 
 	/**
@@ -103,11 +103,11 @@ public class DatabaseProperties
 
 	/**
 	 * This method will be called to set the query executor name.
-	 * @param queryExecutorName query executor name.
+	 * @param queryGeneratorName query generator name.
 	 */
-	public void setQueryExecutorName(String queryExecutorName)
+	public void setQueryGeneratorName(String queryGeneratorName)
 	{
-		this.queryExecutorName = queryExecutorName;
+		this.queryGeneratorName = queryGeneratorName;
 	}
 
 	/**

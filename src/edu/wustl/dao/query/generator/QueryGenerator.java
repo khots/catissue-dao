@@ -1,8 +1,5 @@
 package edu.wustl.dao.query.generator;
 
-import java.util.Collection;
-
-import edu.wustl.dao.sqlformatter.ColumnValueBean;
 
 /**
  * @author kalpana_thakur
@@ -10,16 +7,6 @@ import edu.wustl.dao.sqlformatter.ColumnValueBean;
  */
 public interface QueryGenerator
 {
-	/**
-	 *@param columnValueBean :
-	 *@return SQLFormatter :
-	 */
-	QueryGenerator addColValBean(ColumnValueBean columnValueBean);
-
-	/**
-	 *@return collection :
-	 */
-	Collection<ColumnValueBean> getColValBeans();
 
 	/**
 	 * @return :
@@ -32,8 +19,8 @@ public interface QueryGenerator
 	String getUpdateQuery();
 
 	/**
-	 * @return tableName :
+	 * @param queryData queryData.
 	 */
-	String getTableName();
+	void setQueryData(QueryData queryData);
 
 }

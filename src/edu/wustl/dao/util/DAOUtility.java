@@ -272,9 +272,7 @@ public final class DAOUtility
 		List list = new ArrayList();
 		while (resultSet.next())
 		{
-			List objectDataList = new ArrayList();
-			updateList(resultSet,objectDataList,columnCount,metaData);
-			list.add(objectDataList);
+			updateList(resultSet,list,columnCount,metaData);
 		}
 
 		return list;
@@ -282,15 +280,16 @@ public final class DAOUtility
 
 	/**
 	 * This method will read the resultSet and update the list.
-	 * @param objectDataList :list of data
+	 * @param list :list of data
 	 * @param columnCount : number of columns
 	 * @param metaData : meta data
 	 * @param resultSet : resultSet
 	 * @throws SQLException : exception
 	 */
-	private static void updateList(ResultSet resultSet,List objectDataList,
+	private static void updateList(ResultSet resultSet,List list,
 			int columnCount,ResultSetMetaData metaData) throws SQLException
 	{
+		List rowDataList = new ArrayList();
 		for (int i = 1; i <= columnCount; i++)
 		{
 			Object retObj;
@@ -320,13 +319,14 @@ public final class DAOUtility
 			}
 			if (retObj == null)
 			{
-				objectDataList.add("");
+				rowDataList.add("");
 			}
 			else
 			{
-				objectDataList.add(retObj);
+				rowDataList.add(retObj);
 			}
 		}
+		list.add(rowDataList);
 	}
 	/**
 	 * Checks result set.

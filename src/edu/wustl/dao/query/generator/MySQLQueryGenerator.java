@@ -1,49 +1,37 @@
 package edu.wustl.dao.query.generator;
 
-import edu.wustl.dao.sqlformatter.AbstractSQLFormatter;
-import edu.wustl.dao.sqlformatter.ColumnValueBean;
-
-
-
 /**
  * @author kalpana_thakur
  *
  */
-public class MySQLQueryGenerator extends AbstractSQLFormatter
+public class MySQLQueryGenerator extends AbstractQueryGenerator
 {
 
 
 	/**
-	 * @param tableName :
-	 */
-	public MySQLQueryGenerator(String tableName)
-	{
-		super(tableName);
-	}
-
-	/**
 	 * @param colValBean :
-	 * @param valuePart :
-	 */
-	protected void appendColumnValue(ColumnValueBean colValBean,StringBuffer valuePart)
-	{/*
+	 * @return object
+	  */
+	protected Object fetchColumnValue(ColumnValueBean colValBean)
+	{
 
+		Object value;
 		switch(colValBean.getColumnType())
 		{
-			case Types.BIGINT :
-			case Types.BIT :
-			case Types.FLOAT :
-			case Types.TINYINT :
-				appendNumericValue(colValBean.getColumnValue(),valuePart);
+			case DBTypes.BIGINT :
+			case DBTypes.BIT :
+			case DBTypes.FLOAT :
+			case DBTypes.TINYINT :
+				value = colValBean.getColumnValue();
 			break;
 
 			default :
-				appendStringValue(colValBean.getColumnValue(),valuePart);
+				value= "'"+colValBean.getColumnValue()+"'";
 			break;
 
 		}
+		return value;
 
-	*/}
-
+	}
 
 }
