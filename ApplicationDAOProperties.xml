@@ -22,7 +22,7 @@
 				<DateToStrFunction name = "TO_CHAR"/>
 				<StrTodateFunction name = "STR_TO_DATE"/>
 				<ExceptionFormater name = "edu.wustl.dao.formatmessage.MysqlExceptionFormatter"/>
-				<QueryExecutor name = "edu.wustl.query.executor.MysqlQueryExecutor"/>
+				<QueryGenerator name = "edu.wustl.dao.query.generator.MySQLQueryGenerator"/>
 			</JDBCDAO>
 			
 	
@@ -50,7 +50,7 @@
 				<DateToStrFunction name = "TO_CHAR"/>
 				<StrTodateFunction name = "TO_DATE"/>
 				<ExceptionFormater name = "edu.wustl.dao.formatmessage.OracleExceptionFormatter"/>
-				<QueryExecutor name = "edu.wustl.query.executor.OracleQueryExecutor"/>
+				<QueryGenerator name = "edu.wustl.dao.query.generator.OracleQueryGenerator"/>
 				
 			</JDBCDAO>
 			
