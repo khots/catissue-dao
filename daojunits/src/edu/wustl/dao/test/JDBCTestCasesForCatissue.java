@@ -1,8 +1,11 @@
 package edu.wustl.dao.test;
 
+import java.sql.ResultSet;
 import java.util.List;
 
 import org.junit.Test;
+
+import sun.reflect.ReflectionFactory.GetReflectionFactoryAction;
 
 import edu.wustl.common.exception.ApplicationException;
 import edu.wustl.common.util.PagenatedResultData;
@@ -76,13 +79,13 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 			jdbcDAO.setBatchSize(1);
 			String insertStr1 = "insert into test_user " +
 					"(IDENTIFIER,EMAIL_ADDRESS,FIRST_NAME,LAST_NAME,ACTIVITY_STATUS)" +
-					"VALUES ("+104+",'john@per.co.in','JOHN','REBER','Active')";
+					"VALUES ("+1104+",'john@per.co.in','JOHN','REBER','Active')";
 
 			jdbcDAO.insert(insertStr1);
 
 			insertStr1 = "insert into test_user " +
 					"(IDENTIFIER,EMAIL_ADDRESS,FIRST_NAME,LAST_NAME,ACTIVITY_STATUS)" +
-			"VALUES ("+105+",'kal@per.co.in','kalpana','thakur','Active')";
+			"VALUES ("+1105+",'kal@per.co.in','kalpana','thakur','Active')";
 
 			jdbcDAO.insert(insertStr1);
 
@@ -132,6 +135,61 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 	  }
 	  finally
 		{
+			try
+			{
+				jdbcDAO.closeSession();
+			}
+			catch (DAOException e)
+			{
+
+				e.printStackTrace();
+			}
+		}
+	}
+	@Test
+	public void testCaseRetrieveRS()
+	{
+		try
+		{
+			 jdbcDAO.openSession(null);
+			 String sql = "select count(*) from test_user";
+			 ResultSet rs = jdbcDAO.getQueryResultSet(sql);
+			 
+			 while(rs.next())
+			 {
+				 System.out.println("rs.getInt(1)  : 1:"+rs.getInt(1) );
+			 }
+			 String insertStr1 = "insert into test_user " +
+				"(IDENTIFIER,EMAIL_ADDRESS,FIRST_NAME,LAST_NAME,ACTIVITY_STATUS)" +
+				"VALUES ("+1204+",'john@per.co.in','JOHN','REBER','Active')";
+
+			 jdbcDAO.insert(insertStr1);
+			 jdbcDAO.commit();
+			 
+			 rs = jdbcDAO.getQueryResultSet(sql);
+			 
+			 while(rs.next())
+			 {
+				 System.out.println("rs.getInt(1)  :2:"+rs.getInt(1) );
+			 }
+			 
+			 tempInsert();
+			 
+			 rs = jdbcDAO.getQueryResultSet(sql);
+			 
+			 while(rs.next())
+			 {
+				 System.out.println("rs.getInt(1)  :3 :"+rs.getInt(1) );
+			 }
+			 
+			 fetch(sql);
+		}
+		catch(Exception exp)
+		{
+			exp.printStackTrace();
+		}
+		finally
+		{
 			try 
 			{
 				jdbcDAO.closeSession();
@@ -143,6 +201,73 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 			}
 		}
 	}
+	
+	void tempInsert()
+	{
+		JDBCDAO jdbcDAO= null;
+
+		try
+		{
+
+		 jdbcDAO = daoConfigFactory.getInstance().getDAOFactory("caTissuecore").getJDBCDAO();
+		 jdbcDAO.openSession(null);
+		 String insertStr1 = "insert into test_user " +
+			"(IDENTIFIER,EMAIL_ADDRESS,FIRST_NAME,LAST_NAME,ACTIVITY_STATUS)" +
+			"VALUES ("+1304+",'john@per.co.in','JOHN','REBER','Active')";
+		 
+		 jdbcDAO.insert(insertStr1);
+		 jdbcDAO.commit();
+		
+		}
+		catch(Exception exp)
+		{
+			exp.printStackTrace();
+		}
+		finally
+		{
+			try 
+			{
+				jdbcDAO.closeSession();
+			} 
+			catch (DAOException e)
+			{
+					e.printStackTrace();
+			}
+		}
+	}
+	 void fetch(String sql)
+	 {
+		 JDBCDAO jdbcDAO= null;
+
+			try
+			{
+
+			 jdbcDAO = daoConfigFactory.getInstance().getDAOFactory("caTissuecore").getJDBCDAO();
+			 jdbcDAO.openSession(null);
+
+			 ResultSet rs = jdbcDAO.getQueryResultSet(sql);
+			 
+			 while(rs.next())
+			 {
+				 System.out.println("rs.getInt(1)  :4 :"+rs.getInt(1) );
+			 }
+			}
+			catch(Exception exp)
+			{
+				exp.printStackTrace();
+			}
+			finally
+			{
+				try 
+				{
+					jdbcDAO.closeSession();
+				} 
+				catch (DAOException e)
+				{
+						e.printStackTrace();
+				}
+			}
+	 }
 
 
 /*	*//**
