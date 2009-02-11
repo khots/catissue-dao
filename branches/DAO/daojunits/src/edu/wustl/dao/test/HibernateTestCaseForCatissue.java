@@ -183,8 +183,8 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 		  user.setEmailAddress("sri.adiga@persistent.co.in");
 
 		  dao.openSession(null);
-		  	  dao.update(user,null);
-		  	  dao.commit();
+		  dao.update(user);
+		  dao.commit();
 		//  dao.closeSession();
 		}
 		catch(Exception exp)
