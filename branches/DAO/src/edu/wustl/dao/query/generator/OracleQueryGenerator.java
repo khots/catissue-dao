@@ -1,62 +1,43 @@
 package edu.wustl.dao.query.generator;
 
-import edu.wustl.dao.sqlformatter.AbstractSQLFormatter;
-import edu.wustl.dao.sqlformatter.ColumnValueBean;
-
-
 /**
  * @author kalpana_thakur
  *
  */
-public class OracleQueryGenerator extends AbstractSQLFormatter
+public class OracleQueryGenerator extends AbstractQueryGenerator
 {
-
-
-	/**
-	 * @param tableName :
-	 */
-	public OracleQueryGenerator(String tableName)
+/*
+	*//**
+	 * @param queryData : queryData
+	 *//*
+	public OracleQueryGenerator(QueryData queryData)
 	{
-		super(tableName);
-	}
-
+		super(queryData);
+	}*/
 	/**
 	 * @param colValBean :
-	 * @param valuePart :
-	 */
-	protected void appendColumnValue(ColumnValueBean colValBean,StringBuffer valuePart)
-	{/*
-
+	 * @return object
+	  */
+	protected Object fetchColumnValue(ColumnValueBean colValBean)
+	{
+		Object value;
 		switch(colValBean.getColumnType())
 		{
-			case Types.DATE :
-				appendDateValue(colValBean.getColumnValue(), valuePart);
+			case DBTypes.DATE :
+			    value = "to_date ( '"+colValBean.getColumnValue()+"','yyyy-mm-dd')";
 				break;
 
-			case Types.TIMESTAMP :
-				break;
-
-			case Types.NUMBER :
-			case Types.INTEGER :
-				appendNumericValue(colValBean.getColumnValue(),valuePart);
+			case DBTypes.NUMBER :
+			case DBTypes.INTEGER :
+				value = colValBean.getColumnValue();
 				break ;
 
 			default :
-				appendStringValue(colValBean.getColumnValue(),valuePart);
+				value = "'"+colValBean.getColumnValue()+"'";
 				break;
 
 		}
-
-	*/}
-
-	/**
-
-	 * @param colValue :
-	 * @param valuePart :
-	 */
-	private void appendDateValue(Object colValue,StringBuffer valuePart)
-	{
-		valuePart.append("to_date ( '").append(colValue).append("','yyyy-mm-dd')");
+		return value;
 	}
 
 }

@@ -21,6 +21,8 @@ import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.condition.EqualClause;
 import edu.wustl.dao.exception.DAOException;
+import edu.wustl.dao.query.generator.QueryData;
+import edu.wustl.dao.query.generator.QueryGenerator;
 import edu.wustl.dao.util.DAOConstants;
 import edu.wustl.dao.util.DAOUtility;
 import edu.wustl.security.exception.SMException;
@@ -99,6 +101,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		try
 		{
 			connectionManager.closeConnection();
+			batchStatement.close();
 			batchStatement = null;
 			closeConnectionParams();
 		}
@@ -119,6 +122,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 */
 	public void commit() throws DAOException
 	{
+		logger.debug("Session commit");
 		try
 		{
 			if(batchCounter != 0 )
@@ -214,11 +218,11 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		logger.debug("Clear the batch");
 		try
 		{
-			batchCounter = 0;
-			if(batchStatement != null)
+			if(batchStatement != null && batchCounter != 0)
 			{
 				batchStatement.clearBatch();
 			}
+			batchCounter = 0;
 		}
 		catch (SQLException exp)
 		{
@@ -232,6 +236,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * @param sql typically this is a static SQL INSERT or
      * UPDATE statement
 	 * @throws DAOException : Generic database exception.
+	 * @deprecated Avoid using this method.
 	 */
 	public void insert(String sql)
 			throws DAOException
@@ -241,7 +246,6 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		addSQLToBatch(sql);
 
 	}
-
 	/**
 	 * This method will be called to validate batch query.
 	 * @param sql : This is a static SQL INSERT or
@@ -256,7 +260,59 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 			throw new DAOException(errorKey,null,"AbstractJDBCDAOImpl.java :");
 		}
 	}
+	/**
+	 * Adds the given SQL command to the current list of commands for
+     * batchStatement object.
+	 * @param queryData typically this is a static SQL INSERT or
+     * UPDATE statement
+	 * @throws DAOException : Generic database exception.
+	 */
+	public void insert(QueryData queryData)
+			throws DAOException
+	{
+		logger.debug("Add update sql to batch");
+		QueryGenerator queryGenerator = getQueryGenerator(queryData);
+		addSQLToBatch(queryGenerator.getInsertQuery());
+	}
 
+	/**
+	 * Adds the given SQL command to the current list of commands for
+     * batchStatement object.
+	 * @param queryData typically this is a static SQL INSERT or
+     * UPDATE statement
+	 * @throws DAOException : Generic database exception.
+	 */
+	public void update(QueryData queryData)
+			throws DAOException
+	{
+		logger.debug("Add update sql to batch");
+		QueryGenerator queryGenerator = getQueryGenerator(queryData);
+		addSQLToBatch(queryGenerator.getUpdateQuery());
+	}
+
+	/**
+	 * Get the object of Query generator.
+	 * @param queryData typically this is a static SQL INSERT or
+     * UPDATE statement
+	 * @return QueryGenerator
+	 * @throws DAOException :database exception.
+	 */
+	private QueryGenerator getQueryGenerator(QueryData queryData) throws DAOException
+	{
+		try
+		{
+			Class generatorClass = Class.forName(databaseProperties.getQueryGeneratorName());
+			QueryGenerator queryGenerator =  (QueryGenerator)generatorClass.newInstance();
+			queryGenerator.setQueryData(queryData);
+			return queryGenerator;
+		}
+		catch (Exception exp)
+		{
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
+			throw new DAOException(errorKey,exp,"AbstractJDBCDAOImpl.java :"+
+				DAOConstants.UPDATE_OBJ_ERROR);
+		}
+	}
 	/**
 	 * Retrieves the records for class name in sourceObjectName according to
 	 * field values passed in the passed session.

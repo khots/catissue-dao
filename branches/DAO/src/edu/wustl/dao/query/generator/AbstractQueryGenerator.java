@@ -1,147 +1,116 @@
 package edu.wustl.dao.query.generator;
 
-import java.util.Collection;
-import java.util.HashSet;
+import java.util.Iterator;
 
-import edu.wustl.dao.sqlformatter.ColumnValueBean;
-import edu.wustl.dao.sqlformatter.SQLFormatter;
+import edu.wustl.dao.util.DAOConstants;
 
 /**
  * @author kalpana_thakur
  *
  */
-public abstract class AbstractQueryGenerator implements SQLFormatter
+public abstract class AbstractQueryGenerator implements QueryGenerator
 {
 
 
 	/**
-	 *
+	 * QueryData.
 	 */
-	protected Collection<ColumnValueBean> colValBeanColl
-	= new HashSet<ColumnValueBean>();
-
+	protected QueryData queryData;
 
 	/**
-	 *
-	 */
-	protected String tableName;
-
-	/**
-	 * @param tableName :
-	 */
-	public AbstractQueryGenerator(String tableName)
+	 * @param queryData : queryData
+	 *//*
+	public AbstractQueryGenerator(QueryData queryData)
 	{
-		this.tableName = tableName;
-	}
-
-
-	/**
-	 * @param columnValueBean :
-	 * @return SQLFormatter :
-	 */
-	public SQLFormatter addColValBean(ColumnValueBean columnValueBean)
-	{
-		colValBeanColl.add(columnValueBean);
-		return this;
-	}
+		this.queryData = queryData;
+	}*/
 
 	/**
 	 * @see edu.wustl.dao.query.generator.QueryGenerator#getInsertQuery(java.lang.String)
 	 * @return :
 	 */
 	public String getInsertQuery()
-	{/*
+	{
 
-		boolean isColumnMoreThnOne = false;
 		StringBuffer insertSql = new StringBuffer(DAOConstants.TAILING_SPACES);
 		StringBuffer valuePart = new StringBuffer(DAOConstants.TAILING_SPACES);
-		insertSql.append("insert into").append(DAOConstants.TAILING_SPACES).append(tableName).append(" (");
+		insertSql.append("insert into").append(DAOConstants.TAILING_SPACES).
+		append(queryData.getTableName()).append(" (");
 		valuePart.append("values (");
-		Iterator<ColumnValueBean> colValBeanItr =  colValBeanColl.iterator();
+		Iterator<ColumnValueBean> colValBeanItr = queryData.getColumnValueBeans().iterator();
 		while(colValBeanItr.hasNext())
 		{
 			ColumnValueBean colValBean = colValBeanItr.next();
-			insertSql.append(colValBean.getColumnName()).append(DAOConstants.SPLIT_OPERATOR);
-
-			if(isColumnMoreThnOne)
+			insertSql.append(colValBean.getColumnName());
+			valuePart.append(fetchColumnValue(colValBean));
+			if(colValBeanItr.hasNext())
 			{
+				insertSql.append(DAOConstants.SPLIT_OPERATOR);
 				valuePart.append(DAOConstants.SPLIT_OPERATOR);
-				isColumnMoreThnOne = true;
 			}
-			appendColumnValue(colValBean,valuePart);
+
 		}
 		insertSql.append(" )");
 		valuePart.append(" )");
 		insertSql.append(valuePart.toString());
 
 		return insertSql.toString();
-	*/
-		return null;
 	}
 
 	/**
 	 * @param colValBean :
-	 * @param valuePart :
+	 * @return Object :
 	 */
-	protected abstract void appendColumnValue(ColumnValueBean colValBean,StringBuffer valuePart);
-
+	protected abstract Object fetchColumnValue(ColumnValueBean colValBean);
 
 	/**
-	 * @return :
+	 * @return update query.
 	 */
 	public String getUpdateQuery()
 	{
+		StringBuffer updateSql = new StringBuffer(DAOConstants.TAILING_SPACES);
+		updateSql.append("update").append(DAOConstants.TAILING_SPACES).append(queryData.getTableName()).
+		append(DAOConstants.TAILING_SPACES).append("set").append(DAOConstants.TAILING_SPACES);
 
-			return "";
+		Iterator<ColumnValueBean> colValBeanItr = queryData.getColumnValueBeans().iterator();
+		while(colValBeanItr.hasNext())
+		{
+			ColumnValueBean colValBean = colValBeanItr.next();
+			updateSql.append(colValBean.getColumnName()).append(DAOConstants.EQUAL)
+			.append(fetchColumnValue(colValBean));
+			if(colValBeanItr.hasNext())
+			{
+				updateSql.append(DAOConstants.SPLIT_OPERATOR);
+			}
+		}
+		updateSql.append(queryData.getQueryWhereClause().toWhereClause());
+		return updateSql.toString();
 	}
+
 
 	/**
-
-	 * @param colValue :
-	 * @param valuePart :
+	 * @param queryData : queryData
 	 */
-	protected void appendStringValue(Object colValue,StringBuffer valuePart)
+	public void setQueryData(QueryData queryData)
 	{
-		valuePart.append("' ").append(colValue).append("' ");
-
+		this.queryData = queryData;
 	}
 
-	/**
-
-	 * @param colValue :
-	 * @param valuePart :
-	 */
-	protected void appendNumericValue(Object colValue,StringBuffer valuePart)
+	/*public static void main(String[] args)
 	{
-		valuePart.append(colValue);
+		QueryData queryData = new QueryData();
+		queryData.setTableName("Temp");
 
-	}
+		QueryWhereClause queryWhereClause = new QueryWhereClause("Temp");
+		queryWhereClause.addCondition(new EqualClause("identifier",1));
 
-	/**
-	 * @return :
-	 */
-	public String getTableName()
-	{
-		return tableName;
-	}
-
-	/**
-	 * @param tableName :
-	 */
-
-	public void setTableName(String tableName)
-	{
-		this.tableName = tableName;
-	}
-
-	/**
-	 *@return collection :
-	 */
-	public Collection<ColumnValueBean> getColValBeans()
-	{
-		return colValBeanColl;
-	}
-
-
+		queryData.setQueryWhereClause(queryWhereClause);
+		queryData.addColValBean(new ColumnValueBean("name","kt",DBTypes.STRING)).
+		addColValBean(new ColumnValueBean("date","5feb09",DBTypes.DATE));
+		AbstractQueryGenerator query = new OracleQueryGenerator();
+		query.setQueryData(queryData);
+		System.out.println("-----"+query.getUpdateQuery());
+		System.out.println("-----"+query.getInsertQuery());
+	}*/
 
 }

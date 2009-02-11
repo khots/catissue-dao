@@ -54,7 +54,7 @@ public class ApplicationDAOPropertiesParser
 	 */
 	private String databaseType,dataSource,defaultBatchSize,datePattern,timePattern,
 	dateFormatFunction,timeFormatFunction,dateTostrFunction,strTodateFunction,
-	exceptionFormatterName,queryExecutorName;
+	exceptionFormatterName,queryGeneratorName;
 
 	/**
 	 * This method gets DAO Factory Map.
@@ -172,7 +172,7 @@ public class ApplicationDAOPropertiesParser
 		databaseProperties.setTimeFormatFunction(timeFormatFunction);
 		databaseProperties.setTimePattern(timePattern);
 		databaseProperties.setExceptionFormatterName(exceptionFormatterName);
-		databaseProperties.setQueryExecutorName(queryExecutorName);
+		databaseProperties.setQueryGeneratorName(queryGeneratorName);
 		databaseProperties.setDefaultBatchSize(Integer.valueOf(defaultBatchSize));
 	}
 
@@ -200,7 +200,7 @@ public class ApplicationDAOPropertiesParser
 		dateTostrFunction= "";
 		strTodateFunction= "";
 		exceptionFormatterName="";
-		queryExecutorName="";
+		queryGeneratorName="";
 		defaultBatchSize="";
 	}
 
@@ -339,7 +339,7 @@ public class ApplicationDAOPropertiesParser
 			if (childnode.getNodeName().equals("QueryExecutor"))
 			{
 				Node attNode = getNextnode(childnode);
-				queryExecutorName = attNode.getNodeValue();
+				queryGeneratorName = attNode.getNodeValue();
 			}
 			if(childnode.getNodeName().equals("DefaultBatchSize"))
 			{
