@@ -112,15 +112,13 @@ public class DAOFactory implements IDAOFactory
 	 */
 	public DAO getDAO()throws DAOException
 	{
-		DAO dao = null;
-
 		try
 		{
-		   dao = (DAO)Class.forName(defaultDAOClassName).newInstance();
+		   DAO dao = (DAO)Class.forName(defaultDAOClassName).newInstance();
 		   IConnectionManager connManager = getDefaultConnManager(sessionFactory,configuration);
 		   dao.setConnectionManager(connManager);
 		   HibernateMetaData.initHibernateMetaData(connManager.getConfiguration());
-
+		   return dao;
 		}
 		catch (Exception excp )
 		{
@@ -130,7 +128,7 @@ public class DAOFactory implements IDAOFactory
 					DAOConstants.DEFAULTDAO_INIT_ERR);
 		}
 
-		return dao;
+
 	}
 
 	/**
@@ -142,17 +140,17 @@ public class DAOFactory implements IDAOFactory
 	 */
 	public JDBCDAO getJDBCDAO()throws DAOException
 	{
-		JDBCDAO jdbcDAO = null;
 
 		try
 		{
-			   jdbcDAO = (JDBCDAO) Class.forName(jdbcDAOClassName).newInstance();
+			   JDBCDAO jdbcDAO = (JDBCDAO) Class.forName(jdbcDAOClassName).newInstance();
 			   IConnectionManager connManager = getJDBCConnManager(sessionFactory,configuration);
 			   jdbcDAO.setConnectionManager(connManager);
 			   ((AbstractJDBCDAOImpl)jdbcDAO).setDatabaseProperties(databaseProperties);
 			   jdbcDAO.setBatchSize(databaseProperties.getDefaultBatchSize());
 			   HibernateMetaData.initHibernateMetaData(connManager.
 					   getConfiguration());
+			   return jdbcDAO;
 		}
 		catch (Exception excp )
 		{
@@ -161,7 +159,7 @@ public class DAOFactory implements IDAOFactory
 			throw new DAOException(errorKey,excp,"DAOFactory.java :"+
 					DAOConstants.JDBCDAO_INIT_ERR);
 		}
-		return jdbcDAO;
+
 	}
 
 
@@ -359,7 +357,7 @@ public class DAOFactory implements IDAOFactory
 		this.configurationFile = configurationFile;
 	}
 
-	
+
 
 	/**
 	 * @return This will return true if DAO factory is default.
@@ -414,7 +412,7 @@ public class DAOFactory implements IDAOFactory
 	{
 		this.dataSource = dataSource;
 	}
-	
+
 	/**
 	  * This method will be called to set all database properties.
 	  * @param databaseProperties :database properties.
