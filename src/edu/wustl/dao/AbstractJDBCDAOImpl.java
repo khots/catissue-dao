@@ -14,6 +14,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.LinkedList;
 import java.util.List;
 
 import edu.wustl.common.beans.SessionDataBean;
@@ -535,14 +536,17 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * or (2) 0 for SQL statements that return nothing
 	 * @throws DAOException :Generic Exception
 	 */
-	public int executeUpdate(String query,List columnValues) throws DAOException
+	public int executeUpdate(String query,LinkedList columnValues) throws DAOException
 	{
 		try
 		{
 			PreparedStatement stmt = getPreparedStatement(query);
-			for (int index = 0; index < columnValues.size(); index++)
+			if(columnValues != null && !columnValues.isEmpty())
 			{
-				stmt.setObject(index, columnValues.get(index));
+				for (int index = 0; index < columnValues.size(); index++)
+				{
+					stmt.setObject(index, columnValues.get(index));
+				}
 			}
 			return stmt.executeUpdate();
 		}
