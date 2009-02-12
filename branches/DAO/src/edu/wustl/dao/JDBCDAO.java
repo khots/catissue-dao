@@ -8,6 +8,7 @@ package edu.wustl.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.LinkedList;
 import java.util.List;
 
 import edu.wustl.dao.exception.DAOException;
@@ -118,7 +119,7 @@ public interface JDBCDAO extends DAO
 	 * or (2) 0 for SQL statements that return nothing
 	 * @throws DAOException :Generic Exception
 	 */
-	int executeUpdate(String query,List columnValues) throws DAOException;
+	int executeUpdate(String query,LinkedList columnValues) throws DAOException;
 
 
 	/**
