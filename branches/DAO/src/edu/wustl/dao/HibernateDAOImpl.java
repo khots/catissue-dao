@@ -338,7 +338,7 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 	public List executeNamedQuery(String queryName,Map<String, NamedQueryParam> namedQueryParams)
 	{
 		Query query = session.getNamedQuery(queryName);
-		DAOUtility.substitutionParameterForQuery(query, namedQueryParams);
+		DAOUtility.getInstance().substitutionParameterForQuery(query, namedQueryParams);
 		return query.list();
 	}
 

@@ -204,7 +204,7 @@ public final class DAOUtility
 	 * TODO : need to check this method.have to remove this
 	 */
 
-	public static Collection<Object> executeHQL(String queryName, List<Object> values) throws DAOException
+	public Collection<Object> executeHQL(String queryName, List<Object> values) throws DAOException
 	{
 		DAO dao = null;
 		try
@@ -253,7 +253,7 @@ public final class DAOUtility
 	 * @return Collection containing output of execution of query.
 	 * @throws DAOException :
 	 */
-	public static Collection executeHQL(String queryName)
+	public Collection executeHQL(String queryName)
 	throws DAOException
 	{
 		return executeHQL(queryName, null);
@@ -265,7 +265,7 @@ public final class DAOUtility
 	 * @return :List
 	 * @throws SQLException :
 	 */
-	public static List getListFromRS(ResultSet resultSet)throws SQLException
+	public List getListFromRS(ResultSet resultSet)throws SQLException
 	{
 		ResultSetMetaData metaData = resultSet.getMetaData();
 		int columnCount = metaData.getColumnCount();
@@ -286,7 +286,7 @@ public final class DAOUtility
 	 * @param resultSet : resultSet
 	 * @throws SQLException : exception
 	 */
-	private static void updateList(ResultSet resultSet,List list,
+	private void updateList(ResultSet resultSet,List list,
 			int columnCount,ResultSetMetaData metaData) throws SQLException
 	{
 		List rowDataList = new ArrayList();
@@ -334,7 +334,7 @@ public final class DAOUtility
 	 * @param resultSet : query resultSet
 	 * @throws DAOException : DAOException
 	 */
-	public static boolean isResultSetExists(ResultSet resultSet)throws DAOException
+	public boolean isResultSetExists(ResultSet resultSet)throws DAOException
 	{
 		boolean isResultSetExists = false;
 		try
@@ -359,7 +359,7 @@ public final class DAOUtility
 	 * @param query queryObject
 	 * @param namedQueryParams : Query parameters to set
 	 */
-	public static void substitutionParameterForQuery(Query query,
+	public void substitutionParameterForQuery(Query query,
 		Map<String, NamedQueryParam> namedQueryParams)
 	{
 		if(namedQueryParams != null && !namedQueryParams.isEmpty())

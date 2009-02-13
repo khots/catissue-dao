@@ -171,7 +171,11 @@ public final class DAOConstants
 	public static final String PRPD_STMT_ERROR =
 		" Problem Occurred while obtaining database PreparedStatement. ";
 
-
+	/**
+	 * No parameters assigned to prepared statement.
+	 */
+	public static final String NO_PARAMETERS_TO_STMT =
+		"No parameter value set to statement";
 
 	/**
 	 * NO_CONNECTION_TO_DB.
