@@ -228,7 +228,8 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		catch (SQLException exp)
 		{
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,exp,"AbstractJDBCDAOImpl.java :");
+			throw new DAOException(errorKey,exp,"AbstractJDBCDAOImpl.java :" +
+					DAOConstants.CLEAR_BATCH_ERROR);
 		}
 	}
 	/**
@@ -311,8 +312,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		catch (Exception exp)
 		{
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,exp,"AbstractJDBCDAOImpl.java :"+
-				DAOConstants.UPDATE_OBJ_ERROR);
+			throw new DAOException(errorKey,exp,"AbstractJDBCDAOImpl.java :");
 		}
 	}
 	/**
@@ -495,7 +495,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 			logger.fatal(exp);
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
 			throw new DAOException(errorKey,exp,"AbstractJDBCDAOImpl.java :"
-					+DAOConstants.EXECUTE_QUERY_ERROR+"   "+sql);
+					+DAOConstants.RESULTSET_CREATION_ERROR+"   "+sql);
 		}
 	}
 
@@ -509,7 +509,6 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	{
 
 		logger.debug("get list from RS");
-
 		try
 		{
 			ResultSet resultSet = getQueryResultSet(query);
@@ -521,7 +520,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 			logger.fatal(exp);
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
 			throw new DAOException(errorKey,exp,"AbstractJDBCDAOImpl.java :"+
-					DAOConstants.RS_METADATA_ERROR);
+					DAOConstants.EXECUTE_QUERY_ERROR);
 		}
 		finally
 		{
@@ -564,7 +563,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 			logger.fatal(sqlExp);
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
 			throw new DAOException(errorKey,sqlExp,"AbstractJDBCDAOImpl.java :"
-					+DAOConstants.PRPD_STMT_ERROR+"   "+query);
+					+DAOConstants.PRPDSTMT_CREATION_ERROR+"   "+query);
 		}
 		finally
 		{
@@ -588,7 +587,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 			logger.fatal(sqlExp);
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.conn.para.creation.error");
 			throw new DAOException(errorKey,sqlExp,"AbstractJDBCDAOImpl.java :"+
-					DAOConstants.PRPD_STMT_ERROR);
+					DAOConstants.STMT_CREATION_ERROR);
 		}
 	}
 
@@ -612,7 +611,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 			logger.fatal(sqlExp);
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.conn.para.creation.error");
 			throw new DAOException(errorKey,sqlExp,"AbstractJDBCDAOImpl.java :"+
-					DAOConstants.PRPD_STMT_ERROR);
+					DAOConstants.PRPDSTMT_CREATION_ERROR);
 		}
 	}
 
