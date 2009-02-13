@@ -255,7 +255,8 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 */
 	private void validate(String sql) throws DAOException
 	{
-		if(!(sql.contains("insert") || sql.contains("update")))
+		if(!(sql.contains("insert") || sql.contains("update") ||
+				sql.contains("drop") || sql.contains("create")))
 		{
 			ErrorKey errorKey = ErrorKey.getErrorKey("dao.batch.query.error");
 			throw new DAOException(errorKey,null,"AbstractJDBCDAOImpl.java :");
@@ -513,7 +514,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		{
 			ResultSet resultSet = getQueryResultSet(query);
 			logger.debug("RS"+resultSet);
-			return DAOUtility.getListFromRS(resultSet);
+			return DAOUtility.getInstance().getListFromRS(resultSet);
 		}
 		catch(SQLException exp)
 		{
@@ -540,6 +541,14 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	{
 		try
 		{
+			if(query.contains("?") && (columnValues == null || columnValues.isEmpty()))
+			{
+				logger.fatal(DAOConstants.NO_PARAMETERS_TO_STMT);
+				ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
+				throw new DAOException(errorKey,null,"AbstractJDBCDAOImpl.java :"
+						+DAOConstants.NO_PARAMETERS_TO_STMT+"   "+query);
+			}
+
 			PreparedStatement stmt = getPreparedStatement(query);
 			if(columnValues != null && !columnValues.isEmpty())
 			{
@@ -555,7 +564,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 			logger.fatal(sqlExp);
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
 			throw new DAOException(errorKey,sqlExp,"AbstractJDBCDAOImpl.java :"
-					+DAOConstants.EXECUTE_QUERY_ERROR+"   "+query);
+					+DAOConstants.PRPD_STMT_ERROR+"   "+query);
 		}
 		finally
 		{
