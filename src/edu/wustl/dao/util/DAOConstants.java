@@ -98,7 +98,7 @@ public final class DAOConstants
 	/**
 	 * Problem in executing query.
 	 */
-	public static final String EXECUTE_QUERY_ERROR = " executing SQL query ";
+	public static final String EXECUTE_QUERY_ERROR = " Error while executing SQL query ";
 
 	/**
 	 * Default DAO.
@@ -166,9 +166,15 @@ public final class DAOConstants
 		" Batch size exceeded then specified. ";
 
 	/**
+	 * Problem while batch update insert.
+	 */
+	public static final String CLEAR_BATCH_ERROR =
+		" Error while clearing batch ";
+
+	/**
 	 * Database prepared statement creation error.
 	 */
-	public static final String PRPD_STMT_ERROR =
+	public static final String PRPDSTMT_CREATION_ERROR =
 		" Problem Occurred while obtaining database PreparedStatement. ";
 
 	/**
