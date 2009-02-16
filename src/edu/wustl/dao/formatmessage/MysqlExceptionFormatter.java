@@ -97,7 +97,7 @@ IDBExceptionFormatter
 	private String getColumnNames(Exception objExcp, String tableName,
 			JDBCDAO jdbcDAO) throws DAOException, SQLException
 	{
-		String columnNames = DAOConstants.TAILING_SPACES;
+		String columnNames = DAOConstants.TRAILING_SPACES;
 		ResultSet resultSet = null;
 		try
 		{
@@ -131,7 +131,7 @@ IDBExceptionFormatter
 	private String getColumnNames(ResultSet resultSet, int key)
 	throws SQLException
 	{
-		StringBuffer columnNames = new StringBuffer(DAOConstants.TAILING_SPACES);
+		StringBuffer columnNames = new StringBuffer(DAOConstants.TRAILING_SPACES);
 		boolean found=false;
 
 		HashMap<String,StringBuffer> indexDetails = new HashMap<String,StringBuffer>();

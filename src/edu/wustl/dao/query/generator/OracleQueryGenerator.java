@@ -6,18 +6,12 @@ package edu.wustl.dao.query.generator;
  */
 public class OracleQueryGenerator extends AbstractQueryGenerator
 {
-/*
-	*//**
-	 * @param queryData : queryData
-	 *//*
-	public OracleQueryGenerator(QueryData queryData)
-	{
-		super(queryData);
-	}*/
+
 	/**
-	 * @param colValBean :
-	 * @return object
-	  */
+	 * @param colValBean : bean having column name value and type.
+	 * @return object : value of the column as per the type
+	 */
+
 	protected Object fetchColumnValue(ColumnValueBean colValBean)
 	{
 		Object value;
