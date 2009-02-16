@@ -266,53 +266,52 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	/**
 	 * Adds the given SQL command to the current list of commands for
      * batchStatement object.
-	 * @param queryData typically this is a static SQL INSERT or
-     * UPDATE statement
+	 * @param queryData typically this is a static SQL INSERT.
 	 * @throws DAOException : Generic database exception.
 	 */
 	public void insert(QueryData queryData)
 			throws DAOException
 	{
-		logger.debug("Add update sql to batch");
-		QueryGenerator queryGenerator = getQueryGenerator(queryData);
+		logger.debug("Add insert sql to batch");
+		QueryGenerator queryGenerator = getQueryGenerator();
+		queryGenerator.setQueryData(queryData);
 		addSQLToBatch(queryGenerator.getInsertQuery());
 	}
 
 	/**
 	 * Adds the given SQL command to the current list of commands for
      * batchStatement object.
-	 * @param queryData typically this is a static SQL INSERT or
-     * UPDATE statement
+	 * @param queryData typically this is a UPDATE statement
 	 * @throws DAOException : Generic database exception.
 	 */
 	public void update(QueryData queryData)
 			throws DAOException
 	{
 		logger.debug("Add update sql to batch");
-		QueryGenerator queryGenerator = getQueryGenerator(queryData);
+		QueryGenerator queryGenerator = getQueryGenerator();
+		queryGenerator.setQueryData(queryData);
 		addSQLToBatch(queryGenerator.getUpdateQuery());
 	}
 
 	/**
 	 * Get the object of Query generator.
-	 * @param queryData typically this is a static SQL INSERT or
      * UPDATE statement
 	 * @return QueryGenerator
 	 * @throws DAOException :database exception.
 	 */
-	private QueryGenerator getQueryGenerator(QueryData queryData) throws DAOException
+	private QueryGenerator getQueryGenerator() throws DAOException
 	{
 		try
 		{
 			QueryGenerator queryGenerator = (QueryGenerator)
 			Class.forName(databaseProperties.getQueryGeneratorName()).newInstance();
-			queryGenerator.setQueryData(queryData);
 			return queryGenerator;
 		}
 		catch (Exception exp)
 		{
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,exp,"AbstractJDBCDAOImpl.java :");
+			throw new DAOException(errorKey,exp,"AbstractJDBCDAOImpl.java :" +
+					DAOConstants.OBJECT_CREATION_ERROR);
 		}
 	}
 	/**

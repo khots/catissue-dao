@@ -44,8 +44,8 @@ public class HashedDataHandler
 	{
 
 		ResultSetMetaData metaData;
-		StringBuffer sqlBuff = new StringBuffer(DAOConstants.TAILING_SPACES);
-		sqlBuff.append("Select").append(DAOConstants.TAILING_SPACES);
+		StringBuffer sqlBuff = new StringBuffer(DAOConstants.TRAILING_SPACES);
+		sqlBuff.append("Select").append(DAOConstants.TRAILING_SPACES);
 
 		for (int i = 0; i < columnNames.size(); i++)
 		{
@@ -79,7 +79,7 @@ public class HashedDataHandler
 		try
 		{
 
-			StringBuffer sqlBuff = new StringBuffer(DAOConstants.TAILING_SPACES);
+			StringBuffer sqlBuff = new StringBuffer(DAOConstants.TRAILING_SPACES);
 			sqlBuff.append("Select * from " ).append(tableName).append(" where 1!=1");
 			metaData = jdbcDAO.getQueryResultSet(sqlBuff.toString()).getMetaData();
 
@@ -113,10 +113,10 @@ public class HashedDataHandler
 		while (columnIterator.hasNext())
 		{
 			query.append(columnIterator.next());
-			colValues.append(DAOConstants.INDEX_VALUE_OPERATOR).append(DAOConstants.TAILING_SPACES);
+			colValues.append(DAOConstants.INDEX_VALUE_OPERATOR).append(DAOConstants.TRAILING_SPACES);
 			if (columnIterator.hasNext())
 			{
-				query.append(DAOConstants.SPLIT_OPERATOR).append(DAOConstants.TAILING_SPACES);
+				query.append(DAOConstants.SPLIT_OPERATOR).append(DAOConstants.TRAILING_SPACES);
 				colValues.append(DAOConstants.SPLIT_OPERATOR);
 			}
 			else
@@ -336,7 +336,7 @@ public class HashedDataHandler
 			 * Recheck if some issues occurs.
 			 */
 			Timestamp timestampInner = new Timestamp(date.getTime());
-			if (obj != null && !DAOConstants.TAILING_SPACES.equals(obj.toString()))
+			if (obj != null && !DAOConstants.TRAILING_SPACES.equals(obj.toString()))
 			{
 				timestamp = timestampInner;
 			}

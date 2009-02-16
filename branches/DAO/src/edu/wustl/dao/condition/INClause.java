@@ -105,15 +105,15 @@ public class INClause implements Condition
 	 */
 	public String buildSql()
 	{
-		StringBuffer strBuff = new StringBuffer(DAOConstants.TAILING_SPACES);
+		StringBuffer strBuff = new StringBuffer(DAOConstants.TRAILING_SPACES);
 
-		strBuff = new StringBuffer(DAOConstants.TAILING_SPACES);
+		strBuff = new StringBuffer(DAOConstants.TRAILING_SPACES);
 
 		String sourceObject = DAOUtility.getInstance().parseClassName(sourceObjectName);
 
 		strBuff.append(sourceObject).append(DAOConstants.DOT_OPERATOR).append(columnName).
-		append(DAOConstants.TAILING_SPACES).append(DAOConstants.IN_CONDITION).
-		append(DAOConstants.TAILING_SPACES);
+		append(DAOConstants.TRAILING_SPACES).append(DAOConstants.IN_CONDITION).
+		append(DAOConstants.TRAILING_SPACES);
 
 		updateInclause(strBuff);
 

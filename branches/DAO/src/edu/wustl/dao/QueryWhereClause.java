@@ -47,8 +47,8 @@ public class QueryWhereClause
 	public QueryWhereClause(String sourceObjectName)
 	{
 		whereClauseBuff = new StringBuffer();
-		whereClauseBuff.append(DAOConstants.TAILING_SPACES)
-		.append("WHERE").append(DAOConstants.TAILING_SPACES);
+		whereClauseBuff.append(DAOConstants.TRAILING_SPACES)
+		.append("WHERE").append(DAOConstants.TRAILING_SPACES);
 		this.sourceObjectName = sourceObjectName;
 	}
 
