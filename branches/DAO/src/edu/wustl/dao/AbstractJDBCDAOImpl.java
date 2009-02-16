@@ -304,8 +304,8 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	{
 		try
 		{
-			Class generatorClass = Class.forName(databaseProperties.getQueryGeneratorName());
-			QueryGenerator queryGenerator =  (QueryGenerator)generatorClass.newInstance();
+			QueryGenerator queryGenerator = (QueryGenerator)
+			Class.forName(databaseProperties.getQueryGeneratorName()).newInstance();
 			queryGenerator.setQueryData(queryData);
 			return queryGenerator;
 		}
