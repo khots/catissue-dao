@@ -90,6 +90,12 @@ public final class DAOConstants
 
 
 	/**
+	 * Problem while instantiating object of the class.
+	 */
+	public static final String OBJECT_CREATION_ERROR = "Problem while instantiating object of the class";
+
+
+	/**
 	 * Audit error.
 	 */
 	public static final String AUDIT_ERROR = " Auditing error: ";
@@ -217,7 +223,7 @@ public final class DAOConstants
 	/**
 	 * Space .
 	 */
-	public static final String TAILING_SPACES = " ";
+	public static final String TRAILING_SPACES = " ";
 
 	/**
 	 * And join condition.

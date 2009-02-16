@@ -8,7 +8,7 @@ import edu.wustl.dao.QueryWhereClause;
 
 /**
  * @author kalpana_thakur
- *
+ * This class stores all query related data.
  */
 public class QueryData
 {
@@ -19,25 +19,25 @@ public class QueryData
 	= new HashSet<ColumnValueBean>();
 
   /**
-   *	tableName.
+   * Name of the table.
    */
   private String tableName;
 
   /**
-   *	queryWhereClause.
+   * Where condition clause.
    */
   private QueryWhereClause queryWhereClause;
 
 
   /**
-   * @return get table name.
+   * @return the table name.
    */
   public String getTableName()
   {
 		return tableName;
    }
   /**
-   * @return get queryWhereClause
+   * @return query where clause.
    */
    public QueryWhereClause getQueryWhereClause()
    {
@@ -52,7 +52,7 @@ public class QueryData
 		this.tableName = tableName;
    }
    /**
-    *@param queryWhereClause queryWhereClause
+    *@param queryWhereClause where conditional clause of query.
     */
    public void setQueryWhereClause(QueryWhereClause queryWhereClause)
    {
@@ -60,8 +60,8 @@ public class QueryData
    }
 
    /**
-	 *@param columnValueBean :
-	 *@return SQLFormatter :
+	 *@param columnValueBean : Bean having column name and column value.
+	 *@return QueryData It returns the current instance of QueryData.
 	 */
    public QueryData addColValBean(ColumnValueBean columnValueBean)
    {

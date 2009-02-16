@@ -121,13 +121,13 @@ public final class HibernateMetaData
 	 */
 	public static String getColumnName(Class classObj, String attributeName)
 	{
-		String columnName = DAOConstants.TAILING_SPACES;
+		String columnName = DAOConstants.TRAILING_SPACES;
 		boolean foundColName = false;
 		Iterator<Object> iter = cfg.getClassMapping(classObj.getName()).getPropertyClosureIterator();
 		while(iter.hasNext())
 		{
 			columnName = getColumnName(attributeName,iter);
-			if(!DAOConstants.TAILING_SPACES.equals(columnName))
+			if(!DAOConstants.TRAILING_SPACES.equals(columnName))
 			{
 				foundColName = true;
 				break;
@@ -149,7 +149,7 @@ public final class HibernateMetaData
 	private static String getColumnName(String attributeName,
 			Iterator<Object> iter)
 	{
-		String columnName = DAOConstants.TAILING_SPACES;
+		String columnName = DAOConstants.TRAILING_SPACES;
 		Property property = (Property)iter.next();
 		if(property!=null && property.getName().equals(attributeName))
 		{
@@ -170,7 +170,7 @@ public final class HibernateMetaData
 	 */
 	private static String getColumName(Class classObj, String attributeName)
 	{
-		String columnName = DAOConstants.TAILING_SPACES;
+		String columnName = DAOConstants.TRAILING_SPACES;
 		Property property = cfg.getClassMapping(classObj.getName()).getIdentifierProperty();
 		if(property.getName().equals(attributeName))
 		{
@@ -223,7 +223,7 @@ public final class HibernateMetaData
 	{
 		Iterator iter = cfg.getClassMappings();
 		PersistentClass persistentClass;
-		String className = DAOConstants.TAILING_SPACES;
+		String className = DAOConstants.TRAILING_SPACES;
 		while(iter.hasNext())
 		{
 			persistentClass = (PersistentClass) iter.next();

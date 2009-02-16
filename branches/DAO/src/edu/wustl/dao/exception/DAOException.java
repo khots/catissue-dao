@@ -92,7 +92,7 @@ public class DAOException extends ApplicationException
 
 			for (int i = 0; i < str.length; i++)
 			{
-				message.append(str[i]).append(DAOConstants.TAILING_SPACES);
+				message.append(str[i]).append(DAOConstants.TRAILING_SPACES);
 			}
 		}
 		return message.toString();

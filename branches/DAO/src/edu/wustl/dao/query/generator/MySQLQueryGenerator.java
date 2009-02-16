@@ -9,8 +9,8 @@ public class MySQLQueryGenerator extends AbstractQueryGenerator
 
 
 	/**
-	 * @param colValBean :
-	 * @return object
+	 * @param colValBean : bean having column name value and type.
+	 * @return object : value of the column as per the type
 	  */
 	protected Object fetchColumnValue(ColumnValueBean colValBean)
 	{

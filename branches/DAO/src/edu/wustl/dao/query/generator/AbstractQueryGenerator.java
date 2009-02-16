@@ -6,35 +6,32 @@ import edu.wustl.dao.util.DAOConstants;
 
 /**
  * @author kalpana_thakur
- *
+ * This class will be used to generate SQL queries like insert,update.
+ * It accept the query data and parse the data to create insert update query.
  */
 public abstract class AbstractQueryGenerator implements QueryGenerator
 {
 
 
 	/**
-	 * QueryData.
+	 * It holds data to generate SQL.
+	 * Data like table table columnValue bean having column name ,
+	 * value assigned to the column and where condition clause.
+	 * QueryData
 	 */
 	protected QueryData queryData;
 
 	/**
-	 * @param queryData : queryData
-	 *//*
-	public AbstractQueryGenerator(QueryData queryData)
-	{
-		this.queryData = queryData;
-	}*/
-
-	/**
+	 * Parse the QueryData and create the insert query.
 	 * @see edu.wustl.dao.query.generator.QueryGenerator#getInsertQuery(java.lang.String)
-	 * @return :
+	 * @return : The insert query.
 	 */
 	public String getInsertQuery()
 	{
 
-		StringBuffer insertSql = new StringBuffer(DAOConstants.TAILING_SPACES);
-		StringBuffer valuePart = new StringBuffer(DAOConstants.TAILING_SPACES);
-		insertSql.append("insert into").append(DAOConstants.TAILING_SPACES).
+		StringBuffer insertSql = new StringBuffer(DAOConstants.TRAILING_SPACES);
+		StringBuffer valuePart = new StringBuffer(DAOConstants.TRAILING_SPACES);
+		insertSql.append("insert into").append(DAOConstants.TRAILING_SPACES).
 		append(queryData.getTableName()).append(" (");
 		valuePart.append("values (");
 		Iterator<ColumnValueBean> colValBeanItr = queryData.getColumnValueBeans().iterator();
@@ -58,19 +55,20 @@ public abstract class AbstractQueryGenerator implements QueryGenerator
 	}
 
 	/**
-	 * @param colValBean :
-	 * @return Object :
+	 * @param colValBean : Bean holding column name and value.
+	 * @return Object : Returns the column value.
 	 */
 	protected abstract Object fetchColumnValue(ColumnValueBean colValBean);
 
 	/**
+	 * Reads the queryData and generates the update query.
 	 * @return update query.
 	 */
 	public String getUpdateQuery()
 	{
-		StringBuffer updateSql = new StringBuffer(DAOConstants.TAILING_SPACES);
-		updateSql.append("update").append(DAOConstants.TAILING_SPACES).append(queryData.getTableName()).
-		append(DAOConstants.TAILING_SPACES).append("set").append(DAOConstants.TAILING_SPACES);
+		StringBuffer updateSql = new StringBuffer(DAOConstants.TRAILING_SPACES);
+		updateSql.append("update").append(DAOConstants.TRAILING_SPACES).append(queryData.getTableName()).
+		append(DAOConstants.TRAILING_SPACES).append("set").append(DAOConstants.TRAILING_SPACES);
 
 		Iterator<ColumnValueBean> colValBeanItr = queryData.getColumnValueBeans().iterator();
 		while(colValBeanItr.hasNext())
@@ -89,6 +87,7 @@ public abstract class AbstractQueryGenerator implements QueryGenerator
 
 
 	/**
+	 * This method will be called to set the Query data.
 	 * @param queryData : queryData
 	 */
 	public void setQueryData(QueryData queryData)

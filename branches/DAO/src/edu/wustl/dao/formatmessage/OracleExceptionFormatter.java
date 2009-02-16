@@ -34,8 +34,8 @@ public class OracleExceptionFormatter implements IDBExceptionFormatter
 	{
 
 		Exception objExcp = excp;
-        StringBuffer columnNameBuff = new StringBuffer(DAOConstants.TAILING_SPACES);
-        String formattedErrMsg = DAOConstants.TAILING_SPACES; // Formatted Error Message return by this method
+        StringBuffer columnNameBuff = new StringBuffer(DAOConstants.TRAILING_SPACES);
+        String formattedErrMsg = DAOConstants.TRAILING_SPACES; // Formatted Error Message return by this method
 	    if(objExcp instanceof gov.nih.nci.security.exceptions.CSTransactionException)
         {
             objExcp = (Exception)objExcp.getCause();

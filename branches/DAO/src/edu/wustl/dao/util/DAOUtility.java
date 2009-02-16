@@ -180,7 +180,7 @@ public final class DAOUtility
             {
             	  for (int i = 0; i < str.length; i++)
                   {
-                  	message.append(str[i]).append(DAOConstants.TAILING_SPACES);
+                  	message.append(str[i]).append(DAOConstants.TRAILING_SPACES);
                   }
                   messageToReturn =  message.toString();
             }
