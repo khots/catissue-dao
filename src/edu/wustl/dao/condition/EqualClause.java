@@ -68,13 +68,13 @@ public class EqualClause implements Condition
 	 */
 	public String buildSql()
 	{
-		StringBuffer strBuff = new StringBuffer(DAOConstants.TAILING_SPACES);
+		StringBuffer strBuff = new StringBuffer(DAOConstants.TRAILING_SPACES);
 
 		String sourceObject = DAOUtility.getInstance().parseClassName(sourceObjectName);
 
 		strBuff.append(sourceObject).append(DAOConstants.DOT_OPERATOR).
-		append(columnName).append(DAOConstants.TAILING_SPACES).append(DAOConstants.EQUAL).
-		append(DAOConstants.TAILING_SPACES);
+		append(columnName).append(DAOConstants.TRAILING_SPACES).append(DAOConstants.EQUAL).
+		append(DAOConstants.TRAILING_SPACES);
 
 		if(colValue instanceof String)
 		{
@@ -84,7 +84,7 @@ public class EqualClause implements Condition
 		{
 			strBuff.append(colValue);
 		}
-		strBuff.append(DAOConstants.TAILING_SPACES);
+		strBuff.append(DAOConstants.TRAILING_SPACES);
 		return strBuff.toString();
 	}
 

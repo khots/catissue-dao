@@ -78,13 +78,13 @@ public class NotNullClause implements Condition
 	 */
 	public String buildSql()
 	{
-		StringBuffer strBuff = new StringBuffer(DAOConstants.TAILING_SPACES);
+		StringBuffer strBuff = new StringBuffer(DAOConstants.TRAILING_SPACES);
 
 		String sourceObject = DAOUtility.getInstance().parseClassName(sourceObjectName);
 
 		strBuff.append(sourceObject).append(DAOConstants.DOT_OPERATOR).
-		append(columnName).append(DAOConstants.TAILING_SPACES).append(DAOConstants.NOT_NULL_CONDITION).
-		append(DAOConstants.TAILING_SPACES);
+		append(columnName).append(DAOConstants.TRAILING_SPACES).append(DAOConstants.NOT_NULL_CONDITION).
+		append(DAOConstants.TRAILING_SPACES);
 		return strBuff.toString();
 	}
 
