@@ -232,37 +232,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 					DAOConstants.CLEAR_BATCH_ERROR);
 		}
 	}
-	/**
-	 * Adds the given SQL command to the current list of commands for
-     * batchStatement object.
-	 * @param sql typically this is a static SQL INSERT or
-     * UPDATE statement
-	 * @throws DAOException : Generic database exception.
-	 * @deprecated Avoid using this method.
-	 */
-	public void insert(String sql)
-			throws DAOException
-	{
-		logger.debug("Add DML to batch");
-		validate(sql);
-		addSQLToBatch(sql);
 
-	}
-	/**
-	 * This method will be called to validate batch query.
-	 * @param sql : This is a static SQL INSERT or
-     * UPDATE statement
-	 * @throws DAOException : database exception
-	 */
-	private void validate(String sql) throws DAOException
-	{
-		if(!(sql.contains("insert") || sql.contains("update") ||
-				sql.contains("drop") || sql.contains("create")))
-		{
-			ErrorKey errorKey = ErrorKey.getErrorKey("dao.batch.query.error");
-			throw new DAOException(errorKey,null,"AbstractJDBCDAOImpl.java :");
-		}
-	}
 	/**
 	 * Adds the given SQL command to the current list of commands for
      * batchStatement object.
