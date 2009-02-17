@@ -70,7 +70,7 @@ public interface DAO
 	 * @throws DAOException generic DAOException.
 	 */
 
-	List<Object> retrieve(String sourceObjectName,String[] selectColumnName,
+	List retrieve(String sourceObjectName,String[] selectColumnName,
 			QueryWhereClause queryWhereClause,boolean onlyDistinctRows) throws DAOException;
 
 

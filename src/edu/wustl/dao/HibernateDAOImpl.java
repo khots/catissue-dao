@@ -211,7 +211,7 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 			QueryWhereClause queryWhereClause,boolean onlyDistinctRows) throws DAOException
 	{
 		logger.debug("Inside retrieve method");
-		List<Object> list;
+		List list;
 		try
 		{
 			StringBuffer queryStrBuff = new StringBuffer();
@@ -316,7 +316,7 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		try
 		{
 	    	Query hibernateQuery = session.createQuery(query);
-		    List <Object> returner = hibernateQuery.list();
+		    List returner = hibernateQuery.list();
 		    return returner;
 		}
 		catch(HibernateException hiberExp)
