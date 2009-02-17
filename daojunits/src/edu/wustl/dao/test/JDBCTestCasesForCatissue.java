@@ -5,19 +5,8 @@ import java.util.List;
 
 import org.junit.Test;
 
-import sun.reflect.ReflectionFactory.GetReflectionFactoryAction;
-
-import edu.wustl.common.exception.ApplicationException;
-import edu.wustl.common.util.PagenatedResultData;
-import edu.wustl.common.util.QueryParams;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.JDBCDAO;
-import edu.wustl.dao.QueryWhereClause;
-import edu.wustl.dao.condition.EqualClause;
-import edu.wustl.dao.condition.INClause;
-import edu.wustl.dao.condition.NotEqualClause;
-import edu.wustl.dao.condition.NotNullClause;
-import edu.wustl.dao.condition.NullClause;
 import edu.wustl.dao.daofactory.IDAOFactory;
 import edu.wustl.dao.exception.DAOException;
 
@@ -69,7 +58,51 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 
 	/**
 	 * This test will assert the batch insert
-	 */
+	 *//*
+	@Test
+	public void testBatchInsert()
+	{
+		try
+		{
+			jdbcDAO.openSession(null);
+			jdbcDAO.setBatchSize(1);
+
+			for(int i = 0 ; i<10;i++)
+			{
+				String firstName = "JOHN"+i;
+				String secondName = "REBER"+i;
+
+				String insertStr1 = "insert into test_user " +
+					"(IDENTIFIER,EMAIL_ADDRESS,FIRST_NAME,LAST_NAME,ACTIVITY_STATUS)" +
+					"VALUES ("+i+",'john@per.co.in','"+firstName+ "','"+secondName+"','Active')";
+				jdbcDAO.insert(insertStr1);
+			}
+			jdbcDAO.commit();
+
+		}
+		catch(Exception exp)
+		{
+			System.out.println("---------------------------");
+			exp.printStackTrace();
+			assertFalse("Problem executing batch insert :",true);
+		}
+		finally
+		{
+			try
+			{
+				jdbcDAO.closeSession();
+			}
+			catch (DAOException e)
+			{
+				e.printStackTrace();
+			}
+		}
+	}*/
+
+
+	/**
+	 * This test will assert the batch insert
+	 *//*
 	@Test
 	public void testBatchInsert()
 	{
@@ -109,7 +142,7 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 				e.printStackTrace();
 			}
 		}
-	}
+	}*/
 
 	/**
 	 * This test will assert that all the objects are retrieved successfully.
@@ -146,7 +179,7 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 			}
 		}
 	}
-	@Test
+	/*@Test
 	public void testCaseRetrieveRS()
 	{
 		try
@@ -234,7 +267,7 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 					e.printStackTrace();
 			}
 		}
-	}
+	}*/
 	 void fetch(String sql)
 	 {
 		 JDBCDAO jdbcDAO= null;

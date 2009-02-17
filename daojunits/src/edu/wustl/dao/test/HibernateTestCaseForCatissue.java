@@ -125,6 +125,46 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 
 	}
 
+	/**
+	 * This test will assert that requested objects deleted successfully.
+	 */
+	@Test
+	public void testCaseDeleteObject()
+	{
+	  try
+	  {
+		  User user = new User();
+		  user.setIdentifier(Long.valueOf(2));
+		  dao.openSession(null);
+	  	  dao.delete(user);
+	  	  dao.commit();
+	  	//  dao.closeSession();
+	  	  System.out.println("Deleted object ::::");
+	  	assertTrue("Object deleted :", true);
+	  }
+	  catch(Exception exp)
+	  {
+		  System.out.println("Not Deleted object ::::");
+		  exp.printStackTrace();
+		  assertFalse("Failed while deleting object :", true);
+	  }
+	  finally
+		{
+			try
+			{
+				dao.closeSession();
+			}
+			catch (DAOException e) 
+			{
+				e.printStackTrace();
+			}
+		}
+
+	}
+
+
+	
+
 /**
 	 * This test will assert that Object inserted successfully.
 	 */
@@ -399,78 +439,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 
 	
 	
-	/**
-	 * This test will assert that object will given identifier
-	 * retrieved successfully.
-	 *//*
-	@Test
-	public void testCaseLoadCleanObject()
-	{
-		try
-		{
-			dao.openSession(null);
-			HibernateDAOImpl hiberDao = (HibernateDAOImpl)dao;
-			User user  = (User)hiberDao.loadCleanObj("test.User", Long.valueOf(1));
-		//	dao.closeSession();
-
-			assertNotNull("No object retieved ::",user);
-
-		}
-		catch(Exception exp)
-		{
-			assertFalse("Failed while retrieving object ::", true);
-		}
-		finally
-		{
-			try
-			{
-				dao.closeSession();
-			}
-			catch (DAOException e) 
-			{
-				e.printStackTrace();
-			}
-		}
-
-
-	}*/
 	
-	/**
-	 * This test will assert that requested objects deleted successfully.
-	 */
-	@Test
-	public void testCaseDeleteObject()
-	{
-	  try
-	  {
-		  User user = new User();
-		  user.setIdentifier(Long.valueOf(2));
-		  dao.openSession(null);
-	  	  dao.delete(user);
-	  	  dao.commit();
-	  	//  dao.closeSession();
-	  	assertTrue("Object deleted :", true);
-	  }
-	  catch(Exception exp)
-	  {
-		  exp.printStackTrace();
-		  assertFalse("Failed while deleting object :", true);
-	  }
-	  finally
-		{
-			try
-			{
-				dao.closeSession();
-			}
-			catch (DAOException e) 
-			{
-				e.printStackTrace();
-			}
-		}
-
-	}
-
-
 	/**
 	 * This test will assert that objects retrieved successfully
 	 * when where clause holds in condition.
@@ -640,40 +609,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 	}
 
 
-	/**
-	 * This test will assert that requested objects disabled successfully.
-	 */
-	/*@Test
-	public void testDisableRelatedObjects()
-	{
-		String tableName = "test_user";
-		String whereColumnName = "IDENTIFIER";
-		Long[] whereColumnValues = {Long.valueOf(1),Long.valueOf(2)};
-		try
-		{
-			dao.openSession(null);
-			dao.disableRelatedObjects(tableName,whereColumnName,whereColumnValues);
-			dao.commit();
-			//dao.closeSession();
-		}
-		catch(Exception exp)
-		{
-			assertFalse("Problem in disabling object : :", true);
-		}
-		finally
-		{
-			try
-			{
-				dao.closeSession();
-			}
-			catch (DAOException e) 
-			{
-				e.printStackTrace();
-			}
-		}
-
-	}*/
-
+	
 
 	/**
 	 * This test will assert that attribute retrieved successfully.
@@ -682,7 +618,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 	public void testRetrieveAttribute()
 	{
 		try
-		{/*
+		{
 			dao.openSession(null);
 			Object obj = (Object)dao.retrieveAttribute(User.class,
 					Long.valueOf(1),"emailAddress","identifier");
@@ -692,7 +628,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 			List<String> list = (List<String>)obj;
 			assertNotNull("Object retrieved is null",list);
 			//assertTrue("Problem in retrieving attribute :", !list.isEmpty());
-		*/}
+		}
 		catch(Exception exp)
 		{
 			assertFalse("Problem in retrieving attribute ::", true);
@@ -711,44 +647,6 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 
 	}
 	
-	
-
-	/**
-	 * This method will use session.load to retrieve the object with the given identifier.
-	 *//*
-	@Test
-	public void testLoadCleanObjects()
-	{
-		HibernateDAO hibernateDAO = null;
-		try
-		{
-			//dao.openSession(null);
-			hibernateDAO = (HibernateDAO)dao;
-			hibernateDAO.openSession(null);
-
-			Object obj = (Object)hibernateDAO.loadCleanObj(User.class,
-					Long.valueOf(1));
-			//dao.closeSession();
-			assertNotNull("Object retrieved is null",obj);
-		}
-		catch(Exception exp)
-		{
-			assertFalse("Problem in retrieving attribute ::", true);
-		}
-		finally
-		{
-			try
-			{
-				hibernateDAO.closeSession();
-			}
-			catch (DAOException e) 
-			{
-				e.printStackTrace();
-			}
-		}
-		
-	}
-*/
 	
 
 	/**
@@ -774,86 +672,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 
 	}
 
-	/**
-	 * This test will open clean session with in a session.
-	 * insert one object and in second session update the same object.
-	 */
-	@Test
-	public void testCleanSessionWithinaSession()
-	{/*
-		try
-		{
-			dao.openSession(null);
-
-			Session session = dao.getCleanSession();
-				User user = (User)createUserObject();
-				Transaction transaction = session.beginTransaction();
-				session.save(user);
-				transaction.commit();
-			session.close();
-
-			user.setEmailAddress("cruise_tom@persistent.co.in");
-			dao.update(user,null);
-			dao.commit();
-			//dao.closeSession();
-		}
-		catch(Exception exp)
-		{
-			assertFalse("Problem occurred while opening clean session within a session:", true);
-		}
-		finally
-		{
-			try
-			{
-				dao.closeSession();
-			}
-			catch (DAOException e)
-			{
-				e.printStackTrace();
-			}
-		}
-
-	*/}
-
-
-
-	/**
-	 * This test will ensure that second application can open session
-	 * when first application session is not closed that means
-	 * opening and closing of session by one application do not affect other application session.
-	 * In this test application 'App1' and 'App2'insert object to their respective databases.
-	 * Pointing to same database type either MySQL , Oracle or any third type.
-	 */
-	/*@Test
-	public void testMultAppInsertPointngRespectiveDBSameDBType()
-	{
-		try
-		{
-			User user = (User)createUserObject();
-			dao.openSession(null);
-			insertObjectByApp2(user);
-			user.setEmailAddress("cruise_tom@persistent.co.in");
-			dao.insert(user, null, false, false);
-			dao.commit();
-			//dao.closeSession();
-		}
-		catch(Exception exp)
-		{
-			assertFalse("Problem occurred while opening second session within a session:", true);
-		}
-		finally
-		{
-			try
-			{
-				dao.closeSession();
-			}
-			catch (DAOException e) 
-			{
-				e.printStackTrace();
-			}
-		}
-
-	}*/
+	
 
 
 	/**
@@ -933,22 +752,22 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 
 			String tableName = HibernateMetaData.getTableName(object.getClass());
 				assertTrue("Table name is empty",
-						!tableName.equals(DAOConstants.TAILING_SPACES));
+						!tableName.equals(DAOConstants.TRAILING_SPACES));
 
 			String rootTableName = HibernateMetaData.getRootTableName(object.getClass());
 			assertTrue("Root Table name is empty",
-						!rootTableName.equals(DAOConstants.TAILING_SPACES));
+						!rootTableName.equals(DAOConstants.TRAILING_SPACES));
 
 			String columnName = HibernateMetaData.getColumnName(object.getClass(),"lastName");
 				assertTrue("Column Name is empty",
-						!columnName.equals(DAOConstants.TAILING_SPACES));
+						!columnName.equals(DAOConstants.TRAILING_SPACES));
 
 			int colWidth = HibernateMetaData.getColumnWidth(object.getClass(),"lastName");
 			assertTrue("colWidth  is 0",colWidth > 0);
 
 			String className = HibernateMetaData.getClassName("Test_user");
 				assertTrue("NO class name obtained ",
-						!className.equals(DAOConstants.TAILING_SPACES));
+						!className.equals(DAOConstants.TRAILING_SPACES));
 
 
 			//dao.closeSession();
