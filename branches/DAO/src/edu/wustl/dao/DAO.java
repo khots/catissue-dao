@@ -30,6 +30,8 @@ public interface DAO
 	void insert(Object obj,boolean isAuditable) throws DAOException;
 
 	/**
+	 * This method will be used when user wants to audit
+	 * the object prior to update
 	 * updates the persisted object into the database.
 	 * @param obj Object to be updated in database
 	 * @param oldObj old object.
