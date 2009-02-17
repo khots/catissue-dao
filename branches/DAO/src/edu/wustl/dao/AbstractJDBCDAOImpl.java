@@ -329,7 +329,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * in sourceObjectName which satisfies the where condition
 	 * @throws DAOException : DAOException
 	 */
-	public List<Object> retrieve(String sourceObjectName, String[] selectColumnName,
+	public List retrieve(String sourceObjectName, String[] selectColumnName,
 			QueryWhereClause queryWhereClause,
 			 boolean onlyDistinctRows) throws DAOException
 	{
@@ -338,7 +338,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		{
 			StringBuffer queryStrBuff = generateSQL(sourceObjectName,
 					selectColumnName, queryWhereClause, onlyDistinctRows);
-			List<Object> list  = executeQuery(queryStrBuff.toString());
+			List list  = executeQuery(queryStrBuff.toString());
 			return list;
 		}
 		catch (Exception exp)
@@ -755,7 +755,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * @throws ClassNotFoundException
 	 * @throws DAOException generic DAOException
 	 */
-	public List<Object> retrieve(String sourceObjectName) throws DAOException
+	public List retrieve(String sourceObjectName) throws DAOException
 	{
 		logger.debug("Inside retrieve method");
 		return retrieve(sourceObjectName, null, null,false);
@@ -770,7 +770,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * from the table represented in sourceObjectName.
 	 * @throws DAOException : DAOException
 	*/
-	public List<Object> retrieve(String sourceObjectName, String[] selectColumnName) throws DAOException
+	public List retrieve(String sourceObjectName, String[] selectColumnName) throws DAOException
 	{
 		logger.debug("Inside retrieve method");
 		return retrieve(sourceObjectName, selectColumnName,null,false);
@@ -786,7 +786,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * from the table represented in sourceObjectName.
 	 * @throws DAOException DAOException.
 	 */
-	public List<Object> retrieve(String sourceObjectName, String[] selectColumnName,
+	public List retrieve(String sourceObjectName, String[] selectColumnName,
 			boolean onlyDistinctRows) throws DAOException
 	{
 		logger.debug("Inside retrieve method");
@@ -805,7 +805,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * from the table represented in sourceObjectName which satisfies the where condition
 	 * @throws DAOException : DAOException
 	 */
-	public List<Object> retrieve(String sourceObjectName,
+	public List retrieve(String sourceObjectName,
 			String[] selectColumnName, QueryWhereClause queryWhereClause)
 			throws DAOException
 	{
@@ -824,7 +824,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * in sourceObjectName which satisfies the where condition
 	 * @throws DAOException : DAOException
 	 */
-	public List<Object> retrieve(String sourceObjectName, String whereColumnName, Object whereColumnValue)
+	public List retrieve(String sourceObjectName, String whereColumnName, Object whereColumnValue)
 			throws DAOException
 	{
 		logger.debug("Inside retrieve method");

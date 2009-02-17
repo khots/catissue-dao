@@ -142,7 +142,7 @@ public interface JDBCDAO extends DAO
 	* from the table represented in sourceObjectName.
 	* @throws DAOException generic DAOException.
 	*/
-	List<Object> retrieve(String sourceObjectName, String[] selectColumnName, boolean onlyDistinctRows)
+	List retrieve(String sourceObjectName, String[] selectColumnName, boolean onlyDistinctRows)
 			throws DAOException;
 
 	/**
