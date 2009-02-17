@@ -78,20 +78,6 @@ public interface JDBCDAO extends DAO
 	String getStrTodateFunction();
 
 	/**
-	 * This method will be called to set all the database specific properties.
-	 * @param databaseProperties : database properties.
-	 */
-	//void setDatabaseProperties(DatabaseProperties databaseProperties);
-
-	/**
-	 * Insert the Object in the database.
-	 * @param sql Object to be inserted in database
-	 * @throws DAOException generic DAOException
-	 * @deprecated Avoid using this method.
-	 */
-	void insert(String sql) throws DAOException;
-
-	/**
 	 * Retrieves the records for class name in sourceObjectName according to
 	 * field values passed in the passed session.
 	 * @param sourceObjectName This will holds the object name.
@@ -176,39 +162,5 @@ public interface JDBCDAO extends DAO
 	 * @throws DAOException : Generic database exception.
 	 */
 	void update(QueryData queryData) throws DAOException;
-	/**
-	 * @param excp : Exception Object.
-	 * @param connection :
-	 * @return : It will return the formated messages.
-	 * @throws DAOException :Generic DAOException.
-	 *//*
-	String formatMessage(Exception excp,Connection connection)throws DAOException;
-*/
-	/**
-	 *This method will be called to format the SQL.
-	 *@param tableName :
-	 *@throws DAOException :Generic DAOException.
-	 *@return SQLFormatter :
-	 *//*
-	SQLFormatter getSQLFormatter(String tableName) throws DAOException;
-
-	*//**
-	 * @param sqlFormatter :
-	 * @param sequenceName :
-	 * @param columnName :
-	 * @param columnTpe :
-	 * @throws DAOException :Generic DAOException.
-	 *//*
-	void insert(SQLFormatter sqlFormatter,String sequenceName,String columnName,
-			int columnTpe) throws DAOException;
-
-	*//**
-	 * @param query :
-	 * @param clobContent :
-	 * @throws DAOException :Generic DAOException.
-	 *//*
-	void updateClob(String query,String clobContent)throws DAOException;*/
-
-
 
 }
