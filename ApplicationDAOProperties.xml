@@ -10,19 +10,7 @@
 			</DefaultDAO>
 	
 			<JDBCDAO>
-				<Class-name name = "edu.wustl.dao.MySQLDAOImpl"/>
-				<DatabaseType name = "MySQL"/>
-				<DefaultBatchSize value = "5"/>
-				<DataSource name = ""/>
-				<JDBCConnectionManager name = "edu.wustl.dao.connectionmanager.ConnectionManager"/>
-				<DatePattern name = "%m-%d-%Y"/>
-				<TimePattern name = "%H:%i:%s"/>
-				<DateFormatFunction name ="DATE_FORMAT"/>
-				<TimeFormatFunction name ="TIME_FORMAT"/>
-				<DateToStrFunction name = "TO_CHAR"/>
-				<StrTodateFunction name = "STR_TO_DATE"/>
-				<ExceptionFormater name = "edu.wustl.dao.formatmessage.MysqlExceptionFormatter"/>
-				<QueryGenerator name = "edu.wustl.dao.query.generator.MySQLQueryGenerator"/>
+				<DBPropertyFile name ="MySQLDAOProperties.xml"/>
 			</JDBCDAO>
 			
 	
@@ -37,21 +25,9 @@
 				<Config-file name = "hibernateOracle.cfg.xml"/>
 				<DefaultConnectionManager name = "edu.wustl.dao.connectionmanager.ConnectionManager"/>
 			</DefaultDAO>
+		
 			<JDBCDAO>
-				<Class-name name = "edu.wustl.dao.OracleDAOImpl"/>
-				<DatabaseType name = "Oracle"/>
-				<DefaultBatchSize value = "5"/>
-				<DataSource name = ""/>
-				<JDBCConnectionManager name = "edu.wustl.dao.connectionmanager.ConnectionManager"/>
-				<DatePattern name = "mm-dd-yyyy"/>
-				<TimePattern name = "hh-mi-ss"/>
-				<DateFormatFunction name ="TO_CHAR"/>
-				<TimeFormatFunction name ="TO_CHAR"/>
-				<DateToStrFunction name = "TO_CHAR"/>
-				<StrTodateFunction name = "TO_DATE"/>
-				<ExceptionFormater name = "edu.wustl.dao.formatmessage.OracleExceptionFormatter"/>
-				<QueryGenerator name = "edu.wustl.dao.query.generator.OracleQueryGenerator"/>
-				
+				<DBPropertyFile name ="OracleDAOProperties.xml"/>
 			</JDBCDAO>
 			
 		</DAOFactory>
