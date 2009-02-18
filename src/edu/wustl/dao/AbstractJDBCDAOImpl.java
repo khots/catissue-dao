@@ -26,7 +26,6 @@ import edu.wustl.dao.query.generator.QueryData;
 import edu.wustl.dao.query.generator.QueryGenerator;
 import edu.wustl.dao.util.DAOConstants;
 import edu.wustl.dao.util.DAOUtility;
-import edu.wustl.security.exception.SMException;
 
 
 /**
