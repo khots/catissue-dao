@@ -7,6 +7,12 @@ import org.junit.Test;
 
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.JDBCDAO;
+import edu.wustl.dao.QueryWhereClause;
+import edu.wustl.dao.condition.EqualClause;
+import edu.wustl.dao.condition.INClause;
+import edu.wustl.dao.condition.NotEqualClause;
+import edu.wustl.dao.condition.NotNullClause;
+import edu.wustl.dao.condition.NullClause;
 import edu.wustl.dao.daofactory.IDAOFactory;
 import edu.wustl.dao.exception.DAOException;
 
@@ -144,41 +150,7 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 		}
 	}*/
 
-	/**
-	 * This test will assert that all the objects are retrieved successfully.
-	 */
-	@Test
-	public void testCaseRetriveAllObjectsJDBC()
-	{
-	  try
-	  {
-		  jdbcDAO.openSession(null);
-		  List list = jdbcDAO.retrieve("test_user",null,null,false);
-		  System.out.println("--------------------------------");
-		  System.out.println("Size of list :"+list);
-	  	 // jdbcDAO.closeSession();
-	  	  assertNotNull(list);
-
-	  }
-	  catch(Exception exp)
-	  {
-		  System.out.println("--------------------------------");
-		  exp.printStackTrace();
-		  assertFalse("Failed while retrieving object :", true);
-	  }
-	  finally
-		{
-			try
-			{
-				jdbcDAO.closeSession();
-			}
-			catch (DAOException e)
-			{
-
-				e.printStackTrace();
-			}
-		}
-	}
+	
 	/*@Test
 	public void testCaseRetrieveRS()
 	{
@@ -407,7 +379,7 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 
 	*//**
 	 * This test will assert the execution of query.
-	 *//*
+	 */
 	@Test
 	public void testExecuteUpdateJDBC()
 	{
@@ -440,9 +412,9 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 		}
 	}
 
-	*//**
+	/**
 	 * This test will assert that all the objects are retrieved successfully.
-	 *//*
+	 */
 	@Test
 	public void testCaseRetriveAllObjectsJDBC()
 	{
@@ -472,10 +444,10 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 		}
 	}
 
-	*//**
+	/**
 	 * This test will assert that the object with requested
 	 * column will be retrieved successfully.
-	 *//*
+	 */
 	@Test
 	public void testCaseRetriveObjectJDBC()
 	{
@@ -509,10 +481,10 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 	}
 
 
-	*//**
+	/**
 	 * This test will assert that requested columns of the objects are
 	 * retrieved successfully.
-	 *//*
+	 */
 	@Test
 	public void testCaseRetrieveObjectColumnsJDBC()
 	{
@@ -544,10 +516,10 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 		}
 	}
 
-	*//**
+	/**
 	 * This test will assert that only distinct rows
 	 * retrieved successfully.
-	 *//*
+	 */
 	@Test
 	public void testCaseRetrieveOnlyDistinctRowsJDBC()
 	{
@@ -581,10 +553,10 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 	}
 
 
-	*//**
+	/**
 	 * This test will assert that objects retrieved successfully
 	 * when where clause holds in condition.
-	 *//*
+	 */
 	@Test
 	public void testRetriveInConditionJDBC()
 	{
@@ -624,10 +596,10 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 
 	}
 
-	*//**
+	/**
 	 * This test will assert that objects retrieved successfully
 	 * when where clause holds not null condition.
-	 *//*
+	 */
 	@Test
 	public void testRetriveIsNotNullConditionJDBC()
 	{
@@ -666,10 +638,10 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 		}
 	}
 
-	*//**
+	/**
 	 * This test will assert that objects retrieved successfully
 	 * when where clause holds is null condition.
-	 *//*
+	 */
 	@Test
 	public void testRetriveIsNullConditionJDBC()
 	{
@@ -710,10 +682,10 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 
 	}
 
-	*//**
+	/**
 	 * This test will assert that objects retrieved successfully
 	 * when where clause holds is not equal condition.
-	 *//*
+	 */
 	@Test
 	public void testRetriveNotEqualConditionJDBC()
 	{
@@ -755,10 +727,10 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 	}
 
 
-	*//**
+	/**
 	 * This test will assert that objects retrieved successfully with given column value
 	 * Having equal (=)condition.
-	 *//*
+	 */
 	@Test
 	public void testRetriveEqualConditionJDBC()
 	{
@@ -797,7 +769,7 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 	}
 
 
-	*//**
+	/**
 	 * This test will assert that date pattern retrieved successfully.
 	 *//*
 	@Test
