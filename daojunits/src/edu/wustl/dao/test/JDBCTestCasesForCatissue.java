@@ -747,7 +747,7 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 			//jdbcDAO.closeSession();
 
 			assertNotNull("No object retrieved ::",list);
-			assertTrue("No object retrieved ::",list.size() > 0);
+		
 		}
 		catch(Exception exp)
 		{
