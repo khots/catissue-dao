@@ -39,11 +39,6 @@ public class ApplicationDAOPropertiesParser
 			.getLogger(ApplicationDAOPropertiesParser.class);
 
 	/**
-	 * Specifies Document object.
-	 */
-	private Document dom;
-
-	/**
 	 * Specifies application variables.
 	 */
 	private String defaultConnManager,jdbcConnManager,applicationName, daoFactoryName,
@@ -54,7 +49,7 @@ public class ApplicationDAOPropertiesParser
 	 */
 	private String databaseType,dataSource,defaultBatchSize,datePattern,timePattern,
 	dateFormatFunction,timeFormatFunction,dateTostrFunction,strTodateFunction,
-	exceptionFormatterName,queryGeneratorName;
+	queryGeneratorName;
 
 	/**
 	 * This method gets DAO Factory Map.
@@ -65,8 +60,8 @@ public class ApplicationDAOPropertiesParser
 		Map<String, IDAOFactory> daoFactoryMap = new HashMap<String, IDAOFactory>();
 		try
 		{
-			readFile();
-			parseDocument(daoFactoryMap);
+			Document doc = readFile("ApplicationDAOProperties.xml");
+			parseDocument(daoFactoryMap,doc);
 		}
 		catch (Exception exception)
 		{
@@ -78,8 +73,10 @@ public class ApplicationDAOPropertiesParser
 	/**
 	 * This method parse XML File.
 	 * @throws DAOException :
+	 * @return document object.
+	 * @param fileName : filename
 	 */
-	private void readFile() throws DAOException
+	private Document readFile(String fileName) throws DAOException
 	{
 		//get the factory
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -91,8 +88,10 @@ public class ApplicationDAOPropertiesParser
 
 			//parse using builder to get DOM representation of the XML file
 			InputStream inputStream = ApplicationDAOPropertiesParser.class.getClassLoader()
-			.getResourceAsStream("ApplicationDAOProperties.xml");
-			dom = documentBuilder.parse(inputStream);
+			.getResourceAsStream(fileName);
+			Document doc = documentBuilder.parse(inputStream);
+
+			return doc;
 
 		}
 		catch (Exception exp)
@@ -102,23 +101,23 @@ public class ApplicationDAOPropertiesParser
 			throw new DAOException(errorKey,exp,"ApplicationDAOPropertiesParser.java :"+
 					DAOConstants.FILE_PARSE_ERROR);
 		}
-
-	}
+}
 
 	/**
 	 * This method parse the document.
 	 * @param daoFactoryMap this will hold the factory object as per the application.
+	 * @param doc document instance.
 	 * @throws InstantiationException Instantiation Exception
 	 * @throws IllegalAccessException Illegal Access Exception
 	 * @throws ClassNotFoundException Class Not Found Exception
 	 * @throws DAOException :generic DAOException.
 	 */
-	private void parseDocument(Map<String, IDAOFactory> daoFactoryMap)
+	private void parseDocument(Map<String, IDAOFactory> daoFactoryMap,Document doc)
 	throws InstantiationException, IllegalAccessException,
 			ClassNotFoundException, DAOException
 	{
 		//get the root element
-		Element root = dom.getDocumentElement();
+		Element root = doc.getDocumentElement();
 		NodeList rootChildren = root.getElementsByTagName("Application");
 		for (int i = 0; i < rootChildren.getLength(); i++)
 		{
@@ -171,7 +170,6 @@ public class ApplicationDAOPropertiesParser
 		databaseProperties.setStrTodateFunction(strTodateFunction);
 		databaseProperties.setTimeFormatFunction(timeFormatFunction);
 		databaseProperties.setTimePattern(timePattern);
-		databaseProperties.setExceptionFormatterName(exceptionFormatterName);
 		databaseProperties.setQueryGeneratorName(queryGeneratorName);
 		databaseProperties.setDefaultBatchSize(Integer.valueOf(defaultBatchSize));
 	}
@@ -199,7 +197,6 @@ public class ApplicationDAOPropertiesParser
 		timeFormatFunction= "";
 		dateTostrFunction= "";
 		strTodateFunction= "";
-		exceptionFormatterName="";
 		queryGeneratorName="";
 		defaultBatchSize="";
 	}
@@ -207,8 +204,9 @@ public class ApplicationDAOPropertiesParser
 	/**
 	 * This method sets Application Properties.
 	 * @param applicationChild application Children.
+	 * @throws DAOException database exception
 	 */
-	private void setApplicationProperties(Node applicationChild)
+	private void setApplicationProperties(Node applicationChild) throws DAOException
 	{
 		NamedNodeMap attributeMap = applicationChild.getAttributes();
 		applicationName = ((Node) attributeMap.item(0)).getNodeValue();
@@ -229,8 +227,9 @@ public class ApplicationDAOPropertiesParser
 	/**
 	 * This method sets DAOFactory Properties.
 	 * @param childNode DAOFactory child Node.
+	 * @throws DAOException database exception
 	 */
-	private void setDAOFactoryProperties(Node childNode)
+	private void setDAOFactoryProperties(Node childNode) throws DAOException
 	{
 		setAttributesOfDAOFactory(childNode);
 		NodeList childlist = childNode.getChildNodes();
@@ -274,13 +273,39 @@ public class ApplicationDAOPropertiesParser
 	/**
 	 * This method sets JDBCDAO Properties.
 	 * @param childrenDAOFactory children DAOFactory.
+	 * @throws DAOException database exception
 	 */
-	private void setJDBCDAOProperties(Node childrenDAOFactory)
+	private void setJDBCDAOProperties(Node childrenDAOFactory) throws DAOException
 	{
 		NodeList childJDBCDAO = childrenDAOFactory.getChildNodes();
 		for (int l = 0; l < childJDBCDAO.getLength(); l++)
 		{
 			Node childnode = childJDBCDAO.item(l);
+
+			if (childnode.getNodeName().equals("DBPropertyFile"))
+			{
+				Node attNode = getNextnode(childnode);
+				String dbPropertyFile = attNode.getNodeValue();
+				parseDBPropFile(dbPropertyFile);
+
+			}
+		}
+
+	}
+
+	/**
+	 * @param dbPropFile database property file.
+	 * @throws DAOException database exception
+	 */
+	private  void parseDBPropFile(String dbPropFile) throws DAOException
+	{
+
+		Document doc = readFile(dbPropFile);
+		Element root = doc.getDocumentElement();
+		NodeList list = root.getChildNodes();
+		for (int i = 0; i < list.getLength(); i++)
+		{
+			Node childnode = list.item(i);
 			if (childnode.getNodeName().equals("Class-name"))
 			{
 				Node attNode = getNextnode(childnode);
@@ -331,11 +356,6 @@ public class ApplicationDAOPropertiesParser
 				Node attNode = getNextnode(childnode);
 				strTodateFunction = attNode.getNodeValue();
 			}
-			if (childnode.getNodeName().equals("ExceptionFormater"))
-			{
-				Node attNode = getNextnode(childnode);
-				exceptionFormatterName = attNode.getNodeValue();
-			}
 			if (childnode.getNodeName().equals("QueryExecutor"))
 			{
 				Node attNode = getNextnode(childnode);
@@ -347,6 +367,7 @@ public class ApplicationDAOPropertiesParser
 				defaultBatchSize = attNode.getNodeValue();
 			}
 		}
+
 
 	}
 
@@ -392,11 +413,13 @@ public class ApplicationDAOPropertiesParser
 		}
 	}
 
-/*public static void main(String[] args)
+	/*public static void main(String[] args)
 	{
 		Map<String, IDAOFactory> daoFactoryMap = new HashMap<String, IDAOFactory>();
 		ApplicationDAOPropertiesParser parser = new ApplicationDAOPropertiesParser();
 		daoFactoryMap = parser.getDaoFactoryMap();
-	}
-*/
+		System.out.println(daoFactoryMap.size());
+
+	}*/
+
 }

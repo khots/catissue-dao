@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.junit.Test;
 
 import test.Address;
@@ -25,7 +24,6 @@ import edu.wustl.dao.condition.NotNullClause;
 import edu.wustl.dao.condition.NullClause;
 import edu.wustl.dao.daofactory.IDAOFactory;
 import edu.wustl.dao.exception.DAOException;
-import edu.wustl.dao.formatmessage.ConstraintViolationFormatter;
 import edu.wustl.dao.util.DAOConstants;
 import edu.wustl.dao.util.HibernateMetaData;
 
@@ -814,32 +812,6 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 		{
 			System.out.println("------------------------------------------------------------------------");
 			exp.printStackTrace();
-			ConstraintViolationFormatter formatter = new ConstraintViolationFormatter();
-			try
-			{
-				ApplicationException appExp = (ApplicationException)exp;
-				String messagethrown = formatter.formatMessage(appExp.getWrapException());
-				assertTrue("Message thrown is not correct!! ",
-						messagethrown.contains("Submission failed since"));
-
-			}
-			catch (DAOException e)
-			{
-				logger.fatal(e);
-			}
-			finally
-			{
-				try
-				{
-					dao.closeSession();
-				}
-				catch (DAOException e)
-				{
-					e.printStackTrace();
-				}
-			}
-
-
 		}
 		finally
 		{

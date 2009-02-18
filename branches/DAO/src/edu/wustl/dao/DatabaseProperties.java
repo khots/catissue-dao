@@ -45,11 +45,6 @@ public class DatabaseProperties
 	 */
 	private int defaultBatchSize;
 
-	/**
-	 * Exception formatter name.
-	 */
-	private String exceptionFormatterName;
-
     /**
      * Query executor name.
      */
@@ -75,15 +70,6 @@ public class DatabaseProperties
 
 
 	/**
-	 * This method will be called to get the exception formatter name.
-	 * @return exception formatter name.
-	 */
-	public String getExceptionFormatterName()
-	{
-		return exceptionFormatterName;
-	}
-
-	/**
 	 * This method will be called to get the query executor name.
 	 * @return query executor name.
 	 */
@@ -92,14 +78,6 @@ public class DatabaseProperties
 		return queryGeneratorName;
 	}
 
-	/**
-	 * This method will be called to set the exception formatter name.
-	 * @param exceptionFormatterName exception formatter name.
-	 */
-	public void setExceptionFormatterName(String exceptionFormatterName)
-	{
-		this.exceptionFormatterName = exceptionFormatterName;
-	}
 
 	/**
 	 * This method will be called to set the query executor name.
