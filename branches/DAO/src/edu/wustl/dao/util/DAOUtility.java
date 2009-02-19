@@ -12,9 +12,11 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -23,10 +25,10 @@ import org.hibernate.Query;
 
 import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.global.CommonServiceLocator;
+import edu.wustl.common.util.global.TextConstants;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.DAO;
 import edu.wustl.dao.HibernateDAO;
-import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.daofactory.DAOConfigFactory;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.query.generator.DBTypes;
@@ -131,68 +133,6 @@ public final class DAOUtility
         }
         return qualifiedName;
     }
-
-    /**
-	 * @param tableName :
-	 * @param jdbcDAO :
-	 * @return :
-     * @throws DAOException :
-	 */
-	public String getDisplayName(String tableName,JDBCDAO jdbcDAO) throws DAOException
-	{
-		String displayName="";
-		String sql = "select DISPLAY_NAME from CATISSUE_QUERY_TABLE_DATA where TABLE_NAME='"+tableName+"'";
-		try
-		{
-			ResultSet resultSet = jdbcDAO.getQueryResultSet(sql);
-			while(resultSet.next())
-			{
-				displayName=resultSet.getString("DISPLAY_NAME");
-				break;
-			}
-			resultSet.close();
-		}
-		catch(Exception ex)
-		{
-			logger.error(ex.getMessage(),ex);
-		}
-		return displayName;
-	}
-
-	/**
-	 * Generates error messages.
-	 * @param exep :
-	 * @return error message.
-	 */
-	public String generateErrorMessage(Exception exep)
-	{
-		String messageToReturn = "";
-		if (exep instanceof HibernateException)
-        {
-            HibernateException hibernateException = (HibernateException) exep;
-            StringBuffer message = new StringBuffer(messageToReturn);
-            String[] str = hibernateException.getMessages();
-            if (str == null)
-            {
-            	messageToReturn = "Unknown Error";
-            }
-            else
-            {
-            	  for (int i = 0; i < str.length; i++)
-                  {
-                  	message.append(str[i]).append(DAOConstants.TRAILING_SPACES);
-                  }
-                  messageToReturn =  message.toString();
-            }
-
-        }
-        else
-        {
-        	messageToReturn = exep.getMessage();
-        }
-		  return messageToReturn;
-	}
-
 
 
 
@@ -389,7 +329,5 @@ public final class DAOUtility
 			}
 		}
 	}
-
-
 
 }
