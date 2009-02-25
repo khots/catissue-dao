@@ -437,7 +437,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		}
 		finally
 		{
-			closeConnectionParams();
+			closeStmt();
 		}
 	}
 
@@ -535,7 +535,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		}
 		finally
 		{
-			closeConnectionParams();
+			closePreparedStmt();
 		}
 	}
 
@@ -619,57 +619,78 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 */
 	protected void closeConnectionParams()throws DAOException
 	{
-		try
-		{
 			closeResultSet();
 			closeStmt();
 			closePreparedStmt();
+	}
+
+	/**
+	 * Closes the prepared statement if open.
+	 * @throws DAOException : DAO exception
+	 */
+	private void closePreparedStmt() throws DAOException
+	{
+
+		try
+		{
+			if (preparedStatement != null)
+			{
+				preparedStatement.close();
+				preparedStatement = null;
+			}
 		}
 		catch(SQLException sqlExp)
 		{
 			logger.fatal(sqlExp);
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.close.conn.error");
 			throw new DAOException(errorKey,sqlExp,"AbstractJDBCDAOImpl.java :"+
-					DAOConstants.CLOSE_CONN_ERR);
-		}
-	}
-
-	/**
-	 * Closes the prepared statement if open.
-	 * @throws SQLException : SQL exception
-	 */
-	private void closePreparedStmt() throws SQLException
-	{
-		if (preparedStatement != null)
-		{
-			preparedStatement.close();
-			preparedStatement = null;
+				DAOConstants.CLOSE_CONN_ERR);
 		}
 	}
 
 	/**
 	 * Closes the statement if open.
-	 * @throws SQLException : SQL exception
+	 * @throws DAOException : DAO exception
 	 */
-	private void closeStmt() throws SQLException
+	private void closeStmt() throws DAOException
 	{
-		if(statement != null)
+		try
 		{
-			statement.close();
-			statement = null;
+			if(statement != null)
+			{
+				statement.close();
+				statement = null;
+			}
+		}
+		catch(SQLException sqlExp)
+		{
+			logger.fatal(sqlExp);
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.close.conn.error");
+			throw new DAOException(errorKey,sqlExp,"AbstractJDBCDAOImpl.java :"+
+				DAOConstants.CLOSE_CONN_ERR);
 		}
 	}
 
 	/**
 	 * Closes the result Set.
-	 * @throws SQLException SQL exception
+	 * @throws DAOException : DAO exception
 	 */
-	private void closeResultSet() throws SQLException
+	private void closeResultSet() throws DAOException
 	{
-		if(resultSet != null )
+		try
 		{
-			resultSet.close();
-			resultSet = null;
+			if(resultSet != null )
+			{
+				resultSet.close();
+				resultSet = null;
+			}
+		}
+		catch(SQLException sqlExp)
+		{
+			logger.fatal(sqlExp);
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.close.conn.error");
+			throw new DAOException(errorKey,sqlExp,"AbstractJDBCDAOImpl.java :"+
+			DAOConstants.CLOSE_CONN_ERR);
 		}
 	}
 
