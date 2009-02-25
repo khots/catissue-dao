@@ -14,6 +14,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -55,18 +57,14 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	private Statement batchStatement;
 
 	/**
-	 * Connection statement.
-	 */
-	private Statement statement;
-	/**
-	 * Query resultSet.
-	 */
-	private ResultSet resultSet;
-
-	/**
 	 * Query preparedStatement.
 	 */
 	private PreparedStatement preparedStatement;
+
+	/**
+	 * This will maintain the list of all statements.
+	 */
+	private List<Statement> openedStmts = new ArrayList<Statement>();
 
 	/**
 	 * This method will be used to establish the session with the database.
@@ -423,9 +421,10 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	public int executeUpdate(String query) throws DAOException
 	{
 		logger.debug("Execute query.");
+		Statement statement = null;
 		try
 		{
-			createStatement();
+			statement = createStatement();
 			return statement.executeUpdate(query);
 		}
 		catch (SQLException sqlExp)
@@ -437,7 +436,28 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		}
 		finally
 		{
-			closeStmt();
+			removeStmts(statement);
+		}
+	}
+
+	/**
+	 * Remove statement from opened statements list.
+	 * @param statement statement instance
+	 * @throws DAOException database exception.
+	 */
+	private void removeStmts(Statement statement)throws DAOException
+	{
+		try
+		{
+			statement.close();
+			openedStmts.remove(statement);
+		}
+		catch (SQLException exp)
+		{
+			logger.fatal(exp);
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
+			throw new DAOException(errorKey,exp,"AbstractJDBCDAOImpl.java :"
+					+DAOConstants.CLOSE_CONN_ERR);
 		}
 	}
 
@@ -453,9 +473,9 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		logger.debug("Get Query RS");
 		try
 		{
-			closeResultSet();
-			createStatement();
-			resultSet = statement.executeQuery(sql);
+
+			Statement statement = createStatement();
+			ResultSet resultSet = statement.executeQuery(sql);
 			return resultSet;
 		}
 		catch (SQLException exp)
@@ -490,10 +510,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 			throw new DAOException(errorKey,exp,"AbstractJDBCDAOImpl.java :"+
 					DAOConstants.EXECUTE_QUERY_ERROR);
 		}
-		finally
-		{
-			closeConnectionParams();
-		}
+
 	}
 
 	/**
@@ -541,14 +558,16 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 
 	/**
 	 * This method will return the Query prepared statement.
+	 * @return Statement statement.
 	 * @throws DAOException :Generic Exception
 	 */
-	private void createStatement()throws DAOException
+	private Statement createStatement()throws DAOException
 	{
 		try
 		{
-			closeStmt();
-			statement = (Statement)connection.createStatement();
+			Statement statement = (Statement)connection.createStatement();
+			openedStmts.add(statement);
+			return statement;
 		}
 		catch (SQLException sqlExp)
 		{
@@ -600,8 +619,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
    {
 	   try
 		{
-		   closeResultSet();
-		   resultSet = connection.getMetaData().
+		   ResultSet resultSet = connection.getMetaData().
 		   getIndexInfo(connection.getCatalog(), null,tableName, true, false);
 		   return resultSet;
 		}
@@ -619,7 +637,6 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 */
 	protected void closeConnectionParams()throws DAOException
 	{
-			closeResultSet();
 			closeStmt();
 			closePreparedStmt();
 	}
@@ -656,11 +673,22 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	{
 		try
 		{
-			if(statement != null)
+			Iterator<Statement> stmtIterator = openedStmts.iterator();
+			while(stmtIterator.hasNext())
 			{
-				statement.close();
-				statement = null;
+				Statement stmt = stmtIterator.next();
+				do
+				{
+					ResultSet resultSet = stmt.getResultSet();
+					if(resultSet != null)
+					{
+						resultSet.close();
+					}
+				}while(stmt.getMoreResults());
+
+				stmt.close();
 			}
+
 		}
 		catch(SQLException sqlExp)
 		{
@@ -670,30 +698,6 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 				DAOConstants.CLOSE_CONN_ERR);
 		}
 	}
-
-	/**
-	 * Closes the result Set.
-	 * @throws DAOException : DAO exception
-	 */
-	private void closeResultSet() throws DAOException
-	{
-		try
-		{
-			if(resultSet != null )
-			{
-				resultSet.close();
-				resultSet = null;
-			}
-		}
-		catch(SQLException sqlExp)
-		{
-			logger.fatal(sqlExp);
-			ErrorKey errorKey = ErrorKey.getErrorKey("db.close.conn.error");
-			throw new DAOException(errorKey,sqlExp,"AbstractJDBCDAOImpl.java :"+
-			DAOConstants.CLOSE_CONN_ERR);
-		}
-	}
-
 
 	/**
 	 * This method will be called to get connection Manager object.
