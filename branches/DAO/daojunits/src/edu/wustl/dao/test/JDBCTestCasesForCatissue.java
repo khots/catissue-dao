@@ -411,6 +411,55 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 			}
 		}
 	}
+	
+	
+	
+	/**
+	 * This test will assert the execution of query.
+	 */
+	@Test
+	public void testResultSet()
+	{
+		try
+		{
+			jdbcDAO.openSession(null);
+			StringBuffer strbuff = new StringBuffer();
+			strbuff.append("select IDENTIFIER from test_user");
+
+			ResultSet rsSet = jdbcDAO.getQueryResultSet(strbuff.toString());
+
+			while(rsSet.next())
+			{
+				Long identifier = (Long)rsSet.getObject(1);
+				System.out.println("Identifier :"+identifier);
+				String sql = "select FIRST_NAME from test_user where IDENTIFIER ="+identifier;
+				ResultSet newRS = jdbcDAO.getQueryResultSet(sql);
+				if(newRS.next())
+					System.out.println(" Name:::"+newRS.getObject(1));
+
+			}
+
+			jdbcDAO.commit();
+		//	jdbcDAO.closeSession();
+		}
+		catch(Exception exp)
+		{
+			 exp.printStackTrace();
+			assertFalse("Failed while inserting object Mysql :", true);
+		}
+		finally
+		{
+			try 
+			{
+				jdbcDAO.closeSession();
+			} 
+			catch (DAOException e)
+			{
+		
+				e.printStackTrace();
+			}
+		}
+	}
 
 	/**
 	 * This test will assert that all the objects are retrieved successfully.
