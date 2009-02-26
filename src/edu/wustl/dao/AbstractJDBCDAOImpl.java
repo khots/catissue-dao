@@ -677,14 +677,14 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 			while(stmtIterator.hasNext())
 			{
 				Statement stmt = stmtIterator.next();
-				do
+				/*do
 				{
 					ResultSet resultSet = stmt.getResultSet();
 					if(resultSet != null)
 					{
 						resultSet.close();
 					}
-				}while(stmt.getMoreResults());
+				}while(stmt.getMoreResults());*/
 
 				stmt.close();
 			}
