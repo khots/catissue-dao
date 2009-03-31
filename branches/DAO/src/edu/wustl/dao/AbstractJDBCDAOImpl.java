@@ -501,7 +501,9 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		{
 			ResultSet resultSet = getQueryResultSet(query);
 			logger.debug("RS"+resultSet);
-			return DAOUtility.getInstance().getListFromRS(resultSet);
+			List resultData =  DAOUtility.getInstance().getListFromRS(resultSet);
+			closeStatement(resultSet);
+			return resultData;
 		}
 		catch(SQLException exp)
 		{
@@ -911,5 +913,22 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
 	}
 */
-
+	/**
+	 * This method has been added to close statement for which resultset is returned.
+	 * @param resultSet ResultSet
+	 */
+	public void closeStatement(ResultSet resultSet) throws DAOException
+	{
+		try
+		{
+			Statement stmt=resultSet.getStatement();
+			removeStmts(stmt);
+		}
+		catch(SQLException sqlExp)
+		{
+			logger.fatal(sqlExp);
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
+			throw new DAOException(errorKey,sqlExp,"Problem Occurred while closing Statement.");
+		}
+	}
 }
