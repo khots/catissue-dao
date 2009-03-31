@@ -162,5 +162,11 @@ public interface JDBCDAO extends DAO
 	 * @throws DAOException : Generic database exception.
 	 */
 	void update(QueryData queryData) throws DAOException;
+	
+	/**
+	 * This method has been added to close statement for which resultset is returned.
+	 * @param resultSet ResultSet
+	 */
+	void closeStatement(ResultSet resultSet) throws DAOException;
 
 }
