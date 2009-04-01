@@ -48,6 +48,6 @@ public interface HibernateDAO extends DAO
 	 * @param oldObj old object.
 	 * @throws DAOException : generic DAOException
 	 */
-	public void audit(Object obj, Object oldObj) throws DAOException;
+	void audit(Object obj, Object oldObj) throws DAOException;
 
 }
