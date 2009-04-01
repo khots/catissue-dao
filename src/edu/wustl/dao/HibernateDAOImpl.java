@@ -164,17 +164,31 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 	 */
 	public void update(Object obj, Object oldObj) throws DAOException
 	{
-		try
-		{
-			update(obj);
-			auditManager.audit((Auditable)obj, (Auditable) oldObj, "UPDATE");
-		}
-		catch (AuditException exp)
+		update(obj);
+		audit( obj,  oldObj);		
+	}
+	
+	/**
+	 * Added method to audit.
+	 * @param obj Object to be updated in database
+	 * @param oldObj old object.
+	 * @throws DAOException : generic DAOException
+	 */
+	public void audit(Object obj, Object oldObj) throws DAOException
+    {
+        try
+        {
+        	if (obj instanceof Auditable)
+        	{
+                auditManager.audit((Auditable) obj, (Auditable)oldObj, "UPDATE");
+        	}   
+        }
+        catch (AuditException exp)
 		{
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.audit.error");
 			throw new DAOException(errorKey,exp,"HibernateDAOImpl.java :");
 		}
-	}
+    }
 
 	/**
 	 * Deletes the persistent object from the database.
