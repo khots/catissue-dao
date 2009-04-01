@@ -41,5 +41,13 @@ public interface HibernateDAO extends DAO
 	 * @throws DAOException : generic DAOException
 	 */
 	void update(Object obj, Object oldObj) throws DAOException;
+	
+	/**
+	 * Added method to audit.
+	 * @param obj Object to be updated in database
+	 * @param oldObj old object.
+	 * @throws DAOException : generic DAOException
+	 */
+	public void audit(Object obj, Object oldObj) throws DAOException;
 
 }
