@@ -356,7 +356,7 @@ public class ApplicationDAOPropertiesParser
 				Node attNode = getNextnode(childnode);
 				strTodateFunction = attNode.getNodeValue();
 			}
-			if (childnode.getNodeName().equals("QueryExecutor"))
+			if (childnode.getNodeName().equals("QueryGenerator"))
 			{
 				Node attNode = getNextnode(childnode);
 				queryGeneratorName = attNode.getNodeValue();
