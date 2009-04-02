@@ -39,8 +39,8 @@ public class HashedDataHandler
 	 * @throws DAOException : DAOException
 	 * @throws SQLException :
 	 */
-	protected final ResultSetMetaData getMetaData(String tableName,List<String> columnNames,
-			JDBCDAO jdbcDAO)throws DAOException, SQLException
+	private final ResultSetMetaData getMetaData(String tableName,List<String> columnNames,
+			JDBCDAO jdbcDAO)throws DAOException,SQLException
 	{
 
 		ResultSetMetaData metaData;
@@ -71,7 +71,7 @@ public class HashedDataHandler
 	 * @return It will return the metaData associated to the table.
 	 * @throws DAOException : DAOException
 	 */
-	protected final ResultSetMetaData getMetaDataAndUpdateColumns(String tableName,
+	private final ResultSetMetaData getMetaDataAndUpdateColumns(String tableName,
 			List<String> columnNames,JDBCDAO jdbcDAO)
 	throws DAOException
 	{
@@ -105,7 +105,7 @@ public class HashedDataHandler
 	 * @param columnNamesList : List of columns of the table.
 	 * @return query String.
 	 */
-	protected String createInsertQuery(String tableName,List<String> columnNamesList)
+	private String createInsertQuery(String tableName,List<String> columnNamesList)
 	{
 		StringBuffer query = new StringBuffer("INSERT INTO " + tableName + "(");
 		StringBuffer colValues = new StringBuffer();
@@ -226,7 +226,7 @@ public class HashedDataHandler
 	 * @param obj : Object
 	 * @throws SQLException : SQLException
 	 */
-	protected void setNumberColumns(PreparedStatement stmt,
+	private void setNumberColumns(PreparedStatement stmt,
 			int index, Object obj) throws SQLException
 	{
 			if (obj != null	&& obj.toString().equals("##"))
@@ -248,7 +248,7 @@ public class HashedDataHandler
 	 * @return return true if column type is timeStamp.
 	 * @throws SQLException SQLException
 	 */
-	protected boolean isTimeStampColumn(ResultSetMetaData metaData,
+	private boolean isTimeStampColumn(ResultSetMetaData metaData,
 			PreparedStatement stmt, int index,Object obj) throws SQLException
 	{
 		boolean isTimeStampColumn = false;
@@ -295,7 +295,7 @@ public class HashedDataHandler
 	 * @throws SQLException : SQLException
 	 * @throws DAOException : DAOException
 	 */
-	protected void setDateColumns(PreparedStatement stmt,
+	private void setDateColumns(PreparedStatement stmt,
 			int index,Object obj)
 			throws SQLException, DAOException
 	{
@@ -360,7 +360,7 @@ public class HashedDataHandler
 	 * @throws SQLException : SQLException
 	 */
 	public void insertHashedValues(String tableName, List<Object> columnValues, List<String> columnNames,
-			JDBCDAO jdbcDAO)throws DAOException, SQLException
+			JDBCDAO jdbcDAO)throws DAOException
 	{
 
 		List<String>columnNamesList = new ArrayList<String>();
