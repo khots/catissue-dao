@@ -459,8 +459,8 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 	 * @return Object.
 	 * @throws DAOException generic DAOException.
 	 */
-	public List retrieveAttribute(Class objClass, Long identifier,
-			String attributeName,String columnName) throws DAOException
+	public List retrieveAttribute(Class objClass,String columnName, Long identifier,
+			String attributeName) throws DAOException
 	 {
 		logger.debug("Retrieve attributes");
 		try
