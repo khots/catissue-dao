@@ -102,8 +102,8 @@ public interface DAO
 	 * @return List.
 	 * @throws DAOException generic DAOException.
 	 */
-	List retrieveAttribute(Class objClass, Long identifier,
-			String attributeName,String columnName) throws DAOException;
+	List retrieveAttribute(Class objClass, String columnName,Long identifier,
+			String attributeName) throws DAOException;
 
 	/**
 	 * Retrieve and returns the list of all source objects that satisfy the

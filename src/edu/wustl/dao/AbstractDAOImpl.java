@@ -155,8 +155,8 @@ public abstract class AbstractDAOImpl implements DAO
 	 * @return It will return the Attribute of the object having given identifier
 	 * @throws DAOException : DAOException
 	 */
-	public List retrieveAttribute(Class objClass, Long identifier,
-			String attributeName,String columnName) throws DAOException
+	public List retrieveAttribute(Class objClass,String columnName, Long identifier,
+			String attributeName) throws DAOException
 	{
 		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
 		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
