@@ -618,8 +618,8 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 		try
 		{
 			dao.openSession(null);
-			Object obj = (Object)dao.retrieveAttribute(User.class,
-					Long.valueOf(1),"emailAddress","identifier");
+			Object obj = (Object)dao.retrieveAttribute(User.class,"identifier",
+					Long.valueOf(1),"emailAddress");
 		//	dao.closeSession();
 
 			assertNotNull("Object retrieved is null",obj);
