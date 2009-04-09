@@ -3,6 +3,7 @@ package edu.wustl.dao.test;
 import junit.framework.TestSuite;
 
 
+
 /**
  * @author kalpana_thakur
  *TODO
@@ -24,7 +25,7 @@ public class DAOTestSuite
 	{
 		//org.junit.runner.JUnitCore.main("edu.wustl.dao.test.HibernateInsertTestCase");
 
-		junit.swingui.TestRunner.run(DAOTestSuite.class);
+		junit.awtui.TestRunner.run(DAOTestSuite.class);
 	}
 
 	/**
