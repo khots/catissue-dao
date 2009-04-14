@@ -21,7 +21,6 @@ import org.hibernate.util.XMLHelper;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 
-import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.AbstractJDBCDAOImpl;
 import edu.wustl.dao.DAO;
@@ -29,7 +28,7 @@ import edu.wustl.dao.DatabaseProperties;
 import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.connectionmanager.IConnectionManager;
 import edu.wustl.dao.exception.DAOException;
-import edu.wustl.dao.util.DAOConstants;
+import edu.wustl.dao.util.DAOUtility;
 import edu.wustl.dao.util.HibernateMetaData;
 
 
@@ -122,10 +121,8 @@ public class DAOFactory implements IDAOFactory
 		}
 		catch (Exception excp )
 		{
-			logger.error(excp.getMessage() + DAOConstants.DEFAULTDAO_INIT_ERR + excp);
-			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,excp,"DAOFactory.java :"+
-					DAOConstants.DEFAULTDAO_INIT_ERR);
+			throw DAOUtility.getInstance().getDAOException
+			(excp, "db.dao.init.error", "DAOFactory.java ");
 		}
 
 
@@ -154,10 +151,8 @@ public class DAOFactory implements IDAOFactory
 		}
 		catch (Exception excp )
 		{
-			logger.error(excp.getMessage() + DAOConstants.JDBCDAO_INIT_ERR + excp);
-			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,excp,"DAOFactory.java :"+
-					DAOConstants.JDBCDAO_INIT_ERR);
+			throw DAOUtility.getInstance().getDAOException
+			(excp, "db.jdbcdao.init.error", "DAOFactory.java ");
 		}
 
 	}
@@ -178,11 +173,9 @@ public class DAOFactory implements IDAOFactory
 		}
 		catch (Exception exp)
 		{
-			logger.fatal(exp.getMessage());
-			logger.error(exp.getMessage(),exp);
-			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,exp,"DAOFactory.java :"+
-					DAOConstants.BUILD_SESS_FACTORY_ERR);
+
+			throw DAOUtility.getInstance().getDAOException
+			(exp, "db.sessionfactory.init.error", "DAOFactory.java ");
 
 		}
 	}
@@ -256,10 +249,8 @@ public class DAOFactory implements IDAOFactory
         }
         catch (Exception exp)
         {
-        	logger.fatal(exp.getMessage());
-        	ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,exp,"DAOFactory.java :"+
-					DAOConstants.CONFIG_FILE_PARSE_ERROR);
+        	throw DAOUtility.getInstance().getDAOException
+			(exp, "db.conf.file.parse.error", "DAOFactory.java ");
         }
 
     }

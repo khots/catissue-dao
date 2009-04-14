@@ -11,11 +11,15 @@ package edu.wustl.dao.util;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.sql.Types;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.hibernate.HibernateException;
@@ -115,8 +119,9 @@ public final class DAOUtility
      * Parses the fully qualified class Name and returns only the class Name.
      * @param fullyQualifiedName The fully qualified class Name.
      * @return The className.
+	 * @throws DAOException database exception
      */
-    public String parseClassName(String fullyQualifiedName)
+    public String parseClassName(String fullyQualifiedName) throws DAOException
     {
     	String qualifiedName = fullyQualifiedName;
         try
@@ -124,9 +129,11 @@ public final class DAOUtility
         	qualifiedName = fullyQualifiedName.substring(fullyQualifiedName.
         			lastIndexOf(DAOConstants.DOT_OPERATOR) + 1);
         }
-        catch (Exception e)
+        catch (Exception exp)
         {
-        	logger.fatal("Problem while retrieving Fully Qualified class name.", e);
+        	logger.fatal("Problem while retrieving Fully Qualified class name.", exp);
+        	throw DAOUtility.getInstance().getDAOException(exp, "db.retrieve.data.error",
+			"DAOUtility.java ");
         }
         return qualifiedName;
     }
@@ -176,7 +183,7 @@ public final class DAOUtility
 		}
 		catch(HibernateException excp)
 		{
-			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
+			ErrorKey errorKey = ErrorKey.getErrorKey("db.update.data.error");
 			throw new DAOException(errorKey,excp,"DAOUtility.java :");
 		}
 		finally
@@ -285,9 +292,8 @@ public final class DAOUtility
 		}
 		catch(SQLException exp)
 		{
-			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,exp,"DatabaseConnectionParams.java :"+
-					DAOConstants.RS_METADATA_ERROR);
+			throw DAOUtility.getInstance().getDAOException(exp,
+        			"db.retrieve.data.error", "DatabaseConnectionParams.java ");
 		}
 		return isResultSetExists;
 	}
@@ -326,5 +332,23 @@ public final class DAOUtility
 			}
 		}
 	}
+
+
+	/**
+	 * @param exception : DAOException thrown
+	 * @param errorName : error key
+	 * @param msgValues : Error message
+	 * @return the DAOException instance.
+	 */
+	public DAOException getDAOException(Exception exception,String errorName, String msgValues)
+	{
+		if(exception != null)
+		{
+			logger.debug(exception.getMessage(),exception);
+		}
+		return new DAOException(ErrorKey.getErrorKey(errorName),exception,msgValues);
+
+	}
+
 
 }

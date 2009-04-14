@@ -9,6 +9,8 @@
  */
 package edu.wustl.dao.condition;
 
+import edu.wustl.dao.exception.DAOException;
+
 /**
  * @author kalpana_thakur
  */
@@ -35,7 +37,8 @@ public interface Condition
 	 * It will called by QueryWhereClause.java ,it make use of column name,column value,
 	 * table or class name to generate the condition.
 	 * @return String:
+	 * @throws DAOException database exception.
 	 */
-	String buildSql();
+	String buildSql()throws DAOException;
 
 }
