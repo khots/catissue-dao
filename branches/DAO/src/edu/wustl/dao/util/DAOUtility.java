@@ -183,8 +183,8 @@ public final class DAOUtility
 		}
 		catch(HibernateException excp)
 		{
-			ErrorKey errorKey = ErrorKey.getErrorKey("db.update.data.error");
-			throw new DAOException(errorKey,excp,"DAOUtility.java :");
+			throw DAOUtility.getInstance().getDAOException(excp,
+					"db.update.data.error","DAOUtility.java :");
 		}
 		finally
 		{

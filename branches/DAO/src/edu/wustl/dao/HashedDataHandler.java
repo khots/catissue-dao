@@ -305,9 +305,8 @@ public class HashedDataHandler
 			}
 			catch (ParseException exp)
 			{
-				//TODO have to replace this by parse key
-				ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-				throw new DAOException(errorKey,exp,"HashedDataHandler.java :");
+				throw DAOUtility.getInstance().getDAOException(exp,
+						"db.date.parse.error", "HashedDataHandler.java ");
 			}
 			Date sqlDate = new Date(date.getTime());
 			stmt.setDate(index, sqlDate);
