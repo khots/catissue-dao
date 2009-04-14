@@ -5,12 +5,14 @@
 
 package edu.wustl.dao.daofactory;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
@@ -18,12 +20,12 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
-import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.DatabaseProperties;
 import edu.wustl.dao.exception.DAOException;
-import edu.wustl.dao.util.DAOConstants;
+import edu.wustl.dao.util.DAOUtility;
 
 /**
  * @author prashant_bandal
@@ -54,8 +56,9 @@ public class ApplicationDAOPropertiesParser
 	/**
 	 * This method gets DAO Factory Map.
 	 * @return DAO Factory Map.
+	 * @throws DAOException database exception
 	 */
-	public Map<String, IDAOFactory> getDaoFactoryMap()
+	public Map<String, IDAOFactory> getDaoFactoryMap()throws DAOException
 	{
 		Map<String, IDAOFactory> daoFactoryMap = new HashMap<String, IDAOFactory>();
 		try
@@ -65,43 +68,34 @@ public class ApplicationDAOPropertiesParser
 		}
 		catch (Exception exception)
 		{
-			logger.error(exception.getMessage(), exception);
+			throw DAOUtility.getInstance().getDAOException(exception,
+					"db.app.prop.parsing.exp", "ApplicationDAOPropertiesParser.java ");
 		}
 		return daoFactoryMap;
 	}
 
 	/**
 	 * This method parse XML File.
-	 * @throws DAOException :
 	 * @return document object.
 	 * @param fileName : filename
+	 * @throws ParserConfigurationException : parse exception
+	 * @throws IOException IO exception
+	 * @throws SAXException parser exception
 	 */
-	private Document readFile(String fileName) throws DAOException
+	private Document readFile(String fileName) throws ParserConfigurationException,
+	SAXException, IOException
 	{
 		//get the factory
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-
-		try
-		{
-			//Using factory get an instance of document builder
-			DocumentBuilder documentBuilder = dbf.newDocumentBuilder();
+		//Using factory get an instance of document builder
+		DocumentBuilder documentBuilder = dbf.newDocumentBuilder();
 
 			//parse using builder to get DOM representation of the XML file
-			InputStream inputStream = ApplicationDAOPropertiesParser.class.getClassLoader()
-			.getResourceAsStream(fileName);
-			Document doc = documentBuilder.parse(inputStream);
-
-			return doc;
-
-		}
-		catch (Exception exp)
-		{
-			logger.error(exp.getMessage(), exp);
-			ErrorKey errorKey = ErrorKey.getErrorKey("app.prop.parsing.exp");
-			throw new DAOException(errorKey,exp,"ApplicationDAOPropertiesParser.java :"+
-					DAOConstants.FILE_PARSE_ERROR);
-		}
-}
+		InputStream inputStream = ApplicationDAOPropertiesParser.class.getClassLoader()
+		.getResourceAsStream(fileName);
+		Document doc = documentBuilder.parse(inputStream);
+		return doc;
+	}
 
 	/**
 	 * This method parse the document.
@@ -111,10 +105,14 @@ public class ApplicationDAOPropertiesParser
 	 * @throws IllegalAccessException Illegal Access Exception
 	 * @throws ClassNotFoundException Class Not Found Exception
 	 * @throws DAOException :generic DAOException.
+	 * @throws ParserConfigurationException : parse exception
+	 * @throws IOException IO exception
+	 * @throws SAXException parser exception
 	 */
 	private void parseDocument(Map<String, IDAOFactory> daoFactoryMap,Document doc)
 	throws InstantiationException, IllegalAccessException,
-			ClassNotFoundException, DAOException
+			ClassNotFoundException, DAOException,
+			ParserConfigurationException, SAXException, IOException
 	{
 		//get the root element
 		Element root = doc.getDocumentElement();
@@ -204,9 +202,12 @@ public class ApplicationDAOPropertiesParser
 	/**
 	 * This method sets Application Properties.
 	 * @param applicationChild application Children.
-	 * @throws DAOException database exception
+	 * @throws ParserConfigurationException : parse exception
+	 * @throws IOException IO exception
+	 * @throws SAXException parser exception
 	 */
-	private void setApplicationProperties(Node applicationChild) throws DAOException
+	private void setApplicationProperties(Node applicationChild) throws
+	ParserConfigurationException, SAXException, IOException
 	{
 		NamedNodeMap attributeMap = applicationChild.getAttributes();
 		applicationName = ((Node) attributeMap.item(0)).getNodeValue();
@@ -227,9 +228,12 @@ public class ApplicationDAOPropertiesParser
 	/**
 	 * This method sets DAOFactory Properties.
 	 * @param childNode DAOFactory child Node.
-	 * @throws DAOException database exception
+	  * @throws ParserConfigurationException : parse exception
+	 * @throws IOException IO exception
+	 * @throws SAXException parser exception
 	 */
-	private void setDAOFactoryProperties(Node childNode) throws DAOException
+	private void setDAOFactoryProperties(Node childNode) throws
+	ParserConfigurationException, SAXException, IOException
 	{
 		setAttributesOfDAOFactory(childNode);
 		NodeList childlist = childNode.getChildNodes();
@@ -273,9 +277,12 @@ public class ApplicationDAOPropertiesParser
 	/**
 	 * This method sets JDBCDAO Properties.
 	 * @param childrenDAOFactory children DAOFactory.
-	 * @throws DAOException database exception
+	 * @throws ParserConfigurationException : parse exception
+	 * @throws IOException IO exception
+	 * @throws SAXException parser exception
 	 */
-	private void setJDBCDAOProperties(Node childrenDAOFactory) throws DAOException
+	private void setJDBCDAOProperties(Node childrenDAOFactory) throws
+	ParserConfigurationException, SAXException, IOException
 	{
 		NodeList childJDBCDAO = childrenDAOFactory.getChildNodes();
 		for (int l = 0; l < childJDBCDAO.getLength(); l++)
@@ -295,9 +302,12 @@ public class ApplicationDAOPropertiesParser
 
 	/**
 	 * @param dbPropFile database property file.
-	 * @throws DAOException database exception
+	 * @throws ParserConfigurationException : parse exception
+	 * @throws IOException IO exception
+	 * @throws SAXException parser exception
 	 */
-	private  void parseDBPropFile(String dbPropFile) throws DAOException
+	private  void parseDBPropFile(String dbPropFile) throws
+	ParserConfigurationException, SAXException, IOException
 	{
 
 		Document doc = readFile(dbPropFile);

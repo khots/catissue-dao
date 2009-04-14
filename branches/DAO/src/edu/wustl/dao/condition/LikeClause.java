@@ -1,5 +1,6 @@
 package edu.wustl.dao.condition;
 
+import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.DAOConstants;
 import edu.wustl.dao.util.DAOUtility;
 
@@ -55,8 +56,9 @@ public class LikeClause implements Condition
 	/**
 	 * This method will be called to build like clause.
 	 * @return Query string.
+	 * @throws DAOException Database exception
 	 */
-	public String buildSql()
+	public String buildSql()throws DAOException
 	{
 		StringBuffer strBuff = new StringBuffer(DAOConstants.TRAILING_SPACES);
 

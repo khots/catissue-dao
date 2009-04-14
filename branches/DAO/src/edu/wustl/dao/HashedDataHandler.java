@@ -18,6 +18,7 @@ import edu.wustl.common.util.Utility;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.DAOConstants;
+import edu.wustl.dao.util.DAOUtility;
 
 /**
  * @author kalpana_thakur
@@ -71,7 +72,7 @@ public class HashedDataHandler
 	 * @return It will return the metaData associated to the table.
 	 * @throws DAOException : DAOException
 	 */
-	private final ResultSetMetaData getMetaDataAndUpdateColumns(String tableName,
+	private ResultSetMetaData getMetaDataAndUpdateColumns(String tableName,
 			List<String> columnNames,JDBCDAO jdbcDAO)
 	throws DAOException
 	{
@@ -90,10 +91,8 @@ public class HashedDataHandler
 		}
 		catch (SQLException sqlExp)
 		{
-			logger.fatal(sqlExp.getMessage(), sqlExp);
-			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,sqlExp,"HashedDataHandler.java :"+
-					DAOConstants.RS_METADATA_ERROR);
+			throw DAOUtility.getInstance().getDAOException(sqlExp, "db.update.data.error",
+			"HashedDataHandler.java ");
 		}
 
 		return metaData;
@@ -254,12 +253,10 @@ public class HashedDataHandler
 		boolean isTimeStampColumn = false;
 		if(obj instanceof Timestamp)
 		{
-			Timestamp date = isColumnValueDate(obj);
-			if (date != null)
-			{
-				stmt.setObject(index , date);
-				isTimeStampColumn = true;
-			}
+			Timestamp date = (Timestamp)obj;
+			stmt.setObject(index , date);
+			isTimeStampColumn = true;
+
 		}
 		return isTimeStampColumn;
 	}
@@ -322,7 +319,7 @@ public class HashedDataHandler
 	 * This method checks the TimeStamp value.
 	 * @param obj :
 	 * @return It returns the TimeStamp value
-	 * */
+	 * *//*
 	private Timestamp isColumnValueDate(Object obj)
 	{
 		Timestamp timestamp = null;
@@ -330,11 +327,7 @@ public class HashedDataHandler
 		{
 			DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS",Locale.getDefault());
 			formatter.setLenient(false);
-			java.util.Date date;
-			date = formatter.parse(obj.toString());
-			/*
-			 * Recheck if some issues occurs.
-			 */
+			java.util.Date date = formatter.parse(obj.toString());
 			Timestamp timestampInner = new Timestamp(date.getTime());
 			if (obj != null && !DAOConstants.TRAILING_SPACES.equals(obj.toString()))
 			{
@@ -348,7 +341,7 @@ public class HashedDataHandler
 
 		return timestamp;
 	}
-
+*/
 
 	/**
 	 * This method will be called to insert hashed data values.
@@ -357,7 +350,6 @@ public class HashedDataHandler
 	 * @param columnNames  :List of column names.
 	 * @param jdbcDAO : Database jdbcDAO
 	 * @throws DAOException  :DAOException
-	 * @throws SQLException : SQLException
 	 */
 	public void insertHashedValues(String tableName, List<Object> columnValues, List<String> columnNames,
 			JDBCDAO jdbcDAO)throws DAOException
@@ -387,10 +379,8 @@ public class HashedDataHandler
 		}
 		catch (SQLException sqlExp)
 		{
-			logger.error(sqlExp.getMessage(),sqlExp);
-			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey, sqlExp,"HashedDataHandler.java :"+
-					DAOConstants.INSERT_OBJ_ERROR);
+			throw DAOUtility.getInstance().getDAOException(sqlExp, "db.update.data.error",
+					"HashedDataHandler.java ");
 		}
 
 	}

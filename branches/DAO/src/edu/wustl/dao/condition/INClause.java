@@ -9,6 +9,7 @@
  */
 package edu.wustl.dao.condition;
 
+import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.DAOConstants;
 import edu.wustl.dao.util.DAOUtility;
 
@@ -102,8 +103,9 @@ public class INClause implements Condition
 	/**
 	 * This method will generate the in clause of Query.
 	 * @return String:
+	 * @throws DAOException database exception.
 	 */
-	public String buildSql()
+	public String buildSql()throws DAOException
 	{
 		StringBuffer strBuff = new StringBuffer(DAOConstants.TRAILING_SPACES);
 
@@ -118,6 +120,7 @@ public class INClause implements Condition
 		updateInclause(strBuff);
 
 		return strBuff.toString();
+
 	}
 
 

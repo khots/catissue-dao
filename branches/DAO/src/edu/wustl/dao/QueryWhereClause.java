@@ -16,6 +16,7 @@ import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.condition.Condition;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.DAOConstants;
+import edu.wustl.dao.util.DAOUtility;
 
 /**
  * @author kalpana_thakur
@@ -96,14 +97,24 @@ public class QueryWhereClause
 	 * It will also set the table or class name if required.
 	 * @param condition :
 	 * @return the QueryWhereClause object.
+	 * @throws DAOException database exception.
 	 */
-	public QueryWhereClause addCondition(Condition condition)
+	public QueryWhereClause addCondition(Condition condition)throws DAOException
 	{
-		if(condition.getSourceObjectName() == null)
+		try
 		{
-			condition.setSourceObjectName(sourceObjectName);
+			if(condition.getSourceObjectName() == null)
+			{
+				condition.setSourceObjectName(sourceObjectName);
+			}
+			whereClauseBuff.append(condition.buildSql());
 		}
-		whereClauseBuff.append(condition.buildSql());
+
+		catch(DAOException exp)
+		{
+			throw DAOUtility.getInstance().getDAOException(exp,
+					"db.query.condition.gen.error","QueryWhereClause.java");
+		}
 		return this;
 	}
 

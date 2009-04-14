@@ -19,10 +19,9 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
-import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.exception.DAOException;
-import edu.wustl.dao.util.DAOConstants;
+import edu.wustl.dao.util.DAOUtility;
 
 /**
  * @author kalpana_thakur
@@ -93,9 +92,8 @@ public class ConnectionManager implements IConnectionManager
         }
         catch (Exception excp)
         {
-        	ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,excp,"ConnectionManager.java :"+
-					DAOConstants.NEW_SESSION_ERROR);
+        	throw DAOUtility.getInstance().getDAOException(excp,
+        			"db.open.session.error", "ConnectionManager.java ");
         }
 	}
 
@@ -118,9 +116,8 @@ public class ConnectionManager implements IConnectionManager
 		}
 		catch(HibernateException hiberExp)
 		{
-			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,hiberExp,"ConnectionManager.java :"+
-					DAOConstants.CLOSE_CONN_ERR);
+			throw DAOUtility.getInstance().getDAOException(hiberExp,
+        			"db.close.conn.error", "ConnectionManager.java ");
 		}
 	}
 
@@ -141,9 +138,9 @@ public class ConnectionManager implements IConnectionManager
 		}
 		catch(HibernateException hiberExp)
 		{
-			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,hiberExp,"ConnectionManager.java :"+
-					DAOConstants.CLOSE_CONN_ERR);
+			throw DAOUtility.getInstance().getDAOException(hiberExp,
+        			"db.commit.error", "ConnectionManager.java ");
+
 		}
 	}
 
@@ -164,9 +161,8 @@ public class ConnectionManager implements IConnectionManager
 		}
 		catch(HibernateException hiberExp)
 		{
-			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
-			throw new DAOException(errorKey,hiberExp,"ConnectionManager.java :"+
-				DAOConstants.CLOSE_CONN_ERR);
+			throw DAOUtility.getInstance().getDAOException(hiberExp,
+        			"db.rollback.error", "ConnectionManager.java ");
 		}
 	}
 

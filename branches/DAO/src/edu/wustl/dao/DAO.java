@@ -188,4 +188,12 @@ public interface DAO
 	 */
 	void setConnectionManager(IConnectionManager connectionManager);
 
+	/**
+	 *
+	 * @param sql
+	 * @throws DAOException
+	 * @deprecated
+	 */
+	//public void insert(String sql)throws DAOException;
+
 }

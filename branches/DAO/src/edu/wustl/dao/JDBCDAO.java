@@ -10,8 +10,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 import edu.wustl.dao.exception.DAOException;
+import edu.wustl.dao.query.generator.ColumnValueBean;
 import edu.wustl.dao.query.generator.QueryData;
 
 /** This interface defines methods which are specific to JDBC operations.*/
@@ -152,7 +155,7 @@ public interface JDBCDAO extends DAO
      * UPDATE statement
 	 * @throws DAOException : Generic database exception.
 	 */
-	void insert(QueryData queryData) throws DAOException;
+	//void insert(QueryData queryData) throws DAOException;
 
 	/**
 	 * Adds the given SQL command to the current list of commands for
@@ -161,12 +164,40 @@ public interface JDBCDAO extends DAO
      * UPDATE statement
 	 * @throws DAOException : Generic database exception.
 	 */
-	void update(QueryData queryData) throws DAOException;
-	
+//	void update(QueryData queryData) throws DAOException;
+
 	/**
 	 * This method has been added to close statement for which resultset is returned.
 	 * @param resultSet ResultSet
+	 * @throws DAOException : database exception
 	 */
 	void closeStatement(ResultSet resultSet) throws DAOException;
 
+
+	/**
+	 * @param batchSize :batchSize
+	 * @param tableName : name of the table
+	 * @param columnSet : columns
+	 * @throws DAOException : database exception
+	 */
+	void batchInitialize(int batchSize,String tableName,TreeSet<String> columnSet)
+	throws DAOException;
+
+	/**
+	 * @param dataMap Map holding the column value data.
+	 * @throws DAOException : database exception.
+	 */
+	void batchInsert(TreeMap<String,ColumnValueBean> dataMap)throws DAOException;
+
+	/**
+	 * This method will be called to commit batch updates.
+	 * @throws DAOException : Database exception
+	 */
+	void batchCommit()throws DAOException;
+
+	/**
+	 * Close the batch statement.
+	 * @throws DAOException Database exception
+	 */
+	void batchClose()throws DAOException;
 }
