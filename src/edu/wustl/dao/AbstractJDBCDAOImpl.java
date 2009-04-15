@@ -20,9 +20,8 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.SortedMap;
 import java.util.SortedSet;
-import java.util.TreeMap;
-import java.util.TreeSet;
 
 import org.hibernate.HibernateException;
 
@@ -191,7 +190,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * @param columnSet : columns
 	 * @throws DAOException : database exception
 	 */
-	public void batchInitialize(int batchSize,String tableName,TreeSet<String> columnSet)
+	public void batchInitialize(int batchSize,String tableName,SortedSet<String> columnSet)
 	throws DAOException
 	{
 		logger.debug("Initialize batch");
@@ -217,7 +216,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * @throws DAOException : database exception.
 	 */
 	private void validateBatchParams(int batchSize,String tableName,
-			TreeSet<String> columnSet) throws DAOException
+			SortedSet<String> columnSet) throws DAOException
 	{
 		Validator validator = new Validator();
 		if(batchSize == 0 || !validator.isNumeric(String.valueOf(batchSize)))
@@ -242,7 +241,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * @param dataMap Map holding the column value data.
 	 * @throws DAOException : database exception.
 	 */
-	public void batchInsert(TreeMap<String,ColumnValueBean> dataMap)throws DAOException
+	public void batchInsert(SortedMap<String,ColumnValueBean> dataMap)throws DAOException
 	{
 		logger.debug("insert batch");
 		try
