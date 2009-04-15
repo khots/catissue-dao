@@ -10,8 +10,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import java.util.SortedMap;
+import java.util.SortedSet;
 
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.query.generator.ColumnValueBean;
@@ -163,14 +163,14 @@ public interface JDBCDAO extends DAO
 	 * @param columnSet : columns
 	 * @throws DAOException : database exception
 	 */
-	void batchInitialize(int batchSize,String tableName,TreeSet<String> columnSet)
+	void batchInitialize(int batchSize,String tableName,SortedSet<String> columnSet)
 	throws DAOException;
 
 	/**
 	 * @param dataMap Map holding the column value data.
 	 * @throws DAOException : database exception.
 	 */
-	void batchInsert(TreeMap<String,ColumnValueBean> dataMap)throws DAOException;
+	void batchInsert(SortedMap<String,ColumnValueBean> dataMap)throws DAOException;
 
 	/**
 	 * This method will be called to commit batch updates.
