@@ -98,6 +98,14 @@ public class ConnectionManager implements IConnectionManager
 	}
 
 	/**
+	 * This method will be called to open new transaction.
+	 */
+	public void openTransaction()
+	{
+		 transaction = session.beginTransaction();
+	}
+
+	/**
 	 * This method will be called to close the session.
 	 * It will check the session for the running application in applicationSessionMap,
 	 * if present it will remove it from the Map.

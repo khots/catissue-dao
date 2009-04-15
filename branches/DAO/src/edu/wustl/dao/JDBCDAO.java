@@ -15,7 +15,7 @@ import java.util.TreeSet;
 
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.query.generator.ColumnValueBean;
-import edu.wustl.dao.query.generator.QueryData;
+import edu.wustl.dao.util.StatementData;
 
 /** This interface defines methods which are specific to JDBC operations.*/
 public interface JDBCDAO extends DAO
@@ -24,11 +24,11 @@ public interface JDBCDAO extends DAO
 	/**
 	 * This method will execute the SQL and modifies the database.
 	 * @param sql sql statement.
-	 * @return (1) the row count for INSERT,UPDATE or DELETE statements
-	 * or (2) 0 for SQL statements that return nothing
+	 * @return StatementData statement specific data like row count,
+	 * generatedKeys auto-generated key(s)
 	 * @throws DAOException generic DAOException.
 	 */
-	int executeUpdate(String sql) throws DAOException;
+	StatementData executeUpdate(String sql) throws DAOException;
 
 	/**
 	 * This method will be called to get the result set.
@@ -102,13 +102,13 @@ public interface JDBCDAO extends DAO
 
 	/**
 	 * This method will be called to execute query.
-	 * @param query :query string.
-	 * @param columnValues :list of values
+	 * @param tableName :table name.
+	 * @param columnValueBeanSet :set of column value beans.
 	 * @return (1) the row count for INSERT,UPDATE or DELETE statements
 	 * or (2) 0 for SQL statements that return nothing
 	 * @throws DAOException :Generic Exception
 	 */
-	int executeUpdate(String query,LinkedList columnValues) throws DAOException;
+	StatementData executeUpdate(String tableName,LinkedList<ColumnValueBean> columnValueBeanSet) throws DAOException;
 
 
 	/**
@@ -140,7 +140,7 @@ public interface JDBCDAO extends DAO
 	* from the table represented in sourceObjectName.
 	* @param sourceObjectName The table name.
 	* @param selectColumnName The column names in select clause.
-	* @param onlyDistinctRows true if only distict rows should be selected
+	* @param onlyDistinctRows true if only distinct rows should be selected
 	* @return The ResultSet containing all the rows according to the columns specified
 	* from the table represented in sourceObjectName.
 	* @throws DAOException generic DAOException.
@@ -148,23 +148,6 @@ public interface JDBCDAO extends DAO
 	List retrieve(String sourceObjectName, String[] selectColumnName, boolean onlyDistinctRows)
 			throws DAOException;
 
-	/**
-	 * Adds the given SQL command to the current list of commands for
-     * batchStatement object.
-	 * @param queryData typically this is a static SQL INSERT or
-     * UPDATE statement
-	 * @throws DAOException : Generic database exception.
-	 */
-	//void insert(QueryData queryData) throws DAOException;
-
-	/**
-	 * Adds the given SQL command to the current list of commands for
-     * batchStatement object.
-	 * @param queryData typically this is a static SQL INSERT or
-     * UPDATE statement
-	 * @throws DAOException : Generic database exception.
-	 */
-//	void update(QueryData queryData) throws DAOException;
 
 	/**
 	 * This method has been added to close statement for which resultset is returned.
@@ -200,4 +183,10 @@ public interface JDBCDAO extends DAO
 	 * @throws DAOException Database exception
 	 */
 	void batchClose()throws DAOException;
+
+	/**
+	 * This method will be called to open new transaction.
+	 * @throws DAOException database exception.
+	 */
+	void openTransaction()throws DAOException;
 }

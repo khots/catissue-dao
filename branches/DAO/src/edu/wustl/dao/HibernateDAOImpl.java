@@ -335,6 +335,43 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		}
 	}
 
+	/**
+	 * Executes the HQL query. for given startIndex and max
+	 * records to retrieve
+	 * @param query  HQL query to execute
+	 * @param startIndex Starting index value
+	 * @param maxRecords max number of records to fetch
+	 * @param paramValues List of parameter values.
+	 * @return List of data.
+	 * @throws DAOException database exception.
+	 */
+	public List executeQuery(String query,Integer startIndex,
+			Integer maxRecords,List paramValues) throws DAOException
+	{
+		logger.debug("Execute query");
+		try
+		{
+	    	Query hibernateQuery = session.createQuery(query);
+	    	if(startIndex != null && maxRecords !=null )
+	    	hibernateQuery.setFirstResult(startIndex);
+	    	hibernateQuery.setMaxResults(maxRecords);
+	    	if(paramValues!=null)
+	    	{
+	    		for(int i=0;i<paramValues.size();i++)
+	    		{
+	    			hibernateQuery.setParameter(i, paramValues.get(i));
+	    		}
+	    	}
+		    List returner = hibernateQuery.list();
+		    return returner;
+		}
+		catch(HibernateException hiberExp)
+		{
+			throw DAOUtility.getInstance().getDAOException(hiberExp, "db.retrieve.data.error",
+					"HibernateDAOImpl.java "+query);
+		}
+	}
+
 
 	/**
 	 * This method returns named query.

@@ -15,18 +15,19 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import org.hibernate.HibernateException;
+
 import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.exception.ErrorKey;
-import edu.wustl.common.util.Utility;
 import edu.wustl.common.util.global.Validator;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.condition.EqualClause;
@@ -35,6 +36,7 @@ import edu.wustl.dao.query.generator.ColumnValueBean;
 import edu.wustl.dao.query.generator.DBTypes;
 import edu.wustl.dao.util.DAOConstants;
 import edu.wustl.dao.util.DAOUtility;
+import edu.wustl.dao.util.StatementData;
 
 
 /**
@@ -147,6 +149,22 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 
 	}*/
 
+	 /**
+	 * This method will be called to open new transaction.
+	 * @throws DAOException database exception.
+	 */
+	public void openTransaction()throws DAOException
+	{
+		try
+		{
+			connectionManager.openTransaction();
+		}
+		catch(HibernateException exp)
+		{
+			throw DAOUtility.getInstance().getDAOException(exp, "db.open.transaction.error",
+			"AbstractJDBCDAOImpl.java");
+		}
+	}
 	/**
 	 * RollBack all the changes after last commit.
 	 * Declared in DAO class.
@@ -204,10 +222,8 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		Validator validator = new Validator();
 		if(batchSize == 0 || !validator.isNumeric(String.valueOf(batchSize)))
 		{
-
 			throw DAOUtility.getInstance().getDAOException
 			(null, "db.batch.size.issue", "AbstractJDBCDAOImpl.java");
-
 		}
 
 		if(Validator.isEmpty(tableName))
@@ -215,7 +231,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 			throw DAOUtility.getInstance().getDAOException
 			(null, "db.table.name.empty", "AbstractJDBCDAOImpl.java ");
 		}
-		if(columnSet.isEmpty())
+		if(columnSet == null || columnSet.isEmpty())
 		{
 			throw DAOUtility.getInstance().getDAOException
 			(null, "db.column.set.empty", "AbstractJDBCDAOImpl.java");
@@ -245,11 +261,13 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 				ColumnValueBean colValueBean = dataMap.get(column);
 				if(colValueBean.getColumnType() == DBTypes.DATE)
 				{
-				  setDateToPrepStmt(columnIndex, colValueBean);
+				  prepBatchStatement.setDate(columnIndex,
+						  setDateToPrepStmt(colValueBean));
 				}
 				else if(colValueBean.getColumnType() == DBTypes.TIMESTAMP)
 				{
-				   setTimeStampToPrepStmt(columnIndex, colValueBean);
+				  prepBatchStatement.setTimestamp(columnIndex,
+						  setTimeStampToPrepStmt(colValueBean));
 				}
 				else
 				{
@@ -258,16 +276,14 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 				columnIndex += 1;
 			}
 			prepBatchStatement.addBatch();
+			batchCounter += 1;
 			if(batchCounter >= batchSize)
 			{
 				prepBatchStatement.executeBatch();
 				prepBatchStatement.clearBatch();
 				batchCounter = 0;
 			}
-			else
-			{
-				batchCounter += 1;
-			}
+
 
 		}
 		catch (Exception exp)
@@ -279,13 +295,13 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	}
 
 	/**
-	 * @param columnIndex : Index value
 	 * @param colValueBean : column data bean
 	 * @throws SQLException : SQL exception.
 	 * @throws DAOException database exception.
+	 * @return Timestamp date time value.
 	 */
-	private void setTimeStampToPrepStmt(int columnIndex,
-			ColumnValueBean colValueBean) throws SQLException, DAOException
+	private Timestamp setTimeStampToPrepStmt(ColumnValueBean colValueBean)
+	throws SQLException, DAOException
 	{
 
 		if(!(colValueBean.getColumnValue() instanceof Timestamp))
@@ -294,19 +310,18 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 			(null, "db.dataType.invalid", "AbstractJDBCDAOImpl.java");
 		}
 		Timestamp dateTime = (Timestamp)colValueBean.getColumnValue();
-		prepBatchStatement.setTimestamp(columnIndex , dateTime);
+		return dateTime;
 
 	}
 
 	/**
-	 * @param columnIndex : Index value
 	 * @param colValueBean : column data bean
-	 * @throws ParseException : exception while parsing
 	 * @throws SQLException : SQL exception.
 	 * @throws DAOException database exception.
+	 * @return Date date value
 	 */
-	private void setDateToPrepStmt(int columnIndex, ColumnValueBean colValueBean)
-			throws ParseException, SQLException, DAOException
+	private java.sql.Date setDateToPrepStmt(ColumnValueBean colValueBean)
+			throws SQLException, DAOException
 	{
 		if(!(colValueBean.getColumnValue() instanceof Date))
 		{
@@ -315,7 +330,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		}
 		Date date = (Date)colValueBean.getColumnValue();
 		java.sql.Date sqlDate = new java.sql.Date(date.getTime());
-		prepBatchStatement.setDate(columnIndex, sqlDate);
+		return sqlDate;
 	}
 	/**
 	 * This method will be called to commit batch updates.
@@ -372,7 +387,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * @param columnSet set of column names
 	 * @return String SQL
 	 */
-	private String generateQuery(String tableName,TreeSet<String> columnSet)
+	private String generateQuery(String tableName,SortedSet<String> columnSet)
 	{
 		logger.debug("Generate String");
 
@@ -538,14 +553,17 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * @param query :Holds the query string.
 	 * @throws DAOException : DAOException.
 	 */
-	public int executeUpdate(String query) throws DAOException
+	public StatementData executeUpdate(String query) throws DAOException
 	{
 		logger.debug("Execute query.");
 		Statement statement = null;
+		StatementData statementData = new StatementData();
 		try
 		{
 			statement = createStatement();
-			return statement.executeUpdate(query);
+			statementData.setRowCount(statement.executeUpdate(query));
+			setStatementData(statement, statementData);
+			return statementData ;
 		}
 		catch (SQLException sqlExp)
 		{
@@ -630,42 +648,76 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 
 	/**
 	 * This method will be called to execute query.
-	 * @param query :query string.
-	 * @param columnValues :list of values
+	 * @param sql query string.
+	 * @param columnValueBeanSet :Bean having column name ,
+	 * column value,and column type.
 	 * @return (1) the row count for INSERT,UPDATE or DELETE statements
 	 * or (2) 0 for SQL statements that return nothing
 	 * @throws DAOException :Generic Exception
 	 */
-	public int executeUpdate(String query,LinkedList columnValues) throws DAOException
+	public StatementData executeUpdate(String sql,LinkedList<ColumnValueBean> columnValueBeanSet)
+	throws DAOException
 	{
 		try
 		{
-			if(query.contains("?") && (columnValues == null || columnValues.isEmpty()))
+			if(!sql.contains("?") || columnValueBeanSet == null || columnValueBeanSet.isEmpty())
 			{
-
 				throw DAOUtility.getInstance().getDAOException(null, "db.prepstmt.param.error",
-				"AbstractJDBCDAOImpl.java  "+query);
+				"AbstractJDBCDAOImpl.java  "+sql);
 			}
 
-			PreparedStatement stmt = getPreparedStatement(query);
-			if(columnValues != null && !columnValues.isEmpty())
+			PreparedStatement stmt = getPreparedStatement(sql);
+
+			Iterator<ColumnValueBean> colValItr =  columnValueBeanSet.iterator();
+			int index = 1;
+			while(colValItr.hasNext())
 			{
-				for (int index = 0; index < columnValues.size(); index++)
+				ColumnValueBean colValueBean = colValItr.next();
+
+				if(colValueBean.getColumnType() == DBTypes.DATE)
 				{
-					stmt.setObject(index, columnValues.get(index));
+					stmt.setDate(index,setDateToPrepStmt(colValueBean));
 				}
+				else if(colValueBean.getColumnType() == DBTypes.TIMESTAMP)
+				{
+					stmt.setTimestamp(index,setTimeStampToPrepStmt(colValueBean));
+				}
+				else
+				{
+					stmt.setObject(index, colValueBean.getColumnValue());
+				}
+
+				index += 1;
 			}
-			return stmt.executeUpdate();
+			StatementData statementData = new StatementData();
+			statementData.setRowCount(stmt.executeUpdate());
+			setStatementData(stmt, statementData);
+			return statementData;
 		}
 		catch (SQLException sqlExp)
 		{
 			throw DAOUtility.getInstance().getDAOException(sqlExp, "db.update.data.error",
-			"AbstractJDBCDAOImpl.java   "+query);
+			"AbstractJDBCDAOImpl.java   "+sql);
 		}
 		finally
 		{
 			closePreparedStmt();
 		}
+	}
+
+
+	/**
+	 * @param stmt :statement instance.
+	 * @param statementData statement data
+	 * @throws SQLException SQL exception
+	 */
+	private void setStatementData(Statement stmt,StatementData statementData)
+	throws SQLException
+	{
+		statementData.setGeneratedKeys(stmt.getGeneratedKeys());
+		statementData.setFetchSize(stmt.getFetchSize());
+		statementData.setMaxFieldSize(stmt.getMaxFieldSize());
+		statementData.setMaxRows(stmt.getMaxRows());
 	}
 
 	/**
