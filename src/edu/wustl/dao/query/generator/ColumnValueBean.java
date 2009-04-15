@@ -1,10 +1,18 @@
 package edu.wustl.dao.query.generator;
 
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+
 /**
  * @author kalpana_thakur
  * This class creates the bean having column name and column value.
  */
-public class ColumnValueBean
+public class ColumnValueBean implements Comparable
 {
 	/**
 	 * Name of the Column.
@@ -33,6 +41,18 @@ public class ColumnValueBean
 		this.columnType = columnType;
 
 	}
+
+	/**
+	 * @param columnValue : column value
+	 * @param columnType : column type
+	 */
+	public ColumnValueBean(Object columnValue,int columnType)
+	{
+		this.columnValue = columnValue;
+		this.columnType = columnType;
+
+	}
+
 
 	/**
 	 * @return : the column name
@@ -76,6 +96,149 @@ public class ColumnValueBean
 	public void setColumnType(int columnType)
 	{
 		this.columnType = columnType;
+	}
+
+	/**
+	 * @param arg0 ColumnValueBean first.
+	 * @param arg1 ColumnValueBean second.
+	 * @return integer value.
+	 */
+	public int compare(Object arg0, Object arg1)
+	{
+
+		int returnVal = 0;
+		ColumnValueBean columnValueBeanFrst = (ColumnValueBean)arg0;
+		ColumnValueBean columnValueBeanSec = (ColumnValueBean)arg1;
+		if(columnValueBeanFrst instanceof ColumnValueBean &&
+				columnValueBeanSec instanceof ColumnValueBean)
+		{
+			if(columnValueBeanFrst !=null && columnValueBeanSec != null	)
+			{
+				String columnFrst = columnValueBeanFrst.getColumnName();
+				String columnSec = columnValueBeanSec.getColumnName();
+				if(columnFrst != null && columnSec!= null)
+				{
+					returnVal = columnFrst.compareTo(columnSec);
+				}
+				else if(columnFrst ==null && columnSec == null)
+				{
+					returnVal = 0;
+				}
+				else if(columnFrst ==null)
+				{
+					returnVal = 1;
+				}
+				else if(columnSec == null)
+				{
+					returnVal = -1;
+				}
+
+			}
+			else if(columnValueBeanFrst ==null && columnValueBeanSec == null)
+			{
+				returnVal = 0;
+			}
+			else if(columnValueBeanFrst ==null)
+			{
+				returnVal = 1;
+			}
+			else if(columnValueBeanSec == null)
+			{
+				returnVal = -1;
+			}
+		}
+		return returnVal;
+	}
+
+	public static void main(String[] args) 
+	{
+
+
+		List<ColumnValueBean> list = new ArrayList<ColumnValueBean>();
+
+		ColumnValueBean colValueBean = new ColumnValueBean("identifier",
+				1,DBTypes.INTEGER);
+		list.add(colValueBean);
+
+		ColumnValueBean first_name = new ColumnValueBean("first_name",
+				"",DBTypes.STRING);
+		list.add(first_name);
+
+		ColumnValueBean second_name = new ColumnValueBean("second_name",
+				"",DBTypes.STRING);
+		list.add(second_name);
+
+		ColumnValueBean age = new ColumnValueBean("1age",
+				1,DBTypes.INTEGER);
+		list.add(age);
+
+		ColumnValueBean address_id = new ColumnValueBean("uaddress_id",
+				1,DBTypes.INTEGER);
+		list.add(address_id);
+
+		ColumnValueBean account_id = new ColumnValueBean("account_id",
+				1,DBTypes.INTEGER);
+		list.add(account_id);
+
+		ColumnValueBean birth_date = new ColumnValueBean("birth_date",
+				null,DBTypes.DATE);
+		list.add(birth_date);
+
+		ColumnValueBean isAvailable = new ColumnValueBean("isAvailable",
+				true,DBTypes.BOOLEAN);
+		list.add(isAvailable);
+
+		Collections.sort(list);
+
+		Iterator itr = list.iterator();
+
+		while(itr.hasNext())
+		{
+			System.out.println(" ::"+((ColumnValueBean)itr.next()).getColumnName());
+		}
+
+
+	}
+
+	/**
+	 * @param arg1 ColumnValueBean second.
+	 * @return integer value.
+	 */
+	public int compareTo(Object arg1)
+	{
+
+		int returnVal = 0;
+		ColumnValueBean columnValueBeanSec = (ColumnValueBean)arg1;
+		if(columnValueBeanSec instanceof ColumnValueBean)
+		{
+			if(columnValueBeanSec != null	)
+			{
+				String columnFrst = this.getColumnName();
+				String columnSec = columnValueBeanSec.getColumnName();
+				if(columnFrst != null && columnSec!= null)
+				{
+					returnVal = columnFrst.compareTo(columnSec);
+				}
+				else if(columnFrst ==null && columnSec == null)
+				{
+					returnVal = 0;
+				}
+				else if(columnFrst ==null)
+				{
+					returnVal = 1;
+				}
+				else if(columnSec == null)
+				{
+					returnVal = -1;
+				}
+
+			}
+			else if(columnValueBeanSec == null)
+			{
+				returnVal = -1;
+			}
+		}
+		return returnVal;
 	}
 
 }
