@@ -321,18 +321,7 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 	 */
 	public List executeQuery(String query) throws DAOException
 	{
-		logger.debug("Execute query");
-		try
-		{
-	    	Query hibernateQuery = session.createQuery(query);
-		    List returner = hibernateQuery.list();
-		    return returner;
-		}
-		catch(HibernateException hiberExp)
-		{
-			throw DAOUtility.getInstance().getDAOException(hiberExp, "db.retrieve.data.error",
-			"HibernateDAOImpl.java "+query);
-		}
+		return executeQuery(query,null, null,null);
 	}
 
 	/**
@@ -352,9 +341,14 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		try
 		{
 	    	Query hibernateQuery = session.createQuery(query);
-	    	if(startIndex != null && maxRecords !=null )
-	    	hibernateQuery.setFirstResult(startIndex);
-	    	hibernateQuery.setMaxResults(maxRecords);
+	    	if(startIndex != null)
+	    	{
+	    		hibernateQuery.setFirstResult(startIndex);
+	    	}
+	    	if(maxRecords !=null )
+	    	{
+	    		hibernateQuery.setMaxResults(maxRecords);
+	    	}
 	    	if(paramValues!=null)
 	    	{
 	    		for(int i=0;i<paramValues.size();i++)
