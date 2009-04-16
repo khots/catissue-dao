@@ -1,7 +1,12 @@
 package edu.wustl.dao.test;
 
+import java.sql.Date;
 import java.sql.ResultSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.SortedMap;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 import org.junit.Test;
 
@@ -15,6 +20,8 @@ import edu.wustl.dao.condition.NotNullClause;
 import edu.wustl.dao.condition.NullClause;
 import edu.wustl.dao.daofactory.IDAOFactory;
 import edu.wustl.dao.exception.DAOException;
+import edu.wustl.dao.query.generator.ColumnValueBean;
+import edu.wustl.dao.query.generator.DBTypes;
 
 /**
  * @author kalpana_thakur
@@ -62,184 +69,7 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 		assertNotNull("DAO Object is null",jdbcDAO);
 	}
 
-	/**
-	 * This test will assert the batch insert
-	 *//*
-	@Test
-	public void testBatchInsert()
-	{
-		try
-		{
-			jdbcDAO.openSession(null);
-			jdbcDAO.setBatchSize(1);
-
-			for(int i = 0 ; i<10;i++)
-			{
-				String firstName = "JOHN"+i;
-				String secondName = "REBER"+i;
-
-				String insertStr1 = "insert into test_user " +
-					"(IDENTIFIER,EMAIL_ADDRESS,FIRST_NAME,LAST_NAME,ACTIVITY_STATUS)" +
-					"VALUES ("+i+",'john@per.co.in','"+firstName+ "','"+secondName+"','Active')";
-				jdbcDAO.insert(insertStr1);
-			}
-			jdbcDAO.commit();
-
-		}
-		catch(Exception exp)
-		{
-			System.out.println("---------------------------");
-			exp.printStackTrace();
-			assertFalse("Problem executing batch insert :",true);
-		}
-		finally
-		{
-			try
-			{
-				jdbcDAO.closeSession();
-			}
-			catch (DAOException e)
-			{
-				e.printStackTrace();
-			}
-		}
-	}*/
-
-
-	/**
-	 * This test will assert the batch insert
-	 *//*
-	@Test
-	public void testBatchInsert()
-	{
-		try
-		{
-			jdbcDAO.openSession(null);
-			jdbcDAO.setBatchSize(1);
-			String insertStr1 = "insert into test_user " +
-					"(IDENTIFIER,EMAIL_ADDRESS,FIRST_NAME,LAST_NAME,ACTIVITY_STATUS)" +
-					"VALUES ("+1104+",'john@per.co.in','JOHN','REBER','Active')";
-
-			jdbcDAO.insert(insertStr1);
-
-			insertStr1 = "insert into test_user " +
-					"(IDENTIFIER,EMAIL_ADDRESS,FIRST_NAME,LAST_NAME,ACTIVITY_STATUS)" +
-			"VALUES ("+1105+",'kal@per.co.in','kalpana','thakur','Active')";
-
-			jdbcDAO.insert(insertStr1);
-
-			jdbcDAO.commit();
-
-		}
-		catch(Exception exp)
-		{
-			System.out.println("---------------------------");
-			exp.printStackTrace();
-			assertFalse("Problem executing batch insert :",true);
-		}
-		finally
-		{
-			try
-			{
-				jdbcDAO.closeSession();
-			}
-			catch (DAOException e)
-			{
-				e.printStackTrace();
-			}
-		}
-	}*/
-
 	
-	/*@Test
-	public void testCaseRetrieveRS()
-	{
-		try
-		{
-			 jdbcDAO.openSession(null);
-			 String sql = "select count(*) from test_user";
-			 ResultSet rs = jdbcDAO.getQueryResultSet(sql);
-			 
-			 while(rs.next())
-			 {
-				 System.out.println("rs.getInt(1)  : 1:"+rs.getInt(1) );
-			 }
-			 String insertStr1 = "insert into test_user " +
-				"(IDENTIFIER,EMAIL_ADDRESS,FIRST_NAME,LAST_NAME,ACTIVITY_STATUS)" +
-				"VALUES ("+1204+",'john@per.co.in','JOHN','REBER','Active')";
-
-			 jdbcDAO.insert(insertStr1);
-			 jdbcDAO.commit();
-			 
-			 rs = jdbcDAO.getQueryResultSet(sql);
-			 
-			 while(rs.next())
-			 {
-				 System.out.println("rs.getInt(1)  :2:"+rs.getInt(1) );
-			 }
-			 
-			 tempInsert();
-			 
-			 rs = jdbcDAO.getQueryResultSet(sql);
-			 
-			 while(rs.next())
-			 {
-				 System.out.println("rs.getInt(1)  :3 :"+rs.getInt(1) );
-			 }
-			 
-			 fetch(sql);
-		}
-		catch(Exception exp)
-		{
-			exp.printStackTrace();
-		}
-		finally
-		{
-			try 
-			{
-				jdbcDAO.closeSession();
-			} 
-			catch (DAOException e)
-			{
-		
-				e.printStackTrace();
-			}
-		}
-	}
-	
-	void tempInsert()
-	{
-		JDBCDAO jdbcDAO= null;
-
-		try
-		{
-
-		 jdbcDAO = daoConfigFactory.getInstance().getDAOFactory("caTissuecore").getJDBCDAO();
-		 jdbcDAO.openSession(null);
-		 String insertStr1 = "insert into test_user " +
-			"(IDENTIFIER,EMAIL_ADDRESS,FIRST_NAME,LAST_NAME,ACTIVITY_STATUS)" +
-			"VALUES ("+1304+",'john@per.co.in','JOHN','REBER','Active')";
-		 
-		 jdbcDAO.insert(insertStr1);
-		 jdbcDAO.commit();
-		
-		}
-		catch(Exception exp)
-		{
-			exp.printStackTrace();
-		}
-		finally
-		{
-			try 
-			{
-				jdbcDAO.closeSession();
-			} 
-			catch (DAOException e)
-			{
-					e.printStackTrace();
-			}
-		}
-	}*/
 	 void fetch(String sql)
 	 {
 		 JDBCDAO jdbcDAO= null;
@@ -274,110 +104,7 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 			}
 	 }
 
-
-/*	*//**
-	 * This test will assert that table created successfully.
-	 *//*
-	@Test
-	public void testCreateTableJDBC()
-	{
-		try
-		{
-			String tableName = "Temp_Address";
-			String[] columnNames = {"City","State"};
-			jdbcDAO.openSession(null);
-			jdbcDAO.createTable(tableName, columnNames);
-			jdbcDAO.commit();
-
-		}
-		catch(Exception exp)
-		{
-			assertFalse("Failed while creating table ::", true);
-		}
-		finally
-		{
-			try 
-			{
-				jdbcDAO.closeSession();
-			} 
-			catch (DAOException e)
-			{
-		
-				e.printStackTrace();
-			}
-		}
-
-	}
-
-	*//**
-	 * This test will assert that table created successfully.
-	 *//*
-	@Test
-	public void testCreateTableQueryJDBC()
-	{
-		try
-		{
-			String query = "create table xyz_phoneNumber ( phone_number varchar(20) )";
-			jdbcDAO.openSession(null);
-			jdbcDAO.createTable(query);
-			jdbcDAO.commit();
-		//	jdbcDAO.closeSession();
-		}
-		catch(Exception exp)
-		{
-			assertFalse("Failed while creating table ::", true);
-		}
-		finally
-		{
-			try 
-			{
-				jdbcDAO.closeSession();
-			} 
-			catch (DAOException e)
-			{
-		
-				e.printStackTrace();
-			}
-		}
-
-	}
-
-
-	*//**
-	 * This test will assert that table deleted successfully.
-	 *//*
-	@Test
-	public void testDropTableJDBC()
-	{
-		try
-		{
-			jdbcDAO.openSession(null);
-			jdbcDAO.delete("XYZ_PHONENUMBER");
-			jdbcDAO.commit();
-			jdbcDAO.delete("TEMP_ADDRESS");
-			jdbcDAO.commit();
-		//	jdbcDAO.closeSession();
-		}
-		catch(ApplicationException exp)
-		{
-			logger.fatal(exp.getLogMessage());
-			assertFalse("Failed while droping table ::", true);
-		}
-		finally
-		{
-			try 
-			{
-				jdbcDAO.closeSession();
-			} 
-			catch (DAOException e)
-			{
-		
-				e.printStackTrace();
-			}
-		}
-	}
-
-	*//**
+	 /**
 	 * This test will assert the execution of query.
 	 */
 	@Test
@@ -430,7 +157,7 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 
 			while(rsSet.next())
 			{
-				Long identifier = (Long)rsSet.getObject(1);
+				Long identifier = Long.valueOf(rsSet.getObject(1).toString());
 				System.out.println("Identifier :"+identifier);
 				String sql = "select FIRST_NAME from test_user where IDENTIFIER ="+identifier;
 				ResultSet newRS = jdbcDAO.getQueryResultSet(sql);
@@ -804,445 +531,216 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 		}
 		finally
 		{
-			try 
-			{
-				jdbcDAO.closeSession();
-			} 
-			catch (DAOException e)
-			{
-		
-				e.printStackTrace();
-			}
-		}
-
-	}
-
-
-	/**
-	 * This test will assert that date pattern retrieved successfully.
-	 *//*
-	@Test
-	public void testDatePatternJDBC()
-	{
-		String datePattern = jdbcDAO.getDatePattern();
-		assertNotNull("Problem in geting date pattern.",datePattern);
-
-
-	}
-
-	*//**
-	 * This test will assert that time pattern retrieved successfully.
-	 *//*
-	@Test
-	public void testTimePatternJDBC()
-	{
-		String timePattern = jdbcDAO.getTimePattern();
-		assertNotNull("Problem in geting date pattern.",timePattern);
-
-	}
-
-	*//**
-	 * This test will assert that date format function retrieved successfully.
-	 *//*
-	@Test
-	public void testDateFormatFunctionJDBC()
-	{
-		String dateFormatFunction = jdbcDAO.getDateFormatFunction();
-		assertNotNull("Problem in geting date pattern.",dateFormatFunction);
-
-
-	}
-
-	*//**
-	 * This test will assert that time format function retrieved successfully.
-	 *//*
-	@Test
-	public void testTimeFormatFunctionJDBC()
-	{
-		String timeFormatFunction = jdbcDAO.getTimeFormatFunction();
-		assertNotNull("Problem in geting date pattern.",timeFormatFunction);
-
-	}
-
-
-	*//**
-	 * This test will assert that Date to string format function retrieved successfully.
-	 *//*
-	@Test
-	public void testDateTostrFunctionJDBC()
-	{
-		String dateTostrFunction = jdbcDAO.getDateTostrFunction();
-		assertNotNull("Problem in geting date pattern.",dateTostrFunction);
-
-	}
-
-
-	*//**
-	 * This test will assert that string to date function retrieved successfully.
-	 *//*
-	@Test
-	public void testStrTodateFunctionJDBC()
-	{
-		String strTodateFunction = jdbcDAO.getStrTodateFunction();
-		assertNotNull("Problem in geting date pattern.",strTodateFunction);
-
-	}
-
-	*//**
-	 * This test will assert that string to date function retrieved successfully.
-	 *//*
-	@Test
-	public void testExecuteQueryJDBC()
-	{
-		try
-		{
-			QueryParams queryParams = new QueryParams();
-			queryParams.setQuery("select * from test_user");
-			queryParams.setSessionDataBean(null);
-			queryParams.setSecureToExecute(true);
-			queryParams.setHasConditionOnIdentifiedField(false);
-			queryParams.setQueryResultObjectDataMap(null);
-			queryParams.setStartIndex(-1);
-			queryParams.setNoOfRecords(-1);
-			jdbcDAO.openSession(null);
-			PagenatedResultData pagenatedResultData =
-				(PagenatedResultData)jdbcDAO.executeQuery(queryParams);
-			//jdbcDAO.closeSession();
-			assertNotNull("Problem while retrieving data ",pagenatedResultData!=null);
-		}
-		catch(Exception exp)
-		{
-			assertFalse("Problem while retrieving data ", true);
-		}
-		finally
-		{
-			try 
-			{
-				jdbcDAO.closeSession();
-			} 
-			catch (DAOException e)
-			{
-		
-				e.printStackTrace();
-			}
-		}
-
-	}
-
-
-	*//**
-	 * This test will create a complex retrieve query having multiple clause(IN,NOT NULL,IS NULL)
-	 * It will ensure that objects retrieved successfully.
-	 *//*
-	@Test
-	public void testRetriveComplexQueryJDBC()
-	{
-		try
-		{
-			String sourceObjectName = "test_user";
-			Object [] colValues = {Long.valueOf(1),Long.valueOf(2)};
-			String[] selectColumnName = null;
-
-			QueryWhereClause queryWhereClause = new QueryWhereClause(sourceObjectName);
-			queryWhereClause.addCondition(new INClause("IDENTIFIER",colValues,sourceObjectName)).
-			orOpr().addCondition(new NotNullClause("FIRST_NAME",sourceObjectName)).orOpr().
-			addCondition(new EqualClause("FIRST_NAME","naik",sourceObjectName));
-
-			jdbcDAO.openSession(null);
-			List<Object> list = jdbcDAO.retrieve(sourceObjectName, selectColumnName,queryWhereClause,false);
-			//jdbcDAO.closeSession();
-			assertNotNull("No data retrieved :",list);
-		//	assertTrue("No data retrieved :",!list.isEmpty());
-		}
-		catch(Exception exp)
-		{
-			assertFalse("Problem occurred while retrieving object:", true);
-		}
-		finally
-		{
 			try
 			{
 				jdbcDAO.closeSession();
-			}
+			} 
 			catch (DAOException e)
 			{
 
 				e.printStackTrace();
 			}
 		}
-	}
-
-	*//**
-	 * This test will assert the audit method implementation.
-	 *//*
-	@Test
-	public void testAuditJDBC()
-	{
-		try
-		{
-			jdbcDAO.audit(null, null, null, false);
-		}
-		catch(ApplicationException exp)
-		{
-			assertTrue("Problem: exception should be thrown :",exp.getLogMessage().
-					contains("There is no implementation for this method"));
-			logger.fatal(exp.getLogMessage());
-		}
 
 	}
-
-
-	*//**
-	 * This test will delete method implementation.
-	 *//*
-	@Test
-	public void testDeleteJDBC()
-	{
-		try
-		{
-			jdbcDAO.delete(new Object());
-		}
-		catch(ApplicationException exp)
-		{
-			assertTrue("Problem: exception should be thrown :",exp.getLogMessage().
-					contains("There is no implementation for this method"));
-			logger.fatal(exp.getLogMessage());
-		}
-
-	}
-
-
+	
 	
 
-	*//**
-	 * This test will insert method implementation.
-	 *//*
 	@Test
-	public void testInsertJDBC()
+	public void testBatchInsert() throws DAOException
 	{
 		try
 		{
-			jdbcDAO.insert(null, false);
-		}
-		catch(ApplicationException exp)
-		{
-			assertTrue("Problem: exception should be thrown :",exp.getLogMessage().
-					contains("There is no implementation for this method"));
-			logger.fatal(exp.getLogMessage());
-		}
 
-	}
+			jdbcDAO.openSession(null);
+			TreeSet<String> columnSet = new TreeSet<String>();
+			columnSet.add("identifier");
+			columnSet.add("first_name");
+			columnSet.add("second_name");
+			columnSet.add("age");
+			columnSet.add("address_id");
+			columnSet.add("account_id");
+			columnSet.add("birth_date");
+			columnSet.add("isAvailable");
 
-	*//**
-	 * This test will retrieveAttribute() method implementation.
-	 *//*
-	@Test
-	public void testRetrieveAttributeJDBC()
-	{
-		try
-		{
-			jdbcDAO.retrieveAttribute(null, null, null, null);
-		}
-		catch(ApplicationException exp)
-		{
-			assertTrue("Problem: exception should be thrown :",exp.getLogMessage().
-					contains("There is no implementation for this method"));
-			logger.fatal(exp.getLogMessage());
-		}
+			jdbcDAO.batchInitialize(5, "person", columnSet);
 
-	}
-
-
-	*//**
-	 * This test will Update() method implementation.
-	 *//*
-	@Test
-	public void testUpdateJDBC()
-	{
-		try
-		{
-			jdbcDAO.update(null);
-		}
-		catch(ApplicationException exp)
-		{
-			assertTrue("Problem: exception should be thrown :",exp.getLogMessage().
-					contains("There is no implementation for this method"));
-			logger.fatal(exp.getLogMessage());
-		}
-
-	}
-
-	*//**
-	 * This test will retrieve() method implementation.
-	 *//*
-	@Test
-	public void testRetrieveJDBC()
-	{
-		try
-		{
-			jdbcDAO.retrieveById(null, Long.valueOf(0));
-		}
-		catch(ApplicationException exp)
-		{
-			assertTrue("Problem: exception should be thrown :",exp.getLogMessage().
-					contains("There is no implementation for this method"));
-			logger.fatal(exp.getLogMessage());
-		}
-
-	}
-
-	*//**
-	 * This test will be called to insert default values in place of "##" column values.
-	 *//*
-	@Test
-	public void testInsertHashedValues()
-	{
-		  try
-		  {
-			  jdbcDAO.openSession(null);
-			  List<Object> columnValues = new ArrayList<Object>();
-			  columnValues.add(Long.valueOf(1));
-			  columnValues.add((Object)true);
-			  columnValues.add("##");
-			  columnValues.add((Object)"collected");
-			  jdbcDAO.insertHashedValues("test_table_hashed", columnValues,null);
-			  jdbcDAO.commit();
-			//  jdbcDAO.closeSession();
-		  }
-		  catch(Exception exp)
-		  {
-			  exp.printStackTrace();
-			ApplicationException appExp = (ApplicationException)exp;
-			logger.fatal(appExp.getLogMessage());
-			assertFalse("Problem while inserting ## values", true);
-		  }
-		  finally
+			for(int i = 1 ; i<7;i++)
 			{
-				try 
-				{
-					jdbcDAO.closeSession();
-				} 
-				catch (DAOException e)
-				{
-			
-					e.printStackTrace();
-				}
+
+				SortedMap<String, ColumnValueBean> dataMap = new TreeMap<String, ColumnValueBean>();
+				String firstName = "JOHN"+i;
+				String secondName = "REBER"+i;
+
+				ColumnValueBean colValueBean = new ColumnValueBean("identifier",
+						i,DBTypes.INTEGER);
+				dataMap.put("identifier", colValueBean);
+
+				ColumnValueBean first_name = new ColumnValueBean(firstName,DBTypes.STRING);
+				dataMap.put("first_name", first_name);
+
+				ColumnValueBean second_name = new ColumnValueBean(secondName,DBTypes.STRING);
+				dataMap.put("second_name", second_name);
+
+				ColumnValueBean age = new ColumnValueBean("age",
+						i,DBTypes.INTEGER);
+				dataMap.put("age", age);
+
+				ColumnValueBean address_id = new ColumnValueBean(i,DBTypes.INTEGER);
+				dataMap.put("address_id", address_id);
+
+				ColumnValueBean account_id = new ColumnValueBean(i,DBTypes.INTEGER);
+				dataMap.put("account_id", account_id);
+
+				Date date = new Date(new java.util.Date().getTime());
+
+				ColumnValueBean birth_date = new ColumnValueBean(date,DBTypes.DATE);
+				dataMap.put("birth_date", birth_date);
+
+				ColumnValueBean isAvailable = new ColumnValueBean(true,DBTypes.BOOLEAN);
+				dataMap.put("isAvailable", isAvailable);
+
+				jdbcDAO.batchInsert(dataMap);
+
 			}
-	}
+			jdbcDAO.batchCommit();
+			jdbcDAO.batchClose();
 
-	*//**
-	 * This test will be called to insert default values in place of "##" column values.
-	 *//*
-	@Test
-	public void testInsertHashedValuesGivenColumns()
-	{
-		  try
-		  {
-			  jdbcDAO.openSession(null);
-			  List<String> columnNames = new ArrayList<String>();
-			  columnNames.add("IDENTIFIER");
-			  columnNames.add("AVAILABLE");
-			  columnNames.add("CREATED_ON_DATE");
-			  columnNames.add("COLLECTION_STATUS");
 
-			  List<Object> columnValues = new ArrayList<Object>();
-			  columnValues.add(Long.valueOf(2));
-			  columnValues.add(false);
-			  columnValues.add("##");
-			  columnValues.add("collected");
-			  jdbcDAO.insertHashedValues("test_table_hashed", columnValues,columnNames);
-			  jdbcDAO.commit();
-			  jdbcDAO.closeSession();
-		  }
-		  catch(Exception exp)
-		  {
-			  exp.printStackTrace();
-			ApplicationException appExp = (ApplicationException)exp;
-			logger.fatal(appExp.getLogMessage());
-			assertFalse("Problem while inserting ## values", true);
-		  }
-		  finally
-			{
-				try
-				{
-					jdbcDAO.closeSession();
-				}
-				catch (DAOException e)
-				{
-
-					e.printStackTrace();
-				}
-			}
-	}
-
-	*//**
-	 * This test will assert the creation of database parameters.
-	 *//*
-	@Test
-	public void testDatabaseConnectionAndStmtAndResultSet()
-	{
-		DatabaseConnectionParams databaseConnectionParams = new DatabaseConnectionParams();
-		try
-		{
-
-			databaseConnectionParams.setConnection(jdbcDAO.getConnection());
-
-			assertNotNull("Connection retrieved is null",databaseConnectionParams.getConnection());
-
-			Statement stmt = databaseConnectionParams.getDatabaseStatement();
-
-			assertNotNull("Statement retrieved is null :",stmt);
-
-			ResultSet rs = databaseConnectionParams.getResultSet
-			("select * from test_user");
-
-			assertNotNull("ResultSet retrieved is null :",
-					rs);
-
-			assertTrue("ResultSet doesnot exists or empty :",
-					databaseConnectionParams.isResultSetExists("select * from test_user"));
 		}
-		catch(ApplicationException exp)
+		catch(Exception exp)
 		{
-			logger.fatal(exp.getLogMessage());
-			assertFalse("Problem occurred while retrieveing conn or " +
-					"while creating db stmt or rs", true);
+			assertFalse("Failed while updating object ::", true);
 		}
 		finally
 		{
 			try
 			{
-				databaseConnectionParams.closeConnectionParams();
+				jdbcDAO.closeSession();
 			}
-			catch (ApplicationException exp)
+			catch (DAOException e)
 			{
-				logger.fatal(exp.getLogMessage());
+
+				e.printStackTrace();
 			}
 		}
-
 	}
 
-	*//**
-	 * This test will assert the creation of database parameters.
-	 *//*
 	@Test
-	public void testAllMethodsWithDefaultImplementation()
+	public void testExecuteUpdate()
 	{
+
 		try
 		{
-		jdbcDAO.getSQLForLikeOperator(null, null);
-		jdbcDAO.getPrimitiveOperationProcessor();
-		jdbcDAO.getMaxBarcodeCol();
-		jdbcDAO.getMaxLabelCol();
-		jdbcDAO.executeAuditSql(null, null, null);
-		jdbcDAO.updateClob(null, null);
+			jdbcDAO.openSession(null);
+			LinkedList<ColumnValueBean> list = insertData(10000,"kalpana","thakur");
+
+			String sql = "insert into person (identifier,first_name,second_name,age,address_id,account_id,birth_date,isAvailable )" +
+			" values (?,?,?,?,?,?,?,? )";
+			jdbcDAO.executeUpdate(sql, list);
+			jdbcDAO.commit();
 		}
 		catch(Exception exp)
 		{
-			assertFalse("Problem executing default methods :",true);
+			assertFalse("Failed while updating object ::", true);
 		}
+		finally
+		{
+			try
+			{
+				jdbcDAO.closeSession();
+			}
+			catch (DAOException e)
+			{
+
+				e.printStackTrace();
+			}
+		}
+
 	}
 
 
-*/
+	private LinkedList<ColumnValueBean> insertData(int identifier,String firstName,String lastName) {
+		LinkedList<ColumnValueBean> list = new LinkedList<ColumnValueBean>();
+
+		ColumnValueBean colValueBean = new ColumnValueBean("identifier",
+				identifier,DBTypes.INTEGER);
+		list.add(colValueBean);
+
+		ColumnValueBean first_name = new ColumnValueBean("first_name",
+				firstName,DBTypes.STRING);
+		list.add(first_name);
+
+		ColumnValueBean second_name = new ColumnValueBean("second_name",
+				lastName,DBTypes.STRING);
+		list.add(second_name);
+
+		ColumnValueBean age = new ColumnValueBean("age",
+				1,DBTypes.INTEGER);
+		list.add(age);
+
+		ColumnValueBean address_id = new ColumnValueBean("address_id",
+				1,DBTypes.INTEGER);
+		list.add(address_id);
+
+		ColumnValueBean account_id = new ColumnValueBean("account_id",
+				1,DBTypes.INTEGER);
+		list.add(account_id);
+
+		Date date = new Date(new java.util.Date().getTime());
+		ColumnValueBean birth_date = new ColumnValueBean("birth_date",
+				date,DBTypes.DATE);
+		list.add(birth_date);
+
+		ColumnValueBean isAvailable = new ColumnValueBean("isAvailable",
+				true,DBTypes.BOOLEAN);
+		list.add(isAvailable);
+		return list;
+	}
+
+	@Test
+	public void testMultipleTransaction()
+	{
+
+		try
+		{
+			jdbcDAO.openSession(null);
+
+
+			for(int counter = 10; counter < 13; counter++ )
+			{
+				jdbcDAO.openTransaction();
+				LinkedList<ColumnValueBean> list = insertData(counter,"sri"+counter,"adiga"+counter);
+
+				String insertSql = "insert into person (identifier,first_name,second_name,age,address_id,account_id,birth_date,isAvailable )" +
+				" values (?,?,?,?,?,?,?,? )";
+				jdbcDAO.executeUpdate(insertSql, list);
+				jdbcDAO.commit();
+
+				jdbcDAO.openTransaction();
+				String sql = "update person set first_name = 'naik"+counter+"' where identifier = "+counter;
+				jdbcDAO.executeUpdate(sql);
+				jdbcDAO.commit();
+
+			}
+
+		}
+		catch(Exception exp)
+		{
+			assertFalse("Failed while updating object ::", true);
+		}
+		finally
+		{
+			try
+			{
+				jdbcDAO.closeSession();
+			}
+			catch (DAOException e)
+			{
+
+				e.printStackTrace();
+			}
+		}
+
+	}
 }

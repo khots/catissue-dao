@@ -11,15 +11,11 @@ package edu.wustl.dao.util;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.sql.Types;
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import org.hibernate.HibernateException;
@@ -350,5 +346,18 @@ public final class DAOUtility
 
 	}
 
+	/**
+	 * This method is used to get the token from the string.
+	 * @param string string
+	 * @param tokenSize size
+	 * @return token
+	 */
+	public String getToken(String string , int tokenSize)
+	{
+		String tempString = string.trim();
+		char[] dst = new char[tokenSize];
+		tempString.getChars(0, tokenSize, dst, 0);
+		return new String(dst);
+	}
 
 }
