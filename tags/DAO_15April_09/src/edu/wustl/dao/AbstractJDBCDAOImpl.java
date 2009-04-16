@@ -560,8 +560,8 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		try
 		{
 			statement = createStatement();
-			statementData.setRowCount(statement.executeUpdate(query));
-			setStatementData(statement, statementData);
+			statementData.setRowCount(statement.executeUpdate(query,Statement.RETURN_GENERATED_KEYS));
+			setStatementData(statement, statementData,query);
 			return statementData ;
 		}
 		catch (SQLException sqlExp)
@@ -690,7 +690,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 			}
 			StatementData statementData = new StatementData();
 			statementData.setRowCount(stmt.executeUpdate());
-			setStatementData(stmt, statementData);
+			setStatementData(stmt, statementData,sql);
 			return statementData;
 		}
 		catch (SQLException sqlExp)
@@ -706,14 +706,19 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 
 
 	/**
-	 * @param stmt :statement instance.
+	 * @param stmt statement instance.
 	 * @param statementData statement data
+	 * @param sql query string
 	 * @throws SQLException SQL exception
 	 */
-	private void setStatementData(Statement stmt,StatementData statementData)
+	private void setStatementData(Statement stmt,StatementData statementData,String sql)
 	throws SQLException
 	{
-		statementData.setGeneratedKeys(stmt.getGeneratedKeys());
+		String token = DAOUtility.getInstance().getToken(sql, "insert".length());
+		if(token.compareToIgnoreCase("insert") == 0)
+		{
+			statementData.setGeneratedKeys(stmt.getGeneratedKeys());
+		}
 		statementData.setFetchSize(stmt.getFetchSize());
 		statementData.setMaxFieldSize(stmt.getMaxFieldSize());
 		statementData.setMaxRows(stmt.getMaxRows());
@@ -751,7 +756,8 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		try
 		{
 			closePreparedStmt();
-			preparedStatement = (PreparedStatement) connection.prepareStatement(query);
+			preparedStatement = (PreparedStatement) connection.prepareStatement
+			(query,Statement.RETURN_GENERATED_KEYS);
 			return preparedStatement;
 		}
 		catch (SQLException sqlExp)
