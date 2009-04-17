@@ -2,18 +2,15 @@ package edu.wustl.dao;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 
-import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.Utility;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.exception.DAOException;
@@ -36,15 +33,14 @@ public class HashedDataHandler
 	 * @param tableName Name of the table whose metaData is requested
 	 * @param columnNames Table columns
 	 * @param jdbcDAO : Database connections to retrieve meta data.
-	 * @return It will return the metaData associated to the table.
+	 * @return ResultSet It will return the resultset associated to the table.
 	 * @throws DAOException : DAOException
 	 * @throws SQLException :
 	 */
-	private final ResultSetMetaData getMetaData(String tableName,List<String> columnNames,
+	private ResultSet createQueryAndGetResultSet(String tableName,List<String> columnNames,
 			JDBCDAO jdbcDAO)throws DAOException,SQLException
 	{
 
-		ResultSetMetaData metaData;
 		StringBuffer sqlBuff = new StringBuffer(DAOConstants.TRAILING_SPACES);
 		sqlBuff.append("Select").append(DAOConstants.TRAILING_SPACES);
 
@@ -57,45 +53,35 @@ public class HashedDataHandler
 			}
 		}
 		sqlBuff.append(" from " + tableName + " where 1!=1");
-		metaData = jdbcDAO.getQueryResultSet(sqlBuff.toString()).getMetaData();
-
-		return metaData;
-
+		return jdbcDAO.getQueryResultSet(sqlBuff.toString());
 	}
 
 	/**
 	 * This method will returns the metaData associated to the table specified in tableName
 	 * and update the list columnNames.
 	 * @param tableName Name of the table whose metaData is requested
-	 * @param columnNames Table columns
 	 * @param jdbcDAO : Database connections to retrieve meta data.
 	 * @return It will return the metaData associated to the table.
 	 * @throws DAOException : DAOException
 	 */
-	private ResultSetMetaData getMetaDataAndUpdateColumns(String tableName,
-			List<String> columnNames,JDBCDAO jdbcDAO)
+	private ResultSet createQueryAndGetResultSet(String tableName,JDBCDAO jdbcDAO)
 	throws DAOException
 	{
-		ResultSetMetaData metaData;
+		ResultSet resultSet=null;
 		try
 		{
 
 			StringBuffer sqlBuff = new StringBuffer(DAOConstants.TRAILING_SPACES);
 			sqlBuff.append("Select * from " ).append(tableName).append(" where 1!=1");
-			metaData = jdbcDAO.getQueryResultSet(sqlBuff.toString()).getMetaData();
-
-			for (int i = 1; i <= metaData.getColumnCount(); i++)
-			{
-				columnNames.add(metaData.getColumnName(i));
-			}
+			resultSet=jdbcDAO.getQueryResultSet(sqlBuff.toString());
 		}
-		catch (SQLException sqlExp)
+		catch (DAOException sqlExp)
 		{
 			throw DAOUtility.getInstance().getDAOException(sqlExp, "db.update.data.error",
 			"HashedDataHandler.java ");
 		}
 
-		return metaData;
+		return resultSet;
 	}
 
 	/**
@@ -356,19 +342,24 @@ public class HashedDataHandler
 
 		List<String>columnNamesList = new ArrayList<String>();
 		ResultSetMetaData metaData;
-
+		ResultSet resultSet=null;
 		PreparedStatement stmt = null;
 		try
 		{
 			if(columnNames != null && !columnNames.isEmpty())
 			{
-				metaData = getMetaData(tableName, columnNames,jdbcDAO);
+				resultSet = createQueryAndGetResultSet(tableName, columnNames,jdbcDAO);
+				metaData=resultSet.getMetaData();
 				columnNamesList = columnNames;
 			}
 			else
 			{
-				metaData = getMetaDataAndUpdateColumns(tableName,columnNamesList,
-						jdbcDAO);
+				resultSet = createQueryAndGetResultSet(tableName,jdbcDAO);
+				metaData=resultSet.getMetaData();
+				for (int i = 1; i <= metaData.getColumnCount(); i++)
+				{
+					columnNamesList.add(metaData.getColumnName(i));
+				}
 			}
 
 			String insertQuery = createInsertQuery(tableName,columnNamesList);
@@ -379,9 +370,23 @@ public class HashedDataHandler
 		catch (SQLException sqlExp)
 		{
 			throw DAOUtility.getInstance().getDAOException(sqlExp, "db.update.data.error",
-					"HashedDataHandler.java ");
+			"HashedDataHandler.java ");
+		}
+		finally
+		{
+			try
+			{
+				stmt.close();
+				jdbcDAO.closeStatement(resultSet);
+			}
+			catch (SQLException exception)
+			{
+				throw DAOUtility.getInstance().getDAOException(exception, "db.update.data.error",
+				"HashedDataHandler.java ");
+			}
 		}
 
 	}
+
 
 }
