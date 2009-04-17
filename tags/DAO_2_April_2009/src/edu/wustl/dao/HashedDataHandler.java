@@ -2,6 +2,7 @@ package edu.wustl.dao;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -39,7 +40,7 @@ public class HashedDataHandler
 	 * @throws DAOException : DAOException
 	 * @throws SQLException :
 	 */
-	private final ResultSetMetaData getMetaData(String tableName,List<String> columnNames,
+	private final ResultSet createQueryAndGetResultSet(String tableName,List<String> columnNames,
 			JDBCDAO jdbcDAO)throws DAOException,SQLException
 	{
 
@@ -56,10 +57,7 @@ public class HashedDataHandler
 			}
 		}
 		sqlBuff.append(" from " + tableName + " where 1!=1");
-		metaData = jdbcDAO.getQueryResultSet(sqlBuff.toString()).getMetaData();
-
-		return metaData;
-
+		return jdbcDAO.getQueryResultSet(sqlBuff.toString());
 	}
 
 	/**
@@ -71,24 +69,19 @@ public class HashedDataHandler
 	 * @return It will return the metaData associated to the table.
 	 * @throws DAOException : DAOException
 	 */
-	private final ResultSetMetaData getMetaDataAndUpdateColumns(String tableName,
-			List<String> columnNames,JDBCDAO jdbcDAO)
+	private final ResultSet createQueryAndGetResultSet(String tableName,JDBCDAO jdbcDAO)
 	throws DAOException
 	{
 		ResultSetMetaData metaData;
+		ResultSet resultSet=null;
 		try
 		{
 
 			StringBuffer sqlBuff = new StringBuffer(DAOConstants.TRAILING_SPACES);
 			sqlBuff.append("Select * from " ).append(tableName).append(" where 1!=1");
-			metaData = jdbcDAO.getQueryResultSet(sqlBuff.toString()).getMetaData();
-
-			for (int i = 1; i <= metaData.getColumnCount(); i++)
-			{
-				columnNames.add(metaData.getColumnName(i));
-			}
+			resultSet=jdbcDAO.getQueryResultSet(sqlBuff.toString());			
 		}
-		catch (SQLException sqlExp)
+		catch (DAOException sqlExp)
 		{
 			logger.fatal(sqlExp.getMessage(), sqlExp);
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
@@ -96,7 +89,7 @@ public class HashedDataHandler
 					DAOConstants.RS_METADATA_ERROR);
 		}
 
-		return metaData;
+		return resultSet;
 	}
 
 	/**
@@ -365,19 +358,24 @@ public class HashedDataHandler
 
 		List<String>columnNamesList = new ArrayList<String>();
 		ResultSetMetaData metaData;
-
+		ResultSet resultSet=null;
 		PreparedStatement stmt = null;
 		try
 		{
 			if(columnNames != null && !columnNames.isEmpty())
 			{
-				metaData = getMetaData(tableName, columnNames,jdbcDAO);
+				resultSet = createQueryAndGetResultSet(tableName, columnNames,jdbcDAO);
+				metaData=resultSet.getMetaData();
 				columnNamesList = columnNames;
 			}
 			else
 			{
-				metaData = getMetaDataAndUpdateColumns(tableName,columnNamesList,
-						jdbcDAO);
+				resultSet = createQueryAndGetResultSet(tableName,jdbcDAO);
+				metaData=resultSet.getMetaData();
+				for (int i = 1; i <= metaData.getColumnCount(); i++)
+				{
+					columnNamesList.add(metaData.getColumnName(i));
+				}
 			}
 
 			String insertQuery = createInsertQuery(tableName,columnNamesList);
@@ -391,6 +389,21 @@ public class HashedDataHandler
 			ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
 			throw new DAOException(errorKey, sqlExp,"HashedDataHandler.java :"+
 					DAOConstants.INSERT_OBJ_ERROR);
+		}
+		finally
+		{
+			try
+			{
+				stmt.close();
+				jdbcDAO.closeStatement(resultSet);
+			}
+			catch (SQLException exception)
+			{
+				logger.error(exception.getMessage(),exception);
+				ErrorKey errorKey = ErrorKey.getErrorKey("db.operation.error");
+				throw new DAOException(errorKey, exception,"HashedDataHandler.java :"+
+						DAOConstants.INSERT_OBJ_ERROR);
+			}
 		}
 
 	}
