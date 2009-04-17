@@ -4,6 +4,8 @@
 
 package edu.wustl.dao;
 
+import java.sql.ResultSet;
+
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.DAOUtility;
@@ -28,13 +30,17 @@ public class OracleDAOImpl extends AbstractJDBCDAOImpl
 	 */
 	public void deleteTable(String tableName) throws DAOException
 	{
+		ResultSet rs = null;
 		try
 		{
 
 			StringBuffer query = new StringBuffer("select tname from tab where tname='"
 					+ tableName.toString() + "'");
+
+			rs = getQueryResultSet(query.toString());
+
 			boolean isTableExists = DAOUtility.getInstance().
-			isResultSetExists(getQueryResultSet(query.toString()));
+			isResultSetExists(rs);
 
 			logger.debug("ORACLE :" + query.toString() + isTableExists);
 
@@ -49,7 +55,7 @@ public class OracleDAOImpl extends AbstractJDBCDAOImpl
 		}
 		finally
 		{
-			closeConnectionParams();
+			closeStatement(rs);
 		}
 	}
 
