@@ -12,6 +12,7 @@ package edu.wustl.dao;
 
 
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -335,7 +336,7 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 	 * @throws DAOException database exception.
 	 */
 	public List executeQuery(String query,Integer startIndex,
-			Integer maxRecords,List paramValues) throws DAOException
+			Integer maxRecords,LinkedList paramValues) throws DAOException
 	{
 		logger.debug("Execute query");
 		try
