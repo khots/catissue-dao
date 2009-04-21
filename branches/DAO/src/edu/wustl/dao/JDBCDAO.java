@@ -97,7 +97,7 @@ public interface JDBCDAO extends DAO
 	 */
 	ResultSet retrieveResultSet(String sourceObjectName, String[] selectColumnName,
 			QueryWhereClause queryWhereClause,
-			 boolean onlyDistinctRows) throws DAOException;
+			 Boolean onlyDistinctRows) throws DAOException;
 
 
 	/**
@@ -108,7 +108,8 @@ public interface JDBCDAO extends DAO
 	 * or (2) 0 for SQL statements that return nothing
 	 * @throws DAOException :Generic Exception
 	 */
-	StatementData executeUpdate(String tableName,LinkedList<ColumnValueBean> columnValueBeanSet) throws DAOException;
+	StatementData executeUpdate(String tableName,LinkedList<ColumnValueBean> columnValueBeanSet)
+	throws DAOException;
 
 
 	/**
@@ -145,7 +146,7 @@ public interface JDBCDAO extends DAO
 	* from the table represented in sourceObjectName.
 	* @throws DAOException generic DAOException.
 	*/
-	List retrieve(String sourceObjectName, String[] selectColumnName, boolean onlyDistinctRows)
+	List retrieve(String sourceObjectName, String[] selectColumnName, Boolean onlyDistinctRows)
 			throws DAOException;
 
 

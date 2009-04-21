@@ -433,7 +433,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 */
 	public ResultSet retrieveResultSet(String sourceObjectName, String[] selectColumnName,
 			QueryWhereClause queryWhereClause,
-			 boolean onlyDistinctRows) throws DAOException
+			Boolean onlyDistinctRows) throws DAOException
 	{
 		try
 		{
@@ -463,7 +463,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 */
 	public List retrieve(String sourceObjectName, String[] selectColumnName,
 			QueryWhereClause queryWhereClause,
-			 boolean onlyDistinctRows) throws DAOException
+			Boolean onlyDistinctRows) throws DAOException
 	{
 		logger.debug("Inside retrieve method");
 		try
@@ -498,7 +498,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 */
 	private StringBuffer generateSQL(String sourceObjectName,
 			String[] selectColumnName, QueryWhereClause queryWhereClause,
-			boolean onlyDistinctRows)
+			Boolean onlyDistinctRows)
 	{
 		StringBuffer queryStrBuff = getSelectPartOfQuery(selectColumnName, onlyDistinctRows);
 		logger.debug("Prepare from part of the query");
@@ -519,7 +519,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * @return It will return the select clause of Query.
 	 */
 	private StringBuffer getSelectPartOfQuery(String[] selectColumnName,
-			boolean onlyDistinctRows)
+			Boolean onlyDistinctRows)
 	{
 		logger.debug("Prepare select part of query");
 		StringBuffer query = new StringBuffer("SELECT ");
@@ -970,7 +970,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * @throws DAOException DAOException.
 	 */
 	public List retrieve(String sourceObjectName, String[] selectColumnName,
-			boolean onlyDistinctRows) throws DAOException
+			Boolean onlyDistinctRows) throws DAOException
 	{
 		logger.debug("Inside retrieve method");
 		return retrieve(sourceObjectName, selectColumnName,null,

@@ -27,7 +27,7 @@ public interface DAO
 	 * @param isAuditable is Auditable.
 	 * @throws DAOException generic DAOException
 	 */
-	void insert(Object obj,boolean isAuditable) throws DAOException;
+	void insert(Object obj,Boolean isAuditable) throws DAOException;
 
 	/**
 	 * This method will be used when user wants to audit
@@ -71,7 +71,7 @@ public interface DAO
 	 */
 
 	List retrieve(String sourceObjectName,String[] selectColumnName,
-			QueryWhereClause queryWhereClause,boolean onlyDistinctRows) throws DAOException;
+			QueryWhereClause queryWhereClause,Boolean onlyDistinctRows) throws DAOException;
 
 
 	/**

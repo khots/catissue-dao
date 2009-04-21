@@ -35,12 +35,7 @@ public final class DAOConstants
 		return daoConstant;
 	}
 
-	/**
-	 *  The unique key error message is "Duplicate entry %s for key %d".
-	 *  This string is used for searching " for key " string in the above error message
-	 */
-	public static final String MYSQL_DUPL_KEY_MSG = " for key ";
-
+	
 	/**
 	 * Dot operators.
 	 */
