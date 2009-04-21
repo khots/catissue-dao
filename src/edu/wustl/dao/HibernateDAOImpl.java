@@ -109,7 +109,7 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 	 * @param isAuditable is Auditable.
 	 * @throws DAOException generic DAOException.
 	 */
-	public void insert(Object obj,boolean isAuditable) throws DAOException
+	public void insert(Object obj,Boolean isAuditable) throws DAOException
 	{
 		logger.debug("Insert Object");
 		try
@@ -221,7 +221,7 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 	 * @throws DAOException generic DAOException.
 	 */
 	public List retrieve(String sourceObjectName,String[] selectColumnName,
-			QueryWhereClause queryWhereClause,boolean onlyDistinctRows) throws DAOException
+			QueryWhereClause queryWhereClause,Boolean onlyDistinctRows) throws DAOException
 	{
 		logger.debug("Inside retrieve method");
 		List list;
