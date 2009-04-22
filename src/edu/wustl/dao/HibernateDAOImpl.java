@@ -341,13 +341,10 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		try
 		{
 	    	Query hibernateQuery = session.createQuery(query);
-	    	if(startIndex != null)
+	    	if(startIndex != null && maxRecords != null )
 	    	{
-	    		hibernateQuery.setFirstResult(startIndex);
-	    	}
-	    	if(maxRecords != null )
-	    	{
-	    		hibernateQuery.setMaxResults(maxRecords);
+	    		hibernateQuery.setFirstResult(startIndex.intValue());
+	    		hibernateQuery.setMaxResults(maxRecords.intValue());
 	    	}
 	    	if(paramValues!=null)
 	    	{
