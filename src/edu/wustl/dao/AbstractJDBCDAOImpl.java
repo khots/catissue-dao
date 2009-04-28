@@ -569,10 +569,10 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 			throw DAOUtility.getInstance().getDAOException(sqlExp, "db.update.data.error",
 			"AbstractJDBCDAOImpl.java :   "+query);
 		}
-		finally
+		/*finally
 		{
 			removeStmts(statement);
-		}
+		}*/
 	}
 
 	/**
