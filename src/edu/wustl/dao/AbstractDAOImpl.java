@@ -140,7 +140,7 @@ public abstract class AbstractDAOImpl implements DAO
 	 * @param isAuditable is Auditable.
 	 * @throws DAOException generic DAOException
 	 */
-	public void insert(Object obj, Boolean isAuditable) throws DAOException
+	public void insert(Object obj, boolean isAuditable) throws DAOException
 	{
 		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
 		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
