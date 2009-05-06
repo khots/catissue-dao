@@ -188,5 +188,5 @@ public interface JDBCDAO extends DAO
 	 * This method will be called to open new transaction.
 	 * @throws DAOException database exception.
 	 */
-	void openTransaction()throws DAOException;
+	//void openTransaction()throws DAOException;
 }

@@ -99,11 +99,11 @@ public class ConnectionManager implements IConnectionManager
 
 	/**
 	 * This method will be called to open new transaction.
-	 */
+	 *//*
 	public void openTransaction()
 	{
 		 transaction = session.beginTransaction();
-	}
+	}*/
 
 	/**
 	 * This method will be called to close the session.
