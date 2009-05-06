@@ -22,9 +22,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.SortedSet;
-
-import org.hibernate.HibernateException;
-
 import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.global.Validator;
@@ -147,11 +144,11 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 			connectionManager.commit();
 
 	}*/
-
-	 /**
+/*
+	 *//**
 	 * This method will be called to open new transaction.
 	 * @throws DAOException database exception.
-	 */
+	 *//*
 	public void openTransaction()throws DAOException
 	{
 		try
@@ -163,7 +160,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 			throw DAOUtility.getInstance().getDAOException(exp, "db.open.transaction.error",
 			"AbstractJDBCDAOImpl.java");
 		}
-	}
+	}*/
 	/**
 	 * RollBack all the changes after last commit.
 	 * Declared in DAO class.
