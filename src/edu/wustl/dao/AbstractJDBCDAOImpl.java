@@ -22,9 +22,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.SortedSet;
-
-import org.hibernate.HibernateException;
-
 import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.global.Validator;
@@ -122,48 +119,19 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 */
 	public void commit() throws DAOException
 	{
-		logger.debug("Session commit");
+		logger.debug("connection commit");
 		try
 		{
 			batchCommit();
-			connectionManager.commit();
+			connection.commit();
 		}
-		catch (DAOException exp)
+		catch (SQLException exp)
 		{
 			throw DAOUtility.getInstance().getDAOException(exp, "db.commit.error",
 					"AbstractJDBCDAOImpl.java");
 		}
 	}
 
-	/**
-	 * Commit the database level changes.
-	 * Declared in DAO class.
-	 * @throws DAOException : It will throw DAOException
-	 * @throws SMException
-	 *//*
-	public void commitTransaction() throws DAOException
-	{
-		logger.debug("Session commit");
-			connectionManager.commit();
-
-	}*/
-
-	 /**
-	 * This method will be called to open new transaction.
-	 * @throws DAOException database exception.
-	 */
-	public void openTransaction()throws DAOException
-	{
-		try
-		{
-			connectionManager.openTransaction();
-		}
-		catch(HibernateException exp)
-		{
-			throw DAOUtility.getInstance().getDAOException(exp, "db.open.transaction.error",
-			"AbstractJDBCDAOImpl.java");
-		}
-	}
 	/**
 	 * RollBack all the changes after last commit.
 	 * Declared in DAO class.
@@ -174,9 +142,9 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		try
 		{
 			logger.debug("Session rollback");
-			connectionManager.rollback();
+			connection.rollback();
 		}
-		catch (Exception exp)
+		catch (SQLException exp)
 		{
 			throw DAOUtility.getInstance().getDAOException(exp, "db.rollback.error",
 					"AbstractJDBCDAOImpl.java");
@@ -433,7 +401,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 */
 	public ResultSet retrieveResultSet(String sourceObjectName, String[] selectColumnName,
 			QueryWhereClause queryWhereClause,
-			boolean onlyDistinctRows) throws DAOException
+			 boolean onlyDistinctRows) throws DAOException
 	{
 		try
 		{
@@ -463,7 +431,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 */
 	public List retrieve(String sourceObjectName, String[] selectColumnName,
 			QueryWhereClause queryWhereClause,
-			boolean onlyDistinctRows) throws DAOException
+			 boolean onlyDistinctRows) throws DAOException
 	{
 		logger.debug("Inside retrieve method");
 		try
@@ -569,10 +537,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 			throw DAOUtility.getInstance().getDAOException(sqlExp, "db.update.data.error",
 			"AbstractJDBCDAOImpl.java :   "+query);
 		}
-		/*finally
-		{
-			removeStmts(statement);
-		}*/
+
 	}
 
 	/**
@@ -755,9 +720,9 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	{
 		try
 		{
-			closePreparedStmt();
 			preparedStatement = (PreparedStatement) connection.prepareStatement
-			(query,Statement.RETURN_GENERATED_KEYS);
+			(query);//,Statement.RETURN_GENERATED_KEYS);
+			openedStmts.add(preparedStatement);
 			return preparedStatement;
 		}
 		catch (SQLException sqlExp)

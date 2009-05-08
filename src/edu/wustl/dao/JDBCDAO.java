@@ -185,9 +185,4 @@ public interface JDBCDAO extends DAO
 	 */
 	void batchClose()throws DAOException;
 
-	/**
-	 * This method will be called to open new transaction.
-	 * @throws DAOException database exception.
-	 */
-	void openTransaction()throws DAOException;
 }
