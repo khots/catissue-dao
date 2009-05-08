@@ -709,7 +709,7 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 
 			for(int counter = 10; counter < 13; counter++ )
 			{
-				jdbcDAO.openTransaction();
+				//jdbcDAO.openTransaction();
 				LinkedList<ColumnValueBean> list = insertData(counter,"sri"+counter,"adiga"+counter);
 
 				String insertSql = "insert into person (identifier,first_name,second_name,age,address_id,account_id,birth_date,isAvailable )" +
@@ -717,7 +717,7 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 				jdbcDAO.executeUpdate(insertSql, list);
 				jdbcDAO.commit();
 
-				jdbcDAO.openTransaction();
+				//jdbcDAO.openTransaction();
 				String sql = "update person set first_name = 'naik"+counter+"' where identifier = "+counter;
 				jdbcDAO.executeUpdate(sql);
 				jdbcDAO.commit();
