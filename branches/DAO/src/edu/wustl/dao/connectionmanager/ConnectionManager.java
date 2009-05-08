@@ -77,32 +77,14 @@ public class ConnectionManager implements IConnectionManager
 	 * It will check the session for the running application in applicationSessionMap.
 	 * If present, retrieved the session from the Map otherwise create the
 	 * new session and store it into the Map.
-	 * @return session object.
+	 * @return : the session.
 	 *@throws DAOException :Generic DAOException.
 	 */
 	public Session getSession() throws DAOException
 	{
-		try
-        {
-			session = sessionFactory.openSession();
-			session.setFlushMode(FlushMode.COMMIT);
-            session.connection().setAutoCommit(false);
-            transaction = session.beginTransaction();
-            return session;
-        }
-        catch (Exception excp)
-        {
-        	throw DAOUtility.getInstance().getDAOException(excp,
-        			"db.open.session.error", "ConnectionManager.java ");
-        }
-	}
-
-	/**
-	 * This method will be called to open new transaction.
-	 */
-	public void openTransaction()
-	{
-		 transaction = session.beginTransaction();
+		newSession();
+        transaction = session.beginTransaction();
+        return session;
 	}
 
 	/**
@@ -113,22 +95,33 @@ public class ConnectionManager implements IConnectionManager
 	 */
 	public void closeSession() throws DAOException
 	{
+		close();
+		transaction = null;
+
+	}
+
+	/**
+	 * This method will be called to close the session.
+	 * It will check the session for the running application in applicationSessionMap,
+	 * if present it will remove it from the Map.
+	 *@throws DAOException :Generic DAOException.
+	 */
+	private void close()throws DAOException
+	{
 		try
 		{
 			if(session != null)
 			{
 				session.close();
 				session=null;
-				transaction = null;
 			}
 		}
 		catch(HibernateException hiberExp)
 		{
 			throw DAOUtility.getInstance().getDAOException(hiberExp,
-        			"db.close.conn.error", "ConnectionManager.java ");
+					"db.close.conn.error", "ConnectionManager.java ");
 		}
 	}
-
 
 
 	 /**
@@ -174,6 +167,26 @@ public class ConnectionManager implements IConnectionManager
 		}
 	}
 
+
+	/**
+	 * This will established new session.
+	 * @throws DAOException :Generic DAOException.
+	 */
+	private void newSession()throws DAOException
+	{
+		try
+		{
+			session = sessionFactory.openSession();
+			session.setFlushMode(FlushMode.COMMIT);
+			session.connection().setAutoCommit(false);
+		}
+		catch (Exception excp)
+		{
+			throw DAOUtility.getInstance().getDAOException(excp,
+					"db.open.session.error", "ConnectionManager.java ");
+		}
+	}
+
 	/**
 	 *This method will be called to retrieved the current connection object.
 	 *@return Connection object
@@ -181,7 +194,8 @@ public class ConnectionManager implements IConnectionManager
 	 */
 	public Connection getConnection() throws DAOException
 	{
-		return getSession().connection();
+		newSession();
+		return session.connection();
 	}
 
 
@@ -191,7 +205,7 @@ public class ConnectionManager implements IConnectionManager
 	 */
 	public void closeConnection() throws DAOException
 	{
-		closeSession();
+		close();
 	}
 
 	/**
