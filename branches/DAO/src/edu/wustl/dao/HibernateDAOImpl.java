@@ -29,6 +29,7 @@ import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.condition.EqualClause;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.DAOUtility;
+import edu.wustl.dao.util.HibernateMetaData;
 import edu.wustl.dao.util.NamedQueryParam;
 
 
@@ -303,8 +304,11 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		logger.debug("Inside retrieve method");
 		try
 		{
-			Object object = session.get(Class.forName(sourceObjectName), identifier);
-			return object;
+			Object object = session.load(Class.forName(sourceObjectName), identifier);
+            return HibernateMetaData.getProxyObjectImpl(object);
+
+			/*Object object = session.get(Class.forName(sourceObjectName), identifier);
+			return object;*/
 		}
 		catch (Exception exp)
 		{
