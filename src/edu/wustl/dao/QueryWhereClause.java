@@ -130,6 +130,7 @@ public class QueryWhereClause
 	 * @throws DAOException : Database Exception.
 	 * It iterates the whereCondition clause reads the class name from the map as per the key ,
 	 * instantiate the object and generates the condition clause.
+	 * @deprecated : Create where clause,implementation details are their in TestCases.
 	 */
 	public QueryWhereClause getWhereCondition(String[] whereColumnName, String[]
 	       whereColumnCondition, Object[] whereColumnValue,	String joinCondition) throws DAOException
