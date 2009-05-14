@@ -123,14 +123,14 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		}
 		catch (HibernateException hibExp)
 		{
-
+			logger.info(hibExp.getMessage(),hibExp);
 			throw DAOUtility.getInstance().getDAOException(hibExp, "db.insert.data.error",
 			"HibernateDAOImpl.java ");
 
 		}
 		catch (AuditException exp)
 		{
-
+			logger.info(exp.getMessage(),exp);
 			throw DAOUtility.getInstance().getDAOException(exp, "db.audit.error",
 			"HibernateDAOImpl.java ");
 		}
@@ -152,6 +152,7 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		}
 		catch (HibernateException hibExp)
 		{
+			logger.info(hibExp.getMessage(),hibExp);
 			throw DAOUtility.getInstance().getDAOException(hibExp, "db.update.data.error",
 			"HibernateDAOImpl.java ");
 		}
@@ -186,6 +187,7 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
         }
         catch (AuditException exp)
 		{
+        	logger.info(exp.getMessage(),exp);
 			throw DAOUtility.getInstance().getDAOException(exp, "db.audit.error",
 			"HibernateDAOImpl.java ");
 		}
@@ -205,6 +207,7 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		}
 		catch (HibernateException hibExp)
 		{
+			logger.info(hibExp.getMessage(),hibExp);
 			throw DAOUtility.getInstance().getDAOException(hibExp, "db.delete.data.error",
 			"HibernateDAOImpl.java ");
 
@@ -244,9 +247,10 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 			list = query.list();
 
 		}
-		catch (HibernateException exp)
+		catch (HibernateException hibExp)
 		{
-			throw DAOUtility.getInstance().getDAOException(exp, "db.retrieve.data.error",
+			logger.info(hibExp.getMessage(),hibExp);
+			throw DAOUtility.getInstance().getDAOException(hibExp, "db.retrieve.data.error",
 			"HibernateDAOImpl.java ");
 
 		}
@@ -312,6 +316,7 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		}
 		catch (Exception exp)
 		{
+			logger.info(exp.getMessage(),exp);
 			throw DAOUtility.getInstance().getDAOException(exp, "db.retrieve.data.error",
 			"HibernateDAOImpl.java ");
 		}
@@ -363,6 +368,7 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		}
 		catch(HibernateException hiberExp)
 		{
+			logger.info(hiberExp.getMessage(),hiberExp);
 			throw DAOUtility.getInstance().getDAOException(hiberExp, "db.retrieve.data.error",
 					"HibernateDAOImpl.java "+query);
 		}
@@ -374,12 +380,24 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 	 * @param queryName : handle for named query.
 	 * @param namedQueryParams : Map holding the parameter type and parameter value.
 	 * @return the list of data.
+	 * @throws DAOException : database exception.
 	 */
 	public List executeNamedQuery(String queryName,Map<String, NamedQueryParam> namedQueryParams)
+	throws DAOException
 	{
-		Query query = session.getNamedQuery(queryName);
-		DAOUtility.getInstance().substitutionParameterForQuery(query, namedQueryParams);
-		return query.list();
+		logger.debug("Execute named query");
+		try
+		{
+			Query query = session.getNamedQuery(queryName);
+			DAOUtility.getInstance().substitutionParameterForQuery(query, namedQueryParams);
+			return query.list();
+		}
+		catch(HibernateException hiberExp)
+		{
+			logger.info(hiberExp.getMessage(),hiberExp);
+			throw DAOUtility.getInstance().getDAOException(hiberExp, "db.retrieve.data.error",
+					"HibernateDAOImpl.java "+queryName);
+		}
 	}
 
 	/**
@@ -496,9 +514,10 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 			queryWhereClause.addCondition(new EqualClause(columnName,identifier));
 			return retrieve(objClass.getName(), selectColumnName, queryWhereClause, false);
 		}
-		catch (HibernateException exception)
+		catch (HibernateException hiberExp)
 		{
-			throw DAOUtility.getInstance().getDAOException(exception, "db.retrieve.data.error",
+			logger.info(hiberExp.getMessage(),hiberExp);
+			throw DAOUtility.getInstance().getDAOException(hiberExp, "db.retrieve.data.error",
 					"HibernateDAOImpl.java "+attributeName);
 		}
 	}

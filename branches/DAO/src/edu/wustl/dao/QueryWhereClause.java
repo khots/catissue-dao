@@ -112,6 +112,7 @@ public class QueryWhereClause
 
 		catch(DAOException exp)
 		{
+			logger.info(exp.getMessage(),exp);
 			throw DAOUtility.getInstance().getDAOException(exp,
 					"db.query.condition.gen.error","QueryWhereClause.java");
 		}
@@ -190,7 +191,7 @@ public class QueryWhereClause
 	 * @return QueryConditionMap<condition,class name/> having key as condition and
 	 * value as class specific to condition.
 	 */
-	public static Map<String, String> getWhereClauseCondMap()
+	private Map<String, String> getWhereClauseCondMap()
 	{
 		Map<String, String> queryCondMap = new HashMap<String, String>();
 		queryCondMap.put(DAOConstants.IN_CONDITION, "edu.wustl.dao.condition.INClause");
