@@ -2,8 +2,12 @@ package edu.wustl.dao;
 
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.exception.DAOException;
-
-public class Db2SQLDAOImpl  extends AbstractJDBCDAOImpl 
+/**
+ * DB2DAO.
+ * @author kalpana_thakur
+ *
+ */
+public class Db2SQLDAOImpl  extends AbstractJDBCDAOImpl
 {
 
 	/**

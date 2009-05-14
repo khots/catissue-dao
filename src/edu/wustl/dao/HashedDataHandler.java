@@ -77,6 +77,7 @@ public class HashedDataHandler
 		}
 		catch (DAOException sqlExp)
 		{
+			logger.info(sqlExp.getMessage(),sqlExp);
 			throw DAOUtility.getInstance().getDAOException(sqlExp, "db.update.data.error",
 			"HashedDataHandler.java ");
 		}
@@ -339,7 +340,6 @@ public class HashedDataHandler
 	public void insertHashedValues(String tableName, List<Object> columnValues, List<String> columnNames,
 			JDBCDAO jdbcDAO)throws DAOException
 	{
-
 		List<String>columnNamesList = new ArrayList<String>();
 		ResultSetMetaData metaData;
 		ResultSet resultSet=null;
@@ -369,6 +369,7 @@ public class HashedDataHandler
 		}
 		catch (SQLException sqlExp)
 		{
+			logger.info(sqlExp.getMessage(),sqlExp);
 			throw DAOUtility.getInstance().getDAOException(sqlExp, "db.update.data.error",
 			"HashedDataHandler.java ");
 		}
@@ -379,9 +380,10 @@ public class HashedDataHandler
 				stmt.close();
 				jdbcDAO.closeStatement(resultSet);
 			}
-			catch (SQLException exception)
+			catch (SQLException sqlExp)
 			{
-				throw DAOUtility.getInstance().getDAOException(exception, "db.update.data.error",
+				logger.info(sqlExp.getMessage(),sqlExp);
+				throw DAOUtility.getInstance().getDAOException(sqlExp, "db.update.data.error",
 				"HashedDataHandler.java ");
 			}
 		}

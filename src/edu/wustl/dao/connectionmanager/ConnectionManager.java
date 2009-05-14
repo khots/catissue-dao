@@ -118,6 +118,7 @@ public class ConnectionManager implements IConnectionManager
 		}
 		catch(HibernateException hiberExp)
 		{
+			logger.info(hiberExp.getMessage(), hiberExp);
 			throw DAOUtility.getInstance().getDAOException(hiberExp,
 					"db.close.conn.error", "ConnectionManager.java ");
 		}
@@ -139,6 +140,7 @@ public class ConnectionManager implements IConnectionManager
 		}
 		catch(HibernateException hiberExp)
 		{
+			logger.info(hiberExp.getMessage(), hiberExp);
 			throw DAOUtility.getInstance().getDAOException(hiberExp,
         			"db.commit.error", "ConnectionManager.java ");
 
@@ -162,6 +164,7 @@ public class ConnectionManager implements IConnectionManager
 		}
 		catch(HibernateException hiberExp)
 		{
+			logger.info(hiberExp.getMessage(), hiberExp);
 			throw DAOUtility.getInstance().getDAOException(hiberExp,
         			"db.rollback.error", "ConnectionManager.java ");
 		}
@@ -182,6 +185,7 @@ public class ConnectionManager implements IConnectionManager
 		}
 		catch (Exception excp)
 		{
+			logger.info(excp.getMessage(), excp);
 			throw DAOUtility.getInstance().getDAOException(excp,
 					"db.open.session.error", "ConnectionManager.java ");
 		}

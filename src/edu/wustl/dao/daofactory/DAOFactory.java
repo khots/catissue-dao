@@ -121,6 +121,7 @@ public class DAOFactory implements IDAOFactory
 		}
 		catch (Exception excp )
 		{
+			logger.info(excp.getMessage(), excp);
 			throw DAOUtility.getInstance().getDAOException
 			(excp, "db.dao.init.error", "DAOFactory.java ");
 		}
@@ -151,6 +152,7 @@ public class DAOFactory implements IDAOFactory
 		}
 		catch (Exception excp )
 		{
+			logger.info(excp.getMessage(), excp);
 			throw DAOUtility.getInstance().getDAOException
 			(excp, "db.jdbcdao.init.error", "DAOFactory.java ");
 		}
@@ -173,7 +175,7 @@ public class DAOFactory implements IDAOFactory
 		}
 		catch (Exception exp)
 		{
-
+			logger.info(exp.getMessage(), exp);
 			throw DAOUtility.getInstance().getDAOException
 			(exp, "db.sessionfactory.init.error", "DAOFactory.java ");
 
@@ -249,6 +251,7 @@ public class DAOFactory implements IDAOFactory
         }
         catch (Exception exp)
         {
+        	logger.info(exp.getMessage(), exp);
         	throw DAOUtility.getInstance().getDAOException
 			(exp, "db.conf.file.parse.error", "DAOFactory.java ");
         }
