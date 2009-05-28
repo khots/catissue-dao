@@ -359,8 +359,8 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 			valuePart.append('?');
 			if(columns.hasNext())
 			{
-				insertSql.append(DAOConstants.SPLIT_OPERATOR);
-				valuePart.append(DAOConstants.SPLIT_OPERATOR);
+				insertSql.append(DAOConstants.DELIMETER);
+				valuePart.append(DAOConstants.DELIMETER);
 			}
 
 		}

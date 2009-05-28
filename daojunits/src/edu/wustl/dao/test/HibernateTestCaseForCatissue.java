@@ -88,7 +88,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 
 			Address address = new Address();
 			address.setStreet("Street unknown");
-			dao.insert(address,false);
+			dao.insert(address);
 			person.setAddress(address);
 
 			Collection<Object> orderCol = new HashSet<Object>();
@@ -98,7 +98,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 			person.setName("Kalpana");
 			orderCol.add(order);
 			person.setOrderCollection(orderCol);
-			dao.insert(person,false);
+			dao.insert(person);
 			dao.commit();
 			//dao.closeSession();
 
@@ -173,7 +173,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 		{
 		  User user = (User)createUserObject();
 		  dao.openSession(null);
-		  dao.insert(user, false);
+		  dao.insert(user);
 		//  dao.commit();
 		 // dao.closeSession();
 
@@ -183,7 +183,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 		  	user2.setLastName("Lale");
 		  	user2.setEmailAddress("sach@lale.co.in");
 		//  dao.openSession(null);
-		  dao.insert(user2, false);
+		  dao.insert(user2);
 		  dao.commit();
 		//  dao.closeSession();
 		}
@@ -804,7 +804,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 			dao.openSession(null);
 			Address address = new Address();
 			address.setStreet("Street unknown");
-			dao.insert(address, false);
+			dao.insert(address);
 			dao.commit();
 			//dao.closeSession();
 		}
@@ -842,7 +842,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 		IDAOFactory daoFactory = daoConfigFactory.getInstance().getDAOFactory("DynamicExtensions");
 		DAO deDAO = daoFactory.getDAO();
 		deDAO.openSession(null);
-		deDAO.insert(user, false);
+		deDAO.insert(user);
 		deDAO.commit();
 		deDAO.closeSession();
 	}

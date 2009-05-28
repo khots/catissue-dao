@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import edu.wustl.common.util.Utility;
+import edu.wustl.common.util.global.CommonUtilities;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.DAOConstants;
@@ -102,8 +102,8 @@ public class HashedDataHandler
 			colValues.append(DAOConstants.INDEX_VALUE_OPERATOR).append(DAOConstants.TRAILING_SPACES);
 			if (columnIterator.hasNext())
 			{
-				query.append(DAOConstants.SPLIT_OPERATOR).append(DAOConstants.TRAILING_SPACES);
-				colValues.append(DAOConstants.SPLIT_OPERATOR);
+				query.append(DAOConstants.DELIMETER).append(DAOConstants.TRAILING_SPACES);
+				colValues.append(DAOConstants.DELIMETER);
 			}
 			else
 			{
@@ -288,7 +288,7 @@ public class HashedDataHandler
 			java.util.Date date = null;
 			try
 			{
-				date = Utility.parseDate("1-1-9999", "mm-dd-yyyy");
+				date = CommonUtilities.parseDate("1-1-9999", "mm-dd-yyyy");
 			}
 			catch (ParseException exp)
 			{

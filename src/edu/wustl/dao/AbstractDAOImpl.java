@@ -137,10 +137,9 @@ public abstract class AbstractDAOImpl implements DAO
 	/**
 	 * Insert the Object in the database.
 	 * @param obj Object to be inserted in database
-	 * @param isAuditable is Auditable.
 	 * @throws DAOException generic DAOException
 	 */
-	public void insert(Object obj, boolean isAuditable) throws DAOException
+	public void insert(Object obj) throws DAOException
 	{
 		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
 		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");

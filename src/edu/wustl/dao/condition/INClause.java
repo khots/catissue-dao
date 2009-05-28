@@ -48,7 +48,7 @@ public class INClause implements Condition
 	{
 		this.columnName = columnName;
 		this.sourceObjectName = sourceObjectName;
-		this.colValueArray = values.split(DAOConstants.SPLIT_OPERATOR);
+		this.colValueArray = values.split(DAOConstants.DELIMETER);
 	}
 
 	/**
@@ -61,7 +61,7 @@ public class INClause implements Condition
 	public INClause(String columnName, String values)
 	{
 		this.columnName = columnName;
-		this.colValueArray = values.split(DAOConstants.SPLIT_OPERATOR);
+		this.colValueArray = values.split(DAOConstants.DELIMETER);
 
 
 	}

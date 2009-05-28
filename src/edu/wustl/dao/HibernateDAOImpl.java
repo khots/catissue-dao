@@ -20,11 +20,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
-import edu.wustl.common.audit.AuditManager;
-import edu.wustl.common.audit.Auditable;
 import edu.wustl.common.beans.SessionDataBean;
-import edu.wustl.common.domain.AuditEventLog;
-import edu.wustl.common.exception.AuditException;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.condition.EqualClause;
 import edu.wustl.dao.exception.DAOException;
@@ -51,11 +47,7 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 	 */
      private Session session = null;
 
-     /**
- 	 * Audit Manager.
- 	 */
- 	private AuditManager auditManager;
-
+    
 	/**
 	 * This method will be used to establish the session with the database.
 	 * Declared in  class.
@@ -65,8 +57,7 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 	public void openSession(SessionDataBean sessionDataBean) throws DAOException
 	{
 		logger.debug("Open the session");
-	    auditManager = getAuditManager(sessionDataBean);
-		session = connectionManager.getSession();
+	 	session = connectionManager.getSession();
 	}
 
 	/**
@@ -77,7 +68,6 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 	public void closeSession() throws DAOException
 	{
 		logger.debug("Close the session");
-		auditManager = null;
 		connectionManager.closeSession();
 	}
 
@@ -89,7 +79,6 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 	public void commit() throws DAOException
 	{
 		logger.debug("Session commit");
-		auditManager.insert(this);
 		connectionManager.commit();
 	}
 
@@ -107,19 +96,14 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 	/**
 	 * Saves the persistent object in the database.
 	 * @param obj The object to be saved.
-	 * @param isAuditable is Auditable.
 	 * @throws DAOException generic DAOException.
 	 */
-	public void insert(Object obj,boolean isAuditable) throws DAOException
+	public void insert(Object obj) throws DAOException
 	{
 		logger.debug("Insert Object");
 		try
 		{
 			session.save(obj);
-			if (obj instanceof Auditable && isAuditable)
-			{
-				auditManager.audit((Auditable)obj, null, "INSERT");
-			}
 		}
 		catch (HibernateException hibExp)
 		{
@@ -128,14 +112,6 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 			"HibernateDAOImpl.java ");
 
 		}
-		catch (AuditException exp)
-		{
-			logger.info(exp.getMessage(),exp);
-			throw DAOUtility.getInstance().getDAOException(exp, "db.audit.error",
-			"HibernateDAOImpl.java ");
-		}
-
-
 	}
 
 	/**
@@ -158,40 +134,6 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		}
 	}
 
-	/**
-	 * update and audit the object to the database.
-	 * @param obj Object to be updated in database
-	 * @param oldObj old object.
-	 * @throws DAOException : generic DAOException
-	 */
-	public void update(Object obj, Object oldObj) throws DAOException
-	{
-		update(obj);
-		audit( obj,  oldObj);
-	}
-
-	/**
-	 * Added method to audit.
-	 * @param obj Object to be updated in database
-	 * @param oldObj old object.
-	 * @throws DAOException : generic DAOException
-	 */
-	public void audit(Object obj, Object oldObj) throws DAOException
-    {
-        try
-        {
-        	if (obj instanceof Auditable)
-        	{
-                auditManager.audit((Auditable) obj, (Auditable)oldObj, "UPDATE");
-        	}
-        }
-        catch (AuditException exp)
-		{
-        	logger.info(exp.getMessage(),exp);
-			throw DAOUtility.getInstance().getDAOException(exp, "db.audit.error",
-			"HibernateDAOImpl.java ");
-		}
-    }
 
 	/**
 	 * Deletes the persistent object from the database.
@@ -400,37 +342,8 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		}
 	}
 
-	/**
-	 * add Audit Event Logs.
-	 * @param auditEventDetailsCollection audit Event Details Collection.
-	 */
-	public void addAuditEventLogs(Collection<AuditEventLog> auditEventDetailsCollection)
-	{
-		logger.debug("Add audit event logs");
-		auditManager.addAuditEventLogs(auditEventDetailsCollection);
-	}
 
-	/**
-	 * This will be called to initialized the Audit Manager.
-	 * @param sessionDataBean : This will holds the session data.
-	 * @return AuditManager : instance of AuditManager
-	 */
-	private static AuditManager getAuditManager(SessionDataBean sessionDataBean)
-	{
-		logger.debug("Initialize audit manager");
-		AuditManager auditManager = new AuditManager();
-		if (sessionDataBean == null)
-		{
-			auditManager.setUserId(null);
-		}
-		else
-		{
-			auditManager.setUserId(sessionDataBean.getUserId());
-			auditManager.setIpAddress(sessionDataBean.getIpAddress());
-		}
-		return auditManager;
-	}
-
+	
 	/**
 	 * Retrieves the records for class name in sourceObjectName according
 	 * to field values passed in the passed session.
