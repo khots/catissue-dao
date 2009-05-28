@@ -8,11 +8,13 @@
  */
 package edu.wustl.dao.util;
 
+import edu.wustl.common.util.global.CommonConstants;
+
 /**
  * @author kalpana_thakur
  * This class holds all DAO specific constants.
  */
-public final class DAOConstants
+public final class DAOConstants extends CommonConstants
 {
 
 	/**
@@ -35,7 +37,6 @@ public final class DAOConstants
 		return daoConstant;
 	}
 
-	
 	/**
 	 * Dot operators.
 	 */
@@ -45,21 +46,6 @@ public final class DAOConstants
 	 * Space .
 	 */
 	public static final String TRAILING_SPACES = " ";
-
-	/**
-	 * And join condition.
-	 */
-	public static final String AND_JOIN_CONDITION = "AND";
-
-	/**
-	 * or join condition.
-	 */
-	public static final String OR_JOIN_CONDITION = "OR";
-
-	/**
-	 * Split operator.
-	 */
-	public static final String SPLIT_OPERATOR = ",";
 
 	/**
 	 * in operator.

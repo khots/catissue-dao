@@ -24,20 +24,9 @@ public interface DAO
 	/**
 	 * Insert the Object to the database.
 	 * @param obj Object to be inserted in database
-	 * @param isAuditable is Auditable.
 	 * @throws DAOException generic DAOException
 	 */
-	void insert(Object obj,boolean isAuditable) throws DAOException;
-
-	/**
-	 * This method will be used when user wants to audit
-	 * the object prior to update
-	 * updates the persisted object into the database.
-	 * @param obj Object to be updated in database
-	 * @param oldObj old object.
-	 * @throws DAOException : generic DAOException
-	 */
-	void update(Object obj, Object oldObj) throws DAOException;
+	void insert(Object obj) throws DAOException;//,boolean isAuditable)
 
 	/**
 	 * updates the object into the database.

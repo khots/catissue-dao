@@ -42,8 +42,8 @@ public abstract class AbstractQueryGenerator implements QueryGenerator
 			valuePart.append(fetchColumnValue(colValBean));
 			if(colValBeanItr.hasNext())
 			{
-				insertSql.append(DAOConstants.SPLIT_OPERATOR);
-				valuePart.append(DAOConstants.SPLIT_OPERATOR);
+				insertSql.append(DAOConstants.DELIMETER);
+				valuePart.append(DAOConstants.DELIMETER);
 			}
 
 		}
@@ -78,7 +78,7 @@ public abstract class AbstractQueryGenerator implements QueryGenerator
 			.append(fetchColumnValue(colValBean));
 			if(colValBeanItr.hasNext())
 			{
-				updateSql.append(DAOConstants.SPLIT_OPERATOR);
+				updateSql.append(DAOConstants.DELIMETER);
 			}
 		}
 		updateSql.append(queryData.getQueryWhereClause().toWhereClause());
