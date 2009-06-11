@@ -53,6 +53,11 @@ public final class DAOConstants extends CommonConstants
 	public static final String IN_CONDITION = "in";
 
 	/**
+	 * not in operator.
+	 */
+	public static final String NOT_IN_CONDITION = "not in";
+
+	/**
 	 * is not null operator.
 	 */
 	public static final String NOT_NULL_CONDITION = "is not null";
