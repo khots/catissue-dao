@@ -143,7 +143,8 @@ public class QueryWhereClause
 				Condition condition = null;
 				Class conditionClass = Class.forName(queryConMap.get(whereColumnCondition[index])
 						.toString());
-				if(whereColumnCondition[index].contains(DAOConstants.IN_CONDITION))
+				if(whereColumnCondition[index].contains(DAOConstants.IN_CONDITION) ||
+				   whereColumnCondition[index].contains(DAOConstants.NOT_IN_CONDITION))
 				{
 					Constructor constructor =	conditionClass.getConstructor(new Class[]
 					                         	       {String.class  ,Object[].class} );
@@ -195,6 +196,7 @@ public class QueryWhereClause
 	{
 		Map<String, String> queryCondMap = new HashMap<String, String>();
 		queryCondMap.put(DAOConstants.IN_CONDITION, "edu.wustl.dao.condition.INClause");
+		queryCondMap.put(DAOConstants.NOT_IN_CONDITION, "edu.wustl.dao.condition.NotINClause");
 		queryCondMap.put(DAOConstants.EQUAL, "edu.wustl.dao.condition.EqualClause");
 		queryCondMap.put(DAOConstants.NOT_EQUAL, "edu.wustl.dao.condition.NotEqualClause");
 		queryCondMap.put(DAOConstants.NOT_NULL_CONDITION, "edu.wustl.dao.condition.NotNullClause");
