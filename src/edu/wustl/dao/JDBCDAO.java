@@ -25,10 +25,19 @@ public interface JDBCDAO extends DAO
 	 * This method will execute the SQL and modifies the database.
 	 * @param sql sql statement.
 	 * @return StatementData statement specific data like row count,
-	 * generatedKeys auto-generated key(s)
+	 * but not auto-generated key(s)
 	 * @throws DAOException generic DAOException.
 	 */
 	StatementData executeUpdate(String sql) throws DAOException;
+
+	/**
+	 * This method will execute the SQL and modifies the database.
+	 * @param sql sql statement.
+	 * @return StatementData statement specific data like row count,
+	 * generatedKeys auto-generated key(s)
+	 * @throws DAOException generic DAOException.
+	 */
+	StatementData executeUpdateWithGeneratedKey(String sql) throws DAOException;
 
 	/**
 	 * This method will be called to get the result set.
