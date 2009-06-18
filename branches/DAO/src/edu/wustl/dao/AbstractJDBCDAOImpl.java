@@ -479,8 +479,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		}
 		return query;
 	}
-
-
+	
 	/**
 	 * This method will be called for executing a static SQL statement.
 	 * @see edu.wustl.dao.JDBCDAO#executeUpdate(java.lang.String)
@@ -497,8 +496,8 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		try
 		{
 			statement = createStatement();
-			statementData.setRowCount(statement.executeUpdate(query,Statement.RETURN_GENERATED_KEYS));
-			setStatementData(statement, statementData,query);
+			statementData.setRowCount(statement.executeUpdate(query));
+			setStatementData(statement, statementData,query,false);
 			return statementData ;
 		}
 		catch (SQLException sqlExp)
@@ -510,6 +509,34 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 
 	}
 
+	/**
+	 * This method will be called for executing a static SQL statement.
+	 * @see edu.wustl.dao.JDBCDAO#executeUpdate(java.lang.String)
+	 * @return (1) the row count for INSERT,UPDATE or DELETE statements
+	 * or (2) 0 for SQL statements that return nothing
+	 * @param query :Holds the query string.
+	 * @throws DAOException : DAOException.
+	 */
+	public StatementData executeUpdateWithGeneratedKey(String query) throws DAOException
+	{
+		logger.debug("Execute query.");
+		Statement statement = null;
+		StatementData statementData = new StatementData();
+		try
+		{
+			statement = createStatement();
+			statementData.setRowCount(statement.executeUpdate(query,Statement.RETURN_GENERATED_KEYS));
+			setStatementData(statement, statementData,query,true);
+			return statementData ;
+		}
+		catch (SQLException sqlExp)
+		{
+			logger.info(sqlExp.getMessage(),sqlExp);
+			throw DAOUtility.getInstance().getDAOException(sqlExp, "db.update.data.error",
+			"AbstractJDBCDAOImpl.java :   "+query);
+		}
+
+	}
 	/**
 	 * Remove statement from opened statements list.
 	 * @param statement statement instance
@@ -624,7 +651,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 			}
 			StatementData statementData = new StatementData();
 			statementData.setRowCount(stmt.executeUpdate());
-			setStatementData(stmt, statementData,sql);
+			setStatementData(stmt, statementData,sql,false);
 			return statementData;
 		}
 		catch (SQLException sqlExp)
@@ -644,13 +671,14 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * @param stmt statement instance.
 	 * @param statementData statement data
 	 * @param sql query string
+	 * @param isGeneratedKey If statement required generated keys
 	 * @throws SQLException SQL exception
 	 */
-	private void setStatementData(Statement stmt,StatementData statementData,String sql)
+	private void setStatementData(Statement stmt,StatementData statementData,String sql,boolean isGeneratedKey)
 	throws SQLException
 	{
 		String token = DAOUtility.getInstance().getToken(sql, "insert".length());
-		if(token.compareToIgnoreCase("insert") == 0)
+		if(token.compareToIgnoreCase("insert") == 0 && isGeneratedKey)
 		{
 			statementData.setGeneratedKeys(stmt.getGeneratedKeys());
 		}
