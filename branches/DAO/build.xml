@@ -49,7 +49,7 @@
 				<fileset dir="${build.dir}" includes="**/*" />
 			</delete>
 			<tstamp />
-			<jar taskname="build_jar" jarfile="${build.dir}/DAO.jar">
+			<jar taskname="build_jar" jarfile="${build.dir}/DAO-${DAO.jar.version}.jar">
 				<fileset dir="${target.dir}">
 					<include name="**/*" />
 				</fileset>
@@ -67,7 +67,7 @@
 
 	<target name="build_code_zip" depends="compile">
 		<echo> Building project installable zip : </echo>
-			<zip destfile="${build.dir}/DAO-src.zip">
+			<zip destfile="${build.dir}/DAO-${DAO.jar.version}-src.zip">
 				<fileset dir="${src.dir}" includes="**/*" />
 			</zip>
 	</target>
