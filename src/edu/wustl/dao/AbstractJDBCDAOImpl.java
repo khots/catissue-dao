@@ -479,7 +479,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		}
 		return query;
 	}
-	
+
 	/**
 	 * This method will be called for executing a static SQL statement.
 	 * @see edu.wustl.dao.JDBCDAO#executeUpdate(java.lang.String)
@@ -505,6 +505,19 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 			logger.info(sqlExp.getMessage(),sqlExp);
 			throw DAOUtility.getInstance().getDAOException(sqlExp, "db.update.data.error",
 			"AbstractJDBCDAOImpl.java :   "+query);
+		}
+		finally
+		{
+			try
+			{
+				statement.close();
+			}
+			catch (SQLException sqlExp)
+			{
+				logger.info(sqlExp.getMessage(),sqlExp);
+				throw DAOUtility.getInstance().getDAOException(sqlExp, "db.stmt.close.error",
+				"AbstractJDBCDAOImpl.java :   "+query);
+			}
 		}
 
 	}
