@@ -14,7 +14,7 @@ import edu.wustl.common.domain.AuditEventLog;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.NamedQueryParam;
 
-
+//Test check in Niharika
 /** This interface defines methods which are specific to Hibernate operations .*/
 
 public interface HibernateDAO extends DAO
