@@ -14,7 +14,7 @@ import edu.wustl.common.domain.AuditEventLog;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.NamedQueryParam;
 
-//Test check in Niharika
+
 /** This interface defines methods which are specific to Hibernate operations .*/
 
 public interface HibernateDAO extends DAO
@@ -34,6 +34,16 @@ public interface HibernateDAO extends DAO
 	 * @throws DAOException :Generic DAOException.
 	 */
 	List executeNamedQuery(String queryName,Map<String, NamedQueryParam> namedQueryParams) throws DAOException;
+	/**
+	 * Obtain an instance of Query for a named query string defined in the mapping file.
+	 * The records returned are pagenated.
+	 * @param queryName : handle for named query.
+	 * @param namedQueryParams : Map holding the parameter type and parameter value.
+	 * @return the list of data.
+	 * @throws DAOException :Generic DAOException.
+	 */
+	List executeNamedQuery(String queryName,Map<String, NamedQueryParam> namedQueryParams, Integer startIndex,
+			Integer maxRecords) throws DAOException;
 	/**
 	 * updates the persisted object into the database.
 	 * @param obj Object to be updated in database

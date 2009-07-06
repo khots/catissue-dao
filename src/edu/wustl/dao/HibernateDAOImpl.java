@@ -376,6 +376,25 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		DAOUtility.getInstance().substitutionParameterForQuery(query, namedQueryParams);
 		return query.list();
 	}
+	
+	/**
+	 * This method executes the named query and returns pagenated records.
+	 * @param queryName : handle for named query.
+	 * @param namedQueryParams : Map holding the parameter type and parameter value.
+	 * @return the list of data.
+	 */
+	public List executeNamedQuery(String queryName,Map<String, NamedQueryParam> namedQueryParams, Integer startIndex,
+			Integer maxRecords)
+	{
+		Query query = session.getNamedQuery(queryName);
+		DAOUtility.getInstance().substitutionParameterForQuery(query, namedQueryParams);
+		if(startIndex != null && maxRecords != null )
+    	{
+			query.setFirstResult(startIndex.intValue());
+			query.setMaxResults(maxRecords.intValue());
+    	}
+		return query.list();
+	}
 
 	/**
 	 * add Audit Event Logs.
@@ -497,5 +516,4 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 					"HibernateDAOImpl.java "+attributeName);
 		}
 	}
-
 }
