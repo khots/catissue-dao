@@ -740,16 +740,17 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 
 	/**
 	 * This method will return the Query prepared statement.
+	 * Cider specific. please make sure stmt getting closed.
 	 * @param query :Query String
 	 * @return PreparedStatement.
 	 * @throws DAOException :Generic Exception
-	 * @deprecated Do not use this method.
+     * @deprecated Do not use this method.
 	 */
 	public PreparedStatement getPreparedStatement(String query) throws DAOException
 	{
 		try
 		{
-			closePreparedStmt();
+			// closePreparedStmt();
 			preparedStatement = (PreparedStatement) connection.prepareStatement
 			(query,Statement.RETURN_GENERATED_KEYS);
 			return preparedStatement;
@@ -1026,6 +1027,23 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 			removeStmts(stmt);
 		}
 		catch(SQLException sqlExp)
+		{
+			throw DAOUtility.getInstance().getDAOException(sqlExp, "db.stmt.close.error",
+			"AbstractJDBCDAOImpl.java ");
+		}
+	}
+
+	/**
+     * This method added only for CIDER, next releases handles this issue.(Quick/Patch fix)
+     * * @deprecated
+     */
+	public void commitConnection() throws DAOException
+	{
+		try
+		{
+			connection.commit();
+		}
+		catch (SQLException sqlExp)
 		{
 			throw DAOUtility.getInstance().getDAOException(sqlExp, "db.stmt.close.error",
 			"AbstractJDBCDAOImpl.java ");

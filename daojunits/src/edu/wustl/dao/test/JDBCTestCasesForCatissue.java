@@ -698,7 +698,7 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 		return list;
 	}
 
-	@Test
+	/*@Test
 	public void testMultipleTransaction()
 	{
 
@@ -742,5 +742,5 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 			}
 		}
 
-	}
+	}*/
 }

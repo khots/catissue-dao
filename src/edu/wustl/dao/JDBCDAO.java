@@ -189,4 +189,10 @@ public interface JDBCDAO extends DAO
 	 * @throws DAOException database exception.
 	 */
 	//void openTransaction()throws DAOException;
+
+	/**
+     * This method added only for CIDER, next releases handles this issue(Quick/Patch fix).
+	 * @deprecated
+	 */
+	void commitConnection() throws DAOException;
 }
