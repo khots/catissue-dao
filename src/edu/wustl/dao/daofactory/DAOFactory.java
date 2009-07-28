@@ -178,7 +178,12 @@ public class DAOFactory implements IDAOFactory
 			logger.info(exp.getMessage(), exp);
 			throw DAOUtility.getInstance().getDAOException
 			(exp, "db.sessionfactory.init.error", "DAOFactory.java ");
-
+		}
+		catch(Error err)
+		{
+			logger.info(err.getMessage(), err);
+			throw DAOUtility.getInstance().getDAOException
+			(null, "db.sessionfactory.init.error", "DAOFactory.java ");
 		}
 	}
 

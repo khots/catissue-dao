@@ -177,12 +177,10 @@ public interface DAO
 	 */
 	void setConnectionManager(IConnectionManager connectionManager);
 
-	/**
-	 *
-	 * @param sql
-	 * @throws DAOException
-	 * @deprecated
+	 /**
+	 * This method will be called to begin new transaction.
+	 * @throws DAOException : It will throw DAOException.
 	 */
-	//public void insert(String sql)throws DAOException;
+	void beginTransaction() throws DAOException;
 
 }

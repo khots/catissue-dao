@@ -11,7 +11,6 @@
 package edu.wustl.dao;
 
 
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -47,7 +46,6 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 	 */
      private Session session = null;
 
-    
 	/**
 	 * This method will be used to establish the session with the database.
 	 * Declared in  class.
@@ -91,6 +89,16 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 	{
 		logger.debug("Session rollback");
 		connectionManager.rollback();
+	}
+
+	 /**
+	 * This method will be called to begin new transaction.
+	 * @throws DAOException : It will throw DAOException.
+	 */
+	public void beginTransaction() throws DAOException
+	{
+		logger.debug("Begin transaction .");
+		connectionManager.beginTransaction();
 	}
 
 	/**
@@ -342,8 +350,6 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		}
 	}
 
-
-	
 	/**
 	 * Retrieves the records for class name in sourceObjectName according
 	 * to field values passed in the passed session.

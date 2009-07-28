@@ -83,8 +83,26 @@ public class ConnectionManager implements IConnectionManager
 	public Session getSession() throws DAOException
 	{
 		newSession();
-        transaction = session.beginTransaction();
+		beginTransaction();
+        //transaction = session.beginTransaction();
         return session;
+	}
+
+	 /**
+	 * This method will be called to begin new transaction.
+	 * @throws DAOException : It will throw DAOException.
+	 */
+	public void beginTransaction() throws DAOException
+	{
+
+		if(transaction != null)
+		{
+			logger.debug("Transaction already opened, only one transaction can be opened at a time.");
+			throw DAOUtility.getInstance().getDAOException(null,
+					"db.mult.transaction.open.error", "");
+		}
+    	transaction = session.beginTransaction();
+
 	}
 
 	/**
@@ -96,7 +114,7 @@ public class ConnectionManager implements IConnectionManager
 	public void closeSession() throws DAOException
 	{
 		close();
-		transaction = null;
+		//transaction = null;
 
 	}
 
@@ -137,6 +155,7 @@ public class ConnectionManager implements IConnectionManager
 			{
 				transaction.commit();
 			}
+			transaction = null;
 		}
 		catch(HibernateException hiberExp)
 		{

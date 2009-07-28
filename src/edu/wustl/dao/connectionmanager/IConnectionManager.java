@@ -117,5 +117,12 @@ public interface IConnectionManager
 	 */
 	 void rollback() throws DAOException;
 
+	 /**
+	 * This method will be called to begin new transaction.
+	 * @throws DAOException : It will throw DAOException.
+	 */
+	void beginTransaction() throws DAOException;
+
+
 
 }

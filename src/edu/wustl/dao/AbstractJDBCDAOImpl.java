@@ -138,6 +138,16 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 
 	}
 
+	 /**
+	 * This method will be called to begin new transaction.
+	 * @throws DAOException : It will throw DAOException.
+	 */
+	public void beginTransaction() throws DAOException
+	{
+		logger.debug("Begin transaction .");
+		connectionManager.beginTransaction();
+	}
+
 	/**
 	 * @param batchSize :batchSize
 	 * @param tableName : name of the table
