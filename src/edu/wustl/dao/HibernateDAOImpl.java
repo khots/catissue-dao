@@ -22,7 +22,7 @@ import org.hibernate.Session;
 import edu.wustl.common.audit.AuditManager;
 import edu.wustl.common.audit.Auditable;
 import edu.wustl.common.beans.SessionDataBean;
-import edu.wustl.common.domain.AuditEventLog;
+import edu.wustl.common.domain.AbstractAuditEventLog;
 import edu.wustl.common.exception.AuditException;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.condition.EqualClause;
@@ -108,7 +108,7 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 	 * @param isAuditable is Auditable.
 	 * @throws DAOException generic DAOException.
 	 */
-	public void insert(Object obj,boolean isAuditable) throws DAOException
+	public void insert(Object obj,boolean isAuditable, String eventType) throws DAOException
 	{
 		logger.debug("Insert Object");
 		try
@@ -116,7 +116,7 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 			session.save(obj);
 			if (obj instanceof Auditable && isAuditable)
 			{
-				auditManager.audit((Auditable)obj, null, "INSERT");
+				auditManager.audit((Auditable)obj, null,eventType);
 			}
 		}
 		catch (HibernateException hibExp)
@@ -134,6 +134,17 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		}
 
 
+	}
+	
+	/**
+	 * Saves the persistent object in the database.
+	 * @param obj The object to be saved.
+	 * @param isAuditable is Auditable.
+	 * @throws DAOException generic DAOException.
+	 */
+	public void insert(Object obj,boolean isAuditable) throws DAOException
+	{
+		insert(obj, isAuditable, null);
 	}
 
 	/**
@@ -161,10 +172,22 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 	 * @param oldObj old object.
 	 * @throws DAOException : generic DAOException
 	 */
+	public void update(Object obj, Object oldObj, String eventType) throws DAOException
+	{
+		update(obj);
+		audit( obj,  oldObj, eventType);
+	}
+	
+	/**
+	 * update and audit the object to the database.
+	 * @param obj Object to be updated in database
+	 * @param oldObj old object.
+	 * @throws DAOException : generic DAOException
+	 */
 	public void update(Object obj, Object oldObj) throws DAOException
 	{
 		update(obj);
-		audit( obj,  oldObj);
+		audit( obj,  oldObj, null);
 	}
 
 	/**
@@ -173,13 +196,13 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 	 * @param oldObj old object.
 	 * @throws DAOException : generic DAOException
 	 */
-	public void audit(Object obj, Object oldObj) throws DAOException
+	public void audit(Object obj, Object oldObj, String eventType) throws DAOException
     {
         try
         {
         	if (obj instanceof Auditable)
         	{
-                auditManager.audit((Auditable) obj, (Auditable)oldObj, "UPDATE");
+                auditManager.audit((Auditable) obj, (Auditable)oldObj,eventType);
         	}
         }
         catch (AuditException exp)
@@ -376,12 +399,31 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		DAOUtility.getInstance().substitutionParameterForQuery(query, namedQueryParams);
 		return query.list();
 	}
+	
+	/**
+	 * This method executes the named query and returns pagenated records.
+	 * @param queryName : handle for named query.
+	 * @param namedQueryParams : Map holding the parameter type and parameter value.
+	 * @return the list of data.
+	 */
+	public List executeNamedQuery(String queryName,Map<String, NamedQueryParam> namedQueryParams, Integer startIndex,
+			Integer maxRecords)
+	{
+		Query query = session.getNamedQuery(queryName);
+		DAOUtility.getInstance().substitutionParameterForQuery(query, namedQueryParams);
+		if(startIndex != null && maxRecords != null )
+    	{
+			query.setFirstResult(startIndex.intValue());
+			query.setMaxResults(maxRecords.intValue());
+    	}
+		return query.list();
+	}
 
 	/**
 	 * add Audit Event Logs.
 	 * @param auditEventDetailsCollection audit Event Details Collection.
 	 */
-	public void addAuditEventLogs(Collection<AuditEventLog> auditEventDetailsCollection)
+	public void addAuditEventLogs(Collection<AbstractAuditEventLog> auditEventDetailsCollection)
 	{
 		logger.debug("Add audit event logs");
 		auditManager.addAuditEventLogs(auditEventDetailsCollection);
