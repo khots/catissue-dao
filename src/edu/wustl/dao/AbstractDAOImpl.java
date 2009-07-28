@@ -105,6 +105,18 @@ public abstract class AbstractDAOImpl implements DAO
 	 * @param oldObj Object to be updated in database
 	 * @throws DAOException : generic DAOException
 	 */
+	public void update(Object obj,Object oldObj, String eventType) throws DAOException
+	{
+		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
+		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
+	}
+	
+	/**
+	 * updates the persisted object into the database.
+	 * @param obj Object to be updated in database
+	 * @param oldObj Object to be updated in database
+	 * @throws DAOException : generic DAOException
+	 */
 	public void update(Object obj,Object oldObj) throws DAOException
 	{
 		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
@@ -134,6 +146,18 @@ public abstract class AbstractDAOImpl implements DAO
 		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
 	}
 
+	/**
+	 * Insert the Object in the database.
+	 * @param obj Object to be inserted in database
+	 * @param isAuditable is Auditable.
+	 * @throws DAOException generic DAOException
+	 */
+	public void insert(Object obj, boolean isAuditable, String eventType) throws DAOException
+	{
+		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
+		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
+	}
+	
 	/**
 	 * Insert the Object in the database.
 	 * @param obj Object to be inserted in database
