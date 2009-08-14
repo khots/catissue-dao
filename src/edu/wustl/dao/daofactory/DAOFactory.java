@@ -29,8 +29,7 @@ import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.connectionmanager.IConnectionManager;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.DAOUtility;
-import edu.wustl.dao.util.HibernateMetaData;
-
+import edu.wustl.dao.util.HibernateMetaDataFactory;
 
 /**
  * @author kalpana_thakur
@@ -38,6 +37,7 @@ import edu.wustl.dao.util.HibernateMetaData;
 
 public class DAOFactory implements IDAOFactory
 {
+
 	/**
 	 * This member will store the default Connection Manager name.
 	 */
@@ -73,8 +73,7 @@ public class DAOFactory implements IDAOFactory
 	/**
 	 * This member will store the EntityResolver.
 	 */
-	private static final EntityResolver entityResolver =
-		XMLHelper.DEFAULT_DTD_RESOLVER;
+	private static final EntityResolver entityResolver = XMLHelper.DEFAULT_DTD_RESOLVER;
 
 	/**
 	 * This member will store the configuration instance.
@@ -101,7 +100,6 @@ public class DAOFactory implements IDAOFactory
 	 */
 	private static org.apache.log4j.Logger logger = Logger.getLogger(DAOFactory.class);
 
-
 	/**
 	 * This method will be called to retrieved default DAO instance.
 	 * It will read the concrete class for DAO and instantiate it
@@ -109,22 +107,23 @@ public class DAOFactory implements IDAOFactory
 	 * @return return the DAO instance.
 	 * @throws DAOException :Generic DAOException.
 	 */
-	public DAO getDAO()throws DAOException
+	public DAO getDAO() throws DAOException
 	{
 		try
 		{
-		   DAO dao = (DAO)Class.forName(defaultDAOClassName).newInstance();
-		   IConnectionManager connManager = getDefaultConnManager(sessionFactory,configuration);
-		   dao.setConnectionManager(connManager);
-		   HibernateMetaData.initHibernateMetaData(connManager.getConfiguration());
-		   return dao;
+			DAO dao = (DAO) Class.forName(defaultDAOClassName).newInstance();
+			IConnectionManager connManager = getDefaultConnManager(sessionFactory, configuration);
+			dao.setConnectionManager(connManager);
+			dao.setApplicationName(applicationName);
+			HibernateMetaDataFactory.setHibernateMetaData(applicationName, connManager
+					.getConfiguration());
+			return dao;
 		}
-		catch (Exception excp )
+		catch (Exception excp)
 		{
-			throw DAOUtility.getInstance().getDAOException
-			(excp, "db.dao.init.error", "DAOFactory.java ");
+			throw DAOUtility.getInstance().getDAOException(excp, "db.dao.init.error",
+					"DAOFactory.java ");
 		}
-
 
 	}
 
@@ -135,28 +134,28 @@ public class DAOFactory implements IDAOFactory
 	 * @return the JDBCDAO instance
 	 * @throws DAOException :Generic DAOException.
 	 */
-	public JDBCDAO getJDBCDAO()throws DAOException
+	public JDBCDAO getJDBCDAO() throws DAOException
 	{
 
 		try
 		{
-			   JDBCDAO jdbcDAO = (JDBCDAO) Class.forName(jdbcDAOClassName).newInstance();
-			   IConnectionManager connManager = getJDBCConnManager(sessionFactory,configuration);
-			   jdbcDAO.setConnectionManager(connManager);
-			   ((AbstractJDBCDAOImpl)jdbcDAO).setDatabaseProperties(databaseProperties);
-			   jdbcDAO.setBatchSize(databaseProperties.getDefaultBatchSize());
-			   HibernateMetaData.initHibernateMetaData(connManager.
-					   getConfiguration());
-			   return jdbcDAO;
+			JDBCDAO jdbcDAO = (JDBCDAO) Class.forName(jdbcDAOClassName).newInstance();
+			IConnectionManager connManager = getJDBCConnManager(sessionFactory, configuration);
+			jdbcDAO.setConnectionManager(connManager);
+			jdbcDAO.setApplicationName(applicationName);
+			((AbstractJDBCDAOImpl) jdbcDAO).setDatabaseProperties(databaseProperties);
+			jdbcDAO.setBatchSize(databaseProperties.getDefaultBatchSize());
+			HibernateMetaDataFactory.setHibernateMetaData(applicationName, connManager
+					.getConfiguration());
+			return jdbcDAO;
 		}
-		catch (Exception excp )
+		catch (Exception excp)
 		{
-			throw DAOUtility.getInstance().getDAOException
-			(excp, "db.jdbcdao.init.error", "DAOFactory.java ");
+			throw DAOUtility.getInstance().getDAOException(excp, "db.jdbcdao.init.error",
+					"DAOFactory.java ");
 		}
 
 	}
-
 
 	/**
 	 *This method will be called to build the session factory.
@@ -174,8 +173,8 @@ public class DAOFactory implements IDAOFactory
 		catch (Exception exp)
 		{
 
-			throw DAOUtility.getInstance().getDAOException
-			(exp, "db.sessionfactory.init.error", "DAOFactory.java ");
+			throw DAOUtility.getInstance().getDAOException(exp, "db.sessionfactory.init.error",
+					"DAOFactory.java ");
 
 		}
 	}
@@ -189,16 +188,14 @@ public class DAOFactory implements IDAOFactory
 	private IConnectionManager getDefaultConnManager(SessionFactory sessionFactory,
 			Configuration configuration) throws Exception
 	{
-		IConnectionManager connectionManager =
-			(IConnectionManager)Class.forName(defaultConnMangrName).newInstance();
+		IConnectionManager connectionManager = (IConnectionManager) Class.forName(
+				defaultConnMangrName).newInstance();
 		connectionManager.setApplicationName(applicationName);
 		connectionManager.setSessionFactory(sessionFactory);
 		connectionManager.setConfiguration(configuration);
 
 		return connectionManager;
 	}
-
-
 
 	/**
 	 * @param sessionFactory  session factory object
@@ -209,8 +206,8 @@ public class DAOFactory implements IDAOFactory
 	private IConnectionManager getJDBCConnManager(SessionFactory sessionFactory,
 			Configuration configuration) throws Exception
 	{
-		IConnectionManager connectionManager =
-			(IConnectionManager)Class.forName(jdbcConnMangrName).newInstance();
+		IConnectionManager connectionManager = (IConnectionManager) Class
+				.forName(jdbcConnMangrName).newInstance();
 		connectionManager.setApplicationName(applicationName);
 		connectionManager.setDataSource(dataSource);
 		connectionManager.setSessionFactory(sessionFactory);
@@ -218,43 +215,43 @@ public class DAOFactory implements IDAOFactory
 		return connectionManager;
 	}
 
-	 /**
-     * This method adds configuration file to Hibernate Configuration.
-     * It will parse the configuration file and creates the configuration.
-     * @param configurationfile name of the file that needs to be added
-     * @return Configuration :Configuration object.
-	 * @throws DAOException :Generic DAOException.
-     */
-    private Configuration setConfiguration(String configurationfile) throws DAOException
-    {
-        try
-        {
+	/**
+	* This method adds configuration file to Hibernate Configuration.
+	* It will parse the configuration file and creates the configuration.
+	* @param configurationfile name of the file that needs to be added
+	* @return Configuration :Configuration object.
+	* @throws DAOException :Generic DAOException.
+	*/
+	private Configuration setConfiguration(String configurationfile) throws DAOException
+	{
+		try
+		{
 
-        	Configuration configuration = new Configuration();
-            //InputStream inputStream = DAOFactory.class.getClassLoader().getResourceAsStream(configurationfile);
-        	InputStream inputStream = Thread.currentThread().getContextClassLoader().
-        	getResourceAsStream(configurationfile);
-            List<Object> errors = new ArrayList<Object>();
-            // hibernate api to read configuration file and convert it to
-            // Document(dom4j) object.
-            XMLHelper xmlHelper = new XMLHelper();
-            Document document = xmlHelper.createSAXReader(configurationfile, errors, entityResolver).read(
-                    new InputSource(inputStream));
-            // convert to w3c Document object.
-            DOMWriter writer = new DOMWriter();
-            org.w3c.dom.Document doc = writer.write(document);
-            // configure
-            configuration.configure(doc);
-            return configuration;
-        }
-        catch (Exception exp)
-        {
-        	throw DAOUtility.getInstance().getDAOException
-			(exp, "db.conf.file.parse.error", "DAOFactory.java ");
-        }
+			Configuration configuration = new Configuration();
+			//InputStream inputStream = DAOFactory.class.getClassLoader().getResourceAsStream(configurationfile);
+			InputStream inputStream = Thread.currentThread().getContextClassLoader()
+					.getResourceAsStream(configurationfile);
+			List<Object> errors = new ArrayList<Object>();
+			// hibernate api to read configuration file and convert it to
+			// Document(dom4j) object.
+			XMLHelper xmlHelper = new XMLHelper();
+			Document document = xmlHelper
+					.createSAXReader(configurationfile, errors, entityResolver).read(
+							new InputSource(inputStream));
+			// convert to w3c Document object.
+			DOMWriter writer = new DOMWriter();
+			org.w3c.dom.Document doc = writer.write(document);
+			// configure
+			configuration.configure(doc);
+			return configuration;
+		}
+		catch (Exception exp)
+		{
+			throw DAOUtility.getInstance().getDAOException(exp, "db.conf.file.parse.error",
+					"DAOFactory.java ");
+		}
 
-    }
-
+	}
 
 	/**
 	 * This method will be called to set Connection Manager name.
@@ -273,7 +270,6 @@ public class DAOFactory implements IDAOFactory
 	{
 		this.defaultDAOClassName = defaultDAOClassName;
 	}
-
 
 	/**
 	 * This method will be called to set applicationName.
@@ -301,7 +297,6 @@ public class DAOFactory implements IDAOFactory
 	{
 		this.jdbcDAOClassName = jdbcDAOClassName;
 	}
-
 
 	/**
 	 * This method will be called to retrieved the connectionManagerName.
@@ -343,12 +338,10 @@ public class DAOFactory implements IDAOFactory
 	 *This method will be called to set the configuration file name.
 	 *@param configurationFile : Name of configuration file.
 	 */
-	 public void setConfigurationFile(String configurationFile)
+	public void setConfigurationFile(String configurationFile)
 	{
 		this.configurationFile = configurationFile;
 	}
-
-
 
 	/**
 	 * @return This will return true if DAO factory is default.
