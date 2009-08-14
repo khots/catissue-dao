@@ -8,6 +8,7 @@
  * @version 1.0
  * @author kalpana_thakur
  */
+
 package edu.wustl.dao.daofactory;
 
 import java.util.HashMap;
@@ -16,8 +17,6 @@ import java.util.Map;
 
 import edu.wustl.common.util.logger.Logger;
 
-
-
 /**
  * @author kalpana_thakur
  * It creates a Map having key as the application name and value as DAOFactory object
@@ -25,6 +24,7 @@ import edu.wustl.common.util.logger.Logger;
  */
 public class DAOConfigFactory
 {
+
 	/**
 	 * Singleton instance.
 	 */
@@ -74,7 +74,7 @@ public class DAOConfigFactory
 	 */
 	public IDAOFactory getDAOFactory(String applicationName)
 	{
-		return (IDAOFactory)daoFactoryMap.get(applicationName);
+		return (IDAOFactory) daoFactoryMap.get(applicationName);
 	}
 
 	/**
@@ -87,7 +87,6 @@ public class DAOConfigFactory
 		return defaultDAOFactory;
 	}
 
-
 	/**
 	 * This method will parse the Application property file.
 	 * It will create the Map having application name as key and DAO factory object as a value
@@ -97,14 +96,13 @@ public class DAOConfigFactory
 	{
 		try
 		{
-			ApplicationDAOPropertiesParser applicationPropertiesParser =
-				new ApplicationDAOPropertiesParser();
+			ApplicationDAOPropertiesParser applicationPropertiesParser = new ApplicationDAOPropertiesParser();
 			daoFactoryMap = applicationPropertiesParser.getDaoFactoryMap();
 			Iterator<String> mapKeySetIterator = daoFactoryMap.keySet().iterator();
-			while(mapKeySetIterator.hasNext())
+			while (mapKeySetIterator.hasNext())
 			{
-				IDAOFactory daoFactory = (IDAOFactory)daoFactoryMap.get(mapKeySetIterator.next());
-				if(daoFactory.getIsDefaultDAOFactory())
+				IDAOFactory daoFactory = (IDAOFactory) daoFactoryMap.get(mapKeySetIterator.next());
+				if (daoFactory.getIsDefaultDAOFactory())
 				{
 					defaultDAOFactory = daoFactory;
 				}
@@ -115,6 +113,5 @@ public class DAOConfigFactory
 			logger.error(expc.getMessage(), expc);
 		}
 	}
-
 
 }
