@@ -10,7 +10,6 @@
 
 package edu.wustl.dao;
 
-
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +29,6 @@ import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.DAOUtility;
 import edu.wustl.dao.util.NamedQueryParam;
 
-
 /**
  * Default implementation of DAO through Hibernate ORM tool.
  * @author kapil_kaveeshwar
@@ -38,21 +36,32 @@ import edu.wustl.dao.util.NamedQueryParam;
 public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 {
 
-    /**
-     * logger Logger - Generic logger.
-     */
-      private static org.apache.log4j.Logger logger =
-           Logger.getLogger(HibernateDAOImpl.class);
+	/**
+	 * logger Logger - Generic logger.
+	 */
+	private static org.apache.log4j.Logger logger = Logger.getLogger(HibernateDAOImpl.class);
+
+	private String applicationName;
 
 	/**
 	 * specify Session instance.
 	 */
-     private Session session = null;
+	private Session session = null;
 
-     /**
- 	 * Audit Manager.
- 	 */
- 	private AuditManager auditManager;
+	/**
+	 * Audit Manager.
+	 */
+	private AuditManager auditManager;
+
+	public String getApplicationName()
+	{
+		return applicationName;
+	}
+
+	public void setApplicationName(String appName)
+	{
+		this.applicationName = appName;
+	}
 
 	/**
 	 * This method will be used to establish the session with the database.
@@ -63,7 +72,8 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 	public void openSession(SessionDataBean sessionDataBean) throws DAOException
 	{
 		logger.debug("Open the session");
-	    auditManager = getAuditManager(sessionDataBean);
+		auditManager = getAuditManager(sessionDataBean);
+		auditManager.setApplicationName(applicationName);
 		session = connectionManager.getSession();
 	}
 
@@ -108,7 +118,7 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 	 * @param isAuditable is Auditable.
 	 * @throws DAOException generic DAOException.
 	 */
-	public void insert(Object obj,boolean isAuditable, String eventType) throws DAOException
+	public void insert(Object obj, boolean isAuditable, String eventType) throws DAOException
 	{
 		logger.debug("Insert Object");
 		try
@@ -116,33 +126,32 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 			session.save(obj);
 			if (obj instanceof Auditable && isAuditable)
 			{
-				auditManager.audit((Auditable)obj, null,eventType);
+				auditManager.audit((Auditable) obj, null, eventType);
 			}
 		}
 		catch (HibernateException hibExp)
 		{
 
 			throw DAOUtility.getInstance().getDAOException(hibExp, "db.insert.data.error",
-			"HibernateDAOImpl.java ");
+					"HibernateDAOImpl.java ");
 
 		}
 		catch (AuditException exp)
 		{
 
 			throw DAOUtility.getInstance().getDAOException(exp, "db.audit.error",
-			"HibernateDAOImpl.java ");
+					"HibernateDAOImpl.java ");
 		}
 
-
 	}
-	
+
 	/**
 	 * Saves the persistent object in the database.
 	 * @param obj The object to be saved.
 	 * @param isAuditable is Auditable.
 	 * @throws DAOException generic DAOException.
 	 */
-	public void insert(Object obj,boolean isAuditable) throws DAOException
+	public void insert(Object obj, boolean isAuditable) throws DAOException
 	{
 		insert(obj, isAuditable, null);
 	}
@@ -162,7 +171,7 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		catch (HibernateException hibExp)
 		{
 			throw DAOUtility.getInstance().getDAOException(hibExp, "db.update.data.error",
-			"HibernateDAOImpl.java ");
+					"HibernateDAOImpl.java ");
 		}
 	}
 
@@ -175,9 +184,9 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 	public void update(Object obj, Object oldObj, String eventType) throws DAOException
 	{
 		update(obj);
-		audit( obj,  oldObj, eventType);
+		audit(obj, oldObj, eventType);
 	}
-	
+
 	/**
 	 * update and audit the object to the database.
 	 * @param obj Object to be updated in database
@@ -187,7 +196,7 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 	public void update(Object obj, Object oldObj) throws DAOException
 	{
 		update(obj);
-		audit( obj,  oldObj, null);
+		audit(obj, oldObj, null);
 	}
 
 	/**
@@ -197,20 +206,20 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 	 * @throws DAOException : generic DAOException
 	 */
 	public void audit(Object obj, Object oldObj, String eventType) throws DAOException
-    {
-        try
-        {
-        	if (obj instanceof Auditable)
-        	{
-                auditManager.audit((Auditable) obj, (Auditable)oldObj,eventType);
-        	}
-        }
-        catch (AuditException exp)
+	{
+		try
+		{
+			if (obj instanceof Auditable)
+			{
+				auditManager.audit((Auditable) obj, (Auditable) oldObj, eventType);
+			}
+		}
+		catch (AuditException exp)
 		{
 			throw DAOUtility.getInstance().getDAOException(exp, "db.audit.error",
-			"HibernateDAOImpl.java ");
+					"HibernateDAOImpl.java ");
 		}
-    }
+	}
 
 	/**
 	 * Deletes the persistent object from the database.
@@ -227,7 +236,7 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		catch (HibernateException hibExp)
 		{
 			throw DAOUtility.getInstance().getDAOException(hibExp, "db.delete.data.error",
-			"HibernateDAOImpl.java ");
+					"HibernateDAOImpl.java ");
 
 		}
 	}
@@ -242,8 +251,8 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 	 * @return List.
 	 * @throws DAOException generic DAOException.
 	 */
-	public List retrieve(String sourceObjectName,String[] selectColumnName,
-			QueryWhereClause queryWhereClause,boolean onlyDistinctRows) throws DAOException
+	public List retrieve(String sourceObjectName, String[] selectColumnName,
+			QueryWhereClause queryWhereClause, boolean onlyDistinctRows) throws DAOException
 	{
 		logger.debug("Inside retrieve method");
 		List list;
@@ -256,7 +265,7 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 			generateSelectPartOfQuery(selectColumnName, queryStrBuff, className);
 			generateFromPartOfQuery(sourceObjectName, queryStrBuff, className);
 
-			if(queryWhereClause != null)
+			if (queryWhereClause != null)
 			{
 				queryStrBuff.append(queryWhereClause.toWhereClause());
 			}
@@ -268,7 +277,7 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		catch (HibernateException exp)
 		{
 			throw DAOUtility.getInstance().getDAOException(exp, "db.retrieve.data.error",
-			"HibernateDAOImpl.java ");
+					"HibernateDAOImpl.java ");
 
 		}
 		return list;
@@ -280,22 +289,23 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 	 * @param sqlBuff sqlBuff
 	 * @param className class Name.
 	 */
-	private void generateSelectPartOfQuery(String[] selectColumnName, StringBuffer sqlBuff, String className)
-	 {
+	private void generateSelectPartOfQuery(String[] selectColumnName, StringBuffer sqlBuff,
+			String className)
+	{
 		logger.debug("Prepare select part of query.");
 		if (selectColumnName != null && selectColumnName.length > 0)
-		 {
-		    sqlBuff.append("Select ");
-		    for (int i = 0; i < selectColumnName.length; i++)
-		     {
-		        sqlBuff.append(DAOUtility.getInstance().
-		        		createAttributeNameForHQL(className, selectColumnName[i]));
-		        if (i != selectColumnName.length - 1)
-		        {
-		            sqlBuff.append(", ");
-		        }
-		    }
-		    sqlBuff.append("   ");
+		{
+			sqlBuff.append("Select ");
+			for (int i = 0; i < selectColumnName.length; i++)
+			{
+				sqlBuff.append(DAOUtility.getInstance().createAttributeNameForHQL(className,
+						selectColumnName[i]));
+				if (i != selectColumnName.length - 1)
+				{
+					sqlBuff.append(", ");
+				}
+			}
+			sqlBuff.append("   ");
 		}
 	}
 
@@ -304,12 +314,11 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 	 * @param sqlBuff query buffer
 	 * @param className gives the class name
 	 */
-	private void generateFromPartOfQuery(String sourceObjectName,
-			StringBuffer sqlBuff, String className)
+	private void generateFromPartOfQuery(String sourceObjectName, StringBuffer sqlBuff,
+			String className)
 	{
 		logger.debug("Prepare from part of query");
-		sqlBuff.append("from " + sourceObjectName
-		        + " " + className);
+		sqlBuff.append("from " + sourceObjectName + " " + className);
 	}
 
 	/**
@@ -319,9 +328,8 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 	 * @return object.
 	 * @throws DAOException generic DAOException.
 	 */
-	public Object retrieveById(String sourceObjectName, Long identifier)
-	 throws DAOException
-	 {
+	public Object retrieveById(String sourceObjectName, Long identifier) throws DAOException
+	{
 		logger.debug("Inside retrieve method");
 		try
 		{
@@ -331,7 +339,7 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		catch (Exception exp)
 		{
 			throw DAOUtility.getInstance().getDAOException(exp, "db.retrieve.data.error",
-			"HibernateDAOImpl.java ");
+					"HibernateDAOImpl.java ");
 		}
 
 	}
@@ -344,7 +352,7 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 	 */
 	public List executeQuery(String query) throws DAOException
 	{
-		return executeQuery(query,null, null,null);
+		return executeQuery(query, null, null, null);
 	}
 
 	/**
@@ -357,35 +365,34 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 	 * @return List of data.
 	 * @throws DAOException database exception.
 	 */
-	public List executeQuery(String query,Integer startIndex,
-			Integer maxRecords,List paramValues) throws DAOException
+	public List executeQuery(String query, Integer startIndex, Integer maxRecords, List paramValues)
+			throws DAOException
 	{
 		logger.debug("Execute query");
 		try
 		{
-	    	Query hibernateQuery = session.createQuery(query);
-	    	if(startIndex != null && maxRecords != null )
-	    	{
-	    		hibernateQuery.setFirstResult(startIndex.intValue());
-	    		hibernateQuery.setMaxResults(maxRecords.intValue());
-	    	}
-	    	if(paramValues!=null)
-	    	{
-	    		for(int i=0;i<paramValues.size();i++)
-	    		{
-	    			hibernateQuery.setParameter(i, paramValues.get(i));
-	    		}
-	    	}
-		    List returner = hibernateQuery.list();
-		    return returner;
+			Query hibernateQuery = session.createQuery(query);
+			if (startIndex != null && maxRecords != null)
+			{
+				hibernateQuery.setFirstResult(startIndex.intValue());
+				hibernateQuery.setMaxResults(maxRecords.intValue());
+			}
+			if (paramValues != null)
+			{
+				for (int i = 0; i < paramValues.size(); i++)
+				{
+					hibernateQuery.setParameter(i, paramValues.get(i));
+				}
+			}
+			List returner = hibernateQuery.list();
+			return returner;
 		}
-		catch(HibernateException hiberExp)
+		catch (HibernateException hiberExp)
 		{
 			throw DAOUtility.getInstance().getDAOException(hiberExp, "db.retrieve.data.error",
-					"HibernateDAOImpl.java "+query);
+					"HibernateDAOImpl.java " + query);
 		}
 	}
-
 
 	/**
 	 * This method returns named query.
@@ -393,29 +400,29 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 	 * @param namedQueryParams : Map holding the parameter type and parameter value.
 	 * @return the list of data.
 	 */
-	public List executeNamedQuery(String queryName,Map<String, NamedQueryParam> namedQueryParams)
+	public List executeNamedQuery(String queryName, Map<String, NamedQueryParam> namedQueryParams)
 	{
 		Query query = session.getNamedQuery(queryName);
 		DAOUtility.getInstance().substitutionParameterForQuery(query, namedQueryParams);
 		return query.list();
 	}
-	
+
 	/**
 	 * This method executes the named query and returns pagenated records.
 	 * @param queryName : handle for named query.
 	 * @param namedQueryParams : Map holding the parameter type and parameter value.
 	 * @return the list of data.
 	 */
-	public List executeNamedQuery(String queryName,Map<String, NamedQueryParam> namedQueryParams, Integer startIndex,
-			Integer maxRecords)
+	public List executeNamedQuery(String queryName, Map<String, NamedQueryParam> namedQueryParams,
+			Integer startIndex, Integer maxRecords)
 	{
 		Query query = session.getNamedQuery(queryName);
 		DAOUtility.getInstance().substitutionParameterForQuery(query, namedQueryParams);
-		if(startIndex != null && maxRecords != null )
-    	{
+		if (startIndex != null && maxRecords != null)
+		{
 			query.setFirstResult(startIndex.intValue());
 			query.setMaxResults(maxRecords.intValue());
-    	}
+		}
 		return query.list();
 	}
 
@@ -459,11 +466,10 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 	 * @return List.
 	 * @throws DAOException generic DAOException.
 	 */
-	public List retrieve(String sourceObjectName,
-			String[] selectColumnName, QueryWhereClause queryWhereClause)
-			throws DAOException
+	public List retrieve(String sourceObjectName, String[] selectColumnName,
+			QueryWhereClause queryWhereClause) throws DAOException
 	{
-		return retrieve(sourceObjectName, selectColumnName,queryWhereClause,false);
+		return retrieve(sourceObjectName, selectColumnName, queryWhereClause, false);
 	}
 
 	/**
@@ -476,7 +482,7 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 	{
 		logger.debug("Inside retrieve method");
 		String[] selectColumnName = null;
-		return retrieve(sourceObjectName, selectColumnName, null,false);
+		return retrieve(sourceObjectName, selectColumnName, null, false);
 	}
 
 	/**
@@ -494,9 +500,9 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		String[] selectColumnName = null;
 
 		QueryWhereClause queryWhereClause = new QueryWhereClause(sourceObjectName);
-		queryWhereClause.addCondition(new EqualClause(whereColumnName,whereColumnValue));
+		queryWhereClause.addCondition(new EqualClause(whereColumnName, whereColumnValue));
 
-		return retrieve(sourceObjectName, selectColumnName,queryWhereClause,false);
+		return retrieve(sourceObjectName, selectColumnName, queryWhereClause, false);
 	}
 
 	/**
@@ -505,13 +511,11 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 	 * @return List.
 	 * @throws DAOException generic DAOException.
 	 */
-	public List retrieve(String sourceObjectName, String[] selectColumnName)
-	throws DAOException
+	public List retrieve(String sourceObjectName, String[] selectColumnName) throws DAOException
 	{
 		logger.debug("Inside retrieve method");
-		return retrieve(sourceObjectName, selectColumnName,null,false);
+		return retrieve(sourceObjectName, selectColumnName, null, false);
 	}
-
 
 	/**
 	 * Retrieve Attribute.
@@ -522,22 +526,21 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 	 * @return Object.
 	 * @throws DAOException generic DAOException.
 	 */
-	public List retrieveAttribute(Class objClass,String columnName, Long identifier,
+	public List retrieveAttribute(Class objClass, String columnName, Long identifier,
 			String attributeName) throws DAOException
-	 {
+	{
 		logger.debug("Retrieve attributes");
 		try
 		{
 			String[] selectColumnName = {attributeName};
 			QueryWhereClause queryWhereClause = new QueryWhereClause(objClass.getName());
-			queryWhereClause.addCondition(new EqualClause(columnName,identifier));
+			queryWhereClause.addCondition(new EqualClause(columnName, identifier));
 			return retrieve(objClass.getName(), selectColumnName, queryWhereClause, false);
 		}
 		catch (HibernateException exception)
 		{
 			throw DAOUtility.getInstance().getDAOException(exception, "db.retrieve.data.error",
-					"HibernateDAOImpl.java "+attributeName);
+					"HibernateDAOImpl.java " + attributeName);
 		}
 	}
-
 }
