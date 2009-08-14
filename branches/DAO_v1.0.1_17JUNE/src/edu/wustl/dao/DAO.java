@@ -14,28 +14,28 @@ import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.dao.connectionmanager.IConnectionManager;
 import edu.wustl.dao.exception.DAOException;
 
-
 /**
  * @author kalpana_thakur
  * Handles database operations like insertion, updation, deletion and retrieval of data.
  */
 public interface DAO
 {
+
 	/**
 	 * Insert the Object to the database.
 	 * @param obj Object to be inserted in database
 	 * @param isAuditable is Auditable.
 	 * @throws DAOException generic DAOException
 	 */
-	void insert(Object obj,boolean isAuditable, String eventType) throws DAOException;
-	
+	void insert(Object obj, boolean isAuditable, String eventType) throws DAOException;
+
 	/**
 	 * Insert the Object to the database.
 	 * @param obj Object to be inserted in database
 	 * @param isAuditable is Auditable.
 	 * @throws DAOException generic DAOException
 	 */
-	void insert(Object obj,boolean isAuditable) throws DAOException;
+	void insert(Object obj, boolean isAuditable) throws DAOException;
 
 	/**
 	 * This method will be used when user wants to audit
@@ -45,8 +45,8 @@ public interface DAO
 	 * @param oldObj old object.
 	 * @throws DAOException : generic DAOException
 	 */
-	void update(Object obj, Object oldObj,String eventType) throws DAOException;
-	
+	void update(Object obj, Object oldObj, String eventType) throws DAOException;
+
 	/**
 	 * This method will be used when user wants to audit
 	 * the object prior to update
@@ -63,7 +63,6 @@ public interface DAO
 	 * @throws DAOException : generic DAOException
 	 */
 	void update(Object obj) throws DAOException;
-
 
 	/**
 	 * Deletes the persistent object from the database.
@@ -88,9 +87,8 @@ public interface DAO
 	 * @throws DAOException generic DAOException.
 	 */
 
-	List retrieve(String sourceObjectName,String[] selectColumnName,
-			QueryWhereClause queryWhereClause,boolean onlyDistinctRows) throws DAOException;
-
+	List retrieve(String sourceObjectName, String[] selectColumnName,
+			QueryWhereClause queryWhereClause, boolean onlyDistinctRows) throws DAOException;
 
 	/**
 	 * Retrieve and returns the source object for given id.
@@ -108,8 +106,7 @@ public interface DAO
 	 * @return List.
 	 * @throws DAOException generic DAOException.
 	 */
-	List executeQuery(String query)
-		throws DAOException;
+	List executeQuery(String query) throws DAOException;
 
 	/**
 	 * Retrieves attribute value for given class name and identifier.
@@ -120,8 +117,8 @@ public interface DAO
 	 * @return List.
 	 * @throws DAOException generic DAOException.
 	 */
-	List retrieveAttribute(Class objClass, String columnName,Long identifier,
-			String attributeName) throws DAOException;
+	List retrieveAttribute(Class objClass, String columnName, Long identifier, String attributeName)
+			throws DAOException;
 
 	/**
 	 * Retrieve and returns the list of all source objects that satisfy the
@@ -138,8 +135,8 @@ public interface DAO
 	 * @throws DAOException generic DAOException.
 	 */
 
-	List retrieve(String sourceObjectName,
-			String[] selectColumnName,QueryWhereClause queryWhereClause) throws DAOException;
+	List retrieve(String sourceObjectName, String[] selectColumnName,
+			QueryWhereClause queryWhereClause) throws DAOException;
 
 	/**
 	 * Retrieve and returns the list of all source objects for given
@@ -150,8 +147,8 @@ public interface DAO
 	 * @return the list of all source objects for given condition on a single column.
 	 * @throws DAOException generic DAOException.
 	 */
-	List retrieve(String sourceObjectName, String whereColumnName,
-			Object whereColumnValue) throws DAOException;
+	List retrieve(String sourceObjectName, String whereColumnName, Object whereColumnValue)
+			throws DAOException;
 
 	/**
 	 * Returns the list of all source objects available in database.
@@ -168,8 +165,8 @@ public interface DAO
 	 * @return the list of all objects with the select columns specified.
 	 * @throws DAOException generic DAOException.
 	 */
-	List retrieve(String sourceObjectName, String[] selectColumnName)
-			throws DAOException;
+	List retrieve(String sourceObjectName, String[] selectColumnName) throws DAOException;
+
 	/**
 	 * Create database connection having auto-commit mode as disabled.
 	 * Open a Session on the given connection.
@@ -187,8 +184,8 @@ public interface DAO
 
 	/**
 	 * Makes all changes made since the previous
-     * commit/rollback.
-     * This method should be used only when auto-commit mode has been disabled.
+	 * commit/rollback.
+	 * This method should be used only when auto-commit mode has been disabled.
 	 * @throws DAOException : generic DAOException
 	 */
 	void commit() throws DAOException;
@@ -207,11 +204,15 @@ public interface DAO
 	void setConnectionManager(IConnectionManager connectionManager);
 
 	/**
-	 *
-	 * @param sql
-	 * @throws DAOException
-	 * @deprecated
+	 * This method returns the application name for which the DAO has been created.
+	 * @return String application name
 	 */
-	//public void insert(String sql)throws DAOException;
+	String getApplicationName();
+
+	/**
+	 * This method sets the application name for the DAO, for which the DAO has been created.
+	 * @param appName
+	 */
+	void setApplicationName(String appName);
 
 }
