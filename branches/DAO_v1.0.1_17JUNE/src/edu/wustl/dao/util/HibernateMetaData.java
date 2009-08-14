@@ -7,6 +7,7 @@
  * @version 1.00
  * @author kalpana_thakur
  */
+
 package edu.wustl.dao.util;
 
 import java.util.Iterator;
@@ -27,42 +28,55 @@ public final class HibernateMetaData
 {
 
 	/**
+	 * Configuration file .
+	 */
+	private Configuration cfg;
+
+	/**
 	 * creates a single object.
 	 */
-	private static HibernateMetaData hibernateMData = new HibernateMetaData();;
+	private HibernateMetaData hibernateMData;// = new HibernateMetaData();;
+
 	/**
 	 * Private constructor.
 	 */
-	private HibernateMetaData()
+	protected HibernateMetaData(Configuration configuration)
 	{
-
-	}
-	/**
-	 * returns the single object.
-	 * @return Utility object
-	 */
-	public static HibernateMetaData getInstance()
-	{
-		return hibernateMData;
+		this.cfg = configuration;
 	}
 
-	/**
-	 * Configuration file .
-	 */
-	private static Configuration cfg;
+	//	/**
+	//	 * returns the single object.
+	//	 * @return Utility object
+	//	 */
+	//	public static HibernateMetaData getInstance()
+	//	{
+	//		return hibernateMData;
+	//	}
+
+	public Configuration getCfg()
+	{
+		return cfg;
+	}
+
+	public void setCfg(Configuration cfg)
+	{
+		this.cfg = cfg;
+	}
+
 	/**
 	 * Mappings.
-	 *//*
-	private static Set mappings = new HashSet();*/
+	 */
+	/*
+		private static Set mappings = new HashSet();*/
 	/**
 	 *
 	 * @param configuration :
 	 */
-	public static void initHibernateMetaData(Configuration configuration)
-	{
-		cfg = configuration;
-	}
-
+	//	public static void initHibernateMetaData(Configuration configuration)
+	//	{
+	//		cfg = configuration;
+	//	}
 	/**
 	 * This method will return domain object from proxy Object.
 	 * @param domainObject :
@@ -73,10 +87,10 @@ public final class HibernateMetaData
 		Object object = domainObject;
 		if (domainObject instanceof HibernateProxy)
 		{
-			HibernateProxy hiberProxy  = (HibernateProxy)domainObject;
+			HibernateProxy hiberProxy = (HibernateProxy) domainObject;
 			object = hiberProxy.getHibernateLazyInitializer().getImplementation();
 		}
-        return object;
+		return object;
 	}
 
 	/**
@@ -84,28 +98,28 @@ public final class HibernateMetaData
 	 * @param classObj : Class of the object
 	 * @return tableName : It returns the table name associated to the class.
 	 */
-	public static String getTableName(Class classObj)
+	public String getTableName(Class classObj)
 	{
-
 		String tableName = "";
-		Table tbl = cfg.getClassMapping(classObj.getName()).getTable();
-		if(tbl!=null)
+		Table tbl = this.cfg.getClassMapping(classObj.getName()).getTable();
+		if (tbl != null)
 		{
 			tableName = tbl.getName();
 		}
 		return tableName;
 
 	}
+
 	/**
 	 * This method will be called to return root table name for the given class.
 	 * @param classObj :Class of the object
 	 * @return :It returns the root table name associated to the class.
 	 */
-	public static String getRootTableName(Class classObj)
+	public String getRootTableName(Class classObj)
 	{
 		String rootTableName = "";
-		Table tbl = cfg.getClassMapping(classObj.getName()).getRootTable();
-		if(tbl!=null)
+		Table tbl = this.cfg.getClassMapping(classObj.getName()).getRootTable();
+		if (tbl != null)
 		{
 			rootTableName = tbl.getName();
 		}
@@ -119,65 +133,67 @@ public final class HibernateMetaData
 	 * @param attributeName :attribute of the given class
 	 * @return returns the Column Name mapped to the attribute.
 	 */
-	public static String getColumnName(Class classObj, String attributeName)
+	public String getColumnName(Class classObj, String attributeName)
 	{
 		String columnName = DAOConstants.TRAILING_SPACES;
 		boolean foundColName = false;
-		Iterator<Object> iter = cfg.getClassMapping(classObj.getName()).getPropertyClosureIterator();
-		while(iter.hasNext())
+		Iterator<Object> iter = this.cfg.getClassMapping(classObj.getName())
+				.getPropertyClosureIterator();
+		while (iter.hasNext())
 		{
-			columnName = getColumnName(attributeName,iter);
-			if(!DAOConstants.TRAILING_SPACES.equals(columnName))
+			columnName = getColumnName(attributeName, iter);
+			if (!DAOConstants.TRAILING_SPACES.equals(columnName))
 			{
 				foundColName = true;
 				break;
 			}
 		}
 
-		if(!foundColName)
+		if (!foundColName)
 		{
 			columnName = getColumName(classObj, attributeName);
 		}
 		return columnName;
 	}
+
 	/**
 	 * This method will returns the column name associate to given property.
 	 * @param iter : holds the property object.
 	 * @param attributeName :attribute of the given class
 	 * @return returns the Column Name mapped to the attribute.
 	 */
-	private static String getColumnName(String attributeName,
-			Iterator<Object> iter)
+	private static String getColumnName(String attributeName, Iterator<Object> iter)
 	{
 		String columnName = DAOConstants.TRAILING_SPACES;
-		Property property = (Property)iter.next();
-		if(property!=null && property.getName().equals(attributeName))
+		Property property = (Property) iter.next();
+		if (property != null && property.getName().equals(attributeName))
 		{
 			Iterator<Object> colIt = property.getColumnIterator();
-			if(colIt.hasNext())
+			if (colIt.hasNext())
 			{
-				Column col = (Column)colIt.next();
+				Column col = (Column) colIt.next();
 				columnName = col.getName();
 			}
 		}
 		return columnName;
 	}
+
 	/**
 	 *This method will iterate the Identified property file and returns the column name.
 	 * @param classObj : Class of the object
 	 * @param attributeName :attribute of the given class
 	 * @return returns the Column Name mapped to the attribute.
 	 */
-	private static String getColumName(Class classObj, String attributeName)
+	private String getColumName(Class classObj, String attributeName)
 	{
 		String columnName = DAOConstants.TRAILING_SPACES;
-		Property property = cfg.getClassMapping(classObj.getName()).getIdentifierProperty();
-		if(property.getName().equals(attributeName))
+		Property property = this.cfg.getClassMapping(classObj.getName()).getIdentifierProperty();
+		if (property.getName().equals(attributeName))
 		{
 			Iterator<Object> colIt = property.getColumnIterator();//y("id").getColumnIterator();
-			if(colIt.hasNext())
+			if (colIt.hasNext())
 			{
-				Column col = (Column)colIt.next();
+				Column col = (Column) colIt.next();
 				columnName = col.getName();
 			}
 		}
@@ -190,20 +206,21 @@ public final class HibernateMetaData
 	 * @param attributeName Name of the attribute.
 	 * @return The width of the column. Returns width of the column or zero.
 	 */
-	public static int getColumnWidth(Class classObj, String attributeName)
+	public int getColumnWidth(Class classObj, String attributeName)
 	{
-		Iterator iterator = cfg.getClassMapping(classObj.getName()).getPropertyClosureIterator();
+		Iterator iterator = this.cfg.getClassMapping(classObj.getName())
+				.getPropertyClosureIterator();
 		int colLength = 50;
-		while(iterator.hasNext())
+		while (iterator.hasNext())
 		{
-			Property property = (Property)iterator.next();
+			Property property = (Property) iterator.next();
 
-			if(property!=null && property.getName().equals(attributeName))
+			if (property != null && property.getName().equals(attributeName))
 			{
 				Iterator colIt = property.getColumnIterator();
-				while(colIt.hasNext())
+				while (colIt.hasNext())
 				{
-					Column col = (Column)colIt.next();
+					Column col = (Column) colIt.next();
 					colLength = col.getLength();
 				}
 			}
@@ -212,22 +229,21 @@ public final class HibernateMetaData
 		return colLength;
 	} // getColumnWidth
 
-
 	/**
 	 * This method will be called to obtained the
 	 * domain class name mapped to given table.
 	 * @param tableName :Name of table.
 	 * @return the class name
 	 */
-	public static  String getClassName(String tableName)
+	public String getClassName(String tableName)
 	{
-		Iterator iter = cfg.getClassMappings();
+		Iterator iter = this.cfg.getClassMappings();
 		PersistentClass persistentClass;
 		String className = DAOConstants.TRAILING_SPACES;
-		while(iter.hasNext())
+		while (iter.hasNext())
 		{
 			persistentClass = (PersistentClass) iter.next();
-			if(tableName.equalsIgnoreCase(persistentClass.getTable().getName()))
+			if (tableName.equalsIgnoreCase(persistentClass.getTable().getName()))
 			{
 				className = persistentClass.getClassName();
 			}
@@ -235,7 +251,6 @@ public final class HibernateMetaData
 
 		return className;
 	}
-
 
 	/**
 	 *  This function returns the attributeName related to classObj1 and classObj2.
@@ -268,56 +283,58 @@ public final class HibernateMetaData
 	}
 
 	*//**
-	 *  This function checks weather relation is Many-Many.
-	 * @param classObj1 :
-	 * @param classObj2 :
-	 * @param roleAttributeName :
-	 * @return true is relation is Many-Many otherwise false
-	 *//*
-	public static boolean isRelationManyToMany(Class classObj1,Class classObj2,String roleAttributeName)
-	{
-		ClassRelationshipData crd=new ClassRelationshipData(classObj1.getName(),
-				classObj2.getName(),roleAttributeName);
-		Iterator itr = mappings.iterator();
-		boolean isRelManyToMany = false;
-
-		while(itr.hasNext())
+			 *  This function checks weather relation is Many-Many.
+			 * @param classObj1 :
+			 * @param classObj2 :
+			 * @param roleAttributeName :
+			 * @return true is relation is Many-Many otherwise false
+			 */
+	/*
+		public static boolean isRelationManyToMany(Class classObj1,Class classObj2,String roleAttributeName)
 		{
-			ClassRelationshipData crd1=(ClassRelationshipData)itr.next();
-			if(crd1.equals(crd)&& crd1.getRelationType().equals("ManyToMany"))
+			ClassRelationshipData crd=new ClassRelationshipData(classObj1.getName(),
+					classObj2.getName(),roleAttributeName);
+			Iterator itr = mappings.iterator();
+			boolean isRelManyToMany = false;
+
+			while(itr.hasNext())
 			{
-				isRelManyToMany = true;
+				ClassRelationshipData crd1=(ClassRelationshipData)itr.next();
+				if(crd1.equals(crd)&& crd1.getRelationType().equals("ManyToMany"))
+				{
+					isRelManyToMany = true;
+				}
 			}
+			return isRelManyToMany;
 		}
-		return isRelManyToMany;
-	}
-*/
+	*/
 	/**
 	 * This method returns the list of subclasses of the className
 	 * @author aarti_sharma
 	 * @param className
 	 * @return
 	 * @throws ClassNotFoundException
-	 *//*
-	public static List getSubClassList(String className) throws ClassNotFoundException
-	{
-		List list = new ArrayList();
-		//System.out.println("className :::"+ className);
-		Class classObj = Class.forName(className);
-		//System.out.println("classObj :::"+ classObj);
-		PersistentClass classobj1 = cfg.getClassMapping(classObj.getName());
-		Iterator it  =classobj1.getDirectSubclasses();
-		//Iterator it = cfg.getClassMapping(classObj).getDirectSubclasses();
-		while(it.hasNext())
+	 */
+	/*
+		public static List getSubClassList(String className) throws ClassNotFoundException
 		{
-			Subclass subClass = (Subclass)it.next();
+			List list = new ArrayList();
+			//System.out.println("className :::"+ className);
+			Class classObj = Class.forName(className);
+			//System.out.println("classObj :::"+ classObj);
+			PersistentClass classobj1 = cfg.getClassMapping(classObj.getName());
+			Iterator it  =classobj1.getDirectSubclasses();
+			//Iterator it = cfg.getClassMapping(classObj).getDirectSubclasses();
+			while(it.hasNext())
+			{
+				Subclass subClass = (Subclass)it.next();
 
-			System.out.println(subClass.getClass().getName());
-			//System.out.println("Name "+subClass.getName());
-			list.add(subClass.getClassName());
-		}
-		return list;
-	}*/
+				System.out.println(subClass.getClass().getName());
+				//System.out.println("Name "+subClass.getName());
+				list.add(subClass.getClassName());
+			}
+			return list;
+		}*/
 
 	/**
 	 * This method returns the super class of the obj passed
@@ -332,7 +349,7 @@ public final class HibernateMetaData
 		PersistentClass superClass = persistentClass.getSuperclass();
 		return superClass.getClass();
 	}
-*/
+	*/
 	/**
 	 * This method returns the supermost class
 	 * of the class passed that is in the same package as class
@@ -364,9 +381,7 @@ public final class HibernateMetaData
 		}
 		return persistentClass.getMappedClass();
 	}
-*/
-
-
+	*/
 
 	/*public static void getDATA(Class classObj)
 	{
@@ -428,83 +443,82 @@ public final class HibernateMetaData
 	 * @param col this is the collection which contains all data
 	 * @param rel_type this is Many-To-Many ot Many-To-One
 	 * @throws Exception
-	 *//*
-	private static void saveRelations(Collection col,String rel_type) throws Exception
-	{
-		String className=col.getOwner().getClassName();
-		String relatedClassName=col.getElement().getType().getName();
-		String roleAttribute=col.getRole();
-		String relationType=rel_type;
-		String relationTable=col.getElement().getTable().getName();
-		String keyId=getKeyId(roleAttribute);
-		String roleId=getRoleKeyId(roleAttribute);
-
-		ClassRelationshipData hmc=new ClassRelationshipData(className,relatedClassName,
-		roleAttribute,relationType,relationTable,keyId,roleId);
-		mappings.add(hmc);
-
-		List list1=HibernateMetaData.getSubClassList(col.getOwner().getClassName());
-		for(int i=0;i<list1.size();i++)
+	 */
+	/*
+		private static void saveRelations(Collection col,String rel_type) throws Exception
 		{
-			hmc=new ClassRelationshipData(list1.get(i).
-			toString(),relatedClassName,roleAttribute,relationType,
-					relationTable,keyId,roleId);
+			String className=col.getOwner().getClassName();
+			String relatedClassName=col.getElement().getType().getName();
+			String roleAttribute=col.getRole();
+			String relationType=rel_type;
+			String relationTable=col.getElement().getTable().getName();
+			String keyId=getKeyId(roleAttribute);
+			String roleId=getRoleKeyId(roleAttribute);
+
+			ClassRelationshipData hmc=new ClassRelationshipData(className,relatedClassName,
+			roleAttribute,relationType,relationTable,keyId,roleId);
 			mappings.add(hmc);
-		}
 
-		List list2=HibernateMetaData.getSubClassList(col.getElement().getType().getName());
-		for(int i=0;i<list2.size();i++)
-		{
-			hmc=new ClassRelationshipData(className,list2.get(i).toString(),roleAttribute,relationType,
-					relationTable,keyId,roleId);
-			mappings.add(hmc);
-		}
-	}
-*/
-
-
-/*	public static ClassRelationshipData getClassRelationshipData(Class classObj1,Class classObj2,
- *  String roleAttributeName)
-	{
-		ClassRelationshipData crd=new ClassRelationshipData(classObj1.getName(),classObj2.getName(),
-		roleAttributeName);
-
-		Iterator itr=mappings.iterator();
-
-		while(itr.hasNext())
-		{
-			ClassRelationshipData crd1=(ClassRelationshipData)itr.next();
-			if(crd1.equals(crd))
+			List list1=HibernateMetaData.getSubClassList(col.getOwner().getClassName());
+			for(int i=0;i<list1.size();i++)
 			{
-				return crd1;
+				hmc=new ClassRelationshipData(list1.get(i).
+				toString(),relatedClassName,roleAttribute,relationType,
+						relationTable,keyId,roleId);
+				mappings.add(hmc);
+			}
 
+			List list2=HibernateMetaData.getSubClassList(col.getElement().getType().getName());
+			for(int i=0;i<list2.size();i++)
+			{
+				hmc=new ClassRelationshipData(className,list2.get(i).toString(),roleAttribute,relationType,
+						relationTable,keyId,roleId);
+				mappings.add(hmc);
 			}
 		}
-		return null;
+	*/
 
-	}
-	*//**This function returns the RoleClass for given attName
-	 * @param attName
-	 * @return RoleClass
-	 *//*
-	public static Class getRoleClass(String attName)
-	{
-		Iterator itr=mappings.iterator();
-
-		while(itr.hasNext())
+	/*	public static ClassRelationshipData getClassRelationshipData(Class classObj1,Class classObj2,
+	 *  String roleAttributeName)
 		{
-			ClassRelationshipData crd=(ClassRelationshipData)itr.next();
-			if(crd.getRoleAttribute().indexOf(attName)!=-1)
+			ClassRelationshipData crd=new ClassRelationshipData(classObj1.getName(),classObj2.getName(),
+			roleAttributeName);
+
+			Iterator itr=mappings.iterator();
+
+			while(itr.hasNext())
 			{
-				return Utility.getClassObject(crd.getRelatedClassName());
+				ClassRelationshipData crd1=(ClassRelationshipData)itr.next();
+				if(crd1.equals(crd))
+				{
+					return crd1;
 
+				}
 			}
+			return null;
+
 		}
-		return null;
-	}
-*/
+		*//**This function returns the RoleClass for given attName
+			 * @param attName
+			 * @return RoleClass
+			 */
+	/*
+		public static Class getRoleClass(String attName)
+		{
+			Iterator itr=mappings.iterator();
 
+			while(itr.hasNext())
+			{
+				ClassRelationshipData crd=(ClassRelationshipData)itr.next();
+				if(crd.getRoleAttribute().indexOf(attName)!=-1)
+				{
+					return Utility.getClassObject(crd.getRelatedClassName());
 
+				}
+			}
+			return null;
+		}
+	*/
 
 	/**
 	 * This function gets the key Id.
@@ -512,43 +526,42 @@ public final class HibernateMetaData
 	 * @param attributeName :
 	 * @return key Id
 	 *
-	 *//*
-	public static String getKeyId(String attributeName)
-	{
-		org.hibernate.mapping.Collection col1 = cfg.getCollectionMapping(attributeName);
-		Iterator keyIt = col1.getKey().getColumnIterator();
-		while (keyIt.hasNext())
+	 */
+	/*
+		public static String getKeyId(String attributeName)
 		{
-			Column col = (Column) keyIt.next();
-			return(col.getName());
-		}
+			org.hibernate.mapping.Collection col1 = cfg.getCollectionMapping(attributeName);
+			Iterator keyIt = col1.getKey().getColumnIterator();
+			while (keyIt.hasNext())
+			{
+				Column col = (Column) keyIt.next();
+				return(col.getName());
+			}
 
-		return "";
-	}
-	*//** This function returns the role Id.
-	 * from hibernate mapping and returns the value
-	 * @param attributeName :
-	 * @return roleKeyId
-	 *
-	 *//*
-	public static String getRoleKeyId(String attributeName)
-	{
-		org.hibernate.mapping.Collection col1 = cfg.getCollectionMapping(attributeName);
-		Iterator colIt = col1.getElement().getColumnIterator();
-		while (colIt.hasNext())
-		{
-			Column col = (Column) colIt.next();
-			return(col.getName());
+			return "";
 		}
-		return "";
-	}
-*/
+		*//** This function returns the role Id.
+			 * from hibernate mapping and returns the value
+			 * @param attributeName :
+			 * @return roleKeyId
+			 *
+			 */
+	/*
+		public static String getRoleKeyId(String attributeName)
+		{
+			org.hibernate.mapping.Collection col1 = cfg.getCollectionMapping(attributeName);
+			Iterator colIt = col1.getElement().getColumnIterator();
+			while (colIt.hasNext())
+			{
+				Column col = (Column) colIt.next();
+				return(col.getName());
+			}
+			return "";
+		}
+	*/
 	//Mandar:26-apr-06 start
-//	Mandar : 26-Apr-06 : 872 : Column width
-
-
+	//	Mandar : 26-Apr-06 : 872 : Column width
 	//	Mandar:26-apr-06 end
-
 	/*public static void main(String[] args) throws Exception
 	{
 		Variables.applicationHome = System.getProperty("user.dir");
