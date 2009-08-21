@@ -505,7 +505,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		StatementData statementData = new StatementData();
 		try
 		{
-			statement = createStatement();
+			statement = connection.createStatement();
 			statementData.setRowCount(statement.executeUpdate(query));
 			setStatementData(statement, statementData,query,false);
 			return statementData ;
