@@ -219,7 +219,7 @@ public class DAOFactory implements IDAOFactory
 		IConnectionManager connectionManager =
 			(IConnectionManager)Class.forName(jdbcConnMangrName).newInstance();
 		connectionManager.setApplicationName(applicationName);
-		connectionManager.setDataSource(dataSource);
+		connectionManager.setDataSource(databaseProperties.getDataSource());
 		connectionManager.setSessionFactory(sessionFactory);
 		connectionManager.setConfiguration(configuration);
 		return connectionManager;

@@ -323,8 +323,8 @@ public class ApplicationDAOPropertiesParser
 			}
 			if (childnode.getNodeName().equals("DataSource"))
 			{
-				Node configFileMapNode = getNextnode(childnode);
-				dataSource = configFileMapNode.getNodeValue();
+				Node attNode = getNextnode(childnode);
+				dataSource = attNode.getNodeValue();
 			}
 			if (childnode.getNodeName().equals("JDBCConnectionManager"))
 			{
