@@ -177,6 +177,12 @@ public interface DAO
 	 */
 	void setConnectionManager(IConnectionManager connectionManager);
 
-	List executeQuery(String query,int maxRecords)
-	throws DAOException;
+	/**
+	 *
+	 * @param sql
+	 * @throws DAOException
+	 * @deprecated
+	 */
+	//public void insert(String sql)throws DAOException;
+
 }
