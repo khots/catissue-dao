@@ -58,11 +58,10 @@
 		<mkdir dir="${report.dir}/reports/daoTestReports"/>
 		<mkdir dir="${report.dir}/reports/daoTestReports/HtmlReports"/>
 		
-		<junit printsummary="yes" fork="yes" haltonfailure="yes" jvm="java -agentlib:yjpagent=onexit=memory,dir=f:\MySnapshots">
+		<junit printsummary="yes" fork="yes">
 			<formatter type="xml"/>
 			 <sysproperty key="net.sourceforge.cobertura.datafile" file="${cobertura.location}/coverage.ser" />
-			
-			
+						
 			<!--	Note the classpath order: instrumented classes are before the
 				original (uninstrumented) classes.  This is important.
 			-->	
@@ -80,7 +79,7 @@
 			<classpath>
 				<pathelement path="${test.src.dir}" />
 				<pathelement path= "${test.classes.dir}" />
-				<pathelement path = "C:/Program Files/YourKit Java Profiler 7.0.11/bin/win32" />
+				<!--<pathelement path = "C:/Program Files/YourKit Java Profiler 7.0.11/bin/win32" />-->
 			</classpath>
 						
 			<classpath refid="cobertura.classpath" />
@@ -210,6 +209,43 @@
 		<antcall target="coverage-report"/>
 		
 	</target>
+	
+	<property name="mysql.driver.string" value="com.mysql.jdbc.Driver" />
+	<property file="DAOInstall.properties"/>
+	
+	<target name="db_create_mysql">
+			<echo message="Creating Mysql Database..."/>
+			<sql
+				driver="${mysql.driver.string}"                 
+				url="jdbc:mysql://${database.host}:${database.port}/mysql"
+				userid="${database.username}"
+				password="${database.password}"
+				onerror="continue">
+				<classpath>
+					<fileset dir="${lib.dir}">
+						  <include name="*.jar"/>
+					</fileset>
+				</classpath> 
+				DROP DATABASE ${database.name};
+				CREATE DATABASE ${database.name};
+			</sql>
+		</target>
+	
+	<target name="deploy_db_mysql">
+			<echo message="Initializing MySQL Database for DAO..." />
+			<sql driver="${mysql.driver.string}" url="jdbc:mysql://${database.host}:${database.port}/${database.name}" userid="${database.username}" password="${database.password}" onerror="continue" >
+				<transaction src="${base.dir}/dbcreation_mysql.sql" />
+				
+				<transaction>commit;</transaction>
+				<classpath>
+					<fileset dir="${lib.dir}">
+						<include name="*.jar" />
+					</fileset>
+				</classpath>
+			</sql>
+			
+	</target>
+	
 	
 </project>
 
