@@ -182,5 +182,13 @@ public interface DAO
 	 * @throws DAOException : It will throw DAOException.
 	 */
 	void beginTransaction() throws DAOException;
-
+	/**
+	 * Executes query and returns specified number of records
+	 * @param query - query to execute
+	 * @param maxRecords - max records to be returned
+	 * @return result list
+	 * @throws DAOException
+	 */
+	List executeQuery(String query,int maxRecords)
+	throws DAOException;
 }

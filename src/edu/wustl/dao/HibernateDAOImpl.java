@@ -440,5 +440,8 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 					"HibernateDAOImpl.java "+attributeName);
 		}
 	}
-
+	
+	public List executeQuery(String query, int maxRecords) throws DAOException {
+		return executeQuery(query, 0, maxRecords, null);
+	}
 }
