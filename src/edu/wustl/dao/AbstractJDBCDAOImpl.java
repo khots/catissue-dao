@@ -22,6 +22,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.SortedSet;
+
 import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.global.Validator;
@@ -1018,5 +1019,41 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 			throw DAOUtility.getInstance().getDAOException(sqlExp, "db.stmt.close.error",
 			"AbstractJDBCDAOImpl.java ");
 		}
+	}
+	
+	public List executeQuery(String query, int maxRecords) throws DAOException {
+			try
+			{
+				ResultSet resultSet = getQueryResultSet(query,maxRecords);
+				List resultData =  DAOUtility.getInstance().getListFromRS(resultSet);
+				closeStatement(resultSet);
+				return resultData;
+			}
+			catch(SQLException exp)
+			{
+				logger.info(exp.getMessage(),exp);
+				throw DAOUtility.getInstance().getDAOException(exp, "db.retrieve.data.error",
+				"AbstractJDBCDAOImpl.java "+query);
+			}
+
+		}
+	public ResultSet getQueryResultSet(String sql, int maxRecords)
+			throws DAOException {
+
+		logger.debug("Get Query RS [" + sql +"] MAX RECORDS =["+maxRecords + "]");
+		try
+		{
+			Statement statement = createStatement();
+			statement.setMaxRows(maxRecords);
+			ResultSet resultSet = statement.executeQuery(sql);
+			return resultSet;
+		}
+		catch (SQLException exp)
+		{
+			logger.info(exp.getMessage(),exp);
+			throw DAOUtility.getInstance().getDAOException(exp, "db.retrieve.data.error",
+			"AbstractJDBCDAOImpl.java  "+sql);
+		}
+	
 	}
 }
