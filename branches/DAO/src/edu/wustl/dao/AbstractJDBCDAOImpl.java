@@ -1029,4 +1029,40 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 			"AbstractJDBCDAOImpl.java ");
 		}
 	}
+
+	public List executeQuery(String query, int maxRecords) throws DAOException {
+			try
+			{
+				ResultSet resultSet = getQueryResultSet(query,maxRecords);
+				List resultData =  DAOUtility.getInstance().getListFromRS(resultSet);
+				closeStatement(resultSet);
+				return resultData;
+			}
+			catch(SQLException exp)
+			{
+				logger.info(exp.getMessage(),exp);
+				throw DAOUtility.getInstance().getDAOException(exp, "db.retrieve.data.error",
+				"AbstractJDBCDAOImpl.java "+query);
+			}
+
+		}
+	public ResultSet getQueryResultSet(String sql, int maxRecords)
+			throws DAOException {
+
+		logger.debug("Get Query RS [" + sql +"] MAX RECORDS =["+maxRecords + "]");
+		try
+		{
+			Statement statement = createStatement();
+			statement.setMaxRows(maxRecords);
+			ResultSet resultSet = statement.executeQuery(sql);
+			return resultSet;
+		}
+		catch (SQLException exp)
+		{
+			logger.info(exp.getMessage(),exp);
+			throw DAOUtility.getInstance().getDAOException(exp, "db.retrieve.data.error",
+			"AbstractJDBCDAOImpl.java  "+sql);
+		}
+	
+	}
 }
