@@ -11,6 +11,7 @@
 package edu.wustl.dao;
 
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -432,10 +433,6 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 			throw DAOUtility.getInstance().getDAOException(hiberExp, "db.retrieve.data.error",
 					"HibernateDAOImpl.java "+attributeName);
 		}
-	}
-
-	public List executeQuery(String query, int maxRecords) throws DAOException {
-		return executeQuery(query, 0, maxRecords, null);
 	}
 
 }
