@@ -11,6 +11,7 @@ import java.util.TreeSet;
 import org.junit.Test;
 
 import edu.wustl.common.util.logger.Logger;
+import edu.wustl.dao.DAO;
 import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.QueryWhereClause;
 import edu.wustl.dao.condition.EqualClause;
@@ -743,4 +744,36 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 		}
 
 	}
+
+	@Test
+    public void testCaseExecuteQueryWithFixedResultSize()
+    {
+
+          try
+          {
+
+                jdbcDAO.openSession(null);
+                String sql = "select IDENTIFIER from test_user";
+                List list = ((DAO)jdbcDAO).executeQuery(sql,0,2,null);
+                assertEquals(true, list.size()==2);
+          }
+          catch(Exception exp)
+          {
+                assertFalse("Problem while executing query ::", true);
+          }
+          finally
+          {
+                try
+                {
+                	jdbcDAO.closeSession();
+                }
+                catch (DAOException e)
+                {
+                      e.printStackTrace();
+                }
+
+          }
+
+    }
+
 }
