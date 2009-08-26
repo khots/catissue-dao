@@ -590,6 +590,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 		}
 		catch(Exception exp)
 		{
+			
 			assertFalse("Problem while executing query ::", true);
 		}
 		finally
@@ -644,34 +645,6 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 		}
 
 	}
-	
-	
-
-	/**
-	 * This test will assert that clean session retrieved.
-	 */
-	@Test
-	public void testCleanSession()
-	{
-		Session session = null;
-		try
-		{
-		//	session = dao.getCleanSession();
-			assertNotNull("session Object is null",session);
-		}
-		catch(Exception exp)
-		{
-			assertFalse("Failed while obtaining new session :", true);
-		}
-		finally
-		{
-			session.close();
-		}
-
-	}
-
-	
-
 
 	/**
 	 * This test will create a complex retrieve query having multiple clause(IN,NOT NULL,IS NULL)
@@ -862,6 +835,38 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 	}
 
 
+	@Test
+    public void testCaseExecuteQueryWithFixedResultSize()
+    {
+
+          try
+          {
+
+                dao.openSession(null);
+                String sql = "select identifier from test.User";
+                List list = dao.executeQuery(sql,0,1,null);
+                assertEquals(true, list.size()==1);
+          }
+          catch(Exception exp)
+          {
+        	  System.out.println("Exception : !!!!!!!");
+  			  exp.printStackTrace();
+              assertFalse("Problem while executing query ::", true);
+          }
+          finally
+          {
+                try
+                {
+                      dao.closeSession();
+                }
+                catch (DAOException e)
+                {
+                      e.printStackTrace();
+                }
+
+          }
+
+    }
 
 
 }

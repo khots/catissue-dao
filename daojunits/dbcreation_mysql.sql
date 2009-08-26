@@ -1,6 +1,3 @@
-DROP DATABASE daotestdb;
-CREATE DATABASE daotestdb;
-
 
 drop table test_order;
 drop table test_person;
@@ -58,3 +55,17 @@ CREATE TABLE test_table_hashed (
                        )  ;
 insert into test_user (IDENTIFIER,EMAIL_ADDRESS,FIRST_NAME,LAST_NAME,ACTIVITY_STATUS)VALUES (1,"john@per.co.in","JOHN","REBER","Active");
 insert into test_user (IDENTIFIER,EMAIL_ADDRESS,FIRST_NAME,LAST_NAME,ACTIVITY_STATUS)VALUES (2,"sri@per.co.in","srikanth",null,"Active");
+
+drop table person;
+
+CREATE TABLE `person` (                             
+          `identifier` bigint(20) NOT NULL auto_increment,  
+          `first_name` char(50) default NULL,               
+          `second_name` char(50) default NULL,              
+          `age` bigint(20) default NULL,                    
+          `isAvailable` bit(1) default NULL,                
+          `birth_date` date NOT NULL,                       
+          `address_id` bigint(20) default NULL,             
+          `account_id` bigint(20) default NULL,             
+          PRIMARY KEY  (`identifier`)                       
+        ) ENGINE=InnoDB DEFAULT CHARSET=latin1        

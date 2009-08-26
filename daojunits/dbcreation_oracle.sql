@@ -66,4 +66,18 @@ CREATE TABLE TEST_TABLE_HASHED (
                          PRIMARY KEY  (IDENTIFIER)                             
                        )  ;
 					   
+drop table person;
+DROP sequence person_seq;
+CREATE sequence person_seq;	
 
+CREATE TABLE person (                             
+          identifier NUMBER(19,0) NOT NULL,  
+          first_name VARCHAR(50) default NULL,               
+          second_name VARCHAR(50) default NULL,              
+          age NUMBER(19,0) default NULL,                    
+          isAvailable NUMBER(1,0) default NULL,                
+          birth_date date NOT NULL,                       
+          address_id NUMBER(19,0) default NULL,             
+          account_id NUMBER(19,0) default NULL,             
+          PRIMARY KEY  (identifier)                       
+        ) ;     

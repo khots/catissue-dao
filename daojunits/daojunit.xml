@@ -1,6 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version ="1.0"?>
 
 <project name="DAOJunits" default="compileDaoTestCases" >
+	
 	
 	<property name="base.path" value="${basedir}"> </property>
 	<property name="proj.src" value="../src"/>
@@ -19,6 +20,13 @@
 	<property name="test.instrumented.dir" value="./instrument"/>
 	<property name="report.dir" value="."/>
 	<property name="coverage.dir" value="."/>
+	
+	<!--Database specific properties ....-->
+	<property name="mysql.driver.string" value="com.mysql.jdbc.Driver" />
+	<property name="oracle.driver.string" value="oracle.jdbc.driver.OracleDriver"/>
+	<property name="oracle.dialect.string" value="org.hibernate.dialect.Oracle9Dialect" />
+	<property name="mysql.dialect.string" value="org.hibernate.dialect.MySQLDialect" />
+	<property file="DAOInstall.properties"/>
 
 	<path id="cobertura.classpath">
 			<fileset dir="${cobertura.lib}">
@@ -27,6 +35,13 @@
 			</fileset>
 	</path>
 
+	<!--define require dir and Properties -->
+		<taskdef resource="net/sf/antcontrib/antcontrib.properties">
+				<classpath>
+					<pathelement location="${lib.dir}/ant-contrib.jar" />
+				</classpath>
+		</taskdef>
+		
 	<taskdef classpathref="cobertura.classpath" resource="tasks.properties"/>
 
 	
@@ -50,10 +65,58 @@
 				<include name="**/*.hbm.xml" />
 			</fileset>
 		</copy>
+		<antcall target="update:hibernate-cfg"></antcall>
+		
+				
+	</target>
+	
+	<target name="update:hibernate-cfg-mysql">
+		<echo message="Updating hibernate.cfg.xml file for mysql..." />
+		<replace dir="classes" propertyfile="DAOInstall.properties">
+					<include name="hibernate.cfg.xml"/>
+					<replacefilter token="@@dialect@@" value="${mysql.dialect.string}"/>
+					<replacefilter token="@@driver@@" value="${mysql.driver.string}"/>
+					<replacefilter token="@@url@@" value="jdbc:mysql://${database.host}:${database.port}/${database.name}"/>
+					<replacefilter token="@@username@@" value="${database.username}"/>
+					<replacefilter token="@@password@@" value="${database.password}"/>
+				</replace>
 		
 	</target>
 	
-	<target name="runDAOTestCases" depends="compileDaoTestCases">
+	<target name="update:hibernate-cfg-oracle">
+		<echo message="Updating hibernate.cfg.xml file for oracle..." />
+						<replace dir="classes" propertyfile="DAOInstall.properties">
+							<include name="hibernate.cfg.xml"/>
+							<replacefilter token="@@dialect@@" value="${oracle.dialect.string}"/>
+							<replacefilter token="@@driver@@" value="${oracle.driver.string}"/>
+							<replacefilter token="@@url@@" value="jdbc:oracle:thin:@${database.host}:${database.port}:${database.name}"/>
+							<replacefilter token="@@username@@" value="${database.username}"/>
+							<replacefilter token="@@password@@" value="${database.password}"/>
+	 </replace>
+			
+	</target>
+	
+	<target name="update:hibernate-cfg">
+	
+		<if>
+				<equals arg1="mysql" arg2="${database.type}" />
+						 <then>
+							<antcall target="update:hibernate-cfg-mysql" />
+						</then>
+						
+						<elseif>
+							<equals arg1="oracle" arg2="${database.type}" />
+							<then>
+								<antcall target="update:hibernate-cfg-oracle" />
+							</then>
+						</elseif>
+						<else>
+								<echo message="DATABASE INITIALIZATION FAILED PLEASE CHECK DATABASE.TYPE PROPERTY" level="error" />
+						</else>
+					</if>		
+	</target>
+	
+	<target name="runDAOTestCases" depends="instrument,compileDaoTestCases">
 		<echo>Executing DAO test cases : </echo>
 		<mkdir dir="${report.dir}/reports/daoTestReports"/>
 		<mkdir dir="${report.dir}/reports/daoTestReports/HtmlReports"/>
@@ -85,7 +148,7 @@
 			<classpath refid="cobertura.classpath" />
 			
 			
-			<batchtest todir="${report.dir}/reports/daoTestReports">
+			<batchtest fork="yes" todir="${report.dir}/reports/daoTestReports">
 				<fileset dir="${test.src.dir}">
 					<include name="**/DAOTestSuite.java" />
 				</fileset>	
@@ -210,10 +273,9 @@
 		
 	</target>
 	
-	<property name="mysql.driver.string" value="com.mysql.jdbc.Driver" />
-	<property file="DAOInstall.properties"/>
 	
-	<target name="db_create_mysql">
+	
+	<target name="create:db-mysql">
 			<echo message="Creating Mysql Database..."/>
 			<sql
 				driver="${mysql.driver.string}"                 
@@ -229,9 +291,9 @@
 				DROP DATABASE ${database.name};
 				CREATE DATABASE ${database.name};
 			</sql>
-		</target>
+	</target>
 	
-	<target name="deploy_db_mysql">
+	<target name="deploy:db-mysql">
 			<echo message="Initializing MySQL Database for DAO..." />
 			<sql driver="${mysql.driver.string}" url="jdbc:mysql://${database.host}:${database.port}/${database.name}" userid="${database.username}" password="${database.password}" onerror="continue" >
 				<transaction src="${base.dir}/dbcreation_mysql.sql" />
@@ -243,8 +305,78 @@
 					</fileset>
 				</classpath>
 			</sql>
+		
+			
 			
 	</target>
+	
+	<target name="create:deploy-db-mysql">
+		<antcall target="create:db-mysql"/>
+		<antcall target="deploy:db-mysql"/>
+	</target>
+	
+	<target name="create:db-oracle">
+		<echo message="Initializing Oracle Database for caTISSUECore Client Application..."/>
+			<sql 
+					driver="${oracle.driver.string}"
+				    url="jdbc:oracle:thin:@${database.host}:${database.port}:${database.name}"
+				  	userid="${database.tempusername}"
+					password="${database.temppassword}" 
+				   	onerror="continue"
+		    		rdbms="oracle">				
+					<classpath>
+						<fileset dir="${lib.dir}">
+							<include name="*.jar"/>
+						</fileset>
+					</classpath>			
+					DROP USER ${database.username} CASCADE;
+					CREATE USER ${database.username} IDENTIFIED BY ${database.password} DEFAULT TABLESPACE "${database.tablespace}" TEMPORARY TABLESPACE "${database.temptablespace}" QUOTA UNLIMITED ON "${database.tablespace}";
+					GRANT CONNECT, RESOURCE TO ${database.username};
+					GRANT DBA TO ${database.username};
+					ALTER USER ${database.username} DEFAULT ROLE ALL;
+			</sql>                  
+	</target>      
+	
+	<target name="deploy:db-oracle">
+				<echo message="Initializing Oracle Database for DAO..." />
+				<sql driver="${oracle.driver.string}" 
+					url="jdbc:oracle:thin:@${database.host}:${database.port}:${database.name}" 
+					userid="${database.username}" password="${database.password}"
+					onerror="continue"
+					rdbms="oracle">
+					<transaction src="${base.dir}/dbcreation_oracle.sql" />					
+					<transaction>commit;</transaction>
+					<classpath>
+						<fileset dir="${lib.dir}">
+							<include name="*.jar" />
+						</fileset>
+					</classpath>
+				</sql>
+	</target>
+	
+	<target name="create:deploy-db-oracle">
+		<antcall target="create:db-oracle"/>
+		<antcall target="deploy:db-oracle"/>
+	</target>
+	
+	<target name="deploy:db">
+			<if>
+				<equals arg1="mysql" arg2="${database.type}" />
+				 <then>
+					<antcall target="create:deploy-db-mysql" />
+				</then>
+				
+				<elseif>
+					<equals arg1="oracle" arg2="${database.type}" />
+					<then>
+						<antcall target="create:deploy-db-oracle" />
+					</then>
+				</elseif>
+				<else>
+						<echo message="DATABASE INITIALIZATION FAILED PLEASE CHECK DATABASE.TYPE PROPERTY" level="error" />
+				</else>
+			</if>					
+	</target>	
 	
 	
 </project>
