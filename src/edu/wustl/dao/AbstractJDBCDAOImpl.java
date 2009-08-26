@@ -1030,24 +1030,45 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		}
 	}
 
-	public List executeQuery(String query, int maxRecords) throws DAOException {
-			try
-			{
-				ResultSet resultSet = getQueryResultSet(query,maxRecords);
-				List resultData =  DAOUtility.getInstance().getListFromRS(resultSet);
-				closeStatement(resultSet);
-				return resultData;
-			}
-			catch(SQLException exp)
-			{
-				logger.info(exp.getMessage(),exp);
-				throw DAOUtility.getInstance().getDAOException(exp, "db.retrieve.data.error",
-				"AbstractJDBCDAOImpl.java "+query);
-			}
-
+	/**
+	 * Executes the HQL query. for given startIndex and max
+	 * records to retrieve
+	 * @param query  HQL query to execute
+	 * @param startIndex Starting index value
+	 * @param maxRecords max number of records to fetch
+	 * @param paramValues List of parameter values.
+	 * @return List of data.
+	 * @throws DAOException database exception.
+	 */
+	public List executeQuery(String query,Integer startIndex,
+			Integer maxRecords,LinkedList paramValues) throws DAOException
+	{
+		try
+		{
+			ResultSet resultSet = getQueryResultSet(query,maxRecords);
+			List resultData =  DAOUtility.getInstance().getListFromRS(resultSet);
+			closeStatement(resultSet);
+			return resultData;
 		}
-	public ResultSet getQueryResultSet(String sql, int maxRecords)
-			throws DAOException {
+		catch(SQLException exp)
+		{
+			logger.info(exp.getMessage(),exp);
+			throw DAOUtility.getInstance().getDAOException(exp, "db.retrieve.data.error",
+			"AbstractJDBCDAOImpl.java "+query);
+		}
+
+	}
+
+	/**
+	 * This method will be called to retrieve result set for specified number of records.
+	 * @param sql : SQL
+	 * @param maxRecords max number of records.
+	 * @return the result set.
+	 * @throws DAOException database exception.
+	 */
+	private ResultSet getQueryResultSet(String sql, int maxRecords)
+			throws DAOException
+	{
 
 		logger.debug("Get Query RS [" + sql +"] MAX RECORDS =["+maxRecords + "]");
 		try
@@ -1063,6 +1084,5 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 			throw DAOUtility.getInstance().getDAOException(exp, "db.retrieve.data.error",
 			"AbstractJDBCDAOImpl.java  "+sql);
 		}
-	
 	}
 }
