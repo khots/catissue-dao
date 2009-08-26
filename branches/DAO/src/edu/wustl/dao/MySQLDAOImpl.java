@@ -31,5 +31,4 @@ public class MySQLDAOImpl extends AbstractJDBCDAOImpl
 		executeUpdate(query.toString());
 
 	}
-
 }

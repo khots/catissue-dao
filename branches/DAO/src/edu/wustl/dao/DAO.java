@@ -8,6 +8,7 @@
 
 package edu.wustl.dao;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import edu.wustl.common.beans.SessionDataBean;
@@ -182,13 +183,18 @@ public interface DAO
 	 * @throws DAOException : It will throw DAOException.
 	 */
 	void beginTransaction() throws DAOException;
+
 	/**
-	 * Executes query and returns specified number of records
-	 * @param query - query to execute
-	 * @param maxRecords - max records to be returned
-	 * @return result list
-	 * @throws DAOException
+	 * Executes the HQL query. for given startIndex and max
+	 * records to retrieve
+	 * @param query  HQL query to execute
+	 * @param startIndex Starting index value
+	 * @param maxRecords max number of records to fetch
+	 * @param paramValues List of parameter values.
+	 * @return List of data.
+	 * @throws DAOException database exception.
 	 */
-	List executeQuery(String query,int maxRecords)
-	throws DAOException;
+	List executeQuery(String query,Integer startIndex,
+			Integer maxRecords,LinkedList paramValues) throws DAOException;
+
 }
