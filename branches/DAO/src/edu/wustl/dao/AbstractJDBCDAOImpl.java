@@ -501,12 +501,12 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	public StatementData executeUpdate(String query) throws DAOException
 	{
 		logger.debug("Execute query.");
-		Statement statement = null;
+		PreparedStatement statement = null;
 		StatementData statementData = new StatementData();
 		try
 		{
-			statement = connection.createStatement();
-			statementData.setRowCount(statement.executeUpdate(query));
+			statement = connection.prepareStatement(query);
+			statementData.setRowCount(statement.executeUpdate());
 			setStatementData(statement, statementData,query,false);
 			return statementData ;
 		}
@@ -547,7 +547,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		StatementData statementData = new StatementData();
 		try
 		{
-			statement = createStatement();
+			statement = createStatement(query);
 			statementData.setRowCount(statement.executeUpdate(query,Statement.RETURN_GENERATED_KEYS));
 			setStatementData(statement, statementData,query,true);
 			return statementData ;
@@ -591,7 +591,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		logger.debug("Get Query RS");
 		try
 		{
-			Statement statement = createStatement();
+			Statement statement = createStatement(sql);
 			ResultSet resultSet = statement.executeQuery(sql);
 			return resultSet;
 		}
@@ -712,14 +712,15 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 
 	/**
 	 * This method will return the Query prepared statement.
+	 * @param query : query
 	 * @return Statement statement.
 	 * @throws DAOException :Generic Exception
 	 */
-	private Statement createStatement()throws DAOException
+	private Statement createStatement(String query)throws DAOException
 	{
 		try
 		{
-			Statement statement = (Statement)connection.createStatement();
+			Statement statement = (Statement)connection.prepareStatement(query);
 			openedStmts.add(statement);
 			return statement;
 		}
@@ -1073,7 +1074,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		logger.debug("Get Query RS [" + sql +"] MAX RECORDS =["+maxRecords + "]");
 		try
 		{
-			Statement statement = createStatement();
+			Statement statement = createStatement(sql);
 			statement.setMaxRows(maxRecords);
 			ResultSet resultSet = statement.executeQuery(sql);
 			return resultSet;
