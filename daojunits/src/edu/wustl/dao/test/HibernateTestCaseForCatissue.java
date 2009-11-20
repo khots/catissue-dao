@@ -12,6 +12,7 @@ import test.Order;
 import test.Person;
 import test.User;
 import edu.wustl.common.exception.ApplicationException;
+import edu.wustl.common.util.global.CommonServiceLocator;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.DAO;
 import edu.wustl.dao.QueryWhereClause;
@@ -26,6 +27,7 @@ import edu.wustl.dao.daofactory.IDAOFactory;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.DAOConstants;
 import edu.wustl.dao.util.HibernateMetaData;
+import edu.wustl.dao.util.HibernateMetaDataFactory;
 
 
 /**
@@ -721,22 +723,25 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 			Object object = HibernateMetaData.getProxyObjectImpl(user);
 				assertNotNull("Proxy Object retrieved is null :"+object);
 
-			String tableName = HibernateMetaData.getTableName(object.getClass());
+			String applicationName = CommonServiceLocator.getInstance().getAppName() ;
+			HibernateMetaData hibernateMetaData = HibernateMetaDataFactory.
+								getHibernateMetaData(applicationName) ;	
+			String tableName = hibernateMetaData.getTableName(object.getClass());
 				assertTrue("Table name is empty",
 						!tableName.equals(DAOConstants.TRAILING_SPACES));
 
-			String rootTableName = HibernateMetaData.getRootTableName(object.getClass());
+			String rootTableName = hibernateMetaData.getRootTableName(object.getClass());
 			assertTrue("Root Table name is empty",
 						!rootTableName.equals(DAOConstants.TRAILING_SPACES));
 
-			String columnName = HibernateMetaData.getColumnName(object.getClass(),"lastName");
+			String columnName = hibernateMetaData.getColumnName(object.getClass(),"lastName");
 				assertTrue("Column Name is empty",
 						!columnName.equals(DAOConstants.TRAILING_SPACES));
 
-			int colWidth = HibernateMetaData.getColumnWidth(object.getClass(),"lastName");
+			int colWidth = hibernateMetaData.getColumnWidth(object.getClass(),"lastName");
 			assertTrue("colWidth  is 0",colWidth > 0);
 
-			String className = HibernateMetaData.getClassName("Test_user");
+			String className = hibernateMetaData.getClassName("Test_user");
 				assertTrue("NO class name obtained ",
 						!className.equals(DAOConstants.TRAILING_SPACES));
 
