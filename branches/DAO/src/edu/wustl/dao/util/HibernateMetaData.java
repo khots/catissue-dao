@@ -29,13 +29,13 @@ public final class HibernateMetaData
 	/**
 	 * creates a single object.
 	 */
-	private static HibernateMetaData hibernateMData = new HibernateMetaData();;
+	private static HibernateMetaData hibernateMData ; //= new HibernateMetaData();;
 	/**
 	 * Private constructor.
 	 */
-	private HibernateMetaData()
+	protected HibernateMetaData(Configuration cfg)
 	{
-
+		this.cfg = cfg ;
 	}
 	/**
 	 * returns the single object.
@@ -49,7 +49,7 @@ public final class HibernateMetaData
 	/**
 	 * Configuration file .
 	 */
-	private static Configuration cfg;
+	private Configuration cfg;
 	/**
 	 * Mappings.
 	 *//*
@@ -58,10 +58,10 @@ public final class HibernateMetaData
 	 *
 	 * @param configuration :
 	 */
-	public static void initHibernateMetaData(Configuration configuration)
+	/*public static void initHibernateMetaData(Configuration configuration)
 	{
 		cfg = configuration;
-	}
+	}*/
 
 	/**
 	 * This method will return domain object from proxy Object.
@@ -84,11 +84,11 @@ public final class HibernateMetaData
 	 * @param classObj : Class of the object
 	 * @return tableName : It returns the table name associated to the class.
 	 */
-	public static String getTableName(Class classObj)
+	public String getTableName(Class classObj)
 	{
 
 		String tableName = "";
-		Table tbl = cfg.getClassMapping(classObj.getName()).getTable();
+		Table tbl = this.cfg.getClassMapping(classObj.getName()).getTable();
 		if(tbl!=null)
 		{
 			tableName = tbl.getName();
@@ -101,10 +101,10 @@ public final class HibernateMetaData
 	 * @param classObj :Class of the object
 	 * @return :It returns the root table name associated to the class.
 	 */
-	public static String getRootTableName(Class classObj)
+	public String getRootTableName(Class classObj)
 	{
 		String rootTableName = "";
-		Table tbl = cfg.getClassMapping(classObj.getName()).getRootTable();
+		Table tbl = this.cfg.getClassMapping(classObj.getName()).getRootTable();
 		if(tbl!=null)
 		{
 			rootTableName = tbl.getName();
@@ -119,11 +119,11 @@ public final class HibernateMetaData
 	 * @param attributeName :attribute of the given class
 	 * @return returns the Column Name mapped to the attribute.
 	 */
-	public static String getColumnName(Class classObj, String attributeName)
+	public String getColumnName(Class classObj, String attributeName)
 	{
 		String columnName = DAOConstants.TRAILING_SPACES;
 		boolean foundColName = false;
-		Iterator<Object> iter = cfg.getClassMapping(classObj.getName()).getPropertyClosureIterator();
+		Iterator<Object> iter = this.cfg.getClassMapping(classObj.getName()).getPropertyClosureIterator();
 		while(iter.hasNext())
 		{
 			columnName = getColumnName(attributeName,iter);
@@ -168,10 +168,10 @@ public final class HibernateMetaData
 	 * @param attributeName :attribute of the given class
 	 * @return returns the Column Name mapped to the attribute.
 	 */
-	private static String getColumName(Class classObj, String attributeName)
+	private String getColumName(Class classObj, String attributeName)
 	{
 		String columnName = DAOConstants.TRAILING_SPACES;
-		Property property = cfg.getClassMapping(classObj.getName()).getIdentifierProperty();
+		Property property = this.cfg.getClassMapping(classObj.getName()).getIdentifierProperty();
 		if(property.getName().equals(attributeName))
 		{
 			Iterator<Object> colIt = property.getColumnIterator();//y("id").getColumnIterator();
@@ -190,9 +190,9 @@ public final class HibernateMetaData
 	 * @param attributeName Name of the attribute.
 	 * @return The width of the column. Returns width of the column or zero.
 	 */
-	public static int getColumnWidth(Class classObj, String attributeName)
+	public int getColumnWidth(Class classObj, String attributeName)
 	{
-		Iterator iterator = cfg.getClassMapping(classObj.getName()).getPropertyClosureIterator();
+		Iterator iterator = this.cfg.getClassMapping(classObj.getName()).getPropertyClosureIterator();
 		int colLength = 50;
 		while(iterator.hasNext())
 		{
@@ -219,9 +219,9 @@ public final class HibernateMetaData
 	 * @param tableName :Name of table.
 	 * @return the class name
 	 */
-	public static  String getClassName(String tableName)
+	public String getClassName(String tableName)
 	{
-		Iterator iter = cfg.getClassMappings();
+		Iterator iter = this.cfg.getClassMappings();
 		PersistentClass persistentClass;
 		String className = DAOConstants.TRAILING_SPACES;
 		while(iter.hasNext())
