@@ -184,17 +184,4 @@ public interface DAO
 	 */
 	void beginTransaction() throws DAOException;
 
-	/**
-	 * Executes the HQL query. for given startIndex and max
-	 * records to retrieve
-	 * @param query  HQL query to execute
-	 * @param startIndex Starting index value
-	 * @param maxRecords max number of records to fetch
-	 * @param paramValues List of parameter values.
-	 * @return List of data.
-	 * @throws DAOException database exception.
-	 */
-	List executeQuery(String query,Integer startIndex,
-			Integer maxRecords,LinkedList paramValues) throws DAOException;
-
 }
