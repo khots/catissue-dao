@@ -8,8 +8,7 @@ import org.hibernate.cfg.Configuration;
 /**
  * This class keeps a map of all the HibernateMetaData instances for all the
  * applications.
- * @author niharika_sharma
- *
+ * @author Shrishail_kalshetty
  */
 public class HibernateMetaDataFactory
 {
@@ -17,11 +16,10 @@ public class HibernateMetaDataFactory
 	 * Map to cache all the instances of HibernateMetaData.
 	 */
 	public static final Map<String, HibernateMetaData> metaDataCache=new HashMap<String, HibernateMetaData>();
-	
 	/**
 	 * This method adds the Configuration to the map for the given application.
-	 * @param appName
-	 * @param cfg
+	 * @param appName appName
+	 * @param cfg cfg
 	 */
 	public static final void setHibernateMetaData(String appName, Configuration cfg)
 	{
@@ -32,11 +30,11 @@ public class HibernateMetaDataFactory
 			metaDataCache.put(appName, hibernateMetaData);
 		}
 	}
-	
+
 	/**
 	 * This method returns the Configuration given the application name.
-	 * @param appName
-	 * @return
+	 * @param appName appName
+	 * @return HibernateMetaData HibernateMetaData
 	 */
 	public static HibernateMetaData getHibernateMetaData(String appName)
 	{
@@ -51,5 +49,4 @@ public class HibernateMetaDataFactory
 		}
 		return metadata;
 	}
-	
 }

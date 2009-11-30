@@ -396,6 +396,10 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * @return The ResultSet containing all the rows from the table represented
 	 * in sourceObjectName which satisfies the where condition
 	 * @throws DAOException : DAOException
+	 * @deprecated Avoid use of Statement.
+	 * public ResultSet retrieveResultSet(String sourceObjectName, String[] selectColumnName,
+	 * QueryWhereClause queryWhereClause,LinkedList<ColumnValueBean> columnValueBeans,
+	 * boolean onlyDistinctRows) throws DAOException
 	 */
 	public ResultSet retrieveResultSet(String sourceObjectName, String[] selectColumnName,
 			QueryWhereClause queryWhereClause,
@@ -412,10 +416,65 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * field values passed in the passed session.
 	 * @param sourceObjectName This will holds the object name.
 	 * @param selectColumnName An array of field names in select clause.
+	 * @param queryWhereClause This will hold the where clause.It holds following:
+	 * 1.whereColumnName : An array of field names in where clause.
+	 * 2.whereColumnCondition : The comparison condition for the field values.
+	 * 3.whereColumnValue : An array of field values.
+	 * 4.joinCondition : The join condition.
+	 * @param onlyDistinctRows True if only distinct rows should be selected
+	 * @param columnValueBeans : This will hold column name, value and column type.
+	 * @return The ResultSet containing all the rows from the table represented
+	 * in sourceObjectName which satisfies the where condition
+	 * @throws DAOException : DAOException
+	 */
+	public ResultSet retrieveResultSet(String sourceObjectName, String[] selectColumnName,
+			QueryWhereClause queryWhereClause,LinkedList<ColumnValueBean> columnValueBeans,
+			 boolean onlyDistinctRows) throws DAOException
+	{
+		StringBuffer queryStrBuff = generateSQL(sourceObjectName,
+		selectColumnName, queryWhereClause, onlyDistinctRows);
+		ResultSet resultSet =  getResultSet(queryStrBuff.toString(), columnValueBeans, null);
+		closeStatement(resultSet);
+		return resultSet;
+
+	}
+
+	/**
+	 * Retrieves the records for class name in sourceObjectName according to
+	 * field values passed in the passed session.
+	 * @param sourceObjectName This will holds the object name.
+	 * @param selectColumnName An array of field names in select clause.
+	 * @param queryWhereClause This will hold the where clause.
+	 * @param onlyDistinctRows True if only distinct rows should be selected
+	 * @param columnValueBeans This will hold the column name value and it's type.
+	 * @return The list containing all the rows from the table represented
+	 * in sourceObjectName which satisfies the where condition
+	 * @throws DAOException : DAOException
+	 */
+	public List retrieve(String sourceObjectName, String[] selectColumnName,
+			QueryWhereClause queryWhereClause,LinkedList<ColumnValueBean> columnValueBeans,
+			 boolean onlyDistinctRows) throws DAOException
+	{
+		logger.debug("Inside retrieve method");
+		StringBuffer queryStrBuff = generateSQL(sourceObjectName,
+		selectColumnName, queryWhereClause, onlyDistinctRows);
+		List list  = executeQuery(queryStrBuff.toString(), null, columnValueBeans);
+		return list;
+	}
+
+	/**
+	 * Retrieves the records for class name in sourceObjectName according to
+	 * field values passed in the passed session.
+	 * @param sourceObjectName This will holds the object name.
+	 * @param selectColumnName An array of field names in select clause.
 	 * @param queryWhereClause This will hold the where clause.
 	 * @param onlyDistinctRows True if only distinct rows should be selected
 	 * @return The list containing all the rows from the table represented
 	 * in sourceObjectName which satisfies the where condition
+	 * @deprecated : Avoid use of this, it will be removed in future.
+	 * public List retrieve(String sourceObjectName, String[] selectColumnName,
+	 * QueryWhereClause queryWhereClause,LinkedList<ColumnValueBean> columnValueBeans,
+	 * boolean onlyDistinctRows) throws DAOException
 	 * @throws DAOException : DAOException
 	 */
 	public List retrieve(String sourceObjectName, String[] selectColumnName,
@@ -497,16 +556,19 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * or (2) 0 for SQL statements that return nothing
 	 * @param query :Holds the query string.
 	 * @throws DAOException : DAOException.
+	 * @deprecated : Avoid use of this, it will be removed in future.
+	 * public StatementData executeUpdate(String sql,LinkedList<ColumnValueBean> columnValueBeans)
+	 * throws DAOException
 	 */
 	public StatementData executeUpdate(String query) throws DAOException
 	{
 		logger.debug("Execute query.");
-		PreparedStatement statement = null;
+		Statement statement = null;
 		StatementData statementData = new StatementData();
 		try
 		{
-			statement = connection.prepareStatement(query);
-			statementData.setRowCount(statement.executeUpdate());
+			statement = connection.createStatement();
+			statementData.setRowCount(statement.executeUpdate(query));
 			setStatementData(statement, statementData,query,false);
 			return statementData ;
 		}
@@ -539,6 +601,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * or (2) 0 for SQL statements that return nothing
 	 * @param query :Holds the query string.
 	 * @throws DAOException : DAOException.
+	 * @deprecated : Avoid use of Statement.
 	 */
 	public StatementData executeUpdateWithGeneratedKey(String query) throws DAOException
 	{
@@ -547,7 +610,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		StatementData statementData = new StatementData();
 		try
 		{
-			statement = createStatement(query);
+			statement = createStatement();
 			statementData.setRowCount(statement.executeUpdate(query,Statement.RETURN_GENERATED_KEYS));
 			setStatementData(statement, statementData,query,true);
 			return statementData ;
@@ -585,13 +648,17 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * @param sql SQL statement.
 	 * @throws DAOException generic DAOException.
 	 * @return ResultSet : ResultSet
+	 * @deprecated : Avoid use of this, it will be removed in future,
+	 * use public ResultSet getResultSet(String sql,
+	 * LinkedList<ColumnValueBean> columnValueBeans, Integer maxRecords)
+	 * throws DAOException
 	 */
 	public ResultSet getQueryResultSet(String sql) throws DAOException
 	{
 		logger.debug("Get Query RS");
 		try
 		{
-			Statement statement = createStatement(sql);
+			Statement statement = createStatement();
 			ResultSet resultSet = statement.executeQuery(sql);
 			return resultSet;
 		}
@@ -608,6 +675,9 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 *@param query :
 	 *@throws DAOException :Generic DAOException.
 	 *@return list
+	 *@deprecated : Avoid use of this, it will be removed in future,
+	 *use public List executeQuery(String query,
+	 *Integer maxRecords,LinkedList<ColumnValueBean> columnValueBeans) throws DAOException
 	 */
 	public List executeQuery(String query) throws DAOException
 	{
@@ -632,18 +702,65 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	/**
 	 * This method will be called to execute query.
 	 * @param sql query string.
-	 * @param columnValueBeanSet :Bean having column name ,
+	 * @param columnValueBeans :Bean having column name ,
+	 * column value,and column type.
+	 * @throws DAOException :Generic Exception
+	 */
+	public void executeUpdate(String sql,LinkedList<LinkedList<ColumnValueBean>> columnValueBeans)
+	throws DAOException
+	{
+		PreparedStatement stmt = null;
+		try
+		{
+			//validate SQL.
+			validateSql(sql, columnValueBeans);
+
+			//Initialize Statement.
+			 stmt = getPreparedStatement(sql);
+
+			Iterator<LinkedList<ColumnValueBean>> columnValueBeanItr = columnValueBeans.iterator();
+
+			while(columnValueBeanItr.hasNext())
+			{
+				LinkedList<ColumnValueBean> ColumnValueBeans =
+					columnValueBeanItr.next();
+				//Populate Statement.
+				populateStatement(ColumnValueBeans, stmt);
+				stmt.executeUpdate();
+			}
+
+		}
+		catch (SQLException sqlExp)
+		{
+			sqlExp.printStackTrace();
+			logger.info(sqlExp.getMessage(),sqlExp);
+			throw DAOUtility.getInstance().getDAOException(sqlExp, "db.update.data.error",
+			"AbstractJDBCDAOImpl.java   "+sql);
+		}
+		finally
+		{
+			closePreparedStmt(stmt);
+		}
+	}
+
+	/**
+	 * This method will be called to execute query.
+	 * @param sql query string.
+	 * @param columnValueBeans :Bean having column name ,
 	 * column value,and column type.
 	 * @return (1) the row count for INSERT,UPDATE or DELETE statements
 	 * or (2) 0 for SQL statements that return nothing
 	 * @throws DAOException :Generic Exception
+	 * @deprecated : Avoid use of this it will be removed in future,
+	 * use public void executeUpdate(String sql,LinkedList<LinkedList<ColumnValueBean>> columnValueBeans)
+	 * throws DAOException
 	 */
-	public StatementData executeUpdate(String sql,LinkedList<ColumnValueBean> columnValueBeanSet)
+	public StatementData executeUpdate(String sql,LinkedList<ColumnValueBean> columnValueBeans)
 	throws DAOException
 	{
 		try
 		{
-			if(!sql.contains("?") || columnValueBeanSet == null || columnValueBeanSet.isEmpty())
+			if(!sql.contains("?") || columnValueBeans == null || columnValueBeans.isEmpty())
 			{
 				throw DAOUtility.getInstance().getDAOException(null, "db.prepstmt.param.error",
 				"AbstractJDBCDAOImpl.java  "+sql);
@@ -651,7 +768,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 
 			PreparedStatement stmt = getPreparedStatement(sql);
 
-			Iterator<ColumnValueBean> colValItr =  columnValueBeanSet.iterator();
+			Iterator<ColumnValueBean> colValItr =  columnValueBeans.iterator();
 			int index = 1;
 			while(colValItr.hasNext())
 			{
@@ -691,6 +808,99 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 
 
 	/**
+	 * Populate statement with values.
+	 * @param columnValueBeans columnValueBeans
+	 * @param stmt statement instance.
+	 * @throws SQLException SQLException
+	 * @throws DAOException DAOException
+	 */
+	private void populateStatement(
+			LinkedList<ColumnValueBean> columnValueBeans,
+			PreparedStatement stmt) throws SQLException, DAOException
+	{
+		if(columnValueBeans != null)
+		{
+			Iterator<ColumnValueBean> colValItr =  columnValueBeans.iterator();
+			int index = 1;
+			while(colValItr.hasNext())
+			{
+				ColumnValueBean colValueBean = colValItr.next();
+
+				if(colValueBean.getColumnType() == DBTypes.DATE)
+				{
+					stmt.setDate(index,setDateToPrepStmt(colValueBean));
+				}
+				else if(colValueBean.getColumnType() == DBTypes.TIMESTAMP)
+				{
+					stmt.setTimestamp(index,setTimeStampToPrepStmt(colValueBean));
+				}
+				else
+				{
+					stmt.setObject(index, colValueBean.getColumnValue());
+				}
+
+				index += 1;
+			}
+		}
+	}
+
+	/**
+	 * Validate SQL and data for invalid or malicious code before initializing prepared statement.
+	 * @param sql Query with '?' to initialize the prepared statement.
+	 * @param columnValueBeans Beans having column name, type and data types.
+	 * @throws DAOException DAOException
+	 */
+	private void validateSql(String sql,
+			LinkedList<LinkedList<ColumnValueBean>> columnValueBeans) throws DAOException
+	{
+
+		if(!sql.contains("?") || columnValueBeans == null || columnValueBeans.isEmpty())
+		{
+			throw DAOUtility.getInstance().getDAOException(null, "db.prepstmt.param.error",
+			sql);
+		}
+		Iterator<LinkedList<ColumnValueBean>> columValueBeansItr = columnValueBeans.iterator();
+		while(columValueBeansItr.hasNext())
+		{
+			LinkedList<ColumnValueBean> beans = columValueBeansItr.next();
+			checkforInvalidData(sql, beans);
+		}
+	}
+
+	/**
+	 * This method will be called to check for invalid/malicious data.
+	 * @param sql : Query having '?' as parameters
+	 * @param beans : having column name, value and column type.
+	 * @throws DAOException : database exception.
+	 */
+	private void checkforInvalidData(String sql,
+			LinkedList<ColumnValueBean> beans) throws DAOException
+	{
+		Iterator<ColumnValueBean> beansIter = beans.iterator();
+		while(beansIter.hasNext())
+		{
+			ColumnValueBean bean = beansIter.next();
+			for(int counter =0; counter < DAOConstants.INVALID_DATA.length;counter++)
+			{
+				if(bean.getColumnValue() instanceof String &&
+					(bean.getColumnValue().toString()).trim()
+					.toLowerCase()
+					.contains(DAOConstants.INVALID_DATA[counter].trim().toLowerCase()))
+				{
+
+					logger.error("SQl : "+sql+"" +
+						"  Invalid data : "+ bean.getColumnValue().toString()+
+				    	" Encountered invalid character character :" +
+				    	DAOConstants.INVALID_DATA[counter]);
+					throw DAOUtility.getInstance().getDAOException(null,
+					"db.malicious.data.encountered",bean.getColumnValue().toString()+
+					":"+DAOConstants.INVALID_DATA[counter]);
+				}
+			}
+		}
+	}
+
+	/**
 	 * @param stmt statement instance.
 	 * @param statementData statement data
 	 * @param sql query string
@@ -712,15 +922,14 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 
 	/**
 	 * This method will return the Query prepared statement.
-	 * @param query : query
 	 * @return Statement statement.
 	 * @throws DAOException :Generic Exception
 	 */
-	private Statement createStatement(String query)throws DAOException
+	private Statement createStatement()throws DAOException
 	{
 		try
 		{
-			Statement statement = (Statement)connection.prepareStatement(query);
+			Statement statement = (Statement)connection.createStatement();
 			openedStmts.add(statement);
 			return statement;
 		}
@@ -807,6 +1016,30 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 			{
 				preparedStatement.close();
 				preparedStatement = null;
+			}
+		}
+		catch(SQLException sqlExp)
+		{
+			logger.info(sqlExp.getMessage(),sqlExp);
+			throw DAOUtility.getInstance().getDAOException(sqlExp, "db.stmt.close.error",
+					"AbstractJDBCDAOImpl.java ");
+		}
+	}
+
+	/**
+	 * Closes the prepared statement if open.
+	 * @param statement statement
+	 * @throws DAOException : DAO exception
+	 */
+	private void closePreparedStmt(Statement statement) throws DAOException
+	{
+
+		try
+		{
+			if(statement != null)
+			{
+				statement.close();
+				statement = null;
 			}
 		}
 		catch(SQLException sqlExp)
@@ -919,7 +1152,6 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 */
 	public String getStrTodateFunction()
 	{
-
 		return databaseProperties.getStrTodateFunction();
 	}
 
@@ -933,7 +1165,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	public List retrieve(String sourceObjectName) throws DAOException
 	{
 		logger.debug("Inside retrieve method");
-		return retrieve(sourceObjectName, null, null,false);
+		return retrieve(sourceObjectName, null, null,null,false);
 	}
 
 	/**
@@ -948,7 +1180,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	public List retrieve(String sourceObjectName, String[] selectColumnName) throws DAOException
 	{
 		logger.debug("Inside retrieve method");
-		return retrieve(sourceObjectName, selectColumnName,null,false);
+		return retrieve(sourceObjectName, selectColumnName,null,null,false);
 	}
 
 	/**
@@ -965,7 +1197,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 			boolean onlyDistinctRows) throws DAOException
 	{
 		logger.debug("Inside retrieve method");
-		return retrieve(sourceObjectName, selectColumnName,null,
+		return retrieve(sourceObjectName, selectColumnName,null,null,
 				onlyDistinctRows);
 	}
 
@@ -979,6 +1211,10 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * @return The ResultSet containing all the rows according to the columns specified
 	 * from the table represented in sourceObjectName which satisfies the where condition
 	 * @throws DAOException : DAOException
+	 * @deprecated : Avoid use of this method this will be removed in future.
+	 * Use public List retrieve(String sourceObjectName,
+	 * String[] selectColumnName, QueryWhereClause queryWhereClause,
+	 * LinkedList<ColumnValueBean> columnValueBeans)throws DAOException
 	 */
 	public List retrieve(String sourceObjectName,
 			String[] selectColumnName, QueryWhereClause queryWhereClause)
@@ -986,6 +1222,26 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	{
 		logger.debug("Inside retrieve method");
 		return retrieve(sourceObjectName, selectColumnName,queryWhereClause,false);
+	}
+
+	/**
+	 * Returns the ResultSet containing all the rows according to the columns specified
+	 * from the table represented in sourceObjectName as per the where clause.
+	 * @param sourceObjectName The table name.
+	 * @param selectColumnName The column names in select clause.
+	 * @param queryWhereClause The where condition clause which holds the where column name,
+	 * value and conditions applied
+	 * @param columnValueBeans This will hold colum name value and type.
+	 * @return The ResultSet containing all the rows according to the columns specified
+	 * from the table represented in sourceObjectName which satisfies the where condition
+	 * @throws DAOException : DAOException
+	 */
+	public List retrieve(String sourceObjectName,
+			String[] selectColumnName, QueryWhereClause queryWhereClause,
+			LinkedList<ColumnValueBean> columnValueBeans)throws DAOException
+	{
+		logger.debug("Inside retrieve method");
+		return retrieve(sourceObjectName, selectColumnName,queryWhereClause,columnValueBeans,false);
 	}
 
 	/**
@@ -998,6 +1254,9 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * @return The ResultSet containing all the rows from the table represented
 	 * in sourceObjectName which satisfies the where condition
 	 * @throws DAOException : DAOException
+	 * @deprecated : Avoid use of this method this will be removed in future.
+	 * Use public List retrieve(String sourceObjectName, String whereColumnName,
+			Object whereColumnValue,LinkedList<ColumnValueBean> columnValueBeans)
 	 */
 	public List retrieve(String sourceObjectName, String whereColumnName, Object whereColumnValue)
 			throws DAOException
@@ -1010,6 +1269,32 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 
 		return retrieve(sourceObjectName, selectColumnName,queryWhereClause,false);
 	}
+
+	/**
+	 * Returns the ResultSet containing all the rows from the table represented in sourceObjectName
+	 * according to the where clause.It will create the where condition clause which holds where column name,
+	 * value and conditions applied.
+	 * @param sourceObjectName The table name.
+	 * @param columnValueBeans This will hold column name value and type.
+	 * @param whereColumnName The column names in where clause.
+	 * @param whereColumnValue The column values in where clause.
+	 * @return The ResultSet containing all the rows from the table represented
+	 * in sourceObjectName which satisfies the where condition
+	 * @throws DAOException : DAOException
+	 */
+	public List retrieve(String sourceObjectName, String whereColumnName,
+			Object whereColumnValue,LinkedList<ColumnValueBean> columnValueBeans)
+			throws DAOException
+	{
+		logger.debug("Inside retrieve method");
+		String[] selectColumnName = null;
+
+		QueryWhereClause queryWhereClause = new QueryWhereClause(sourceObjectName);
+		queryWhereClause.addCondition(new EqualClause(whereColumnName,whereColumnValue,sourceObjectName));
+
+		return retrieve(sourceObjectName, selectColumnName,queryWhereClause, columnValueBeans, false);
+	}
+
 
 	/**
 	 * This method has been added to close statement for which resultset is returned.
@@ -1040,6 +1325,9 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * @param paramValues List of parameter values.
 	 * @return List of data.
 	 * @throws DAOException database exception.
+	 * @deprecated : Avoid use of this it will be removed in future,
+	 * Use public List executeQuery(String query,
+	 * Integer maxRecords,LinkedList<ColumnValueBean> columnValueBeans) throws DAOException
 	 */
 	public List executeQuery(String query,Integer startIndex,
 			Integer maxRecords,LinkedList paramValues) throws DAOException
@@ -1047,6 +1335,34 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		try
 		{
 			ResultSet resultSet = getQueryResultSet(query,maxRecords);
+			List resultData =  DAOUtility.getInstance().getListFromRS(resultSet);
+			closeStatement(resultSet);
+			return resultData;
+		}
+		catch(SQLException exp)
+		{
+			logger.info(exp.getMessage(),exp);
+			throw DAOUtility.getInstance().getDAOException(exp, "db.retrieve.data.error",
+			"AbstractJDBCDAOImpl.java "+query);
+		}
+
+	}
+
+	/**
+	 * Executes the HQL query. for given startIndex and max
+	 * records to retrieve.
+	 * @param query  HQL query to execute
+	 * @param maxRecords max number of records to fetch
+	 * @param columnValueBeans columnValueBeans
+	 * @return List of data.
+	 * @throws DAOException database exception.
+	  */
+	public List executeQuery(String query,
+			Integer maxRecords,LinkedList<ColumnValueBean> columnValueBeans) throws DAOException
+	{
+		try
+		{
+			ResultSet resultSet = getResultSet(query,columnValueBeans,maxRecords);
 			List resultData =  DAOUtility.getInstance().getListFromRS(resultSet);
 			closeStatement(resultSet);
 			return resultData;
@@ -1074,7 +1390,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		logger.debug("Get Query RS [" + sql +"] MAX RECORDS =["+maxRecords + "]");
 		try
 		{
-			Statement statement = createStatement(sql);
+			Statement statement = createStatement();
 			statement.setMaxRows(maxRecords);
 			ResultSet resultSet = statement.executeQuery(sql);
 			return resultSet;
@@ -1085,5 +1401,56 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 			throw DAOUtility.getInstance().getDAOException(exp, "db.retrieve.data.error",
 			"AbstractJDBCDAOImpl.java  "+sql);
 		}
+	}
+
+	/**
+	 * This method will be called to get the result set.
+	 * @param sql SQL statement.
+	 * @param columnValueBeans columnValueBeans
+	 * @param maxRecords maxRecords
+	 * @throws DAOException generic DAOException.
+	 * @return ResultSet : ResultSet
+	 */
+	public ResultSet getResultSet(String sql,
+			LinkedList<ColumnValueBean> columnValueBeans, Integer maxRecords) throws DAOException
+	{
+		logger.debug("Get Query RS [" + sql +"] MAX RECORDS =["+maxRecords + "]");
+		PreparedStatement statement = null;
+		try
+		{
+			//validate SQL.
+			if(columnValueBeans != null && !columnValueBeans.isEmpty())
+			{
+				if(!sql.contains("?"))
+				{
+					throw DAOUtility.getInstance().getDAOException(null,
+							"db.prepstmt.param.error",sql);
+				}
+				checkforInvalidData(sql, columnValueBeans);
+			}
+
+			//Initialize Statement.
+			statement = getPreparedStatement(sql);
+
+			//Populate Statement.
+			populateStatement(columnValueBeans, statement);
+
+			//set the max row size.
+			if(maxRecords != null)
+			{
+				statement.setMaxRows(maxRecords.intValue());
+			}
+			//Execute Query.
+			ResultSet resultSet = statement.executeQuery();
+
+			return resultSet;
+		}
+		catch (SQLException exp)
+		{
+			logger.info(exp.getMessage(),exp);
+			throw DAOUtility.getInstance().getDAOException(exp, "db.retrieve.data.error",
+			"AbstractJDBCDAOImpl.java  "+sql);
+		}
+
 	}
 }

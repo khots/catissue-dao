@@ -128,4 +128,16 @@ public final class DAOConstants extends CommonConstants
 	public static final String CLOSING_BRACKET_OPERATOR = ")";
 */
 
+	  /**
+	    * SQL injection : Reject input with following characters.
+	    * EXECUTE, EXEC, or sp_executesql, DELETE, DROP
+	    * ;  :Query delimiter.
+	    * '  :Character data string delimiter.
+		* -- : Comment delimiter.
+		* xp_ : Used at the start of the name of catalog-extended stored procedures, such as xp_cmdshell.
+	    * /*..*/ /*:Comment delimiters. Text between /* and *//*is not evaluated by the server.
+	    */
+	 public static final String[] INVALID_DATA = {"execute", "exec","sp_executesql",
+		 "delete","drop",";","'","--","xp_","/*","*/"};
+
 }
