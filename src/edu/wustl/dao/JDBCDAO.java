@@ -309,22 +309,4 @@ public interface JDBCDAO extends DAO
 			String[] selectColumnName, QueryWhereClause queryWhereClause,
 			LinkedList<ColumnValueBean> columnValueBeans)throws DAOException;
 
-	 /**
-	 * Returns the ResultSet containing all the rows from the table represented in sourceObjectName
-	 * according to the where clause.It will create the where condition clause which holds where column name,
-	 * value and conditions applied.
-	 * @param sourceObjectName The table name.
-	 * @param columnValueBeans This will hold column name value and type.
-	 * @param whereColumnName The column names in where clause.
-	 * @param whereColumnValue The column values in where clause.
-	 * @return The ResultSet containing all the rows from the table represented
-	 * in sourceObjectName which satisfies the where condition
-	 * @throws DAOException : DAOException
-	*/
-	List retrieve(String sourceObjectName, String whereColumnName,
-				Object whereColumnValue,LinkedList<ColumnValueBean> columnValueBeans)
-				throws DAOException;
-
-
-
 }

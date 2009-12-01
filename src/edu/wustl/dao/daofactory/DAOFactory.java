@@ -29,7 +29,6 @@ import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.connectionmanager.IConnectionManager;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.DAOUtility;
-import edu.wustl.dao.util.HibernateMetaData;
 import edu.wustl.dao.util.HibernateMetaDataFactory;
 
 
