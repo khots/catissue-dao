@@ -8,7 +8,6 @@
 
 package edu.wustl.dao;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import edu.wustl.common.beans.SessionDataBean;
@@ -58,6 +57,8 @@ public interface DAO
 	 * @param onlyDistinctRows true if only distinct rows should be selected.
 	 * @return the list of all source objects that satisfy the search conditions.
 	 * @throws DAOException generic DAOException.
+	 * @deprecated : Avoid using these methods in case of JDBC, these are specific to Hibernate.
+	 * Will move them in Hibernate DAO in next release.
 	 */
 
 	List retrieve(String sourceObjectName,String[] selectColumnName,
@@ -108,6 +109,8 @@ public interface DAO
 	 * 4.joinCondition join condition between two columns. (AND, OR)
 	 * @return the list of all source objects that satisfy the search conditions.
 	 * @throws DAOException generic DAOException.
+	 * @deprecated : Avoid using these methods in case of JDBC, these are specific to Hibernate.
+	 * Will move them in Hibernate DAO in next release.
 	 */
 
 	List retrieve(String sourceObjectName,
