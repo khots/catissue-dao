@@ -122,8 +122,8 @@
 		<mkdir dir="${report.dir}/reports/daoTestReports/HtmlReports"/>
 		
 		<junit printsummary="yes" fork="yes">
-			<formatter type="xml"/>
-			 <sysproperty key="net.sourceforge.cobertura.datafile" file="${cobertura.location}/coverage.ser" />
+			<formatter type="xml" />
+			 <sysproperty key="net.sourceforge.cobertura.datafile" file="${cobertura.location}/cobertura.ser" />
 						
 			<!--	Note the classpath order: instrumented classes are before the
 				original (uninstrumented) classes.  This is important.
@@ -134,7 +134,7 @@
 						
 			<classpath>
 				<fileset dir="${lib.dir}">
-					<exclude name="DAO.jar"/>
+					<exclude name="DAO-1.1.5.jar"/>
 					<include name="*.jar"/>
 				</fileset>
 			</classpath>
