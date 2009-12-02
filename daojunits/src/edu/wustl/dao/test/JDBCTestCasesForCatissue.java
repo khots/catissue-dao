@@ -116,7 +116,7 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 			jdbcDAO.openSession(null);
 			StringBuffer strbuff = new StringBuffer();
 			strbuff.append("update test_user set EMAIL_ADDRESS ='abc@per.co.in'" +
-					" where FIRST_NAME = 'john'");
+					" where FIRST_NAME = 'Srikanth'");
 			jdbcDAO.executeUpdate(strbuff.toString());
 			jdbcDAO.commit();
 		//	jdbcDAO.closeSession();
@@ -634,7 +634,7 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 		try
 		{
 			jdbcDAO.openSession(null);
-			LinkedList<ColumnValueBean> list = insertData(10000,"kalpana","thakur");
+			LinkedList<ColumnValueBean> list = insertData(10000,"kalpana","thakur",1);
 
 			String sql = "insert into person (identifier,first_name,second_name,age,address_id,account_id,birth_date,isAvailable )" +
 			" values (?,?,?,?,?,?,?,? )";
@@ -660,20 +660,103 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 
 	}
 
+	@Test
+	public void testExecuteUpdateforPreparedStatement()
+	{
 
-	private LinkedList<ColumnValueBean> insertData(int identifier,String firstName,String lastName) {
+		try
+		{
+			jdbcDAO.openSession(null);
+
+			LinkedList<LinkedList<ColumnValueBean>> allbeans = new LinkedList<LinkedList<ColumnValueBean>>();
+			
+			for(int i=45; i<=50 ;i++)
+			{
+				
+				LinkedList<ColumnValueBean> list = insertData(i,"kalpana","thakur",i);
+				allbeans.add(list);
+			}
+			String sql = "insert into person (identifier,first_name,second_name,age,address_id,account_id,birth_date,isAvailable )" +
+			" values (?,?,?,?,?,?,?,? )";
+			jdbcDAO.executeUpdate(sql, allbeans);
+			jdbcDAO.commit();
+		}
+		catch(Exception exp)
+		{
+			assertFalse("Failed while updating object ::", true);
+			exp.printStackTrace();
+		}
+		finally
+		{
+			try
+			{
+				jdbcDAO.closeSession();
+			}
+			catch (DAOException e)
+			{
+
+				e.printStackTrace();
+			}
+		}
+
+	}
+
+	@Test
+	public void testExecuteUpdateforMaliciousData()
+	{
+
+		try
+		{
+			jdbcDAO.openSession(null);
+
+			LinkedList<LinkedList<ColumnValueBean>> allbeans = new LinkedList<LinkedList<ColumnValueBean>>();
+
+			for(int i=51; i<=53 ;i++)
+			{
+
+				LinkedList<ColumnValueBean> list = insertData(i,"kalpana'delete","thakur;abc",i);
+				allbeans.add(list);
+			}
+			String sql = "insert into person (identifier,first_name,second_name,age,address_id,account_id,birth_date,isAvailable )" +
+			" values (?,?,?,?,?,?,?,? )";
+			jdbcDAO.executeUpdate(sql, allbeans);
+			jdbcDAO.commit();
+		}
+		catch(Exception exp)
+		{
+			assertFalse("Failed while updating object ::", false);
+			exp.printStackTrace();
+		}
+		finally
+		{
+			try
+			{
+				jdbcDAO.closeSession();
+			}
+			catch (DAOException e)
+			{
+
+				e.printStackTrace();
+			}
+		}
+
+	}
+
+
+
+	private LinkedList<ColumnValueBean> insertData(int identifier,String firstName,String lastName,int i) {
 		LinkedList<ColumnValueBean> list = new LinkedList<ColumnValueBean>();
 
 		ColumnValueBean colValueBean = new ColumnValueBean("identifier",
-				identifier,DBTypes.INTEGER);
+				identifier+1,DBTypes.INTEGER);
 		list.add(colValueBean);
 
 		ColumnValueBean first_name = new ColumnValueBean("first_name",
-				firstName,DBTypes.STRING);
+				firstName+1,DBTypes.STRING);
 		list.add(first_name);
 
 		ColumnValueBean second_name = new ColumnValueBean("second_name",
-				lastName,DBTypes.STRING);
+				lastName+1,DBTypes.STRING);
 		list.add(second_name);
 
 		ColumnValueBean age = new ColumnValueBean("age",
@@ -711,7 +794,7 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 			for(int counter = 10; counter < 13; counter++ )
 			{
 				//jdbcDAO.openTransaction();
-				LinkedList<ColumnValueBean> list = insertData(counter,"sri"+counter,"adiga"+counter);
+				LinkedList<ColumnValueBean> list = insertData(counter,"sri"+counter,"adiga"+counter,1);
 
 				String insertSql = "insert into person (identifier,first_name,second_name,age,address_id,account_id,birth_date,isAvailable )" +
 				" values (?,?,?,?,?,?,?,? )";
@@ -754,7 +837,7 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 
                 jdbcDAO.openSession(null);
                 String sql = "select IDENTIFIER from test_user";
-                List list = ((DAO)jdbcDAO).executeQuery(sql,0,2,null);
+                List list = jdbcDAO.executeQuery(sql,0,2,null);
                 assertEquals(true, list.size()==2);
           }
           catch(Exception exp)
@@ -775,5 +858,77 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
           }
 
     }
+	@Test
+    public void testCaseExecuteQueryforMaliciousCode()
+    {
+
+          try
+          {
+                jdbcDAO.openSession(null);
+                String sql = "select FIRST_NAME, IDENTIFIER from test_user where IDENTIFIER = ? ";
+                ColumnValueBean colValueBean = new ColumnValueBean("IDENTIFIER",Long.valueOf(2),DBTypes.INTEGER);
+
+                LinkedList<ColumnValueBean> beans = new LinkedList<ColumnValueBean>();
+                beans.add(colValueBean);
+                List list = jdbcDAO.executeQuery(sql,null,beans);
+                assertEquals(true, list.size()==1);
+
+          }
+          catch(Exception exp)
+          {
+        	  	exp.printStackTrace();
+                assertFalse("Problem while executing query ::", true);
+          }
+          finally
+          {
+                try
+                {
+                	jdbcDAO.closeSession();
+                }
+                catch (DAOException e)
+                {
+                      e.printStackTrace();
+                }
+
+          }
+
+    }
+	
+	@Test
+    public void testCaseExecuteQueryWithPreparedStmt()
+    {
+
+          try
+          {
+                jdbcDAO.openSession(null);
+                String sql = "select FIRST_NAME, IDENTIFIER from test_user where FIRST_NAME = ? ";
+                ColumnValueBean colValueBean = new ColumnValueBean("IDENTIFIER","sri--",DBTypes.STRING);
+
+                LinkedList<ColumnValueBean> beans = new LinkedList<ColumnValueBean>();
+                beans.add(colValueBean);
+                List list = jdbcDAO.executeQuery(sql,null,beans);
+                System.out.println("list Size : : : "+list.size());
+
+          }
+          catch(Exception exp)
+          {
+        	  	exp.printStackTrace();
+                assertFalse("Problem while executing query ::", false);
+          }
+          finally
+          {
+                try
+                {
+                	jdbcDAO.closeSession();
+                }
+                catch (DAOException e)
+                {
+                      e.printStackTrace();
+                }
+
+          }
+
+    }
+
 
 }
