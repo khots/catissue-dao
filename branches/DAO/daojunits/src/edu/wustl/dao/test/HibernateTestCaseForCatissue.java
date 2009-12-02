@@ -15,6 +15,7 @@ import edu.wustl.common.exception.ApplicationException;
 import edu.wustl.common.util.global.CommonServiceLocator;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.DAO;
+import edu.wustl.dao.HibernateDAO;
 import edu.wustl.dao.QueryWhereClause;
 import edu.wustl.dao.condition.EqualClause;
 import edu.wustl.dao.condition.GreaterThenClause;
@@ -723,9 +724,8 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 			Object object = HibernateMetaData.getProxyObjectImpl(user);
 				assertNotNull("Proxy Object retrieved is null :"+object);
 
-			String applicationName = CommonServiceLocator.getInstance().getAppName() ;
 			HibernateMetaData hibernateMetaData = HibernateMetaDataFactory.
-								getHibernateMetaData(applicationName) ;	
+								getHibernateMetaData("caTissuecore") ;
 			String tableName = hibernateMetaData.getTableName(object.getClass());
 				assertTrue("Table name is empty",
 						!tableName.equals(DAOConstants.TRAILING_SPACES));
@@ -849,7 +849,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 
                 dao.openSession(null);
                 String sql = "select identifier from test.User";
-                List list = dao.executeQuery(sql,0,1,null);
+                List list = ((HibernateDAO)dao).executeQuery(sql,0,1,null);
                 assertEquals(true, list.size()==1);
           }
           catch(Exception exp)
