@@ -1,10 +1,7 @@
 package edu.wustl.dao.query.generator;
 
-import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -41,6 +38,18 @@ public class ColumnValueBean implements Comparable
 		this.columnType = columnType;
 
 	}
+
+	/**
+	 * @param columnName : column name
+	 * @param columnValue : column value
+	 */
+	public ColumnValueBean(String columnName,
+			Object columnValue)
+	{
+		this.columnName = columnName;
+		this.columnValue = columnValue;
+	}
+
 
 	/**
 	 * @param columnValue : column value
