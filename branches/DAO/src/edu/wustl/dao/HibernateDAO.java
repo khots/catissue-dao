@@ -6,7 +6,6 @@
  */
 package edu.wustl.dao;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -39,6 +38,6 @@ public interface HibernateDAO extends DAO
 	 * @throws DAOException database exception.
 	 */
 	List executeQuery(String query,Integer startIndex,
-			Integer maxRecords,LinkedList paramValues) throws DAOException;
+			Integer maxRecords,List paramValues) throws DAOException;
 
 }

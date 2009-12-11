@@ -28,7 +28,7 @@ public class QueryWhereClause
 	/**
 	 * Class Logger.
 	 */
-	private static org.apache.log4j.Logger logger = Logger.getLogger(AbstractJDBCDAOImpl.class);
+	private static Logger logger = Logger.getCommonLogger(AbstractJDBCDAOImpl.class);
 	/**
 	 * This will hold the complete where clause of query.
 	 */

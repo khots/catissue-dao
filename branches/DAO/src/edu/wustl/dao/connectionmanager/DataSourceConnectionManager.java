@@ -20,17 +20,24 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
+import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.DAOUtility;
 
+/**
+ * This class is used to obtain connection
+ * @author virender_mehta
+ *
+ */
 public class DataSourceConnectionManager implements IConnectionManager
 {
    /**
     * logger Logger - Generic logger.
     */
-	private transient Logger logger = Logger.getCommonLogger(DataSourceConnectionManager.class);
-	
+	private static final Logger logger =
+		Logger.getCommonLogger(DataSourceConnectionManager.class);
+
 	/**
 	 * Connection object
 	 */
@@ -127,7 +134,7 @@ public class DataSourceConnectionManager implements IConnectionManager
 	}
 
 
-	
+
 
 	/**
 	 *This method will be called to retrieved the current connection object.
@@ -139,16 +146,16 @@ public class DataSourceConnectionManager implements IConnectionManager
 		try
 		{
 			InitialContext ctx = new InitialContext();
-			DataSource ds = (DataSource) ctx.lookup(getDataSource());
-			conn = ds.getConnection();
+			DataSource dataSource = (DataSource) ctx.lookup(getDataSource());
+			conn = dataSource.getConnection();
 		}
 		catch (NamingException e)
 		{
 			logger.debug("Naming Exception");
 			throw DAOUtility.getInstance().getDAOException(e,
 					"db.dao.init.error", "DataSourceConnectionManager.java");
-		} 
-		catch (SQLException e) 
+		}
+		catch (SQLException e)
 		{
 			logger.debug("SQLException");
 			throw DAOUtility.getInstance().getDAOException(e,
@@ -170,11 +177,11 @@ public class DataSourceConnectionManager implements IConnectionManager
 	/**
 	 * This will called to retrieve configuration object.
 	 * @return configuration
-	 * @throws DAOException 
+	 * @throws DAOException
 	 */
 	public Configuration getConfiguration()
 	{
-		logger.debug("dao.method.without.implementation");
+		logger.error("dao.method.without.implementation");
 		return null;
 	}
 
@@ -184,7 +191,7 @@ public class DataSourceConnectionManager implements IConnectionManager
 	 */
 	public void setConfiguration(Configuration cfg)
 	{
-		logger.debug("dao.method.without.implementation");
+		logger.error("dao.method.without.implementation");
 	}
 
 	/**
@@ -193,7 +200,7 @@ public class DataSourceConnectionManager implements IConnectionManager
 	 */
 	public SessionFactory getSessionFactory()
 	{
-		logger.debug("dao.method.without.implementation");
+		logger.error("dao.method.without.implementation");
 		return null;
 	}
 
@@ -203,7 +210,7 @@ public class DataSourceConnectionManager implements IConnectionManager
 	 */
 	public void setSessionFactory(SessionFactory sessionFactory)
 	{
-		logger.debug("dao.method.without.implementation");
+		logger.error("dao.method.without.implementation");
 	}
 
 
@@ -243,20 +250,25 @@ public class DataSourceConnectionManager implements IConnectionManager
 		this.dataSource = dataSource;
 	}
 	/**
-	 * Begin transaction
+	 * Begin transaction.
+	 * @throws DAOException database exception.
 	 */
-	public void beginTransaction() 
+	public void beginTransaction() throws DAOException
 	{
-		logger.debug("dao.method.without.implementation");
+		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
+		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
+
 	}
-	
+
 	/**
-	 * Get Session
+	 * Get Session.
+	 * @return Session
+	 * @throws DAOException database exception.
 	 */
-	public Session getSession()
+	public Session getSession() throws DAOException
 	{
-		logger.debug("dao.method.without.implementation");
-		return null;
+		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
+		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
 	}
 
 }

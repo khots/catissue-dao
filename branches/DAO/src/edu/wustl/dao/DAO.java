@@ -187,4 +187,13 @@ public interface DAO
 	 */
 	void beginTransaction() throws DAOException;
 
+	/**
+	 * This method will be called when user need to audit and update the changes.
+	 * @param currentObj object with new changes
+	 * * @param previousObj persistent object fetched from database.
+	 * @throws DAOException : generic DAOException
+	 */
+	void update(Object currentObj,Object previousObj) throws DAOException;
+
+
 }

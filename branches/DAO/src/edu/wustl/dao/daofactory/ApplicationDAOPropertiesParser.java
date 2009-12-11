@@ -22,7 +22,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.DatabaseProperties;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.DAOUtility;
@@ -34,11 +33,6 @@ import edu.wustl.dao.util.DAOUtility;
 public class ApplicationDAOPropertiesParser
 {
 
-	/**
-	 * logger Logger - Generic logger.
-	 */
-	private static org.apache.log4j.Logger logger = Logger
-			.getLogger(ApplicationDAOPropertiesParser.class);
 
 	/**
 	 * Specifies application variables.
@@ -93,8 +87,8 @@ public class ApplicationDAOPropertiesParser
 			//parse using builder to get DOM representation of the XML file
 		InputStream inputStream = ApplicationDAOPropertiesParser.class.getClassLoader()
 		.getResourceAsStream(fileName);
-		Document doc = documentBuilder.parse(inputStream);
-		return doc;
+		return documentBuilder.parse(inputStream);
+		
 	}
 
 	/**
@@ -389,8 +383,7 @@ public class ApplicationDAOPropertiesParser
 	private Node getNextnode(Node childnode)
 	{
 		NamedNodeMap defaultConnMangrMap = childnode.getAttributes();
-		Node defaultConnMangrNode = defaultConnMangrMap.item(0);
-		return defaultConnMangrNode;
+		return defaultConnMangrMap.item(0);
 	}
 
 	/**

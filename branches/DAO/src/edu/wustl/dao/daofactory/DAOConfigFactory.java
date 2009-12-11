@@ -36,7 +36,7 @@ public class DAOConfigFactory
 	/**
 	 *Class Logger.
 	 */
-	private static org.apache.log4j.Logger logger = Logger.getLogger(DAOConfigFactory.class);
+	private static final Logger logger = Logger.getCommonLogger(DAOConfigFactory.class);
 	/**
 	 *This Map holds the DAO factory object as per the application.
 	 *Key of the Map is application name and it holds IDAOFactory type Object.

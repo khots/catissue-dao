@@ -28,7 +28,7 @@ public interface JDBCDAO extends DAO
 	 * but not auto-generated key(s)
 	 * @throws DAOException generic DAOException.
 	 * @deprecated : Avoid use of this, it will be removed in future.
-	 * public StatementData executeUpdate(String sql,LinkedList<ColumnValueBean> columnValueBeans)
+	 * public StatementData executeUpdate(String sql,List<ColumnValueBean> columnValueBeans)
 	 * throws DAOException
 	 */
 	StatementData executeUpdate(String sql) throws DAOException;
@@ -50,7 +50,7 @@ public interface JDBCDAO extends DAO
 	 * @return ResultSet : ResultSet
 	 * @deprecated : Avoid use of this, it will be removed in future,
 	 * use public ResultSet getResultSet(String sql,
-	 * LinkedList<ColumnValueBean> columnValueBeans, Integer maxRecords)
+	 * List<ColumnValueBean> columnValueBeans, Integer maxRecords)
 	 */
 	ResultSet getQueryResultSet(String sql)throws DAOException;
 
@@ -112,7 +112,7 @@ public interface JDBCDAO extends DAO
 	 * @throws DAOException : DAOException
 	 * @deprecated Avoid use of Statement.
 	 * public ResultSet retrieveResultSet(String sourceObjectName, String[] selectColumnName,
-	 * QueryWhereClause queryWhereClause,LinkedList<ColumnValueBean> columnValueBeans,
+	 * QueryWhereClause queryWhereClause,List<ColumnValueBean> columnValueBeans,
 	 * boolean onlyDistinctRows) throws DAOException
 	 */
 	ResultSet retrieveResultSet(String sourceObjectName, String[] selectColumnName,
@@ -128,10 +128,10 @@ public interface JDBCDAO extends DAO
 	 * or (2) 0 for SQL statements that return nothing
 	 * @throws DAOException :Generic Exception
 	 * @deprecated : Avoid use of this it will be removed in future,
-	 * use public void executeUpdate(String sql,LinkedList<LinkedList<ColumnValueBean>> columnValueBeans)
+	 * use public void executeUpdate(String sql,List<LinkedList<ColumnValueBean>> columnValueBeans)
 	 * throws DAOException
 	 */
-	StatementData executeUpdate(String sql,LinkedList<ColumnValueBean> columnValueBeans)
+	StatementData executeUpdate(String sql,List<ColumnValueBean> columnValueBeans)
 	throws DAOException;
 
 
@@ -146,10 +146,10 @@ public interface JDBCDAO extends DAO
 	 * @throws DAOException database exception.
 	 * @deprecated : Avoid use of this it will be removed in future,
 	 * Use public List executeQuery(String query,
-	 * Integer maxRecords,LinkedList<ColumnValueBean> columnValueBeans) throws DAOException
+	 * Integer maxRecords,List<ColumnValueBean> columnValueBeans) throws DAOException
 	 */
 	List executeQuery(String query,Integer startIndex,
-			Integer maxRecords,LinkedList paramValues) throws DAOException;
+			Integer maxRecords,List paramValues) throws DAOException;
 
 	/**
 	 * This method will be called to execute query.
@@ -233,7 +233,7 @@ public interface JDBCDAO extends DAO
 	 * @return ResultSet : ResultSet
 	 */
 	 ResultSet getResultSet(String sql,
-			LinkedList<ColumnValueBean> columnValueBeans, Integer maxRecords) throws DAOException;
+			List<ColumnValueBean> columnValueBeans, Integer maxRecords) throws DAOException;
 
 	/**
 	 * Executes the HQL query. for given startIndex and max
@@ -245,7 +245,7 @@ public interface JDBCDAO extends DAO
 	 * @throws DAOException database exception.
 	 */
 	 List executeQuery(String query,
-		Integer maxRecords,LinkedList<ColumnValueBean> columnValueBeans) throws DAOException;
+		Integer maxRecords,List<ColumnValueBean> columnValueBeans) throws DAOException;
 
 	 /**
 	  * This method will be called to execute query.
@@ -254,7 +254,7 @@ public interface JDBCDAO extends DAO
 	  * column value,and column type.
 	  * @throws DAOException :Generic Exception
 	  */
-	  void executeUpdate(String sql,LinkedList<LinkedList<ColumnValueBean>> columnValueBeans)
+	  void executeUpdate(String sql,List<LinkedList<ColumnValueBean>> columnValueBeans)
 	  throws DAOException;
 
 	  /**
@@ -274,7 +274,7 @@ public interface JDBCDAO extends DAO
 		* @throws DAOException : DAOException
 		*/
 	  ResultSet retrieveResultSet(String sourceObjectName, String[] selectColumnName,
-				QueryWhereClause queryWhereClause,LinkedList<ColumnValueBean> columnValueBeans,
+				QueryWhereClause queryWhereClause,List<ColumnValueBean> columnValueBeans,
 				 boolean onlyDistinctRows) throws DAOException;
 
 	/**
@@ -290,7 +290,7 @@ public interface JDBCDAO extends DAO
 	 * @throws DAOException : DAOException
 	 */
 	 List retrieve(String sourceObjectName, String[] selectColumnName,
-				QueryWhereClause queryWhereClause,LinkedList<ColumnValueBean> columnValueBeans,
+				QueryWhereClause queryWhereClause,List<ColumnValueBean> columnValueBeans,
 				 boolean onlyDistinctRows) throws DAOException;
 
 	/**
@@ -307,6 +307,6 @@ public interface JDBCDAO extends DAO
 	 */
 	 List retrieve(String sourceObjectName,
 			String[] selectColumnName, QueryWhereClause queryWhereClause,
-			LinkedList<ColumnValueBean> columnValueBeans)throws DAOException;
+			List<ColumnValueBean> columnValueBeans)throws DAOException;
 
 }

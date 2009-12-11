@@ -1,5 +1,10 @@
 package edu.wustl.dao.query.generator;
 
+/**
+ * This class meant for DB2.
+ * @author kalpana_thakur
+ *
+ */
 public class Db2SQLQueryGenerator extends AbstractQueryGenerator
 {
 

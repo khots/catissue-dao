@@ -30,17 +30,17 @@ public class OracleDAOImpl extends AbstractJDBCDAOImpl
 	 */
 	public void deleteTable(String tableName) throws DAOException
 	{
-		ResultSet rs = null;
+		ResultSet resultSet = null;
 		try
 		{
 
 			StringBuffer query = new StringBuffer("select tname from tab where tname='"
-					+ tableName.toString() + "'");
+					+ tableName + "'");
 
-			rs = getQueryResultSet(query.toString());
+			resultSet = getQueryResultSet(query.toString());
 
 			boolean isTableExists = DAOUtility.getInstance().
-			isResultSetExists(rs);
+			isResultSetExists(resultSet);
 
 			logger.debug("ORACLE :" + query.toString() + isTableExists);
 
@@ -49,13 +49,13 @@ public class OracleDAOImpl extends AbstractJDBCDAOImpl
 
 				logger.debug("Drop Table");
 				executeUpdate("DROP TABLE " +
-						tableName.toString() + " cascade constraints");
+						tableName + " cascade constraints");
 			}
 
 		}
 		finally
 		{
-			closeStatement(rs);
+			closeStatement(resultSet);
 		}
 	}
 
