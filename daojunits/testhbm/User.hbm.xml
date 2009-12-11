@@ -12,7 +12,7 @@
      <cache usage="read-write" />
     
    <id
-            name="identifier"
+            name="id"
             column="IDENTIFIER"
             type="long"
             length="30"
@@ -64,6 +64,27 @@
             length="255"
       />
      
+      <set
+            name="orderCollection"
+            table="test_order"
+           	lazy="false" 
+            inverse="true"
+            cascade="save-update,all-delete-orphan"
+            sort="unsorted"
+        >
+        
+        <cache usage="read-write" />
+
+              <key
+                  column="user_id"
+              />
+
+              <one-to-many
+                  class="test.Order"
+              />
+        </set>
+  
+              
     </class>
 
 </hibernate-mapping>

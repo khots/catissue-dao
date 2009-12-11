@@ -27,6 +27,8 @@
 	<property name="oracle.dialect.string" value="org.hibernate.dialect.Oracle9Dialect" />
 	<property name="mysql.dialect.string" value="org.hibernate.dialect.MySQLDialect" />
 	<property file="DAOInstall.properties"/>
+	<property name="mysql.dao.prop.filename" value="MySQLDAOProperties.xml" />
+	<property name="oracle.dao.prop.filename" value="OracleDAOProperties.xml" />
 
 	<path id="cobertura.classpath">
 			<fileset dir="${cobertura.lib}">
@@ -79,7 +81,7 @@
 					<replacefilter token="@@url@@" value="jdbc:mysql://${database.host}:${database.port}/${database.name}"/>
 					<replacefilter token="@@username@@" value="${database.username}"/>
 					<replacefilter token="@@password@@" value="${database.password}"/>
-				</replace>
+		</replace>
 		
 	</target>
 	
@@ -102,12 +104,18 @@
 				<equals arg1="mysql" arg2="${database.type}" />
 						 <then>
 							<antcall target="update:hibernate-cfg-mysql" />
+						 	<replace file="classes/ApplicationDAOProperties.xml">
+						 		<replacefilter token="${oracle.dao.prop.filename}" value="${mysql.dao.prop.filename}" />
+						 	</replace>
 						</then>
 						
 						<elseif>
 							<equals arg1="oracle" arg2="${database.type}" />
 							<then>
 								<antcall target="update:hibernate-cfg-oracle" />
+								<replace file="classes/ApplicationDAOProperties.xml">
+									<replacefilter token="${mysql.dao.prop.filename}" value="${oracle.dao.prop.filename}" />
+								</replace>
 							</then>
 						</elseif>
 						<else>
@@ -236,7 +244,7 @@
 						don't instrument the test classes.
 					-->
 					<include name="**/*.class" />
-					
+										
 				</fileset>
 			</cobertura-instrument>
 	</target>

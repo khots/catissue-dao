@@ -7,12 +7,12 @@
     <class
         name="test.Person"
         table="test_person"
-        lazy="true"
+        lazy="false"
     >
      <cache usage="read-write" />
     
    <id
-            name="identifier"
+            name="id"
             column="IDENTIFIER"
             type="long"
             length="30"
@@ -40,8 +40,7 @@
       <many-to-one
             name="address"
             class="test.Address"
-            cascade="none"
-             
+            cascade="save-update"
             update="true"
             insert="true"
             column="ADDRESS_ID"  lazy="false" 
@@ -49,7 +48,7 @@
         
         <set
             name="orderCollection"
-            table="xyz_user_order"
+            table="test_order"
            	lazy="false" 
             inverse="true"
             cascade="save-update,all-delete-orphan"

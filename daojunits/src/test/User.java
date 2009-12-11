@@ -1,6 +1,9 @@
 
 package test;
 
+import java.util.Collection;
+import java.util.HashSet;
+
 /**
  * @author kalpana_thakur
  *
@@ -11,7 +14,7 @@ public class User
 	/**
 	 * id.
 	 */
-    private Long identifier;
+    private Long id;
     /**
 	 * lastName.
 	 */
@@ -28,7 +31,10 @@ public class User
 	 * activityStatus.
 	 */
     private String activityStatus;
-
+    /**
+     * Role of the User
+     */
+    private Collection<Object> roleCollection = new HashSet<Object>() ;
     /**
      * @return activityStatus
      */
@@ -45,21 +51,7 @@ public class User
 		this.activityStatus = activityStatus;
 	}
 
-	/**
-	 * @return  identifier
-	 */
-	public Long getIdentifier()
-    {
-        return identifier;
-    }
-
-    /**
-     * @param id :
-     */
-    public void setIdentifier(Long id)
-    {
-        this.identifier = id;
-    }
+	
 
     /**
      * @return emailAddress
@@ -105,4 +97,57 @@ public class User
     {
         this.lastName = lastName;
     }
+    /**
+	 * @return the roleCollection
+	 */
+	public Collection<Object> getRoleCollection()
+	{
+		return roleCollection;
+	}
+	/**
+	 * @param roleCollection the roleCollection to set
+	 */
+	public void setRoleCollection(Collection<Object> roleCollection)
+	{
+		this.roleCollection = roleCollection;
+	}
+	/**
+	 * @return identifier.
+	 */
+    public Long getId()
+    {
+		return id;
+	}
+
+    /**
+	 * @param identifier :
+	 */
+	public void setId(Long identifier)
+	{
+		this.id = identifier;
+	}
+	/**
+	 * orderCollection.
+	 */
+	 private Collection<Object> orderCollection = new HashSet<Object>() ;
+
+	 /**
+	  * orderCollection.
+	  * @return orderCollection
+	  */
+	 public Collection<Object> getOrderCollection()
+	 {
+		return orderCollection;
+	 }
+
+	 /**
+	  * orderCollection.
+	  * @param orderCollection orderCollection
+	  */
+	public void setOrderCollection(Collection<Object> orderCollection)
+	{
+		this.orderCollection = orderCollection;
+	}
+
+
 }
