@@ -10,7 +10,7 @@ public class Address
 	/**
 	 * identifier.
 	 */
-    private Long identifier;
+    private Long id;
 
     /**
 	 * street.
@@ -21,17 +21,17 @@ public class Address
     /**
 	 * @return identifier.
 	 */
-    public Long getIdentifier()
+    public Long getId()
     {
-		return identifier;
+		return id;
 	}
 
     /**
 	 * @param identifier :
 	 */
-	public void setIdentifier(Long identifier)
+	public void setId(Long identifier)
 	{
-		this.identifier = identifier;
+		this.id = identifier;
 	}
 
 	/**

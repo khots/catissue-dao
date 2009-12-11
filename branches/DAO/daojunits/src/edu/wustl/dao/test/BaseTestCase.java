@@ -5,6 +5,7 @@ import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Test;
 
+import edu.wustl.common.audit.AuditManager;
 import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.daofactory.DAOConfigFactory;
@@ -38,6 +39,7 @@ public class BaseTestCase extends TestCase
 		{
 			daoConfigFactory = DAOConfigFactory.getInstance();
 			ErrorKey.init(":");
+			AuditManager.init();
 			System.setProperty("app.propertiesFile",System.getProperty("user.dir")+"/caTissueCore_Properties.xml");
 		}
 		catch (Exception e)

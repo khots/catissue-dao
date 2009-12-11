@@ -9,7 +9,7 @@ public class Order
 	/**
 	 * id.
 	 */
-    private Long identifier;
+    private Long id;
 
     /**
 	 * Person.
@@ -32,21 +32,45 @@ public class Order
 	{
 		this.person = person;
 	}
+	/**
+	 * user.
+	 */
+	private User user;
+
 
 	/**
-	 * @return : identifier
+	 * user.
+	 * @return user
 	 */
-	public Long getIdentifier()
+	public User getUser()
 	{
-		return identifier;
+		return user;
 	}
 
 	/**
+	 * user.
+	 * @param user user
+	 */
+	public void setUser(User user)
+	{
+		this.user = user;
+	}
+
+	/**
+	 * @return identifier.
+	 */
+    public Long getId()
+    {
+		return id;
+	}
+
+    /**
 	 * @param identifier :
 	 */
-	public void setIdentifier(Long identifier)
+	public void setId(Long identifier)
 	{
-		this.identifier = identifier;
+		this.id = identifier;
 	}
+
 
 }

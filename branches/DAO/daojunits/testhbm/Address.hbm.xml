@@ -12,7 +12,7 @@
      <cache usage="read-write" />
     
    <id
-            name="identifier"
+            name="id"
             column="IDENTIFIER"
             type="long"
             length="30"

@@ -27,6 +27,7 @@ ALTER TABLE test_person ADD constraint person_address_index foreign key (ADDRESS
 create table test_order (
 	 IDENTIFIER NUMBER(19,0) NOT NULL,  
 	 PERSON_ID NUMBER(19,0),
+ 	 USER_ID   NUMBER(19,0),
 	 primary key (IDENTIFIER)
 );
 
@@ -81,3 +82,63 @@ CREATE TABLE person (
           account_id NUMBER(19,0) default NULL,             
           PRIMARY KEY  (identifier)                       
         ) ;     
+
+
+
+drop table catissue_audit_event;
+CREATE TABLE catissue_audit_event (                                                                
+                        IDENTIFIER number(19,0) not null ,                                                   
+                        IP_ADDRESS varchar(20),                                                            
+                        EVENT_TIMESTAMP date ,                                                           
+                        USER_ID number(19,0),                                                                 
+                        COMMENTS varchar2(500),                                                                                  
+                        EVENT_TYPE varchar(200),                                                            
+                        PRIMARY KEY  (IDENTIFIER)                                                                  
+                        
+                      ) ;
+
+drop table catissue_audit_event_log;
+CREATE TABLE catissue_audit_event_log (                                                                          
+                            IDENTIFIER number(19,0) not null ,                                                              
+                            AUDIT_EVENT_ID number(19,0),                                                                        
+                            PRIMARY KEY  (IDENTIFIER),                                                                                     
+                            CONSTRAINT FK8BB672DF77F0B904 FOREIGN KEY (AUDIT_EVENT_ID) REFERENCES catissue_audit_event (IDENTIFIER)  
+                          );
+
+drop table catissue_data_audit_event_log;
+CREATE TABLE catissue_data_audit_event_log (                                                                               
+                                 IDENTIFIER number(19,0) not null ,                                                                              
+                                 OBJECT_IDENTIFIER number(19,0),                                                                               
+                                 OBJECT_NAME varchar(50),                                                                                    
+                                 PARENT_LOG_ID number(19,0),                                                                                   
+                                 PRIMARY KEY  (IDENTIFIER),                                                                                               
+                                 CONSTRAINT FK5C07745DC62F96A411 FOREIGN KEY (IDENTIFIER) REFERENCES catissue_audit_event_log (IDENTIFIER),         
+                                 CONSTRAINT FK5C07745DC62F96A412 FOREIGN KEY (PARENT_LOG_ID) REFERENCES catissue_data_audit_event_log (IDENTIFIER)  
+                               ) ;
+
+
+drop table catissue_audit_event_details;
+CREATE TABLE catissue_audit_event_details (                                                                              
+                                IDENTIFIER number(19,0) not null ,                                                                        
+                                ELEMENT_NAME varchar(150),                                                                                
+                                PREVIOUS_VALUE varchar(150),                                                                              
+                                CURRENT_VALUE varchar(500),                                                                               
+                                AUDIT_EVENT_LOG_ID number(19,0) ,                                                                            
+                                PRIMARY KEY  (IDENTIFIER),                                                                                             
+                                CONSTRAINT FK5C07745D34FFD77F FOREIGN KEY (AUDIT_EVENT_LOG_ID) REFERENCES catissue_audit_event_log (IDENTIFIER)  
+                              ) ;
+
+alter table test_order add constraint user_order_index foreign key (user_id) references test_user (IDENTIFIER);
+
+drop table temp_table;
+CREATE TABLE temp_table (              
+              Identifier number(19,0),  
+              Name varchar(250)     
+            ); 
+
+CREATE sequence CATISSUE_AUDIT_EVENT_PARAM_SEQ;
+CREATE sequence CATISSUE_AUDIT_EVENT_DET_SEQ;
+CREATE sequence CATISSUE_AUDIT_EVENT_LOG_SEQ;
+CREATE sequence LOGIN_EVENT_PARAM_SEQ;
+
+

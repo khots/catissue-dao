@@ -78,7 +78,7 @@
 <tr>  <td class="numLine">&nbsp;30</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="comment">         * @deprecated : Avoid use of this, it will be removed in future.</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;31</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;<span class="comment">         * public StatementData executeUpdate(String sql,LinkedList&lt;ColumnValueBean&gt; columnValueBeans)</span></pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * public StatementData executeUpdate(String sql,List&lt;ColumnValueBean&gt; columnValueBeans)</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;32</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="comment">         * throws DAOException</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;33</td>  <td class="nbHits">&nbsp;</td>
@@ -122,7 +122,7 @@
 <tr>  <td class="numLine">&nbsp;52</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="comment">         * use public ResultSet getResultSet(String sql,</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;53</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;<span class="comment">         * LinkedList&lt;ColumnValueBean&gt; columnValueBeans, Integer maxRecords)</span></pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * List&lt;ColumnValueBean&gt; columnValueBeans, Integer maxRecords)</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;54</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="comment">         */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;55</td>  <td class="nbHits">&nbsp;</td>
@@ -246,7 +246,7 @@
 <tr>  <td class="numLine">&nbsp;114</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="comment">         * public ResultSet retrieveResultSet(String sourceObjectName, String[] selectColumnName,</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;115</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;<span class="comment">         * QueryWhereClause queryWhereClause,LinkedList&lt;ColumnValueBean&gt; columnValueBeans,</span></pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * QueryWhereClause queryWhereClause,List&lt;ColumnValueBean&gt; columnValueBeans,</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;116</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="comment">         * boolean onlyDistinctRows) throws DAOException</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;117</td>  <td class="nbHits">&nbsp;</td>
@@ -278,13 +278,13 @@
 <tr>  <td class="numLine">&nbsp;130</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="comment">         * @deprecated : Avoid use of this it will be removed in future,</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;131</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;<span class="comment">         * use public void executeUpdate(String sql,LinkedList&lt;LinkedList&lt;ColumnValueBean&gt;&gt; columnValueBeans)</span></pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * use public void executeUpdate(String sql,List&lt;LinkedList&lt;ColumnValueBean&gt;&gt; columnValueBeans)</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;132</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="comment">         * throws DAOException</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;133</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="comment">         */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;134</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;        StatementData executeUpdate(String sql,LinkedList&lt;ColumnValueBean&gt; columnValueBeans)</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;        StatementData executeUpdate(String sql,List&lt;ColumnValueBean&gt; columnValueBeans)</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;135</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="keyword">throws</span> DAOException;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;136</td>  <td class="nbHits">&nbsp;</td>
@@ -314,13 +314,13 @@
 <tr>  <td class="numLine">&nbsp;148</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="comment">         * Use public List executeQuery(String query,</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;149</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;<span class="comment">         * Integer maxRecords,LinkedList&lt;ColumnValueBean&gt; columnValueBeans) throws DAOException</span></pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">         * Integer maxRecords,List&lt;ColumnValueBean&gt; columnValueBeans) throws DAOException</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;150</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="comment">         */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;151</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        List executeQuery(String query,Integer startIndex,</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;152</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;                        Integer maxRecords,LinkedList paramValues) <span class="keyword">throws</span> DAOException;</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;                        Integer maxRecords,List paramValues) <span class="keyword">throws</span> DAOException;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;153</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;154</td>  <td class="nbHits">&nbsp;</td>
@@ -488,7 +488,7 @@
 <tr>  <td class="numLine">&nbsp;235</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;         ResultSet getResultSet(String sql,</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;236</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;                        LinkedList&lt;ColumnValueBean&gt; columnValueBeans, Integer maxRecords) <span class="keyword">throws</span> DAOException;</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;                        List&lt;ColumnValueBean&gt; columnValueBeans, Integer maxRecords) <span class="keyword">throws</span> DAOException;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;237</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;238</td>  <td class="nbHits">&nbsp;</td>
@@ -512,7 +512,7 @@
 <tr>  <td class="numLine">&nbsp;247</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;         List executeQuery(String query,</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;248</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;                Integer maxRecords,LinkedList&lt;ColumnValueBean&gt; columnValueBeans) <span class="keyword">throws</span> DAOException;</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;                Integer maxRecords,List&lt;ColumnValueBean&gt; columnValueBeans) <span class="keyword">throws</span> DAOException;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;249</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;250</td>  <td class="nbHits">&nbsp;</td>
@@ -530,7 +530,7 @@
 <tr>  <td class="numLine">&nbsp;256</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="comment">          */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;257</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;          <span class="keyword">void</span> executeUpdate(String sql,LinkedList&lt;LinkedList&lt;ColumnValueBean&gt;&gt; columnValueBeans)</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;          <span class="keyword">void</span> executeUpdate(String sql,List&lt;LinkedList&lt;ColumnValueBean&gt;&gt; columnValueBeans)</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;258</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;          <span class="keyword">throws</span> DAOException;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;259</td>  <td class="nbHits">&nbsp;</td>
@@ -570,7 +570,7 @@
 <tr>  <td class="numLine">&nbsp;276</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;          ResultSet retrieveResultSet(String sourceObjectName, String[] selectColumnName,</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;277</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;                                QueryWhereClause queryWhereClause,LinkedList&lt;ColumnValueBean&gt; columnValueBeans,</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;                                QueryWhereClause queryWhereClause,List&lt;ColumnValueBean&gt; columnValueBeans,</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;278</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;                                 <span class="keyword">boolean</span> onlyDistinctRows) <span class="keyword">throws</span> DAOException;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;279</td>  <td class="nbHits">&nbsp;</td>
@@ -602,7 +602,7 @@
 <tr>  <td class="numLine">&nbsp;292</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;         List retrieve(String sourceObjectName, String[] selectColumnName,</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;293</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;                                QueryWhereClause queryWhereClause,LinkedList&lt;ColumnValueBean&gt; columnValueBeans,</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;                                QueryWhereClause queryWhereClause,List&lt;ColumnValueBean&gt; columnValueBeans,</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;294</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;                                 <span class="keyword">boolean</span> onlyDistinctRows) <span class="keyword">throws</span> DAOException;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;295</td>  <td class="nbHits">&nbsp;</td>
@@ -636,13 +636,13 @@
 <tr>  <td class="numLine">&nbsp;309</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;                        String[] selectColumnName, QueryWhereClause queryWhereClause,</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;310</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;                        LinkedList&lt;ColumnValueBean&gt; columnValueBeans)<span class="keyword">throws</span> DAOException;</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;                        List&lt;ColumnValueBean&gt; columnValueBeans)<span class="keyword">throws</span> DAOException;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;311</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;312</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;}</pre></td></tr>
 </table>
 
-<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 1.9 on 12/2/09 11:16 AM.</div>
+<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 1.9 on 12/11/09 6:59 PM.</div>
 </body>
 </html>

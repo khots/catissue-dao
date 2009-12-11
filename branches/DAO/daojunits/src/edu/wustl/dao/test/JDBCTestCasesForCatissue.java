@@ -11,7 +11,6 @@ import java.util.TreeSet;
 import org.junit.Test;
 
 import edu.wustl.common.util.logger.Logger;
-import edu.wustl.dao.DAO;
 import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.QueryWhereClause;
 import edu.wustl.dao.condition.EqualClause;
@@ -70,7 +69,7 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 		assertNotNull("DAO Object is null",jdbcDAO);
 	}
 
-	
+
 	 void fetch(String sql)
 	 {
 		 JDBCDAO jdbcDAO= null;
@@ -82,7 +81,7 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 			 jdbcDAO.openSession(null);
 
 			 ResultSet rs = jdbcDAO.getQueryResultSet(sql);
-			 
+
 			 while(rs.next())
 			 {
 				 System.out.println("rs.getInt(1)  :4 :"+rs.getInt(1) );
@@ -94,10 +93,10 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 			}
 			finally
 			{
-				try 
+				try
 				{
 					jdbcDAO.closeSession();
-				} 
+				}
 				catch (DAOException e)
 				{
 						e.printStackTrace();
@@ -118,7 +117,7 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 			strbuff.append("update test_user set EMAIL_ADDRESS ='abc@per.co.in'" +
 					" where FIRST_NAME = 'Srikanth'");
 			jdbcDAO.executeUpdate(strbuff.toString());
-			jdbcDAO.commit();
+
 		//	jdbcDAO.closeSession();
 		}
 		catch(Exception exp)
@@ -128,20 +127,18 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 		}
 		finally
 		{
-			try 
+			try
 			{
 				jdbcDAO.closeSession();
-			} 
+			}
 			catch (DAOException e)
 			{
-		
+
 				e.printStackTrace();
 			}
 		}
 	}
-	
-	
-	
+
 	/**
 	 * This test will assert the execution of query.
 	 */
@@ -177,13 +174,13 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 		}
 		finally
 		{
-			try 
+			try
 			{
 				jdbcDAO.closeSession();
-			} 
+			}
 			catch (DAOException e)
 			{
-		
+
 				e.printStackTrace();
 			}
 		}
@@ -209,13 +206,13 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 	  }
 	  finally
 		{
-			try 
+			try
 			{
 				jdbcDAO.closeSession();
-			} 
+			}
 			catch (DAOException e)
 			{
-		
+
 				e.printStackTrace();
 			}
 		}
@@ -234,7 +231,7 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 		QueryWhereClause queryWhereClause = new QueryWhereClause("test_user");
 		queryWhereClause.addCondition(new EqualClause("IDENTIFIER" , Long.valueOf(1)));
 	    List<Object> list = jdbcDAO.retrieve("test_user",null ,queryWhereClause,false);
-	    
+
 	 //   jdbcDAO.closeSession();
 	  	assertNotNull("No objects retrieved",list);
 		//assertTrue("No object retrieved ::",!list.isEmpty());
@@ -245,13 +242,13 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 	  }
 	  finally
 		{
-			try 
+			try
 			{
 				jdbcDAO.closeSession();
-			} 
+			}
 			catch (DAOException e)
 			{
-		
+
 				e.printStackTrace();
 			}
 		}
@@ -281,13 +278,13 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 	  }
 	  finally
 		{
-			try 
+			try
 			{
 				jdbcDAO.closeSession();
-			} 
+			}
 			catch (DAOException e)
 			{
-		
+
 				e.printStackTrace();
 			}
 		}
@@ -316,13 +313,13 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 		  }
 		  finally
 			{
-				try 
+				try
 				{
 					jdbcDAO.closeSession();
-				} 
+				}
 				catch (DAOException e)
 				{
-			
+
 					e.printStackTrace();
 				}
 			}
@@ -360,13 +357,13 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 		}
 		finally
 		{
-			try 
+			try
 			{
 				jdbcDAO.closeSession();
-			} 
+			}
 			catch (DAOException e)
 			{
-		
+
 				e.printStackTrace();
 			}
 		}
@@ -403,13 +400,13 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 		}
 		finally
 		{
-			try 
+			try
 			{
 				jdbcDAO.closeSession();
-			} 
+			}
 			catch (DAOException e)
 			{
-		
+
 				e.printStackTrace();
 			}
 		}
@@ -446,7 +443,7 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 		}
 		finally
 		{
-			try 
+			try
 			{
 				jdbcDAO.closeSession();
 			} 
@@ -490,7 +487,7 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 		}
 		finally
 		{
-			try 
+			try
 			{
 				jdbcDAO.closeSession();
 			} 
@@ -538,7 +535,7 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
 			} 
 			catch (DAOException e)
 			{
-
+		
 				e.printStackTrace();
 			}
 		}
@@ -914,6 +911,38 @@ public class JDBCTestCasesForCatissue extends BaseTestCase
           {
         	  	exp.printStackTrace();
                 assertFalse("Problem while executing query ::", false);
+          }
+          finally
+          {
+                try
+                {
+                	jdbcDAO.closeSession();
+                }
+                catch (DAOException e)
+                {
+                      e.printStackTrace();
+                }
+
+          }
+
+    }
+	
+	@Test
+    public void testCaseDeleteTable()
+    {
+
+          try
+          {
+        	  jdbcDAO.openSession(null);
+              jdbcDAO.deleteTable("temp_table");
+              jdbcDAO.commit();
+
+
+          }
+          catch(Exception exp)
+          {
+        	  	exp.printStackTrace();
+                assertFalse("Problem while executing query ::", true);
           }
           finally
           {

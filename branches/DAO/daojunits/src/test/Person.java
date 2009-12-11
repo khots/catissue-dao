@@ -12,7 +12,7 @@ public class Person
 	/**
 	 * id.
 	 */
-    private Long identifier;
+    private Long id;
 
     /**
      * name.
@@ -64,20 +64,21 @@ public class Person
 	}
 
 	/**
-	 * @return :
+	 * @return identifier.
 	 */
-	public Long getIdentifier()
-	{
-		return identifier;
+    public Long getId()
+    {
+		return id;
 	}
 
-	/**
+    /**
 	 * @param identifier :
 	 */
-	public void setIdentifier(Long identifier)
+	public void setId(Long identifier)
 	{
-		this.identifier = identifier;
+		this.id = identifier;
 	}
+
 
 
 	/**

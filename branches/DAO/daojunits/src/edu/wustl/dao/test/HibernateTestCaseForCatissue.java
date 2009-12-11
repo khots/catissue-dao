@@ -2,17 +2,18 @@ package edu.wustl.dao.test;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 
-import org.hibernate.Session;
 import org.junit.Test;
 
 import test.Address;
 import test.Order;
 import test.Person;
 import test.User;
+import test.UserRole;
+import edu.wustl.common.audit.AuditManager;
 import edu.wustl.common.exception.ApplicationException;
-import edu.wustl.common.util.global.CommonServiceLocator;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.DAO;
 import edu.wustl.dao.HibernateDAO;
@@ -24,6 +25,7 @@ import edu.wustl.dao.condition.LessThenClause;
 import edu.wustl.dao.condition.NotEqualClause;
 import edu.wustl.dao.condition.NotNullClause;
 import edu.wustl.dao.condition.NullClause;
+import edu.wustl.dao.daofactory.DAOConfigFactory;
 import edu.wustl.dao.daofactory.IDAOFactory;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.DAOConstants;
@@ -41,7 +43,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 	/**
 	 * Logger.
 	 */
-	private static org.apache.log4j.Logger logger = Logger.getLogger(HibernateTestCaseForCatissue.class);
+	private static Logger logger = Logger.getCommonLogger(HibernateTestCaseForCatissue.class);
 	/**
 	 * DAO instance.
 	 */
@@ -86,22 +88,137 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 	{
 		try
 		{
+			AuditManager.init();
 			dao.openSession(null);
 			Person person = new Person();
+			person.setName("Kalpana");
 
 			Address address = new Address();
 			address.setStreet("Street unknown");
-			dao.insert(address);
 			person.setAddress(address);
 
 			Collection<Object> orderCol = new HashSet<Object>();
-			Order order = new Order();
-			order.setPerson(person);
-
-			person.setName("Kalpana");
-			orderCol.add(order);
+			Order personOrder = new Order();
+			Order personOrder1 = new Order();
+			personOrder.setPerson(person);
+			personOrder1.setPerson(person);
+			orderCol.add(personOrder);
+			orderCol.add(personOrder1);
 			person.setOrderCollection(orderCol);
 			dao.insert(person);
+
+			
+						dao.commit();
+			//dao.closeSession();
+
+		}
+		catch(Exception exp)
+		{
+			ApplicationException appExp = (ApplicationException)exp;
+			appExp.printStackTrace();
+			logger.fatal(appExp.getLogMessage());
+			assertFalse("Failed while inserting object :", true);
+		}
+		finally
+		{
+			try
+			{
+				dao.closeSession();
+			}
+			catch (DAOException e)
+			{
+				e.printStackTrace();
+			}
+		}
+
+	}
+	/**
+	 * This test will assert that Object inserted successfully.
+	 */
+	@Test
+	public void testInsertUser()
+	{
+		try
+		{
+			dao.openSession(null);
+			User user = createUser();
+			dao.insert(user);
+			User user1 = createUser();
+			dao.insert(user1);
+			dao.commit();
+		}
+	catch(Exception exp)
+	{
+		ApplicationException appExp = (ApplicationException)exp;
+		appExp.printStackTrace();
+		logger.fatal(appExp.getLogMessage());
+		assertFalse("Failed while inserting object :", true);
+	}
+	finally
+	{
+		try
+		{
+			dao.closeSession();
+		}
+		catch (DAOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+	}
+
+
+	private User createUser()
+	{
+		User user = new User();
+		user.setEmailAddress("kalpana@kalpana.com");
+		user.setFirstName("kalpana");
+		user.setActivityStatus("Active");
+		user.setLastName("Thakur");
+
+		Collection<Object> userOrderColl = new HashSet<Object>();
+		Order userOrder = new Order();
+		Order userOrder1 = new Order();
+		userOrder.setUser(user);
+		userOrder1.setUser(user);
+		userOrderColl.add(userOrder);
+		userOrderColl.add(userOrder1);
+		user.setOrderCollection(userOrderColl);
+		return user;
+	}
+
+	/**
+	 * This test will assert that Object inserted successfully.
+	 */
+	@Test
+	public void testUpdateUser()
+	{
+		try
+		{
+			//AuditManager.init();
+			dao.openSession(null);
+
+			DAO newdao = DAOConfigFactory.getInstance().getDAOFactory("caTissuecore")
+			.getDAO();
+
+			newdao.openSession(null);
+			User oldUser = (User)
+			newdao.retrieveById(User.class.getName(), Long.valueOf(1));
+			newdao.closeSession();
+
+			User currentUser = new User();
+			currentUser.setId(oldUser.getId());
+
+			Collection collection = new HashSet();
+			collection.add(oldUser.getOrderCollection().iterator().next());
+			currentUser.setOrderCollection(collection);
+			currentUser.setEmailAddress(oldUser.getEmailAddress());
+			currentUser.setActivityStatus(oldUser.getActivityStatus());
+			currentUser.setLastName(oldUser.getLastName());
+			currentUser.setFirstName("Maria johns");
+
+
+			dao.update(currentUser,oldUser);
 			dao.commit();
 			//dao.closeSession();
 
@@ -109,6 +226,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 		catch(Exception exp)
 		{
 			ApplicationException appExp = (ApplicationException)exp;
+			appExp.printStackTrace();
 			logger.fatal(appExp.getLogMessage());
 			assertFalse("Failed while inserting object :", true);
 		}
@@ -127,41 +245,96 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 	}
 
 	/**
-	 * This test will assert that requested objects deleted successfully.
+	 * This test will assert that Object inserted successfully.
 	 */
 	@Test
-	public void testCaseDeleteObject()
+	public void testUpdatePerson()
 	{
-	  try
-	  {
-		  User user = new User();
-		  user.setIdentifier(Long.valueOf(2));
-		  dao.openSession(null);
-	  	  dao.delete(user);
-	  	  dao.commit();
-	  	//  dao.closeSession();
-	  	  System.out.println("Deleted object ::::");
-	  	assertTrue("Object deleted :", true);
-	  }
-	  catch(Exception exp)
-	  {
-		  System.out.println("Not Deleted object ::::");
-		  exp.printStackTrace();
-		  assertFalse("Failed while deleting object :", true);
-	  }
-	  finally
+		try
+		{
+			//AuditManager.init();
+			dao.openSession(null);
+
+			DAO newdao = DAOConfigFactory.getInstance().getDAOFactory("caTissuecore")
+			.getDAO();
+
+			newdao.openSession(null);
+			Person oldPerson = (Person)
+			newdao.retrieveById(Person.class.getName(), Long.valueOf(1));
+			newdao.closeSession();
+
+			Person currentPerson = new Person();
+			currentPerson.setId(oldPerson.getId());
+			currentPerson.setAddress(oldPerson.getAddress());
+			Collection collection = new HashSet();
+			collection.add(oldPerson.getOrderCollection().iterator().next());
+			currentPerson.setOrderCollection(collection);
+
+			currentPerson.setName("Kalpana Thakur");
+
+			dao.update(currentPerson,oldPerson);
+			dao.commit();
+			//dao.closeSession();
+
+		}
+		catch(Exception exp)
+		{
+			ApplicationException appExp = (ApplicationException)exp;
+			appExp.printStackTrace();
+			logger.fatal(appExp.getLogMessage());
+			assertFalse("Failed while inserting object :", true);
+		}
+		finally
 		{
 			try
 			{
 				dao.closeSession();
 			}
-			catch (DAOException e) 
+			catch (DAOException e)
 			{
 				e.printStackTrace();
 			}
 		}
 
 	}
+
+	/**
+	 * This test will assert that Object inserted successfully.
+	 */
+	@Test
+	public void testUpdateAuditablePerson()
+	{
+		try
+		{
+			//AuditManager.init();
+			dao.openSession(null);
+			Person person = (Person)
+			dao.retrieveById(Person.class.getName(), Long.valueOf(1));
+			person.setName("Kalpana Thakur !!!");
+
+			dao.update(person);
+			dao.commit();
+			//dao.closeSession();
+
+		}
+		catch(Exception exp)
+		{
+			assertFalse("Failed while inserting object :", false);
+		}
+		finally
+		{
+			try
+			{
+				dao.closeSession();
+			}
+			catch (DAOException e)
+			{
+				e.printStackTrace();
+			}
+		}
+
+	}
+	
 
 
 	
@@ -180,11 +353,16 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 		//  dao.commit();
 		 // dao.closeSession();
 
+		  User user2 = new User();
+		  Collection<Object> userRollCollection = new HashSet<Object>();
+		  UserRole userRoll = new UserRole();
+		  userRoll.setId(Long.valueOf(1));
+		  userRoll.setUser(user2);
 
-		  	User user2 = new User();
-		  	user2.setFirstName("sachin");
-		  	user2.setLastName("Lale");
-		  	user2.setEmailAddress("sach@lale.co.in");
+		  user2.setRoleCollection(userRollCollection)	;
+		  user2.setFirstName("sachin");
+		  user2.setLastName("Lale");
+		  user2.setEmailAddress("sach@lale.co.in");
 		//  dao.openSession(null);
 		  dao.insert(user2);
 		  dao.commit();
@@ -192,6 +370,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 		}
 		catch(Exception exp)
 		{
+			exp.printStackTrace();
 			assertFalse("Failed while inserting object :", true);
 		}
 		finally
@@ -208,45 +387,6 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 
 	}
 
-		/**
-	 * This test will assert that Object updated successfully.
-	 */
-	@Test
-	public void testCaseUpdateObject()
-	{
-		try
-		{
-
-		  User user = new User();
-		  user.setIdentifier(Long.valueOf(1));
-		  user.setFirstName("Srikanth");
-		  user.setLastName("Adiga");
-		  user.setEmailAddress("sri.adiga@persistent.co.in");
-
-		  dao.openSession(null);
-		  dao.update(user);
-		  dao.commit();
-		//  dao.closeSession();
-		}
-		catch(Exception exp)
-		{
-			assertFalse("Failed while updating object :", true);
-		}
-		finally
-		{
-			try
-			{
-				dao.closeSession();
-			}
-			catch (DAOException e) 
-			{
-				e.printStackTrace();
-			}
-		}
-
-
-	  }
-
 	/**
 	 * This test will assert  the retrieve used by catissuecore.
 	 */
@@ -260,7 +400,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 			String[] selectColumnName = null;
 			String sourceObjectName = "test.User";
 			Object [] colValues = {Long.valueOf(1),Long.valueOf(2)};
-			String[] whereColNames = {"lastName" , "identifier"};
+			String[] whereColNames = {"lastName" , "id"};
 			String[] whereColConditions = {DAOConstants.EQUAL,
 					DAOConstants.IN_CONDITION};
 			Object[] whereColValues = {"Naik",colValues};
@@ -271,7 +411,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 			list = dao.retrieve(sourceObjectName, selectColumnName,queryWhereClause,false);
 			assertNotNull("Object retrieved is null ",list);
 
-			String[] whereColNamesNew = {"identifier","lastName" };
+			String[] whereColNamesNew = {"id","lastName" };
 			String[] whereColConditionsNew = {DAOConstants.EQUAL,
 					DAOConstants.NOT_NULL_CONDITION};
 			Object[] whereColValuesNew = {Long.valueOf(1)};
@@ -345,7 +485,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 	  {
 	    dao.openSession(null);
 	    QueryWhereClause queryWhereClause = new QueryWhereClause("test.User");
-	    queryWhereClause.addCondition(new EqualClause("identifier" , Long.valueOf(1)));
+	    queryWhereClause.addCondition(new EqualClause("id" , Long.valueOf(1)));
 	    List<Object> list = dao.retrieve("test.User",null , queryWhereClause,false);
 
 	  //	dao.closeSession();
@@ -379,7 +519,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 	{
 	  try
 	  {
-		String[] selectColumnName = {"identifier","firstName","lastName","emailAddress"};
+		String[] selectColumnName = {"id","firstName","lastName","emailAddress"};
 		dao.openSession(null);
 	    List<Object> list = dao.retrieve("test.User", selectColumnName,null,false);
 	   // dao.closeSession();
@@ -406,7 +546,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 	}
 
 	/**
-	 * This test will assert that object will given identifier
+	 * This test will assert that object will given id
 	 * retrieved successfully.
 	 */
 	@Test
@@ -457,7 +597,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 			QueryWhereClause queryWhereClause = new QueryWhereClause(sourceObjectName);
 			queryWhereClause.addCondition(new INClause("firstName","JOHN,abhijit")).andOpr().
 			addCondition(new INClause("lastName",object,sourceObjectName)).orOpr().
-			addCondition(new NotEqualClause("identifier",Long.valueOf(1)));
+			addCondition(new NotEqualClause("id",Long.valueOf(1)));
 
 			dao.openSession(null);
 			List<Object> list = dao.retrieve(sourceObjectName, selectColumnName,
@@ -499,7 +639,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 			String[] selectColumnName = null;
 
 			QueryWhereClause queryWhereClause = new QueryWhereClause(sourceObjectName);
-			queryWhereClause.addCondition(new NotNullClause("identifier"))
+			queryWhereClause.addCondition(new NotNullClause("id"))
 			.orOpr().addCondition(new NotNullClause("lastName",sourceObjectName));
 
 
@@ -622,7 +762,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 		try
 		{
 			dao.openSession(null);
-			Object obj = (Object)dao.retrieveAttribute(User.class,"identifier",
+			Object obj = (Object)dao.retrieveAttribute(User.class,"id",
 					Long.valueOf(1),"emailAddress");
 		//	dao.closeSession();
 
@@ -663,13 +803,13 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 			String[] selectColumnName = null;
 
 			QueryWhereClause queryWhereClause = new QueryWhereClause(sourceObjectName);
-			queryWhereClause.addCondition(new INClause("identifier",colValues))
+			queryWhereClause.addCondition(new INClause("id",colValues))
 			.orOpr().addCondition(new NotNullClause("firstName")).orOpr()
 			.addCondition(new EqualClause("firstName","Washu")).orOpr().
-			addCondition(new LessThenClause("identifier",Long.valueOf(100))).orOpr().
-			addCondition(new LessThenClause("identifier",Long.valueOf(100),sourceObjectName)).orOpr()
-			.addCondition(new GreaterThenClause("identifier",Long.valueOf(100),sourceObjectName)).orOpr().
-			addCondition(new GreaterThenClause("identifier",Long.valueOf(1)));
+			addCondition(new LessThenClause("id",Long.valueOf(100))).orOpr().
+			addCondition(new LessThenClause("id",Long.valueOf(100),sourceObjectName)).orOpr()
+			.addCondition(new GreaterThenClause("id",Long.valueOf(100),sourceObjectName)).orOpr().
+			addCondition(new GreaterThenClause("id",Long.valueOf(1)));
 
 			dao.openSession(null);
 			List<Object> list = dao.retrieve(sourceObjectName, selectColumnName,queryWhereClause,false);
@@ -848,7 +988,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
           {
 
                 dao.openSession(null);
-                String sql = "select identifier from test.User";
+                String sql = "select id from test.User";
                 List list = ((HibernateDAO)dao).executeQuery(sql,0,1,null);
                 assertEquals(true, list.size()==1);
           }
@@ -872,6 +1012,44 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
           }
 
     }
+
+	/**
+	 * This test will assert that requested objects deleted successfully.
+	 */
+	@Test
+	public void testCaseDeleteObject()
+	{
+	  try
+	  {
+		  User user = new User();
+		  user.setId(Long.valueOf(3));
+		  dao.openSession(null);
+	  	  dao.delete(user);
+	  	  dao.commit();
+	  	//  dao.closeSession();
+	  	  System.out.println("Deleted object ::::");
+	  	assertTrue("Object deleted :", true);
+	  }
+	  catch(Exception exp)
+	  {
+		  System.out.println("Not Deleted object ::::");
+		  exp.printStackTrace();
+		  assertFalse("Failed while deleting object :", true);
+	  }
+	  finally
+		{
+			try
+			{
+				dao.closeSession();
+			}
+			catch (DAOException e) 
+			{
+				e.printStackTrace();
+			}
+		}
+
+	}
+
 
 
 }
