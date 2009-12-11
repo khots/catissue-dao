@@ -22,6 +22,7 @@ import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 
 import edu.wustl.common.util.logger.Logger;
+import edu.wustl.dao.AbstractDAOImpl;
 import edu.wustl.dao.AbstractJDBCDAOImpl;
 import edu.wustl.dao.DAO;
 import edu.wustl.dao.DatabaseProperties;
@@ -99,7 +100,7 @@ public class DAOFactory implements IDAOFactory
 	/**
 	 * Class logger.
 	 */
-	private static org.apache.log4j.Logger logger = Logger.getLogger(DAOFactory.class);
+	private static final Logger logger = Logger.getCommonLogger(DAOFactory.class);
 
 
 	/**
@@ -116,6 +117,7 @@ public class DAOFactory implements IDAOFactory
 		   DAO dao = (DAO)Class.forName(defaultDAOClassName).newInstance();
 		   IConnectionManager connManager = getDefaultConnManager(sessionFactory,configuration);
 		   dao.setConnectionManager(connManager);
+		   ((AbstractDAOImpl)dao).setApplicationName(applicationName);
 		   HibernateMetaDataFactory.setHibernateMetaData(applicationName,
 				   connManager.getConfiguration());
 		   return dao;
@@ -149,6 +151,7 @@ public class DAOFactory implements IDAOFactory
 			   jdbcDAO.setBatchSize(databaseProperties.getDefaultBatchSize());
 			   HibernateMetaDataFactory.setHibernateMetaData(applicationName,
 					   connManager.getConfiguration());
+			   ((AbstractDAOImpl)jdbcDAO).setApplicationName(applicationName);
 			   return jdbcDAO;
 		}
 		catch (Exception excp )
@@ -191,11 +194,14 @@ public class DAOFactory implements IDAOFactory
 	/**
 	 * @param sessionFactory :session factory object
 	 * @param configuration :configuration
-	 * @throws Exception : exception
 	 * @return IConnectionManager : connection manager.
+	 * @throws ClassNotFoundException  ClassNotFoundException
+	 * @throws IllegalAccessException  IllegalAccessException
+	 * @throws InstantiationException  InstantiationException
 	 */
 	private IConnectionManager getDefaultConnManager(SessionFactory sessionFactory,
-			Configuration configuration) throws Exception
+			Configuration configuration) throws InstantiationException,
+			IllegalAccessException, ClassNotFoundException
 	{
 		IConnectionManager connectionManager =
 			(IConnectionManager)Class.forName(defaultConnMangrName).newInstance();
@@ -211,11 +217,14 @@ public class DAOFactory implements IDAOFactory
 	/**
 	 * @param sessionFactory  session factory object
 	 * @param configuration configuration
-	 * @throws Exception exception
 	 * @return IConnectionManager : connection manager.
+	 * @throws ClassNotFoundException ClassNotFoundException
+	 * @throws IllegalAccessException IllegalAccessException
+	 * @throws InstantiationException InstantiationException
 	 */
 	private IConnectionManager getJDBCConnManager(SessionFactory sessionFactory,
-			Configuration configuration) throws Exception
+			Configuration configuration) throws
+			InstantiationException, IllegalAccessException, ClassNotFoundException
 	{
 		IConnectionManager connectionManager =
 			(IConnectionManager)Class.forName(jdbcConnMangrName).newInstance();

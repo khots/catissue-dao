@@ -13,7 +13,8 @@ public class Db2SQLDAOImpl  extends AbstractJDBCDAOImpl
 	/**
 	 * Logger.
 	 */
-	private static org.apache.log4j.Logger logger = Logger.getLogger(MySQLDAOImpl.class);
+	private static final Logger logger =
+		Logger.getCommonLogger(Db2SQLDAOImpl.class);
 
 
 	/**
@@ -22,11 +23,9 @@ public class Db2SQLDAOImpl  extends AbstractJDBCDAOImpl
 	 */
 	public void deleteTable(String tableName) throws DAOException
 	{
-		StringBuffer query;
-
 		logger.debug("Drop Table");
 		executeUpdate("DROP TABLE " +
-				tableName.toString() + " cascade constraints");
+				tableName+ " cascade constraints");
 
 	}
 }

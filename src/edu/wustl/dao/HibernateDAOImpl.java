@@ -11,7 +11,6 @@
 package edu.wustl.dao;
 
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -19,9 +18,12 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
+import edu.wustl.common.audit.AuditManager;
 import edu.wustl.common.beans.SessionDataBean;
+import edu.wustl.common.domain.AuditEvent;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.condition.EqualClause;
+import edu.wustl.dao.exception.AuditException;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.DAOUtility;
 import edu.wustl.dao.util.HibernateMetaData;
@@ -35,16 +37,21 @@ import edu.wustl.dao.util.NamedQueryParam;
 public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 {
 
-    /**
-     * logger Logger - Generic logger.
-     */
-      private static org.apache.log4j.Logger logger =
-           Logger.getLogger(HibernateDAOImpl.class);
+	/**
+  	* LOGGER Logger - class logger.
+  	*/
+  	private static final Logger logger =
+  		Logger.getCommonLogger(HibernateDAOImpl.class);
 
 	/**
 	 * specify Session instance.
 	 */
-     private Session session = null;
+     private Session session;
+
+     /**
+      * AuditManager for auditing.
+      */
+     private AuditManager auditManager;
 
 	/**
 	 * This method will be used to establish the session with the database.
@@ -56,6 +63,7 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 	{
 		logger.debug("Open the session");
 	 	session = connectionManager.getSession();
+	 	auditManager = new AuditManager(sessionDataBean,applicationName);
 	}
 
 	/**
@@ -67,6 +75,7 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 	{
 		logger.debug("Close the session");
 		connectionManager.closeSession();
+		auditManager = null;
 	}
 
 	/**
@@ -112,6 +121,8 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		try
 		{
 			session.save(obj);
+			auditManager.audit(obj,null,"INSERT");
+			insertAudit();
 		}
 		catch (HibernateException hibExp)
 		{
@@ -119,6 +130,12 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 			throw DAOUtility.getInstance().getDAOException(hibExp, "db.insert.data.error",
 			"HibernateDAOImpl.java ");
 
+		}
+		catch (AuditException exp)
+		{
+
+			throw DAOUtility.getInstance().getDAOException(exp, exp.getErrorKeyName(),
+					exp.getMsgValues());
 		}
 	}
 
@@ -132,6 +149,7 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		logger.debug("Update Object");
 		try
 		{
+			auditManager.isObjectAuditable(obj);
 			session.update(obj);
 		}
 		catch (HibernateException hibExp)
@@ -140,9 +158,55 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 			throw DAOUtility.getInstance().getDAOException(hibExp, "db.update.data.error",
 			"HibernateDAOImpl.java ");
 		}
+		catch (AuditException exp)
+		{
+			throw DAOUtility.getInstance().getDAOException(exp, exp.getErrorKeyName(),
+					exp.getMsgValues());
+		}
+	}
+
+	/**
+	 * This method will be called when user need to audit and update the changes.
+	 * @param currentObj object with new changes
+	 * * @param previousObj persistent object fetched from database.
+	 * @throws DAOException : generic DAOException
+	 */
+	public void update(Object currentObj,Object previousObj) throws DAOException
+	{
+		logger.debug("Update Object");
+		try
+		{
+			session.update(currentObj);
+			auditManager.audit(currentObj, previousObj,"UPDATE");
+			insertAudit();
+		}
+		catch (HibernateException hibExp)
+		{
+			logger.info(hibExp.getMessage(),hibExp);
+			throw DAOUtility.getInstance().getDAOException(hibExp, "db.update.data.error",
+			"HibernateDAOImpl.java ");
+		}
+		catch (AuditException exp)
+		{
+			throw DAOUtility.getInstance().getDAOException(exp, exp.getErrorKeyName(),
+					exp.getMsgValues());
+		}
 	}
 
 
+	/**
+	 * This method inserts audit Event details in database.
+	 * @throws DAOException generic DAOException.
+	 */
+	public void insertAudit() throws DAOException
+	{
+		if (auditManager.getAuditEvent() != null &&
+				!auditManager.getAuditEvent().getAuditEventLogCollection().isEmpty())
+		{
+			session.save(auditManager.getAuditEvent());
+		}
+		auditManager.setAuditEvent(new AuditEvent());
+	}
 	/**
 	 * Deletes the persistent object from the database.
 	 * @param obj The object to be deleted.
@@ -295,7 +359,7 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 	 * @throws DAOException database exception.
 	 */
 	public List executeQuery(String query,Integer startIndex,
-			Integer maxRecords,LinkedList paramValues) throws DAOException
+			Integer maxRecords,List paramValues) throws DAOException
 	{
 		logger.debug("Execute query");
 		try
@@ -313,8 +377,8 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 	    			hibernateQuery.setParameter(i, paramValues.get(i));
 	    		}
 	    	}
-		    List returner = hibernateQuery.list();
-		    return returner;
+		    return hibernateQuery.list();
+
 		}
 		catch(HibernateException hiberExp)
 		{

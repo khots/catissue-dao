@@ -4,7 +4,6 @@
 
 package edu.wustl.dao;
 
-import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.exception.DAOException;
 
 
@@ -14,11 +13,6 @@ import edu.wustl.dao.exception.DAOException;
  */
 public class MySQLDAOImpl extends AbstractJDBCDAOImpl
 {
-	/**
-	 * Logger.
-	 */
-	private static org.apache.log4j.Logger logger = Logger.getLogger(MySQLDAOImpl.class);
-
 
 	/**
 	 * @param tableName :
@@ -27,7 +21,7 @@ public class MySQLDAOImpl extends AbstractJDBCDAOImpl
 	public void deleteTable(String tableName) throws DAOException
 	{
 		StringBuffer query;
-		query = new StringBuffer("DROP TABLE IF EXISTS ").append(tableName.toString());
+		query = new StringBuffer("DROP TABLE IF EXISTS ").append(tableName);
 		executeUpdate(query.toString());
 
 	}

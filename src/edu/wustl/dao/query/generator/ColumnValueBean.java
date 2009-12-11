@@ -1,9 +1,5 @@
 package edu.wustl.dao.query.generator;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * @author kalpana_thakur
@@ -60,6 +56,14 @@ public class ColumnValueBean implements Comparable
 		this.columnValue = columnValue;
 		this.columnType = columnType;
 
+	}
+
+	/**
+	 * @param columnValue : column value
+	 */
+	public ColumnValueBean(Object columnValue)
+	{
+		this.columnValue = columnValue;
 	}
 
 
@@ -159,8 +163,12 @@ public class ColumnValueBean implements Comparable
 		return returnVal;
 	}
 
+	/**
+	 * Test method.
+	 * @param args args
+	 */
 	public static void main(String[] args) 
-	{
+	{/*
 
 
 		List<ColumnValueBean> list = new ArrayList<ColumnValueBean>();
@@ -207,7 +215,7 @@ public class ColumnValueBean implements Comparable
 		}
 
 
-	}
+	*/}
 
 	/**
 	 * @param arg1 ColumnValueBean second.

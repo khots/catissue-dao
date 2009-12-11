@@ -65,8 +65,8 @@ public final class DAOUtility
 	/**
      * logger Logger - Generic logger.
      */
-      private static org.apache.log4j.Logger logger =
-           Logger.getLogger(DAOUtility.class);
+      private static Logger logger =
+           Logger.getCommonLogger(DAOUtility.class);
 	 /**
      * Constants that will appear in HQL for retrieving Attributes of the Collection data type.
      */
@@ -305,25 +305,26 @@ public final class DAOUtility
 		{
 			for (int counter = 0; counter < namedQueryParams.size(); counter++)
 			{
-				NamedQueryParam queryParam = (NamedQueryParam) namedQueryParams
-						.get(counter + "");
+				NamedQueryParam queryParam = (NamedQueryParam) namedQueryParams.get(counter);
+
 				int objectType = queryParam.getType();
 				if ( DBTypes.STRING == objectType)
 				{
-					query.setString(counter, queryParam.getValue() + "");
+					query.setString(counter, queryParam.getValue().toString());
 				}
 				else if (DBTypes.INTEGER == objectType)
 				{
-					query.setInteger(counter, Integer.parseInt(queryParam.getValue() + ""));
+					query.setInteger(counter, Integer.parseInt
+							(queryParam.getValue().toString()));
 				}
 				else if (DBTypes.LONG == objectType)
 				{
-					query.setLong(counter, Long.parseLong(queryParam.getValue() + ""));
+					query.setLong(counter, Long.parseLong(queryParam.getValue().toString()));
 				}
 				else if (DBTypes.BOOLEAN == objectType)
 				{
 					query.setBoolean(counter,
-							Boolean.parseBoolean(queryParam.getValue() + ""));
+							Boolean.parseBoolean(queryParam.getValue().toString()));
 				}
 			}
 		}

@@ -26,7 +26,7 @@ public class HashedDataHandler
 	/**
 	 * Class Logger.
 	 */
-	private static org.apache.log4j.Logger logger = Logger.getLogger(HashedDataHandler.class);
+	private static final Logger logger = Logger.getCommonLogger(HashedDataHandler.class);
 
 	/**
 	 * This method returns the metaData associated to the table specified in tableName.
@@ -131,7 +131,7 @@ public class HashedDataHandler
 		{
 			Object obj = columnValues.get(i);
 			int index = i;index++;
-			if(isTimeStampColumn(metaData,stmt,index,obj))
+			if(isTimeStampColumn(stmt,index,obj))
 			{
 				continue;
 			}
@@ -230,12 +230,10 @@ public class HashedDataHandler
 	 * @param stmt :PreparedStatement
 	 * @param index :
 	 * @param obj :
-	 * @param metaData :
 	 * @return return true if column type is timeStamp.
 	 * @throws SQLException SQLException
 	 */
-	private boolean isTimeStampColumn(ResultSetMetaData metaData,
-			PreparedStatement stmt, int index,Object obj) throws SQLException
+	private boolean isTimeStampColumn(PreparedStatement stmt, int index,Object obj) throws SQLException
 	{
 		boolean isTimeStampColumn = false;
 		if(obj instanceof Timestamp)

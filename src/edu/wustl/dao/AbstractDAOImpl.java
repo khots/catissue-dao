@@ -15,6 +15,11 @@ import edu.wustl.dao.exception.DAOException;
 public abstract class AbstractDAOImpl implements DAO
 {
 
+
+	/**
+	 * Class Logger.
+	 */
+	private static final Logger logger = Logger.getCommonLogger(AbstractDAOImpl.class);
 	/**
 	 * Connection Manager.
 	 */
@@ -30,11 +35,30 @@ public abstract class AbstractDAOImpl implements DAO
 	 */
 	protected transient int  batchCounter = 0;
 
+	/**
+	 * It holds the name of the application name
+	 * to which this DAO is associated.
+	 */
+	protected String  applicationName;
 
 	/**
-	 * Class Logger.
+	 * This method will be called to set applicationName.
+	 * @param applicationName : Name of the application.
 	 */
-	private static org.apache.log4j.Logger logger = Logger.getLogger(AbstractDAOImpl.class);
+	public void setApplicationName(String applicationName)
+	{
+		this.applicationName = applicationName;
+	}
+
+	/**
+	 * This method will be called to retrieved the application Name.
+	 * @return application name.
+	 */
+	public String getApplicationName()
+	{
+		return applicationName;
+	}
+
 
 
 	/**
