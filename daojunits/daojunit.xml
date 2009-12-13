@@ -10,6 +10,7 @@
 
 	<property name="base.dir" value="."/>
 	<property name="lib.dir" value="../lib"/>
+	<property name="build.dir" value="../build"/>
 	<property name="cobertura.lib" value="coberturalib"/>
 
 	<property name="test.classes.dir" value="${base.dir}/classes"/>
@@ -55,6 +56,9 @@
 			<src path="${test.src.dir}"/>
 			<classpath>
 				<fileset dir="${lib.dir}">
+    				<include name="**/*.jar"/>
+    			</fileset>
+				<fileset dir="${build.dir}">
     				<include name="**/*.jar"/>
     			</fileset>
 			</classpath>
