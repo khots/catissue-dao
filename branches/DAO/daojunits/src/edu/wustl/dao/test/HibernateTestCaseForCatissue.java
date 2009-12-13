@@ -2,7 +2,6 @@ package edu.wustl.dao.test;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 
 import org.junit.Test;
@@ -11,7 +10,6 @@ import test.Address;
 import test.Order;
 import test.Person;
 import test.User;
-import test.UserRole;
 import edu.wustl.common.audit.AuditManager;
 import edu.wustl.common.exception.ApplicationException;
 import edu.wustl.common.util.logger.Logger;
@@ -106,9 +104,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 			orderCol.add(personOrder1);
 			person.setOrderCollection(orderCol);
 			dao.insert(person);
-
-			
-						dao.commit();
+			dao.commit();
 			//dao.closeSession();
 
 		}
@@ -334,10 +330,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 		}
 
 	}
-	
 
-
-	
 
 /**
 	 * This test will assert that Object inserted successfully.
@@ -355,10 +348,6 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 
 		  User user2 = new User();
 		  Collection<Object> userRollCollection = new HashSet<Object>();
-		  UserRole userRoll = new UserRole();
-		  userRoll.setId(Long.valueOf(1));
-		  userRoll.setUser(user2);
-
 		  user2.setRoleCollection(userRollCollection)	;
 		  user2.setFirstName("sachin");
 		  user2.setLastName("Lale");
@@ -704,7 +693,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 			{
 				dao.closeSession();
 			}
-			catch (DAOException e) 
+			catch (DAOException e)
 			{
 				e.printStackTrace();
 			}
@@ -713,7 +702,6 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 
 	}
 
-	
 
 	/**
 	 * This test will assert that query will be executed successfully.
@@ -733,7 +721,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 		}
 		catch(Exception exp)
 		{
-			
+
 			assertFalse("Problem while executing query ::", true);
 		}
 		finally
@@ -742,7 +730,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 			{
 				dao.closeSession();
 			}
-			catch (DAOException e) 
+			catch (DAOException e)
 			{
 				e.printStackTrace();
 			}
@@ -751,7 +739,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 	}
 
 
-	
+
 
 	/**
 	 * This test will assert that attribute retrieved successfully.
@@ -781,7 +769,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 			{
 				dao.closeSession();
 			}
-			catch (DAOException e) 
+			catch (DAOException e)
 			{
 				e.printStackTrace();
 			}
