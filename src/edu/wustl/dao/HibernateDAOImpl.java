@@ -53,6 +53,12 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
       */
      private AuditManager auditManager;
 
+     /**
+      * Hibernate Metadata associated to the application.
+      */
+     private HibernateMetaData hibernateMetaData;
+
+
 	/**
 	 * This method will be used to establish the session with the database.
 	 * Declared in  class.
@@ -63,7 +69,7 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 	{
 		logger.debug("Open the session");
 	 	session = connectionManager.getSession();
-	 	auditManager = new AuditManager(sessionDataBean,applicationName);
+	 	auditManager = new AuditManager(sessionDataBean,hibernateMetaData);
 	}
 
 	/**
@@ -503,4 +509,20 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 					"HibernateDAOImpl.java "+attributeName);
 		}
 	}
+	/**
+	 * @return the hibernateMetaData
+	 */
+	public HibernateMetaData getHibernateMetaData()
+	{
+		return hibernateMetaData;
+	}
+
+	/**
+	 * @param hibernateMetaData the hibernateMetaData to set
+	 */
+	public void setHibernateMetaData(HibernateMetaData hibernateMetaData)
+	{
+		this.hibernateMetaData = hibernateMetaData;
+	}
+
 }

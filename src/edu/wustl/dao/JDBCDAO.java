@@ -309,4 +309,16 @@ public interface JDBCDAO extends DAO
 			String[] selectColumnName, QueryWhereClause queryWhereClause,
 			List<ColumnValueBean> columnValueBeans)throws DAOException;
 
+	 /**
+		 *This method will be called to get all database properties.
+		 * @return database properties.
+		 */
+	 DatabaseProperties getDatabaseProperties();
+
+	 /**
+	  * This method will be called to set all the database specific properties.
+	  * @param databaseProperties : database properties.
+	  */
+	  void setDatabaseProperties(DatabaseProperties databaseProperties);
+
 }

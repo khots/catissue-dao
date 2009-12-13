@@ -22,10 +22,9 @@ import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 
 import edu.wustl.common.util.logger.Logger;
-import edu.wustl.dao.AbstractDAOImpl;
-import edu.wustl.dao.AbstractJDBCDAOImpl;
 import edu.wustl.dao.DAO;
 import edu.wustl.dao.DatabaseProperties;
+import edu.wustl.dao.HibernateDAO;
 import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.connectionmanager.IConnectionManager;
 import edu.wustl.dao.exception.DAOException;
@@ -117,9 +116,10 @@ public class DAOFactory implements IDAOFactory
 		   DAO dao = (DAO)Class.forName(defaultDAOClassName).newInstance();
 		   IConnectionManager connManager = getDefaultConnManager(sessionFactory,configuration);
 		   dao.setConnectionManager(connManager);
-		   ((AbstractDAOImpl)dao).setApplicationName(applicationName);
 		   HibernateMetaDataFactory.setHibernateMetaData(applicationName,
 				   connManager.getConfiguration());
+		   ((HibernateDAO)dao).setHibernateMetaData(HibernateMetaDataFactory.
+				   getHibernateMetaData(applicationName));
 		   return dao;
 		}
 		catch (Exception excp )
@@ -147,11 +147,10 @@ public class DAOFactory implements IDAOFactory
 			   JDBCDAO jdbcDAO = (JDBCDAO) Class.forName(jdbcDAOClassName).newInstance();
 			   IConnectionManager connManager = getJDBCConnManager(sessionFactory,configuration);
 			   jdbcDAO.setConnectionManager(connManager);
-			   ((AbstractJDBCDAOImpl)jdbcDAO).setDatabaseProperties(databaseProperties);
+			   jdbcDAO.setDatabaseProperties(databaseProperties);
 			   jdbcDAO.setBatchSize(databaseProperties.getDefaultBatchSize());
 			   HibernateMetaDataFactory.setHibernateMetaData(applicationName,
 					   connManager.getConfiguration());
-			   ((AbstractDAOImpl)jdbcDAO).setApplicationName(applicationName);
 			   return jdbcDAO;
 		}
 		catch (Exception excp )

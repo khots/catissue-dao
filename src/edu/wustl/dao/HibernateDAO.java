@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import edu.wustl.dao.exception.DAOException;
+import edu.wustl.dao.util.HibernateMetaData;
 import edu.wustl.dao.util.NamedQueryParam;
 
 
@@ -39,5 +40,19 @@ public interface HibernateDAO extends DAO
 	 */
 	List executeQuery(String query,Integer startIndex,
 			Integer maxRecords,List paramValues) throws DAOException;
+
+	/**
+	 * This method will be called to set the hibernate metadata
+	 * for the application.
+	 * @param hibernateMetaData the hibernateMetaData to set
+	 */
+	void setHibernateMetaData(HibernateMetaData hibernateMetaData);
+
+	/**
+	 * This method will be called to fetch hibernate metadata
+	 * associated to the application.
+	 * @return the hibernateMetaData
+	 */
+	HibernateMetaData getHibernateMetaData();
 
 }
