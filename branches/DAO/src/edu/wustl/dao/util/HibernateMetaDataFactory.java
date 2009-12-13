@@ -5,6 +5,9 @@ import java.util.Map;
 
 import org.hibernate.cfg.Configuration;
 
+import edu.wustl.common.exception.ErrorKey;
+import edu.wustl.dao.exception.DAOException;
+
 /**
  * This class keeps a map of all the HibernateMetaData instances for all the
  * applications.
@@ -43,17 +46,19 @@ public final class HibernateMetaDataFactory
 	 * This method returns the Configuration given the application name.
 	 * @param appName appName
 	 * @return HibernateMetaData HibernateMetaData
+	 * @throws DAOException database Exception
 	 */
-	public static HibernateMetaData getHibernateMetaData(String appName)
+	public static HibernateMetaData getHibernateMetaData(String appName) throws DAOException
 	{
-		HibernateMetaData metadata;
+		HibernateMetaData metadata = null;
 		if(appName!=null)
 		{
 			metadata=metaDataCache.get(appName);
 		}
-		else
+		if(appName == null || metadata == null)
 		{
-			metadata=null;
+			throw new DAOException(ErrorKey.getErrorKey
+					("problem.in.fetching.hibernate.metadata"),null, "");
 		}
 		return metadata;
 	}

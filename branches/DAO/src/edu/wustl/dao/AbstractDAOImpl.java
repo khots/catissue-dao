@@ -36,32 +36,6 @@ public abstract class AbstractDAOImpl implements DAO
 	protected transient int  batchCounter = 0;
 
 	/**
-	 * It holds the name of the application name
-	 * to which this DAO is associated.
-	 */
-	protected String  applicationName;
-
-	/**
-	 * This method will be called to set applicationName.
-	 * @param applicationName : Name of the application.
-	 */
-	public void setApplicationName(String applicationName)
-	{
-		this.applicationName = applicationName;
-	}
-
-	/**
-	 * This method will be called to retrieved the application Name.
-	 * @return application name.
-	 */
-	public String getApplicationName()
-	{
-		return applicationName;
-	}
-
-
-
-	/**
 	 * This method will be called to set the size of the batch.
 	 * @param batchSize batchSize
 	 * @throws DAOException : Generic database exception.

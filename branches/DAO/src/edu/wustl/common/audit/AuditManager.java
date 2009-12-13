@@ -19,12 +19,10 @@ import edu.wustl.common.domain.LoginEvent;
 import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.HibernateDAO;
-import edu.wustl.dao.daofactory.DAOConfigFactory;
 import edu.wustl.dao.exception.AuditException;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.DAOConstants;
 import edu.wustl.dao.util.HibernateMetaData;
-import edu.wustl.dao.util.HibernateMetaDataFactory;
 
 
 /**
@@ -64,9 +62,9 @@ public class AuditManager // NOPMD
 	}
 
 	/**
-	 * It holds the batch size.
+	 * It holds the hibernate metadata for the application.
 	 */
-	private String  applicationName;
+	private HibernateMetaData  hibernateMetaData;
 
 
 	/**
@@ -100,32 +98,19 @@ public class AuditManager // NOPMD
 
 	/**
 	 * Instantiate a new instance of AuditManager.
-	 * @param applicationName Name of the application.
+	 * @param hibernateMetaData application specific hibernate metadata.
 	 * @param sessionDataBean Bean holding session details like IP address,
 	 * user Id, application name.
 	 * */
-	public AuditManager(SessionDataBean sessionDataBean,String applicationName)
+	public AuditManager(SessionDataBean sessionDataBean,
+			HibernateMetaData hibernateMetaData)
 	{
 		this();
-		setApplicationName(applicationName);
+		this.hibernateMetaData = hibernateMetaData;
 		initializeAuditManager(sessionDataBean);
 
 	}
 
-	/**
-	 * @return the applicationName.
-	 */
-	public String getApplicationName()
-	{
-		return applicationName;
-	}
-	/**
-	 * @param applicationName the applicationName to set.
-	 */
-	public void setApplicationName(String applicationName)
-	{
-		this.applicationName = applicationName;
-	}
 	/**
 	 * Set the id of the logged-in user who performed the changes.
 	 * @param userId System identifier of logged-in user who performed the changes.
@@ -315,11 +300,6 @@ public class AuditManager // NOPMD
 			AuditDataEventLog auditEventLog, AuditableClass auditableClass) throws AuditException
 	{
 		LOGGER.debug("Inside startAuditing method.");
-		// Set System identifier if the current object.
-		//auditEventLog.setObjectIdentifier(((AbstractDomainObject)obj).getId());
-
-		HibernateMetaData hibernateMetaData = HibernateMetaDataFactory.
-		   getHibernateMetaData(applicationName);
 
 		auditEventLog.setObjectName(hibernateMetaData
 				.getTableName(obj.getClass()));
@@ -679,21 +659,15 @@ public class AuditManager // NOPMD
 	{
 		// Find the corresponding column in the database
 		String columnName = "";
-		HibernateMetaData hibernateMetaData = HibernateMetaDataFactory
-				.getHibernateMetaData(applicationName);
-
-		if (hibernateMetaData != null)
+		if(currentObj == null)
 		{
-			if(currentObj == null)
-			{
-				columnName = hibernateMetaData.getColumnName(
-						previousObj.getClass(),attribute.getName());
-			}
-			else
-			{
-				columnName = hibernateMetaData.getColumnName(
-						currentObj.getClass(), attribute.getName());
-			}
+			columnName = hibernateMetaData.getColumnName(
+					previousObj.getClass(),attribute.getName());
+		}
+		else
+		{
+			columnName = hibernateMetaData.getColumnName(
+					currentObj.getClass(), attribute.getName());
 		}
 		return columnName;
 	}
@@ -806,21 +780,23 @@ public class AuditManager // NOPMD
 	 * Sets the status of LoginAttempt to loginStatus provided as an argument.
 	 * @param loginStatus LoginStatus boolean value.
 	 * @param loginDetails LoginDetails object.
+	 * @param dao Hibernate DAO instance.
 	 * @throws AuditException AuditException
 	 * @throws DAOException Database exception.
 	 */
-	public void loginAudit(boolean loginStatus,LoginDetails loginDetails)throws AuditException, DAOException
+	public void loginAudit(HibernateDAO dao,boolean loginStatus,
+			LoginDetails loginDetails)throws AuditException, DAOException
 	{
 		LoginEvent loginEvent = setLoginDetails(loginDetails);
-		HibernateDAO hibernateDao = null;
 		try
 		{
-			hibernateDao = (HibernateDAO) DAOConfigFactory.getInstance().getDAOFactory(applicationName)
-			.getDAO();
-			hibernateDao.openSession(null);
+			if(dao == null)
+			{
+			 throw new AuditException(ErrorKey.getErrorKey(
+					 "dao.close.or.not.initialized"),null,"");
+			}
 			loginEvent.setIsLoginSuccessful(loginStatus);
-			hibernateDao.insert(loginEvent);
-			hibernateDao.commit();
+			dao.insert(loginEvent);
 		}
 		catch (DAOException daoException)
 		{
@@ -830,10 +806,7 @@ public class AuditManager // NOPMD
 			throw new AuditException(ErrorKey.getErrorKey("error.in.login.audit"),daoException,"");
 
 		}
-		finally
-		{
-				hibernateDao.closeSession();
-		}
+
 	}
 
 	/**
