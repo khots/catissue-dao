@@ -305,7 +305,7 @@ public final class DAOUtility
 		{
 			for (int counter = 0; counter < namedQueryParams.size(); counter++)
 			{
-				NamedQueryParam queryParam = (NamedQueryParam) namedQueryParams.get(counter);
+				NamedQueryParam queryParam = (NamedQueryParam) namedQueryParams.get(counter+"");
 
 				int objectType = queryParam.getType();
 				if ( DBTypes.STRING == objectType)
