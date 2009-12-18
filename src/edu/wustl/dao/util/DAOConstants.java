@@ -105,6 +105,10 @@ public final class DAOConstants extends CommonConstants
 	 */
 	public static final boolean SWITCH_SECURITY = true;
 
+	/**
+	 * System identifier.
+	 */
+	public static final String SYSTEM_IDENTIFIER = "id";
 
 	/**
 	 * Time pattern.

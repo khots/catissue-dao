@@ -9,6 +9,11 @@
 
 package edu.wustl.dao;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.sql.Blob;
+import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -704,6 +709,12 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 			throw DAOUtility.getInstance().getDAOException(sqlExp, "db.update.data.error",
 			"AbstractJDBCDAOImpl.java   "+sql);
 		}
+		catch (FileNotFoundException exp)
+		{
+			logger.info(exp.getMessage(),exp);
+			throw DAOUtility.getInstance().getDAOException(exp, "db.file.not.found.error",
+			sql);
+		}
 		finally
 		{
 			closeStatementInstance(stmt);
@@ -780,10 +791,11 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * @param stmt statement instance.
 	 * @throws SQLException SQLException
 	 * @throws DAOException DAOException
+	 * @throws FileNotFoundException  File not found issue.
 	 */
 	private void populateStatement(
 			List<ColumnValueBean> columnValueBeans,
-			PreparedStatement stmt) throws SQLException, DAOException
+			PreparedStatement stmt) throws SQLException, DAOException, FileNotFoundException
 	{
 		if(columnValueBeans != null)
 		{
@@ -800,6 +812,21 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 				else if(colValueBean.getColumnValue() instanceof Timestamp)
 				{
 					stmt.setTimestamp(index,(Timestamp)colValueBean.getColumnValue());
+				}
+				else if (colValueBean.getColumnValue() instanceof File)
+				{
+					File file = (File)colValueBean.getColumnValue();
+					FileInputStream fis = new FileInputStream(file);
+			        int fileLength = (int) file.length();
+			        stmt.setBinaryStream(index,fis, fileLength);
+				}
+				else if (colValueBean.getColumnValue() instanceof Blob)
+				{
+					 stmt.setBlob(index,(Blob)colValueBean.getColumnValue());
+				}
+				else if (colValueBean.getColumnValue() instanceof Clob)
+				{
+					 stmt.setClob(index,(Clob)colValueBean.getColumnValue());
 				}
 				else
 				{
@@ -1387,6 +1414,12 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 			logger.info(exp.getMessage(),exp);
 			throw DAOUtility.getInstance().getDAOException(exp, "db.retrieve.data.error",
 			"AbstractJDBCDAOImpl.java  "+sql);
+		}
+		catch (FileNotFoundException exp)
+		{
+			logger.info(exp.getMessage(),exp);
+			throw DAOUtility.getInstance().getDAOException(exp, "db.file.not.found.error",
+			sql);
 		}
 
 	}
