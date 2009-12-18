@@ -29,6 +29,7 @@ import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.connectionmanager.IConnectionManager;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.DAOUtility;
+import edu.wustl.dao.util.HibernateMetaData;
 import edu.wustl.dao.util.HibernateMetaDataFactory;
 
 
@@ -97,6 +98,27 @@ public class DAOFactory implements IDAOFactory
 	private DatabaseProperties databaseProperties;
 
 	/**
+	 * hibernateMetaData Hibernate metadata specific to the application.
+	 */
+	private HibernateMetaData hibernateMetaData;
+
+	/**
+	 * @return the hibernateMetaData
+	 */
+	public HibernateMetaData getHibernateMetaData()
+	{
+		return hibernateMetaData;
+	}
+
+	/**
+	 * @param hibernateMetaData the hibernateMetaData to set
+	 */
+	public void setHibernateMetaData(HibernateMetaData hibernateMetaData)
+	{
+		this.hibernateMetaData = hibernateMetaData;
+	}
+
+	/**
 	 * Class logger.
 	 */
 	private static final Logger logger = Logger.getCommonLogger(DAOFactory.class);
@@ -114,10 +136,8 @@ public class DAOFactory implements IDAOFactory
 		try
 		{
 		   DAO dao = (DAO)Class.forName(defaultDAOClassName).newInstance();
-		   IConnectionManager connManager = getDefaultConnManager(sessionFactory,configuration);
+		   IConnectionManager connManager = getDefaultConnManager();
 		   dao.setConnectionManager(connManager);
-		   HibernateMetaDataFactory.setHibernateMetaData(applicationName,
-				   connManager.getConfiguration());
 		   ((HibernateDAO)dao).setHibernateMetaData(HibernateMetaDataFactory.
 				   getHibernateMetaData(applicationName));
 		   return dao;
@@ -145,12 +165,10 @@ public class DAOFactory implements IDAOFactory
 		try
 		{
 			   JDBCDAO jdbcDAO = (JDBCDAO) Class.forName(jdbcDAOClassName).newInstance();
-			   IConnectionManager connManager = getJDBCConnManager(sessionFactory,configuration);
+			   IConnectionManager connManager = getJDBCConnManager();
 			   jdbcDAO.setConnectionManager(connManager);
 			   jdbcDAO.setDatabaseProperties(databaseProperties);
 			   jdbcDAO.setBatchSize(databaseProperties.getDefaultBatchSize());
-			   HibernateMetaDataFactory.setHibernateMetaData(applicationName,
-					   connManager.getConfiguration());
 			   return jdbcDAO;
 		}
 		catch (Exception excp )
@@ -175,6 +193,8 @@ public class DAOFactory implements IDAOFactory
 		{
 			configuration = setConfiguration(configurationFile);
 			sessionFactory = configuration.buildSessionFactory();
+			HibernateMetaDataFactory.setHibernateMetaData(applicationName,
+					configuration);
 		}
 		catch (Exception exp)
 		{
@@ -191,15 +211,12 @@ public class DAOFactory implements IDAOFactory
 	}
 
 	/**
-	 * @param sessionFactory :session factory object
-	 * @param configuration :configuration
 	 * @return IConnectionManager : connection manager.
 	 * @throws ClassNotFoundException  ClassNotFoundException
 	 * @throws IllegalAccessException  IllegalAccessException
 	 * @throws InstantiationException  InstantiationException
 	 */
-	private IConnectionManager getDefaultConnManager(SessionFactory sessionFactory,
-			Configuration configuration) throws InstantiationException,
+	private IConnectionManager getDefaultConnManager() throws InstantiationException,
 			IllegalAccessException, ClassNotFoundException
 	{
 		IConnectionManager connectionManager =
@@ -214,15 +231,12 @@ public class DAOFactory implements IDAOFactory
 
 
 	/**
-	 * @param sessionFactory  session factory object
-	 * @param configuration configuration
 	 * @return IConnectionManager : connection manager.
 	 * @throws ClassNotFoundException ClassNotFoundException
 	 * @throws IllegalAccessException IllegalAccessException
 	 * @throws InstantiationException InstantiationException
 	 */
-	private IConnectionManager getJDBCConnManager(SessionFactory sessionFactory,
-			Configuration configuration) throws
+	private IConnectionManager getJDBCConnManager() throws
 			InstantiationException, IllegalAccessException, ClassNotFoundException
 	{
 		IConnectionManager connectionManager =

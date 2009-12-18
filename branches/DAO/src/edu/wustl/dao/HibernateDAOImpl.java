@@ -147,16 +147,16 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 
 	/**
 	 * updates the object into the database.
-	 * @param obj Object to be updated in database
+	 * @param currentObj Object to be updated in database
 	 * @throws DAOException : generic DAOException
 	 */
-	public void update(Object obj) throws DAOException
+	public void update(Object currentObj) throws DAOException
 	{
 		logger.debug("Update Object");
 		try
 		{
-			auditManager.isObjectAuditable(obj);
-			session.update(obj);
+			Object previousObj = retrieveOldObject(currentObj);
+			update(currentObj,previousObj);
 		}
 		catch (HibernateException hibExp)
 		{
@@ -164,10 +164,44 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 			throw DAOUtility.getInstance().getDAOException(hibExp, "db.update.data.error",
 			"HibernateDAOImpl.java ");
 		}
+	}
+
+	/**
+	 * This method will be called to retrieve the oldObject.
+	 * @param currentObj Object whose old values has to be fetched from database.
+	 * @return old Object.
+	 * @throws DAOException database exception.
+	 */
+	private Object retrieveOldObject(Object currentObj)throws DAOException
+	{
+		Session session = null;
+		try
+		{
+		 Long objectId = auditManager.getObjectId(currentObj);
+		 session = connectionManager.getSessionFactory().openSession();
+		 return session.get(Class.forName(currentObj.getClass().getName()), objectId);
+		}
 		catch (AuditException exp)
 		{
 			throw DAOUtility.getInstance().getDAOException(exp, exp.getErrorKeyName(),
 					exp.getMsgValues());
+		}
+		catch (HibernateException hibExp)
+		{
+			logger.info(hibExp.getMessage(),hibExp);
+			throw DAOUtility.getInstance().getDAOException(hibExp, "db.update.data.error",
+			"HibernateDAOImpl.java ");
+		}
+		catch (ClassNotFoundException exp)
+		{
+			logger.info(exp.getMessage(),exp);
+			throw DAOUtility.getInstance().getDAOException(exp, "class.not.found.error",
+			currentObj.getClass().getName());
+		}
+		finally
+		{
+			session.close();
+			session = null;
 		}
 	}
 

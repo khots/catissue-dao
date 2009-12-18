@@ -253,38 +253,39 @@ public class AuditManager // NOPMD
 	 * @return AuditableClass.
 	 * @throws AuditException AuditException.
 	 */
-	private Long getObjectId(Object obj) throws AuditException
+	public Long getObjectId(Object obj) throws AuditException
 	{
 		boolean isClassFound = false;
 		Long auditableClassId = null;
-		if (auditableClasses != null)
+		if(obj != null)
 		{
-			Iterator<AuditableClass> classListIterator = auditableClasses.iterator();
-			while (classListIterator.hasNext())
+			if (auditableClasses != null)
 			{
-				AuditableClass auditableClass = classListIterator.next();
-				if (obj.getClass().getName()
-						.equals(auditableClass.getClassName())
-						&& auditableClass.getIsAuditable())
+				Iterator<AuditableClass> classListIterator = auditableClasses.iterator();
+				while (classListIterator.hasNext())
 				{
-					isClassFound = true;
-					auditableClassId = (Long)auditableClass.invokeGetterForId(obj);
-					break;
+					AuditableClass auditableClass = classListIterator.next();
+					if (obj.getClass().getName()
+							.equals(auditableClass.getClassName()))
+					{
+						isClassFound = true;
+						auditableClassId = (Long)auditableClass.invokeGetterForId(obj);
+						break;
+					}
 				}
 			}
-		}
 
-		//Class not exist.
-		if(!isClassFound)
-		{
-			LOGGER.error("Class "+ obj.getClass().getName()+
-					" missing in auditablemetadata.xml.");
+			//Class not exist.
+			if(!isClassFound)
+			{
+				LOGGER.error("Class "+ obj.getClass().getName()+
+				" missing in auditablemetadata.xml.");
 
-			throw new AuditException(ErrorKey.getErrorKey
+				throw new AuditException(ErrorKey.getErrorKey
 						("class.missing"),null, obj.getClass().getName());
 
+			}
 		}
-
 		return auditableClassId;
 	}
 
@@ -356,7 +357,7 @@ public class AuditManager // NOPMD
 					auditContainmentsforNewEntry(auditEventLog,
 							currentAuditableObject);
 				}
-				else
+				else if(currentAuditableObject != null)
 				{
 					//case of update
 					Object previousAuditableObject = auditableClass.
@@ -428,7 +429,7 @@ public class AuditManager // NOPMD
 
 			}
 		}//for one to one containment Associations.
-		else
+		else if(currentAuditableObject != null)
 		{
 
 			//Call to obtainAuditableEventLog to audit the object of collection.
@@ -455,10 +456,14 @@ public class AuditManager // NOPMD
 		while(itr.hasNext())
 		{
 			Object auditableObject = itr.next();
-			colonSeparatedIds.append(getObjectId(auditableObject).toString());
-			if(itr.hasNext())
+			Object objectId = getObjectId(auditableObject);
+			if(objectId != null)
 			{
-				colonSeparatedIds.append(":");
+				colonSeparatedIds.append(objectId.toString());
+				if(itr.hasNext())
+				{
+					colonSeparatedIds.append(":");
+				}
 			}
 
 		}
@@ -501,7 +506,8 @@ public class AuditManager // NOPMD
 					auditRefrenceAssociationforNewEntry(auditEventLog,
 							currentAuditableObject);
 				}
-				else // Case of update : having both current and previous objects:
+				else if(currentAuditableObject != null)
+					// Case of update : having both current and previous objects:
 				{
 					Object prevAuditableObject = auditableClass.
 					invokeGetterMethod(refrenceAssociation.getRoleName(),previousObj);
@@ -549,11 +555,14 @@ public class AuditManager // NOPMD
 		else
 		{
 			//Audit identifiers of current and previous objects.
-
+            String previousAuditableObjectId = DAOConstants.EMPTY_STRING;
+			if(prevAuditableObject != null)
+			{
+				previousAuditableObjectId = getObjectId(prevAuditableObject).toString();
+			}
 			AuditEventDetails auditEventDetails =
 			auditRefrenceAssociationsIds((getObjectId(currentAuditableObject)).toString(),
-				(getObjectId(prevAuditableObject)).toString(),
-				currentAuditableObject.getClass().getName());
+				previousAuditableObjectId,currentAuditableObject.getClass().getName());
 			auditEventDetails.setAuditEventLog(auditEventLog);
 			auditEventLog.getAuditEventDetailsCollection().add(auditEventDetails);
 
@@ -583,7 +592,7 @@ public class AuditManager // NOPMD
 				auditEventLog.getAuditEventDetailsCollection().add(auditEventDetails);
 			}
 		}//for one to one Reference Associations.
-		else
+		else if(currentAuditableObject != null)
 		{
 			//Audit identifiers of current and previous objects.
 
@@ -630,7 +639,7 @@ public class AuditManager // NOPMD
 				// Case of transient object
 				if (!(DAOConstants.EMPTY_STRING.equals(columnName)))
 				{
-					if(columnName.equalsIgnoreCase("IDENTIFIER"))
+					if(columnName.equalsIgnoreCase("IDENTIFIER") && currVal != null )
 					{
 					 auditEventLog.setObjectIdentifier(Long.valueOf(currVal.toString()));
 					}
@@ -698,9 +707,14 @@ public class AuditManager // NOPMD
 		}
 		else if(prevObject != null && currentObject != null)
 		{
-			auditEventDetails = new AuditEventDetails();
-			auditEventDetails.setPreviousValue(getObjectValue(prevObject));
-			auditEventDetails.setCurrentValue(getObjectValue(currentObject));
+			String previousVal = getObjectValue(prevObject);
+			String currentVal = getObjectValue(currentObject);
+			if(!previousVal.equals(currentVal))
+			{
+				auditEventDetails = new AuditEventDetails();
+				auditEventDetails.setPreviousValue(previousVal);
+				auditEventDetails.setCurrentValue(currentVal);
+			}
 		}
 
 		return auditEventDetails;
@@ -741,8 +755,9 @@ public class AuditManager // NOPMD
 			for(Object previousObject : (Collection)prevObjColl)
 			{
 				//Call to obtainAuditableEventLog to audit the object of collection.
-			 if(getObjectId(currentObject).equals(getObjectId(previousObject)))
-				{
+				Object currentObjectId = getObjectId(currentObject);
+			 if(currentObjectId != null && currentObjectId.equals(getObjectId(previousObject)))
+			 {
 
 					auditEventLog.getAuditDataEventLogs().
 					add(obtainAuditableEventLog(currentObject,
@@ -750,7 +765,7 @@ public class AuditManager // NOPMD
 					isExists = true;
 					break;
 
-				}
+			 }
 			}// If it is new entry in collection then add it to DB with previous value as NULL.
 			if(!isExists)
 			{
