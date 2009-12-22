@@ -132,7 +132,7 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		}
 		catch (HibernateException hibExp)
 		{
-			logger.info(hibExp.getMessage(),hibExp);
+			logger.error(hibExp.getMessage(),hibExp);
 			throw DAOUtility.getInstance().getDAOException(hibExp, "db.insert.data.error",
 			"HibernateDAOImpl.java ");
 
@@ -140,8 +140,9 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		catch (AuditException exp)
 		{
 
-			throw DAOUtility.getInstance().getDAOException(exp, exp.getErrorKeyName(),
-					exp.getMsgValues());
+			logger.error(exp.getMessage(),exp);
+			//throw DAOUtility.getInstance().getDAOException(exp, exp.getErrorKeyName(),
+				//	exp.getMsgValues());
 		}
 	}
 
@@ -160,7 +161,7 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		}
 		catch (HibernateException hibExp)
 		{
-			logger.info(hibExp.getMessage(),hibExp);
+			logger.error(hibExp.getMessage(),hibExp);
 			throw DAOUtility.getInstance().getDAOException(hibExp, "db.update.data.error",
 			"HibernateDAOImpl.java ");
 		}
@@ -183,25 +184,32 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		}
 		catch (AuditException exp)
 		{
-			throw DAOUtility.getInstance().getDAOException(exp, exp.getErrorKeyName(),
-					exp.getMsgValues());
+			logger.error(exp.getMessage(),exp);
+			return null;
+			/*throw DAOUtility.getInstance().getDAOException(exp, exp.getErrorKeyName(),
+					exp.getMsgValues());*/
 		}
 		catch (HibernateException hibExp)
 		{
-			logger.info(hibExp.getMessage(),hibExp);
-			throw DAOUtility.getInstance().getDAOException(hibExp, "db.update.data.error",
-			"HibernateDAOImpl.java ");
+			logger.error(hibExp.getMessage(),hibExp);
+			return null;
+		//	throw DAOUtility.getInstance().getDAOException(hibExp, "db.update.data.error",
+			//"HibernateDAOImpl.java ");
 		}
 		catch (ClassNotFoundException exp)
 		{
-			logger.info(exp.getMessage(),exp);
-			throw DAOUtility.getInstance().getDAOException(exp, "class.not.found.error",
-			currentObj.getClass().getName());
+			logger.error(exp.getMessage(),exp);
+			return null;
+			//throw DAOUtility.getInstance().getDAOException(exp, "class.not.found.error",
+			//currentObj.getClass().getName());
 		}
 		finally
 		{
-			session.close();
-			session = null;
+			if (session != null)
+			{
+			  session.close();
+			  session = null;
+			}
 		}
 	}
 
@@ -222,14 +230,15 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		}
 		catch (HibernateException hibExp)
 		{
-			logger.info(hibExp.getMessage(),hibExp);
+			logger.error(hibExp.getMessage(),hibExp);
 			throw DAOUtility.getInstance().getDAOException(hibExp, "db.update.data.error",
 			"HibernateDAOImpl.java ");
 		}
 		catch (AuditException exp)
 		{
-			throw DAOUtility.getInstance().getDAOException(exp, exp.getErrorKeyName(),
-					exp.getMsgValues());
+			logger.error(exp.getMessage(),exp);
+			//throw DAOUtility.getInstance().getDAOException(exp, exp.getErrorKeyName(),
+				//	exp.getMsgValues());
 		}
 	}
 
@@ -261,7 +270,7 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		}
 		catch (HibernateException hibExp)
 		{
-			logger.info(hibExp.getMessage(),hibExp);
+			logger.error(hibExp.getMessage(),hibExp);
 			throw DAOUtility.getInstance().getDAOException(hibExp, "db.delete.data.error",
 			"HibernateDAOImpl.java ");
 
@@ -303,7 +312,7 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		}
 		catch (HibernateException hibExp)
 		{
-			logger.info(hibExp.getMessage(),hibExp);
+			logger.error(hibExp.getMessage(),hibExp);
 			throw DAOUtility.getInstance().getDAOException(hibExp, "db.retrieve.data.error",
 			"HibernateDAOImpl.java ");
 
@@ -370,7 +379,7 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		}
 		catch (Exception exp)
 		{
-			logger.info(exp.getMessage(),exp);
+			logger.error(exp.getMessage(),exp);
 			throw DAOUtility.getInstance().getDAOException(exp, "db.retrieve.data.error",
 			"HibernateDAOImpl.java ");
 		}
@@ -422,7 +431,7 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		}
 		catch(HibernateException hiberExp)
 		{
-			logger.info(hiberExp.getMessage(),hiberExp);
+			logger.error(hiberExp.getMessage(),hiberExp);
 			throw DAOUtility.getInstance().getDAOException(hiberExp, "db.retrieve.data.error",
 					"HibernateDAOImpl.java "+query);
 		}
@@ -448,7 +457,7 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		}
 		catch(HibernateException hiberExp)
 		{
-			logger.info(hiberExp.getMessage(),hiberExp);
+			logger.error(hiberExp.getMessage(),hiberExp);
 			throw DAOUtility.getInstance().getDAOException(hiberExp, "db.retrieve.data.error",
 					"HibernateDAOImpl.java "+queryName);
 		}
@@ -538,7 +547,7 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		}
 		catch (HibernateException hiberExp)
 		{
-			logger.info(hiberExp.getMessage(),hiberExp);
+			logger.error(hiberExp.getMessage(),hiberExp);
 			throw DAOUtility.getInstance().getDAOException(hiberExp, "db.retrieve.data.error",
 					"HibernateDAOImpl.java "+attributeName);
 		}
