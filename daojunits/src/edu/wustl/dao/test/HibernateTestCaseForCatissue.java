@@ -214,7 +214,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 			currentUser.setFirstName("Maria johns");
 
 
-			dao.update(currentUser,oldUser);
+			dao.update(currentUser);
 			dao.commit();
 			//dao.closeSession();
 
@@ -268,7 +268,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 
 			currentPerson.setName("Kalpana Thakur");
 
-			dao.update(currentPerson,oldPerson);
+			dao.update(currentPerson);
 			dao.commit();
 			//dao.closeSession();
 

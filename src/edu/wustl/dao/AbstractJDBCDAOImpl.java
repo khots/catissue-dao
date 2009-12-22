@@ -117,7 +117,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		}
 		catch (SQLException sqlExp)
 		{
-			logger.info(sqlExp.getMessage(),sqlExp);
+			logger.error(sqlExp.getMessage(),sqlExp);
 			throw DAOUtility.getInstance().getDAOException(sqlExp, "db.commit.error",
 					"AbstractJDBCDAOImpl.java");
 		}
@@ -137,7 +137,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		}
 		catch (SQLException sqlExp)
 		{
-			logger.info(sqlExp.getMessage(),sqlExp);
+			logger.error(sqlExp.getMessage(),sqlExp);
 			throw DAOUtility.getInstance().getDAOException(sqlExp, "db.rollback.error",
 					"AbstractJDBCDAOImpl.java");
 		}
@@ -174,7 +174,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		}
 		catch (SQLException exp)
 		{
-			logger.info(exp.getMessage(),exp);
+			logger.error(exp.getMessage(),exp);
 			throw DAOUtility.getInstance().getDAOException
 			(exp, "db.batch.initialization.error", "AbstractJDBCDAOImpl.java");
 		}
@@ -255,7 +255,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		}
 		catch (Exception exp)
 		{
-			logger.info(exp.getMessage(),exp);
+			logger.error(exp.getMessage(),exp);
 			throw DAOUtility.getInstance().getDAOException
 			(exp, "db.batch.insert.error", "AbstractJDBCDAOImpl.java");
 		}
@@ -295,7 +295,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		}
 		catch (SQLException exp)
 		{
-			logger.info(exp.getMessage(),exp);
+			logger.error(exp.getMessage(),exp);
 			throw DAOUtility.getInstance().getDAOException
 			(exp, "db.batch.commit.error", "AbstractJDBCDAOImpl.java");
 
@@ -318,7 +318,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		}
 		catch (SQLException exp)
 		{
-			logger.info(exp.getMessage(),exp);
+			logger.error(exp.getMessage(),exp);
 			throw DAOUtility.getInstance().getDAOException
 			(exp, "db.batch.close.error", "AbstractJDBCDAOImpl.java");
 
@@ -552,7 +552,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		}
 		catch (SQLException sqlExp)
 		{
-			logger.info(sqlExp.getMessage(),sqlExp);
+			logger.error(sqlExp.getMessage(),sqlExp);
 			throw DAOUtility.getInstance().getDAOException(sqlExp, "db.update.data.error",
 			"AbstractJDBCDAOImpl.java :   "+query);
 		}
@@ -586,7 +586,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		}
 		catch (SQLException sqlExp)
 		{
-			logger.info(sqlExp.getMessage(),sqlExp);
+			logger.error(sqlExp.getMessage(),sqlExp);
 			throw DAOUtility.getInstance().getDAOException(sqlExp, "db.update.data.error",
 			"AbstractJDBCDAOImpl.java :   "+query);
 		}
@@ -610,7 +610,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		}
 		catch (SQLException exp)
 		{
-			logger.info(exp.getMessage(),exp);
+			logger.error(exp.getMessage(),exp);
 			throw DAOUtility.getInstance().getDAOException(exp, "db.stmt.close.error",
 					"AbstractJDBCDAOImpl.java ");
 		}
@@ -637,7 +637,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		}
 		catch (SQLException exp)
 		{
-			logger.info(exp.getMessage(),exp);
+			logger.error(exp.getMessage(),exp);
 			throw DAOUtility.getInstance().getDAOException(exp, "db.retrieve.data.error",
 			"AbstractJDBCDAOImpl.java  "+sql);
 		}
@@ -665,7 +665,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		}
 		catch(SQLException exp)
 		{
-			logger.info(exp.getMessage(),exp);
+			logger.error(exp.getMessage(),exp);
 			throw DAOUtility.getInstance().getDAOException(exp, "db.retrieve.data.error",
 			"AbstractJDBCDAOImpl.java "+query);
 		}
@@ -705,7 +705,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		}
 		catch (SQLException sqlExp)
 		{
-			logger.info(sqlExp.getMessage(),sqlExp);
+			logger.error(sqlExp.getMessage(),sqlExp);
 			throw DAOUtility.getInstance().getDAOException(sqlExp, "db.update.data.error",
 			"AbstractJDBCDAOImpl.java   "+sql);
 		}
@@ -774,7 +774,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		}
 		catch (SQLException sqlExp)
 		{
-			logger.info(sqlExp.getMessage(),sqlExp);
+			logger.error(sqlExp.getMessage(),sqlExp);
 			throw DAOUtility.getInstance().getDAOException(sqlExp, "db.update.data.error",
 			"AbstractJDBCDAOImpl.java   "+sql);
 		}
@@ -929,7 +929,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		}
 		catch (SQLException sqlExp)
 		{
-			logger.info(sqlExp.getMessage(),sqlExp);
+			logger.error(sqlExp.getMessage(),sqlExp);
 			throw DAOUtility.getInstance().getDAOException(sqlExp, "db.stmt.creation.error",
 			"AbstractJDBCDAOImpl.java ");
 		}
@@ -953,7 +953,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		}
 		catch (SQLException sqlExp)
 		{
-			logger.info(sqlExp.getMessage(),sqlExp);
+			logger.error(sqlExp.getMessage(),sqlExp);
 			throw DAOUtility.getInstance().getDAOException(sqlExp, "db.stmt.creation.error",
 			"AbstractJDBCDAOImpl.java ");
 		}
@@ -982,7 +982,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		}
 	    catch (SQLException sqlExp)
 		{
-	    	logger.info(sqlExp.getMessage(),sqlExp);
+	    	logger.error(sqlExp.getMessage(),sqlExp);
 	    	throw DAOUtility.getInstance().getDAOException(sqlExp, "db.retrieve.data.error",
 				"AbstractJDBCDAOImpl.java ");
 		}
@@ -1014,7 +1014,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		}
 		catch(SQLException sqlExp)
 		{
-			logger.info(sqlExp.getMessage(),sqlExp);
+			logger.error(sqlExp.getMessage(),sqlExp);
 			throw DAOUtility.getInstance().getDAOException(sqlExp, "db.stmt.close.error",
 					"AbstractJDBCDAOImpl.java ");
 		}
@@ -1038,7 +1038,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		}
 		catch(SQLException sqlExp)
 		{
-			logger.info(sqlExp.getMessage(),sqlExp);
+			logger.error(sqlExp.getMessage(),sqlExp);
 			throw DAOUtility.getInstance().getDAOException(sqlExp, "db.stmt.close.error",
 					"AbstractJDBCDAOImpl.java ");
 		}
@@ -1071,7 +1071,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		}
 		catch(SQLException sqlExp)
 		{
-			logger.info(sqlExp.getMessage(),sqlExp);
+			logger.error(sqlExp.getMessage(),sqlExp);
 			throw DAOUtility.getInstance().getDAOException(sqlExp, "db.stmt.close.error",
 					"AbstractJDBCDAOImpl.java ");
 		}
@@ -1276,7 +1276,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		}
 		catch(SQLException sqlExp)
 		{
-			logger.info(sqlExp.getMessage(),sqlExp);
+			logger.error(sqlExp.getMessage(),sqlExp);
 			throw DAOUtility.getInstance().getDAOException(sqlExp, "db.stmt.close.error",
 			"AbstractJDBCDAOImpl.java ");
 		}
@@ -1308,7 +1308,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		}
 		catch(SQLException exp)
 		{
-			logger.info(exp.getMessage(),exp);
+			logger.error(exp.getMessage(),exp);
 			throw DAOUtility.getInstance().getDAOException(exp, "db.retrieve.data.error",
 			"AbstractJDBCDAOImpl.java "+query);
 		}
@@ -1336,7 +1336,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		}
 		catch(SQLException exp)
 		{
-			logger.info(exp.getMessage(),exp);
+			logger.error(exp.getMessage(),exp);
 			throw DAOUtility.getInstance().getDAOException(exp, "db.retrieve.data.error",
 			"AbstractJDBCDAOImpl.java "+query);
 		}
@@ -1363,7 +1363,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		}
 		catch (SQLException exp)
 		{
-			logger.info(exp.getMessage(),exp);
+			logger.error(exp.getMessage(),exp);
 			throw DAOUtility.getInstance().getDAOException(exp, "db.retrieve.data.error",
 			"AbstractJDBCDAOImpl.java  "+sql);
 		}
@@ -1411,13 +1411,13 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		}
 		catch (SQLException exp)
 		{
-			logger.info(exp.getMessage(),exp);
+			logger.error(exp.getMessage(),exp);
 			throw DAOUtility.getInstance().getDAOException(exp, "db.retrieve.data.error",
 			"AbstractJDBCDAOImpl.java  "+sql);
 		}
 		catch (FileNotFoundException exp)
 		{
-			logger.info(exp.getMessage(),exp);
+			logger.error(exp.getMessage(),exp);
 			throw DAOUtility.getInstance().getDAOException(exp, "db.file.not.found.error",
 			sql);
 		}
