@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.hibernate.Hibernate;
+
 import edu.wustl.common.audit.util.AuditUtil;
 import edu.wustl.common.audit.util.MetadataParser;
 import edu.wustl.common.beans.SessionDataBean;
@@ -698,12 +700,12 @@ public class AuditManager // NOPMD
 		if (prevObject == null && currentObject != null)
 		{
 			auditEventDetails = new AuditEventDetails();
-			auditEventDetails.setCurrentValue(getObjectValue(currentObject));
+			auditEventDetails.setCurrentValue(Hibernate.createClob(getObjectValue(currentObject)));
 		}
 		else if(currentObject == null && prevObject != null)
 		{
 			auditEventDetails = new AuditEventDetails();
-			auditEventDetails.setPreviousValue(getObjectValue(prevObject));
+			auditEventDetails.setPreviousValue(Hibernate.createClob(getObjectValue(prevObject)));
 		}
 		else if(prevObject != null && currentObject != null)
 		{
@@ -712,8 +714,8 @@ public class AuditManager // NOPMD
 			if(!previousVal.equals(currentVal))
 			{
 				auditEventDetails = new AuditEventDetails();
-				auditEventDetails.setPreviousValue(previousVal);
-				auditEventDetails.setCurrentValue(currentVal);
+				auditEventDetails.setPreviousValue(Hibernate.createClob(previousVal));
+				auditEventDetails.setCurrentValue(Hibernate.createClob(currentVal));
 			}
 		}
 
@@ -733,8 +735,24 @@ public class AuditManager // NOPMD
 	{
 		AuditEventDetails auditEventDetails = new AuditEventDetails();
 		auditEventDetails.setElementName(attributeName+"_PREV_CURR_IDS_LIST");
-		auditEventDetails.setCurrentValue(currentCollectionIds);
-		auditEventDetails.setPreviousValue(prevCollectionIds);
+		if(currentCollectionIds == null)
+		{
+			auditEventDetails.setCurrentValue(Hibernate.createClob(""));
+		}
+		else
+		{
+			auditEventDetails.setCurrentValue(Hibernate.createClob(currentCollectionIds));
+		}
+		if(prevCollectionIds == null)
+		{
+			auditEventDetails.setPreviousValue(Hibernate.createClob(""));
+		}
+		else
+		{
+			auditEventDetails.setPreviousValue(Hibernate.createClob(prevCollectionIds));
+		}
+
+
 		return auditEventDetails;
 	}
 	/**
