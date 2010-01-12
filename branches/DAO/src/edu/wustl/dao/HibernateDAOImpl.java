@@ -146,7 +146,7 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		catch (AuditException exp)
 		{
 
-			logger.error(exp.getMessage(),exp);
+			logger.info(exp.getMessage(),exp);
 			//throw DAOUtility.getInstance().getDAOException(exp, exp.getErrorKeyName(),
 				//	exp.getMsgValues());
 		}
@@ -167,7 +167,7 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		}
 		catch (HibernateException hibExp)
 		{
-			logger.error(hibExp.getMessage(),hibExp);
+			logger.info(hibExp.getMessage(),hibExp);
 			throw DAOUtility.getInstance().getDAOException(hibExp, "db.update.data.error",
 			"HibernateDAOImpl.java ");
 		}
@@ -190,21 +190,21 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		}
 		catch (AuditException exp)
 		{
-			logger.error(exp.getMessage(),exp);
+			logger.info(exp.getMessage(),exp);
 			return null;
 			/*throw DAOUtility.getInstance().getDAOException(exp, exp.getErrorKeyName(),
 					exp.getMsgValues());*/
 		}
 		catch (HibernateException hibExp)
 		{
-			logger.error(hibExp.getMessage(),hibExp);
+			logger.info(hibExp.getMessage(),hibExp);
 			return null;
 		//	throw DAOUtility.getInstance().getDAOException(hibExp, "db.update.data.error",
 			//"HibernateDAOImpl.java ");
 		}
 		catch (ClassNotFoundException exp)
 		{
-			logger.error(exp.getMessage(),exp);
+			logger.info(exp.getMessage(),exp);
 			return null;
 			//throw DAOUtility.getInstance().getDAOException(exp, "class.not.found.error",
 			//currentObj.getClass().getName());
@@ -236,13 +236,13 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		}
 		catch (HibernateException hibExp)
 		{
-			logger.error(hibExp.getMessage(),hibExp);
+			logger.info(hibExp.getMessage(),hibExp);
 			throw DAOUtility.getInstance().getDAOException(hibExp, "db.update.data.error",
 			"HibernateDAOImpl.java ");
 		}
 		catch (AuditException exp)
 		{
-			logger.error(exp.getMessage(),exp);
+			logger.info(exp.getMessage(),exp);
 			//throw DAOUtility.getInstance().getDAOException(exp, exp.getErrorKeyName(),
 				//	exp.getMsgValues());
 		}

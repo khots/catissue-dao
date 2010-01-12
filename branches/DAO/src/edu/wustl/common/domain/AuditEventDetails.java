@@ -1,6 +1,8 @@
 
 package edu.wustl.common.domain;
 
+import java.sql.Clob;
+
 /**
  * @hibernate.class table="CATISSUE_AUDIT_EVENT_DETAILS"
  **/
@@ -25,12 +27,12 @@ public class AuditEventDetails implements java.io.Serializable
 	/**
 	 * Specifies previous Value.
 	 */
-	private String previousValue;
+	private Clob previousValue;
 
 	/**
 	 * Specifies current Value.
 	 */
-	private String currentValue;
+	private Clob currentValue;
 
 	/**
 	 * Specifies AuditEventLog instance.
@@ -88,7 +90,7 @@ public class AuditEventDetails implements java.io.Serializable
 	 * @hibernate.property name="previousValue" type="string"
 	 * column="PREVIOUS_VALUE" length="150"
 	 **/
-	public String getPreviousValue()
+	public Clob getPreviousValue()
 	{
 		return previousValue;
 	}
@@ -100,7 +102,7 @@ public class AuditEventDetails implements java.io.Serializable
 	 * column="PREVIOUS_VALUE" length="150"
 	 **/
 
-	public void setPreviousValue(String previousValue)
+	public void setPreviousValue(Clob previousValue)
 	{
 		this.previousValue = previousValue;
 	}
@@ -111,7 +113,7 @@ public class AuditEventDetails implements java.io.Serializable
 	 * @hibernate.property name="currentValue" type="string"
 	 * column="CURRENT_VALUE" length="500"
 	 **/
-	public String getCurrentValue()
+	public Clob getCurrentValue()
 	{
 		return currentValue;
 	}
@@ -123,7 +125,7 @@ public class AuditEventDetails implements java.io.Serializable
 	 * column="CURRENT_VALUE" length="500"
 	 **/
 
-	public void setCurrentValue(String currentValue)
+	public void setCurrentValue(Clob currentValue)
 	{
 		this.currentValue = currentValue;
 	}

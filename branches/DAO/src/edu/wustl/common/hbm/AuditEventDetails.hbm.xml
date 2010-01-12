@@ -34,7 +34,7 @@
 
         <property
             name="previousValue"
-            type="string"
+            type="java.sql.Clob"
             update="true"
             insert="true"
             column="PREVIOUS_VALUE"
@@ -43,7 +43,7 @@
 
         <property
             name="currentValue"
-            type="string"
+            type="java.sql.Clob"
             update="true"
             insert="true"
             column="CURRENT_VALUE"

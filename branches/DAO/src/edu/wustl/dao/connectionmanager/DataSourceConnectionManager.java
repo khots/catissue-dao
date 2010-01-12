@@ -82,7 +82,7 @@ public class DataSourceConnectionManager implements IConnectionManager
 		}
 		catch (SQLException e)
 		{
-			logger.info(e.getMessage(), e);
+			logger.error(e.getMessage(), e);
 			throw DAOUtility.getInstance().getDAOException(e,
 					"db.close.conn.error", "DataSourceConnectionManager.java ");
 		}
@@ -104,7 +104,7 @@ public class DataSourceConnectionManager implements IConnectionManager
 		}
 		catch (SQLException e)
 		{
-			logger.info(e.getMessage(), e);
+			logger.error(e.getMessage(), e);
 			throw DAOUtility.getInstance().getDAOException(e,
 					"db.commit.error", "DataSourceConnectionManager.java ");
 		}
@@ -127,7 +127,7 @@ public class DataSourceConnectionManager implements IConnectionManager
 		}
 		catch (SQLException e)
 		{
-			logger.info(e.getMessage(), e);
+			logger.error(e.getMessage(), e);
 			throw DAOUtility.getInstance().getDAOException(e,
 					"db.rollback.error", "DataSourceConnectionManager.java ");
 		}
@@ -151,13 +151,13 @@ public class DataSourceConnectionManager implements IConnectionManager
 		}
 		catch (NamingException e)
 		{
-			logger.debug("Naming Exception");
+			logger.error(e.getMessage(), e);
 			throw DAOUtility.getInstance().getDAOException(e,
 					"db.dao.init.error", "DataSourceConnectionManager.java");
 		}
 		catch (SQLException e)
 		{
-			logger.debug("SQLException");
+			logger.error(e.getMessage(), e);
 			throw DAOUtility.getInstance().getDAOException(e,
 					"db.dao.init.error", "DataSourceConnectionManager.java");
 		}

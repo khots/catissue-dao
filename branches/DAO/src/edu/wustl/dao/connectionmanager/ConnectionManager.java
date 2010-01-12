@@ -20,6 +20,7 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
 import edu.wustl.common.util.logger.Logger;
+import edu.wustl.dao.daofactory.DAOConfigFactory;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.DAOUtility;
 
@@ -30,10 +31,9 @@ import edu.wustl.dao.util.DAOUtility;
 public class ConnectionManager implements IConnectionManager
 {
 	/**
-     * logger Logger - Generic logger.
-     */
-      private static org.apache.log4j.Logger logger =
-           Logger.getLogger(ConnectionManager.class);
+	 *Class Logger.
+	 */
+	private static final Logger logger = Logger.getCommonLogger(ConnectionManager.class);
 
 	/**
 	 * This member will store the name of the application.
@@ -136,7 +136,7 @@ public class ConnectionManager implements IConnectionManager
 		}
 		catch(HibernateException hiberExp)
 		{
-			logger.info(hiberExp.getMessage(), hiberExp);
+			logger.error(hiberExp.getMessage(), hiberExp);
 			throw DAOUtility.getInstance().getDAOException(hiberExp,
 					"db.close.conn.error", "ConnectionManager.java ");
 		}
@@ -159,7 +159,7 @@ public class ConnectionManager implements IConnectionManager
 		}
 		catch(HibernateException hiberExp)
 		{
-			logger.info(hiberExp.getMessage(), hiberExp);
+			logger.error(hiberExp.getMessage(), hiberExp);
 			throw DAOUtility.getInstance().getDAOException(hiberExp,
         			"db.commit.error", "ConnectionManager.java ");
 
@@ -183,7 +183,7 @@ public class ConnectionManager implements IConnectionManager
 		}
 		catch(HibernateException hiberExp)
 		{
-			logger.info(hiberExp.getMessage(), hiberExp);
+			logger.error(hiberExp.getMessage(), hiberExp);
 			throw DAOUtility.getInstance().getDAOException(hiberExp,
         			"db.rollback.error", "ConnectionManager.java ");
 		}
@@ -204,7 +204,7 @@ public class ConnectionManager implements IConnectionManager
 		}
 		catch (Exception excp)
 		{
-			logger.info(excp.getMessage(), excp);
+			logger.error(excp.getMessage(), excp);
 			throw DAOUtility.getInstance().getDAOException(excp,
 					"db.open.session.error", "ConnectionManager.java ");
 		}

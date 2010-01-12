@@ -22,6 +22,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.DatabaseProperties;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.DAOUtility;
@@ -48,6 +49,11 @@ public class ApplicationDAOPropertiesParser
 	queryGeneratorName;
 
 	/**
+	 *Class Logger.
+	 */
+	private static final Logger logger = Logger.getCommonLogger(ApplicationDAOPropertiesParser.class);
+	
+	/**
 	 * This method gets DAO Factory Map.
 	 * @return DAO Factory Map.
 	 * @throws DAOException database exception
@@ -62,6 +68,7 @@ public class ApplicationDAOPropertiesParser
 		}
 		catch (Exception exception)
 		{
+			logger.error(exception.getMessage(), exception);
 			throw DAOUtility.getInstance().getDAOException(exception,
 					"db.app.prop.parsing.exp", "ApplicationDAOPropertiesParser.java ");
 		}
@@ -88,7 +95,7 @@ public class ApplicationDAOPropertiesParser
 		InputStream inputStream = ApplicationDAOPropertiesParser.class.getClassLoader()
 		.getResourceAsStream(fileName);
 		return documentBuilder.parse(inputStream);
-		
+
 	}
 
 	/**
