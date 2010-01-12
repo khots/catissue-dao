@@ -57,6 +57,11 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
       * Hibernate Metadata associated to the application.
       */
      private HibernateMetaData hibernateMetaData;
+     
+     /**
+      * Session data bean.
+      */
+     private SessionDataBean sessionDataBean;
 
 
 	/**
@@ -70,6 +75,7 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		logger.debug("Open the session");
 	 	session = connectionManager.getSession();
 	 	auditManager = new AuditManager(sessionDataBean,hibernateMetaData);
+	 	this.sessionDataBean = sessionDataBean;
 	}
 
 	/**
@@ -255,6 +261,7 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 			session.save(auditManager.getAuditEvent());
 		}
 		auditManager.setAuditEvent(new AuditEvent());
+		auditManager.initializeAuditManager(sessionDataBean);
 	}
 	/**
 	 * Deletes the persistent object from the database.

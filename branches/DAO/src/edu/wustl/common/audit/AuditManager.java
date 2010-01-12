@@ -828,13 +828,12 @@ public class AuditManager // NOPMD
 	 * This method will be called to return the Audit manager.
 	 * @param sessionDataBean SessionDataBean sessionDataBean object
 	 */
-	private void initializeAuditManager(SessionDataBean sessionDataBean)
+	public void initializeAuditManager(SessionDataBean sessionDataBean)
 	{
 		if (sessionDataBean != null)
 		{
 			setUserId(sessionDataBean.getUserId());
 			setIpAddress(sessionDataBean.getIpAddress());
-
 		}
 	}
 
