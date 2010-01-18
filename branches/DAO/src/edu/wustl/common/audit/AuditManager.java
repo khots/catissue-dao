@@ -259,7 +259,7 @@ public class AuditManager // NOPMD
 	{
 		LOGGER.info("obj.getClass().getName() :"+obj.getClass().getName());
 		boolean isClassFound = false;
-		Long auditableClassId = Long.valueOf("");
+		Long auditableClassId = null;
 		if(obj != null)
 		{
 			if (auditableClasses != null)
