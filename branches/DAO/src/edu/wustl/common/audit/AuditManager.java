@@ -257,8 +257,9 @@ public class AuditManager // NOPMD
 	 */
 	public Long getObjectId(Object obj) throws AuditException
 	{
+		LOGGER.info("obj.getClass().getName() :"+obj.getClass().getName());
 		boolean isClassFound = false;
-		Long auditableClassId = null;
+		Long auditableClassId = Long.valueOf("");
 		if(obj != null)
 		{
 			if (auditableClasses != null)
@@ -597,7 +598,8 @@ public class AuditManager // NOPMD
 		else if(currentAuditableObject != null)
 		{
 			//Audit identifiers of current and previous objects.
-
+			LOGGER.info("currentAuditableObject.getClass().getName()"
+					+currentAuditableObject.getClass().getName());
 			AuditEventDetails auditEventDetails =
 			auditRefrenceAssociationsIds((getObjectId(currentAuditableObject))
 				.toString(),	null,
