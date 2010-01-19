@@ -32,6 +32,11 @@ public class MetadataParser
 	private AuditableMetaData metadata = null;
 
 	/**
+	 * audit metadata file name.
+	 */
+	private String metadataCfg = "auditablemetadata.xml";
+
+	/**
 	 * Private method to initialize the AuditableMetaData instance.
 	 * @throws AuditException  Exception while auditing.
 	 */
@@ -50,7 +55,7 @@ public class MetadataParser
 
 			// -- Read in the migration.xml using the mapping
 			InputStream inputStream = MetadataParser.class.getClassLoader()
-					.getResourceAsStream("auditablemetadata.xml");
+					.getResourceAsStream(metadataCfg);
 			InputSource inputSource = new InputSource(inputStream);
 			//FileReader in = new FileReader("migrationmetadata.xml");
 			metadata = (AuditableMetaData) unmarshaller.unmarshal(inputSource);
@@ -77,6 +82,20 @@ public class MetadataParser
 	}
 
 	/**
+	 * Public constructor that initializes the AuditableMetaData instance.
+	 *  in case it is not already initialized.
+	 * @throws AuditException  Exception while auditing.
+	 */
+	public MetadataParser(String metadataCfg) throws AuditException
+	{
+		this.metadataCfg =metadataCfg;
+		if (metadata == null)
+		{
+			init();
+		}
+	}
+
+	/**
 	 * This method returns the instance of AuditableMetaData.
 	 *  which contains all the metadata required.
 	 * for auditing the domain objects of the host application.
@@ -86,5 +105,25 @@ public class MetadataParser
 	{
 		return metadata;
 	}
+
+
+	/**
+	 * @return metadata file name
+	 */
+	public String getMetadataCfg()
+	{
+		return metadataCfg;
+	}
+
+
+	/**
+	 * @param metadataCfg
+	 */
+	public void setMetadataCfg(String metadataCfg)
+	{
+		this.metadataCfg = metadataCfg;
+	}
+
+
 
 }

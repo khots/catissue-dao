@@ -136,6 +136,7 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 	{
 		try
 		{
+			AuditManager.init("testauditablemetadata.xml");
 			dao.openSession(null);
 			User user = createUser();
 			dao.insert(user);
