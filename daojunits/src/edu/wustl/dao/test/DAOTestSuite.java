@@ -36,6 +36,8 @@ public class DAOTestSuite
 		TestSuite daoSuite = new TestSuite("Test for DAO Layer");
 		daoSuite.addTestSuite(HibernateTestCaseForCatissue.class);
 		daoSuite.addTestSuite(JDBCTestCasesForCatissue.class);
+		daoSuite.addTestSuite(TestAuditXMLGenerator.class);
+
 		return daoSuite;
 	}
 
