@@ -267,7 +267,7 @@ public class AuditManager // NOPMD
 	{
 		LOGGER.info("obj.getClass().getName() :"+obj.getClass().getName());
 		boolean isClassFound = false;
-		Long auditableClassId = null;
+		Long auditableClassId = Long.valueOf(-1);
 		if(obj != null)
 		{
 			if (auditableClasses != null)
@@ -281,6 +281,11 @@ public class AuditManager // NOPMD
 					{
 						isClassFound = true;
 						auditableClassId = (Long)auditableClass.invokeGetterForId(obj);
+						//need to remove this check in future !!
+						if(auditableClassId == null)
+						{
+							auditableClassId = Long.valueOf(-1);
+						}
 						break;
 					}
 				}
@@ -566,6 +571,8 @@ public class AuditManager // NOPMD
 		else
 		{
 			//Audit identifiers of current and previous objects.
+			LOGGER.info("currentAuditableObject.getClass().getName()"
+					+currentAuditableObject.getClass().getName());
             String previousAuditableObjectId = DAOConstants.EMPTY_STRING;
 			if(prevAuditableObject != null)
 			{
