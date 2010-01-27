@@ -1,0 +1,72 @@
+
+validate:pre:build:
+     [echo] Checking for existence of GLOBUS_LOCATION envrironment variable.
+     [echo] wscore.relative.dir = ws-core-4.0.3
+     [echo] GLOBUS_LOCATION not set, downloading and installing http://gforge.nci.nih.gov/svnroot/commonlibrary/trunk/techstack-2006/os-independent/ws-core-enum-4.0.3.zip
+     [echo] c:/apps/washu-commons-webapp/ws-core-4.0.3 already exists.
+
+clean:
+   [delete] Deleting directory D:\DAO_bda\DAO\software\target\dist
+   [delete] Deleting directory D:\DAO_bda\DAO\software\target\temp
+
+init:
+     [echo]  ______   ______   _______ 
+     [echo] (____  \ (______) (_______)
+     [echo]  ____)  ) _     _  _______ 
+     [echo] |  __  ( | |   | ||  ___  |
+     [echo] | |__)  )| |__/ / | |   | |
+     [echo] |______/ |_____/  |_|   |_|
+    [mkdir] Created dir: D:\DAO_bda\DAO\software\target\dist
+    [mkdir] Created dir: D:\DAO_bda\DAO\software\target\dist\exploded
+    [mkdir] Created dir: D:\DAO_bda\DAO\software\target\dist\exploded\DAO-api
+    [mkdir] Created dir: D:\DAO_bda\DAO\software\target\dist\exploded\DAO-webapp
+    [mkdir] Created dir: D:\DAO_bda\DAO\software\target\dist\exploded\common
+    [mkdir] Created dir: D:\DAO_bda\DAO\software\target\dist\exploded\tools
+    [mkdir] Created dir: D:\DAO_bda\DAO\software\target\temp
+
+build:DAO-api:
+
+build:DAO-webapp:
+
+init:
+     [echo] Initializing necessary parameters : 
+   [delete] Deleting directory D:\DAO_bda\DAO\software\DAO\build\classes
+    [mkdir] Created dir: D:\DAO_bda\DAO\software\DAO\build\classes
+
+compile:
+     [echo]  Compiling DAO source code : 
+    [javac] Compiling 43 source files to D:\DAO_bda\DAO\software\DAO\build\classes
+    [javac] Note: Some input files use or override a deprecated API.
+    [javac] Note: Recompile with -Xlint:deprecation for details.
+    [javac] Note: Some input files use unchecked or unsafe operations.
+    [javac] Note: Recompile with -Xlint:unchecked for details.
+
+build_jar:
+     [echo] Building project jar : 
+[build_jar] Building jar: D:\DAO_bda\DAO\software\DAO\build\DAO-1.1.2.jar
+
+init:
+     [echo] Initializing necessary parameters : 
+   [delete] Deleting directory D:\DAO_bda\DAO\software\DAO\build\classes
+    [mkdir] Created dir: D:\DAO_bda\DAO\software\DAO\build\classes
+
+compile:
+     [echo]  Compiling DAO source code : 
+    [javac] Compiling 43 source files to D:\DAO_bda\DAO\software\DAO\build\classes
+    [javac] Note: Some input files use or override a deprecated API.
+    [javac] Note: Recompile with -Xlint:deprecation for details.
+    [javac] Note: Some input files use unchecked or unsafe operations.
+    [javac] Note: Recompile with -Xlint:unchecked for details.
+
+build_code_zip:
+     [echo]  Building project installable zip : 
+      [zip] Building zip: D:\DAO_bda\DAO\software\DAO\build\DAO-1.1.2-src.zip
+
+build_code_zip:
+     [echo]  Building project installable zip : 
+
+dist:
+
+build:all:
+
+BUILD SUCCESSFUL
