@@ -80,6 +80,8 @@ public interface DAO
 	 * @param query query
 	 * @return List.
 	 * @throws DAOException generic DAOException.
+	 * @deprecated Deprecated this method use alternate
+	 *  API exposed to support this issue.
 	 */
 	List executeQuery(String query)
 		throws DAOException;
