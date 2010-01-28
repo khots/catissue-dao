@@ -73,29 +73,30 @@ public class AuditManager // NOPMD
 	/**
 	 * Collection of all the Object classes.
 	 */
-	private static Collection<AuditableClass>  auditableClasses;
+	private static Collection<AuditableClass>  auditableClasses = new ArrayList<AuditableClass>();
 
 	/**
 	 * Initializes the auditable Metadata.
+	 * @param metadataCfg : metadataCfg.
 	 * @throws AuditException throws if auditablemetadata.xml not found or unable to read.
 	 */
 	public static void init(String... metadataCfg) throws AuditException
 	{
 		//Get the instance of AuditableMetaData to read the
 		//auditable properties of the domain objects
-		auditableClasses  = new ArrayList<AuditableClass>();
 		MetadataParser parser = null;
 		if(metadataCfg.length > 0)
 		{
 			parser = new MetadataParser(metadataCfg[0]);
-		}else
+		}
+		else
 		{
 			parser = new MetadataParser();
 		}
 
 		AuditableMetaData metadata = parser.getAuditableMetaData();
 
-		auditableClasses = metadata.getAuditableClass();
+		auditableClasses.addAll(metadata.getAuditableClass());
 	}
 
 	/**

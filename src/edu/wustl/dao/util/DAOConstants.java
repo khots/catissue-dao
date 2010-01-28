@@ -142,6 +142,6 @@ public final class DAOConstants extends CommonConstants
 	    * /*..*/ /*:Comment delimiters. Text between /* and *//*is not evaluated by the server.
 	    */
 	 public static final String[] INVALID_DATA = {"execute", "exec","sp_executesql",
-		 "delete","drop",";","'","--","xp_","/*","*/"};
+		 "delete","drop",";","xp_","/*","*/"};
 
 }
