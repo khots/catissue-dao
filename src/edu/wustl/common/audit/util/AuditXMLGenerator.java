@@ -20,6 +20,7 @@ import edu.wustl.dao.exception.AuditException;
  */
 public class AuditXMLGenerator
 {
+	public static boolean excludeAssociation;
 	public static void main(String[] args) throws AuditException
 	{
 		int classCounter = generateAuditXML(args);
@@ -44,6 +45,10 @@ public class AuditXMLGenerator
 			auditableXmlWriter.println("<?xml version='1.0' encoding='utf-8'?>");
 			auditableXmlWriter.println("<AuditableMetaData>");
 			AuditXMLTagGenerator auditXMLGenerator = new AuditXMLTagGenerator();
+			if(args.length >2)
+			{
+				excludeAssociation = Boolean.valueOf(args[2]);
+			}
 
 			for (Class class1 : getClasses(args[0]))
 			{

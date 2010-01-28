@@ -2,6 +2,7 @@
 package edu.wustl.common.audit.util;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,11 +29,10 @@ public class AuditXMLTagGenerator
 			populateAllFields(newObjectClass, fieldList);
 			for (Field field : fieldList.values())
 			{
-				if (!"serialVersionUID".equalsIgnoreCase(field.getName()))
+				if (!"serialVersionUID".equalsIgnoreCase(field.getName()) && validateAttribute(field,newObjectClass))
 				{
 					auditableMetatdataXML.append('\t');
-					auditableMetatdataXML.append(getAttributeTag(field));
-					auditableMetatdataXML.append('\n');
+					updateAttributeTag(auditableMetatdataXML,field);
 				}
 
 			}
@@ -46,6 +46,28 @@ public class AuditXMLTagGenerator
 			auditableMetatdataXML.append("</AuditableClass>");
 		}
 		return auditableMetatdataXML.toString();
+	}
+
+	/**
+	 * check whether getter present for the given attribute in the class or not
+	 * @param field
+	 * @param newObjectClass
+	 * @return
+	 */
+	private boolean validateAttribute(Field field, Class newObjectClass)
+	{
+		boolean validAttribute = false;
+
+		String fieldName = field.getName();
+		Method methlist[] = newObjectClass.getDeclaredMethods();
+		for(Method method: methlist)
+		{
+			if(method.getName().equalsIgnoreCase("get"+fieldName))
+			{
+				validAttribute = true;
+			}
+		}
+		return validAttribute;
 	}
 
 	/**
@@ -87,23 +109,26 @@ public class AuditXMLTagGenerator
 	 * @param field
 	 * @return attribute tag
 	 */
-	private String getAttributeTag(Field field)
+	private void updateAttributeTag(StringBuffer auditableMetatdataXML,Field field)
 	{
-		String attributeTag = null;
-		if (field.getType().getName().startsWith("java.util.")
+
+		if (!AuditXMLGenerator.excludeAssociation && field.getType().getName().startsWith("java.util.")
 				&& !field.getType().getName().startsWith("java.util.Date"))
 		{
-			attributeTag = getContainmentAssociationCollection(field);
+			auditableMetatdataXML.append(getContainmentAssociationCollection(field));
+			auditableMetatdataXML.append('\n');
 		}
-		else
+		else if(!field.getType().getName().startsWith("java.util.Collection"))
 		{
+
 			String fieldName = field.getName();
 			String fieldType = field.getType().getName();
-			attributeTag = AuditXMLConstants.ATTRIBUTE_TAG;
+			String attributeTag = AuditXMLConstants.ATTRIBUTE_TAG;
 			attributeTag = attributeTag.replace(AuditXMLConstants.NAME_TOKEN, fieldName);
 			attributeTag = attributeTag.replace(AuditXMLConstants.DATA_TYPE_TOKEN, fieldType);
+			auditableMetatdataXML.append(attributeTag);
+			auditableMetatdataXML.append('\n');
 		}
-		return attributeTag;
 	}
 
 	/**
