@@ -15,6 +15,7 @@ import java.sql.Types;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +29,7 @@ import edu.wustl.dao.DAO;
 import edu.wustl.dao.HibernateDAO;
 import edu.wustl.dao.daofactory.DAOConfigFactory;
 import edu.wustl.dao.exception.DAOException;
+import edu.wustl.dao.query.generator.ColumnValueBean;
 import edu.wustl.dao.query.generator.DBTypes;
 
 
@@ -359,6 +361,64 @@ public final class DAOUtility
 		char[] dst = new char[tokenSize];
 		tempString.getChars(0, tokenSize, dst, 0);
 		return new String(dst);
+	}
+
+	/**
+	 * This method will be called to check for invalid/malicious data.
+	 * @param sql : Query having '?' as parameters
+	 * @param beans : having column name, value and column type.
+	 * @throws DAOException : database exception.
+	 */
+	public static void checkforInvalidData(String sql,
+			List<ColumnValueBean> beans) throws DAOException
+	{
+		Iterator<ColumnValueBean> beansIter = beans.iterator();
+		while(beansIter.hasNext())
+		{
+			ColumnValueBean bean = beansIter.next();
+			for(int counter =0; counter < DAOConstants.INVALID_DATA.length;counter++)
+			{
+				if(bean.getColumnValue() instanceof String &&
+					(bean.getColumnValue().toString()).trim()
+					.toLowerCase()
+					.contains(DAOConstants.INVALID_DATA[counter].trim().toLowerCase()))
+				{
+
+					logger.error("SQl : "+sql+
+						"  Invalid data : "+ bean.getColumnValue().toString()+
+				    	" Encountered invalid character:" +
+				    	DAOConstants.INVALID_DATA[counter]);
+					throw DAOUtility.getInstance().getDAOException(null,
+					"db.malicious.data.encountered",bean.getColumnValue().toString()+
+					":"+DAOConstants.INVALID_DATA[counter]);
+				}
+			}
+		}
+	}
+
+	/**
+	 * This method will be called to look for invalid data.
+	 * @param dataValue dataValue
+	 * @throws DAOException database exception.
+	 */
+	public static void checkforInvalidData(Object dataValue) throws DAOException
+	{
+		for(int counter =0; counter < DAOConstants.INVALID_DATA.length;counter++)
+		{
+			if(dataValue instanceof String &&
+				(dataValue.toString()).trim()
+				.toLowerCase()
+				.contains(DAOConstants.INVALID_DATA[counter].trim().toLowerCase()))
+			{
+
+				logger.error("  Invalid data : "+ dataValue.toString()+
+			    	" Encountered invalid character:" +
+			    	DAOConstants.INVALID_DATA[counter]);
+				throw DAOUtility.getInstance().getDAOException(null,
+				"db.malicious.data.encountered",dataValue.toString()+
+				":"+DAOConstants.INVALID_DATA[counter]);
+			}
+		}
 	}
 
 }
