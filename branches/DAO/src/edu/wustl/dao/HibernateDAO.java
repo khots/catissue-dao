@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import edu.wustl.dao.exception.DAOException;
+import edu.wustl.dao.query.generator.ColumnValueBean;
 import edu.wustl.dao.util.HibernateMetaData;
 import edu.wustl.dao.util.NamedQueryParam;
 
@@ -29,6 +30,16 @@ public interface HibernateDAO extends DAO
 	List executeNamedQuery(String queryName,Map<String, NamedQueryParam> namedQueryParams) throws DAOException;
 
 	/**
+	 * Executes the HQL query.
+	 * @param query HQL query to execute.
+	 * @param columnValueBeans column data beans.
+	 * @return list of data.
+	 * @throws DAOException Database exception.
+	 */
+	List executeParamHQL(String query,List<ColumnValueBean> columnValueBeans)
+	throws DAOException;
+
+	/**
 	 * Executes the HQL query. for given startIndex and max
 	 * records to retrieve
 	 * @param query  HQL query to execute
@@ -40,6 +51,62 @@ public interface HibernateDAO extends DAO
 	 */
 	List executeQuery(String query,Integer startIndex,
 			Integer maxRecords,List paramValues) throws DAOException;
+
+	/**
+	 * Retrieve and returns the list of all source objects that satisfy the
+	 * for given conditions on a various columns.
+	 * @param sourceObjectName Source object's name to be retrieved from database.
+	 * @param selectColumnName Column names in SELECT clause of the query.
+	 * @param queryWhereClause : This will hold following:
+	 * 1.whereColumnName Array of column name to be included in where clause.
+	 * 2.whereColumnCondition condition to be satisfy between column and its value.
+	 * e.g. "=", "!=", "<", ">", "in", "null" etc
+	 * 3. whereColumnValue Value of the column name that included in where clause.
+	 * 4.joinCondition join condition between two columns. (AND, OR)
+	 * @param onlyDistinctRows true if only distinct rows should be selected.
+	 * @param columnValueBeans columnValueBeans
+	 * @return the list of all source objects that satisfy the search conditions.
+	 * @throws DAOException generic DAOException.
+	 *  */
+
+	List retrieve(String sourceObjectName,String[] selectColumnName,
+			QueryWhereClause queryWhereClause,boolean onlyDistinctRows,
+			List<ColumnValueBean> columnValueBeans) throws DAOException;
+
+
+	/**
+	 * Retrieve and returns the list of all source objects that satisfy the
+	 * for given conditions on a various columns.
+	 * @param sourceObjectName Source object's name to be retrieved from database.
+	 * @param selectColumnName Column names in SELECT clause of the query.
+	 * @param queryWhereClause : This will hold following:
+	 * 1.whereColumnName Array of column name to be included in where clause.
+	 * 2.whereColumnCondition condition to be satisfy between column and its value.
+	 * e.g. "=", "<", ">", "=<", ">=" etc
+	 * 3. whereColumnValue Value of the column name that included in where clause.
+	 * 4.joinCondition join condition between two columns. (AND, OR)
+	 * @return the list of all source objects that satisfy the search conditions.
+	 * @throws DAOException generic DAOException.
+	 * @param columnValueBeans columnValueBeans
+	 */
+
+	List retrieve(String sourceObjectName,
+			String[] selectColumnName,QueryWhereClause queryWhereClause,
+			List<ColumnValueBean> columnValueBeans) throws DAOException;
+
+
+
+	/**
+	 * Retrieves attribute value for given class name and identifier.
+	 * @param objClass source Class object
+	 * @param attributeName attribute to be retrieved
+	 * @param columnValueBean columnValueBean
+	 * @return List.
+	 * @throws DAOException generic DAOException.
+	 */
+	List retrieveAttribute(Class objClass, ColumnValueBean columnValueBean,
+			String attributeName) throws DAOException;
+
 
 	/**
 	 * This method will be called to set the hibernate metadata

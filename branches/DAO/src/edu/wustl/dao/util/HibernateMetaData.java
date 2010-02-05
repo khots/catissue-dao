@@ -225,4 +225,18 @@ public final class HibernateMetaData
 		return className;
 	}
 
+	/**
+	 * This method will be called to obtained the
+	 * persistent class mapped to given class.
+	 * @param className : Class name.
+	 * @return the class name
+	 */
+	public PersistentClass getPersistentClass(String className)
+	{
+		PersistentClass persistentClass = this.cfg.getClassMapping(className);
+		return persistentClass;
+	}
+
+
+
 }

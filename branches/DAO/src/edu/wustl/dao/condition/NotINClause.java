@@ -99,6 +99,10 @@ public class NotINClause implements Condition
 	 */
 	public String buildSql()throws DAOException
 	{
+		for(Object obj : colValueArray)
+		{
+			DAOUtility.checkforInvalidData(obj);
+		}
 		StringBuffer strBuff = new StringBuffer(DAOConstants.TRAILING_SPACES);
 
 		strBuff = new StringBuffer(DAOConstants.TRAILING_SPACES);

@@ -14,6 +14,7 @@ import edu.wustl.dao.DAO;
 import edu.wustl.dao.DatabaseProperties;
 import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.exception.DAOException;
+import edu.wustl.dao.util.HibernateMetaData;
 
 
 
@@ -152,5 +153,10 @@ public interface IDAOFactory
 	 * @return database name.
 	 */
 	String getDataBaseType();
+
+	/**
+	 * @return the hibernateMetaData
+	 */
+	HibernateMetaData getHibernateMetaData();
 
 }

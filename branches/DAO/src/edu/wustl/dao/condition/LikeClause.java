@@ -60,6 +60,7 @@ public class LikeClause implements Condition
 	 */
 	public String buildSql()throws DAOException
 	{
+		DAOUtility.checkforInvalidData(colValue);
 		StringBuffer strBuff = new StringBuffer(DAOConstants.TRAILING_SPACES);
 
 		String sourceObject = DAOUtility.getInstance().parseClassName(sourceObjectName);
