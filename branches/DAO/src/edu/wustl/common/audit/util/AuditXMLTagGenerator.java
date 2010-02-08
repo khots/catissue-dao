@@ -3,7 +3,9 @@ package edu.wustl.common.audit.util;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -57,9 +59,9 @@ public class AuditXMLTagGenerator
 	private boolean validateAttribute(Field field, Class newObjectClass)
 	{
 		boolean validAttribute = false;
-
 		String fieldName = field.getName();
-		Method methlist[] = newObjectClass.getDeclaredMethods();
+		List<Method> methlist = new ArrayList<Method>();
+		populateAllMethods(newObjectClass, methlist);
 		for(Method method: methlist)
 		{
 			if(method.getName().equalsIgnoreCase("get"+fieldName))
@@ -84,6 +86,24 @@ public class AuditXMLTagGenerator
 		for (Field field : klass.getDeclaredFields())
 		{
 			fieldList.put(field.getName(), field);
+		}
+	}
+
+	/**
+	 * @param klass
+	 * @param fieldList field list declared in the class and in its parent classes
+	 */
+	private void populateAllMethods(Class klass, List<Method> fieldList)
+	{
+
+		if (klass.getSuperclass() != null)
+		{
+			populateAllMethods(klass.getSuperclass(), fieldList);
+		}
+		klass.getDeclaredFields();
+		for(Method method: klass.getDeclaredMethods())
+		{
+			fieldList.add(method);
 		}
 	}
 
