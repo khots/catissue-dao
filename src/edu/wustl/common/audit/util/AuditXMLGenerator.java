@@ -14,7 +14,7 @@ import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.dao.exception.AuditException;
 
 /**
- * This class generates the audit metadata xml for given package
+ * This class generates the audit metadata xml for given package.
  * @author kunal_kamble
  *
  */
