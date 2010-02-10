@@ -1,5 +1,6 @@
 package edu.wustl.dao.test;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -26,6 +27,7 @@ import edu.wustl.dao.condition.NullClause;
 import edu.wustl.dao.daofactory.DAOConfigFactory;
 import edu.wustl.dao.daofactory.IDAOFactory;
 import edu.wustl.dao.exception.DAOException;
+import edu.wustl.dao.query.generator.ColumnValueBean;
 import edu.wustl.dao.util.DAOConstants;
 import edu.wustl.dao.util.HibernateMetaData;
 import edu.wustl.dao.util.HibernateMetaDataFactory;
@@ -739,6 +741,138 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 
 	}
 
+	/**
+	 * This test will assert that query will be executed successfully.
+	 */
+	@Test
+	public void testCaseExecuteQueryforParamHQL()
+	{
+		try
+		{
+			dao.openSession(null);
+			String sql = "from test.User where id = :id and lastName = :lastName";
+			ColumnValueBean columnValueBean = new ColumnValueBean("id",Long.valueOf(1));
+			ColumnValueBean columnValueBean1 = new ColumnValueBean("lastName","Thakur");
+			List<ColumnValueBean> columnValueBeans = new ArrayList<ColumnValueBean>();
+			columnValueBeans.add(columnValueBean);
+			columnValueBeans.add(columnValueBean1);
+			List<Object> list = ((HibernateDAO)dao).executeParamHQL(sql,columnValueBeans);
+
+			User user = (User)list.get(0);
+			System.out.println("User firstname "+user.getFirstName());
+			System.out.println("User lastname  "+user.getLastName());
+			System.out.println("User id "+user.getId());
+			//dao.closeSession();
+			assertNotNull(list);
+		//	assertTrue("No object retrieved ::",!list.isEmpty());
+
+		}
+		catch(Exception exp)
+		{
+
+			assertFalse("Problem while executing query :: for SQL injection", true);
+		}
+		finally
+		{
+			try
+			{
+				dao.closeSession();
+			}
+			catch (DAOException e)
+			{
+				e.printStackTrace();
+			}
+		}
+
+	}
+
+	/**
+	 * This test will assert that query will be executed successfully.
+	 */
+	@Test
+	public void testCaseExecuteQueryforSQLInjectionWithParam()
+	{
+		try
+		{
+			dao.openSession(null);
+			String sql = "from test.User where id = ? and lastName = ?";
+			ColumnValueBean columnValueBean = new ColumnValueBean(Long.valueOf(1));
+			ColumnValueBean columnValueBean1 = new ColumnValueBean("Thakur");
+			List<ColumnValueBean> columnValueBeans = new ArrayList<ColumnValueBean>();
+			columnValueBeans.add(columnValueBean);
+			columnValueBeans.add(columnValueBean1);
+			List<Object> list = dao.executeQuery(sql,columnValueBeans);
+
+			User user = (User)list.get(0);
+			System.out.println("testCaseExecuteQueryforSQLInjectionWithParam User firstname "+user.getFirstName());
+			System.out.println("testCaseExecuteQueryforSQLInjectionWithParam User lastname  "+user.getLastName());
+			System.out.println("testCaseExecuteQueryforSQLInjectionWithParam User id "+user.getId());
+			//dao.closeSession();
+			assertNotNull(list);
+		//	assertTrue("No object retrieved ::",!list.isEmpty());
+
+		}
+		catch(Exception exp)
+		{
+
+			assertFalse("Problem while executing query :: for SQL injection", true);
+		}
+		finally
+		{
+			try
+			{
+				dao.closeSession();
+			}
+			catch (DAOException e)
+			{
+				e.printStackTrace();
+			}
+		}
+
+	}
+
+	/**
+	 * This test will assert that query will be executed successfully.
+	 */
+	@Test
+	public void testCaseExecuteQueryforSQLInjection()
+	{
+		try
+		{
+			dao.openSession(null);
+			String sql = "from test.User where id = ? and lastName = ?";
+			List columnValueBeans = new ArrayList();
+			columnValueBeans.add(Long.valueOf(1));
+			columnValueBeans.add("Thakur");
+			List<Object> list = ((HibernateDAO)dao).executeQuery(sql,null,null,columnValueBeans);
+			System.out.println("list size "+list.size());
+			User user = (User)list.get(0);
+			System.out.println("testCaseExecuteQueryforSQLInjection User firstname "+user.getFirstName());
+			System.out.println("testCaseExecuteQueryforSQLInjection User lastname  "+user.getLastName());
+			System.out.println("testCaseExecuteQueryforSQLInjection User id "+user.getId());
+			//dao.closeSession();
+			assertNotNull(list);
+		//	assertTrue("No object retrieved ::",!list.isEmpty());
+
+		}
+		catch(Exception exp)
+		{
+
+			assertFalse("Problem while executing query :: for SQL injection", true);
+		}
+		finally
+		{
+			try
+			{
+				dao.closeSession();
+			}
+			catch (DAOException e)
+			{
+				e.printStackTrace();
+			}
+		}
+
+	}
 
 
 
@@ -758,6 +892,77 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 			assertNotNull("Object retrieved is null",obj);
 			List<String> list = (List<String>)obj;
 			assertNotNull("Object retrieved is null",list);
+			//assertTrue("Problem in retrieving attribute :", !list.isEmpty());
+		}
+		catch(Exception exp)
+		{
+			assertFalse("Problem in retrieving attribute ::", true);
+		}
+		finally
+		{
+			try
+			{
+				dao.closeSession();
+			}
+			catch (DAOException e)
+			{
+				e.printStackTrace();
+			}
+		}
+
+	}
+	
+	
+	/**
+	 * This test will assert that attribute retrieved successfully.
+	 */
+	@Test
+	public void testRetrieveAttributeSQLINJCT()
+	{
+		try
+		{
+			dao.openSession(null);
+			List listObj = (List)((HibernateDAO)dao).retrieveAttribute(
+					User.class,new ColumnValueBean("id",Long.valueOf(1)),"emailAddress");
+		//	dao.closeSession();
+			System.out.println("List size retrive attribute :"+listObj.size() +":"+listObj);
+
+			assertNotNull("Object retrieved is null",listObj);
+			//assertTrue("Problem in retrieving attribute :", !list.isEmpty());
+		}
+		catch(Exception exp)
+		{
+			assertFalse("Problem in retrieving attribute ::", true);
+		}
+		finally
+		{
+			try
+			{
+				dao.closeSession();
+			}
+			catch (DAOException e)
+			{
+				e.printStackTrace();
+			}
+		}
+
+	}
+	
+	/**
+	 * This test will assert that attribute retrieved successfully.
+	 */
+	@Test
+	public void testRetrieveObjectSQLINJCT()
+	{
+		try
+		{
+			dao.openSession(null);
+			ColumnValueBean columnValueBean = new ColumnValueBean("id",Long.valueOf(1));
+			List listObj = (List)((HibernateDAO)dao).retrieve(User.class.getName(), columnValueBean);
+		//	dao.closeSession();
+			System.out.println("List size retrive objects :"+listObj.size() +":"+listObj);
+
+			assertNotNull("Object retrieved is null",listObj);
 			//assertTrue("Problem in retrieving attribute :", !list.isEmpty());
 		}
 		catch(Exception exp)
@@ -823,6 +1028,65 @@ public class HibernateTestCaseForCatissue extends BaseTestCase
 		}
 
 	}
+
+
+	/**
+	 * This test will create a complex retrieve query having multiple clause(IN,NOT NULL,IS NULL)
+	 * It will ensure that objects retrieved successfully.
+	 */
+	@Test
+	public void testRetriveQueryForSQLInjcn()
+	{
+		try
+		{
+			String sourceObjectName = "test.User";
+
+			List<ColumnValueBean> columnValueBeans = new ArrayList<ColumnValueBean>();
+			columnValueBeans.add(new ColumnValueBean(Long.valueOf(1)));
+			columnValueBeans.add(new ColumnValueBean(Long.valueOf(2)));
+			columnValueBeans.add(new ColumnValueBean("Washu"));
+			columnValueBeans.add(new ColumnValueBean(Long.valueOf(100)));
+			columnValueBeans.add(new ColumnValueBean(Long.valueOf(1)));
+
+			Object [] colValues = {'?','?'};
+			String[] selectColumnName = null;
+
+			QueryWhereClause queryWhereClause = new QueryWhereClause(sourceObjectName);
+			queryWhereClause.addCondition(new INClause("id",colValues))
+			.orOpr().addCondition(new NotNullClause("firstName")).orOpr()
+			.addCondition(new EqualClause("firstName",'?')).orOpr().
+			addCondition(new LessThenClause("id",'?')).orOpr().
+			addCondition(new GreaterThenClause("id",'?'));
+
+
+			System.out.println("queryWhereClause :"+queryWhereClause.toWhereClause());
+
+			dao.openSession(null);
+			List<Object> list = ((HibernateDAO)dao).retrieve(sourceObjectName, selectColumnName,
+					queryWhereClause,false,columnValueBeans);
+			System.out.println("List ---- "+list);
+			System.out.println("List size :---- "+list.size());
+			assertNotNull("No data retrieved :",list);
+			//assertTrue("No data retrieved :",!list.isEmpty());
+		}
+		catch(Exception exp)
+		{
+			assertFalse("Problem occurred while retrieving object:", true);
+		}
+		finally
+		{
+			try
+			{
+				dao.closeSession();
+			}
+			catch (DAOException e)
+			{
+				e.printStackTrace();
+			}
+		}
+
+	}
+	
 
 	/**
 	 * This test will various factory members.

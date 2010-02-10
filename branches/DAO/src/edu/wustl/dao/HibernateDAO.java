@@ -9,6 +9,8 @@ package edu.wustl.dao;
 import java.util.List;
 import java.util.Map;
 
+import edu.wustl.common.domain.LoginDetails;
+import edu.wustl.dao.exception.AuditException;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.query.generator.ColumnValueBean;
 import edu.wustl.dao.util.HibernateMetaData;
@@ -121,5 +123,14 @@ public interface HibernateDAO extends DAO
 	 * @return the hibernateMetaData
 	 */
 	HibernateMetaData getHibernateMetaData();
+
+	/**
+	 * Sets the status of LoginAttempt to loginStatus provided as an argument.
+	 * @param loginStatus LoginStatus boolean value.
+	 * @param loginDetails LoginDetails object.
+	 * @throws AuditException AuditException
+	 */
+	void auditLoginEvents(boolean loginStatus,
+			LoginDetails loginDetails)throws AuditException;
 
 }

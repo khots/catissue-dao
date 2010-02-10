@@ -23,6 +23,8 @@ import org.hibernate.Session;
 import edu.wustl.common.audit.AuditManager;
 import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.domain.AuditEvent;
+import edu.wustl.common.domain.LoginDetails;
+import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.condition.EqualClause;
 import edu.wustl.dao.exception.AuditException;
@@ -266,6 +268,33 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		auditManager.setAuditEvent(new AuditEvent());
 		auditManager.initializeAuditManager(sessionDataBean);
 	}
+
+	/**
+	 * Sets the status of LoginAttempt to loginStatus provided as an argument.
+	 * @param loginStatus LoginStatus boolean value.
+	 * @param loginDetails LoginDetails object.
+	 * @throws AuditException AuditException
+	 */
+	public void auditLoginEvents(boolean loginStatus,
+			LoginDetails loginDetails)throws AuditException
+	{
+		auditManager.setLoginDetails(loginDetails);
+		try
+		{
+			auditManager.getLoginEvent().setIsLoginSuccessful(loginStatus);
+			session.save(auditManager.getLoginEvent());
+		}
+		catch (HibernateException daoException)
+		{
+			logger.error("Exception while Auditing Login Attempt. "
+					+ daoException.getMessage(), daoException);
+
+			throw new AuditException(ErrorKey.getErrorKey("error.in.login.audit"),daoException,"");
+
+		}
+
+	}
+
 	/**
 	 * Deletes the persistent object from the database.
 	 * @param obj The object to be deleted.
