@@ -45,6 +45,29 @@ public class AuditManager // NOPMD
 	 */
 	private AuditEvent auditEvent;
 
+	/**
+	 * Instance of login event.
+	 * Login event changes.
+	 *
+	 */
+	private LoginEvent loginEvent;
+
+	/**
+	 * @return the loginEvent.
+	 */
+	public LoginEvent getLoginEvent()
+	{
+		return loginEvent;
+	}
+
+
+	/**
+	 * @param loginEvent the loginEvent to set.
+	 */
+	public void setLoginEvent(LoginEvent loginEvent)
+	{
+		this.loginEvent = loginEvent;
+	}
 
 	/**
 	 * @param auditEvent the auditEvent to set
@@ -817,49 +840,14 @@ public class AuditManager // NOPMD
 	/**
 	 * Sets the LoginDetails.
 	 * @param loginDetails LoginDetails object to set.
-	 * @return LoginEvent LoginEvent.
 	 */
-	private LoginEvent setLoginDetails(LoginDetails loginDetails)
+	public void setLoginDetails(LoginDetails loginDetails)
 	{
-		LoginEvent loginEvent = new LoginEvent();
+		loginEvent = new LoginEvent();
 		loginEvent.setIpAddress(loginDetails.getIpAddress());
 		loginEvent.setSourceId(loginDetails.getSourceId());
 		loginEvent.setUserLoginId(loginDetails.getUserLoginId());
-		return loginEvent ;
 	}
-	/**
-	 * Sets the status of LoginAttempt to loginStatus provided as an argument.
-	 * @param loginStatus LoginStatus boolean value.
-	 * @param loginDetails LoginDetails object.
-	 * @param dao Hibernate DAO instance.
-	 * @throws AuditException AuditException
-	 * @throws DAOException Database exception.
-	 */
-	public void loginAudit(HibernateDAO dao,boolean loginStatus,
-			LoginDetails loginDetails)throws AuditException, DAOException
-	{
-		LoginEvent loginEvent = setLoginDetails(loginDetails);
-		try
-		{
-			if(dao == null)
-			{
-			 throw new AuditException(ErrorKey.getErrorKey(
-					 "dao.close.or.not.initialized"),null,"");
-			}
-			loginEvent.setIsLoginSuccessful(loginStatus);
-			dao.insert(loginEvent);
-		}
-		catch (DAOException daoException)
-		{
-			LOGGER.debug("Exception while Auditing Login Attempt. "
-					+ daoException.getMessage(), daoException);
-
-			throw new AuditException(ErrorKey.getErrorKey("error.in.login.audit"),daoException,"");
-
-		}
-
-	}
-
 	/**
 	 * This method will be called to return the Audit manager.
 	 * @param sessionDataBean SessionDataBean sessionDataBean object

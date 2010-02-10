@@ -12,7 +12,7 @@ public class LoginDetails
 	/**
 	 * User's login id.
 	 */
-	private String userLoginId;
+	private Long userLoginId;
 	/**
 	 * User's source or domain he belongs to.
 	 */
@@ -31,7 +31,7 @@ public class LoginDetails
 	 * @param sourceId Source Id.
 	 * @param ipAddress IP Address.
 	 */
-	public LoginDetails(String userLoginId, Long sourceId, String ipAddress)
+	public LoginDetails(Long userLoginId, Long sourceId, String ipAddress)
 	{
 		this.ipAddress = ipAddress;
 		this.userLoginId = userLoginId;
@@ -45,7 +45,7 @@ public class LoginDetails
 	 * @param ipAddress IP Address.
 	 * @param isLoginSuccessful boolean value.
 	 */
-	public LoginDetails(String userLoginId, Long sourceId, String ipAddress,
+	public LoginDetails(Long userLoginId, Long sourceId, String ipAddress,
 			boolean isLoginSuccessful)
 	{
 		this(userLoginId, sourceId, ipAddress);
@@ -55,7 +55,7 @@ public class LoginDetails
 	 * Returns the userLoginId.
 	 * @return user Login Id.
 	 */
-	public String getUserLoginId()
+	public Long getUserLoginId()
 	{
 		return userLoginId;
 	}
@@ -63,7 +63,7 @@ public class LoginDetails
 	 * Sets the userLoginId.
 	 * @param userLoginId userLoginId to set.
 	 */
-	public void setUserLoginId(String userLoginId)
+	public void setUserLoginId(Long userLoginId)
 	{
 		this.userLoginId = userLoginId;
 	}
