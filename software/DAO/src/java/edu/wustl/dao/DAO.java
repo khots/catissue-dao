@@ -13,6 +13,7 @@ import java.util.List;
 import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.dao.connectionmanager.IConnectionManager;
 import edu.wustl.dao.exception.DAOException;
+import edu.wustl.dao.query.generator.ColumnValueBean;
 
 
 /**
@@ -64,7 +65,6 @@ public interface DAO
 	List retrieve(String sourceObjectName,String[] selectColumnName,
 			QueryWhereClause queryWhereClause,boolean onlyDistinctRows) throws DAOException;
 
-
 	/**
 	 * Retrieve and returns the source object for given id.
 	 * @param sourceObjectName Source object in the Database.
@@ -87,16 +87,29 @@ public interface DAO
 		throws DAOException;
 
 	/**
+	 * Executes the HQL query.
+	 * @param query HQL query to execute.
+	 * @param columnValueBeans column data beans.
+	 * @return list of data.
+	 * @throws DAOException Database exception.
+	 */
+	List executeQuery(String query,List<ColumnValueBean> columnValueBeans)
+	throws DAOException;
+
+	/**
 	 * Retrieves attribute value for given class name and identifier.
 	 * @param objClass source Class object
 	 * @param identifier identifier of the source object
 	 * @param attributeName attribute to be retrieved
 	 * @param columnName : where clause column field.
 	 * @return List.
+	 * @deprecated user retrieveAttribute in HibernateDAO.java pass column name
+	 * and column value column value bean
 	 * @throws DAOException generic DAOException.
 	 */
 	List retrieveAttribute(Class objClass, String columnName,Long identifier,
 			String attributeName) throws DAOException;
+
 
 	/**
 	 * Retrieve and returns the list of all source objects that satisfy the
@@ -126,9 +139,25 @@ public interface DAO
 	 * @param whereColumnValue Value of the Column name that included in where clause.
 	 * @return the list of all source objects for given condition on a single column.
 	 * @throws DAOException generic DAOException.
+	 * @deprecated : Avoid using these methods. Use List retrieve(String sourceObjectName,
+	 * List<ColumnValueBean> columnValueBeans) pass column name
+	 * and column value column value bean
 	 */
 	List retrieve(String sourceObjectName, String whereColumnName,
 			Object whereColumnValue) throws DAOException;
+
+	/**
+	 * Returns the ResultSet containing all the rows from the table represented in sourceObjectName
+	 * according to the where clause.It will create the where condition clause which holds where column name,
+	 * value and conditions applied.
+	 * @param sourceObjectName The table name.
+	 * @param columnValueBean columnValueBean
+	 * @return The ResultSet containing all the rows from the table represented
+	 * in sourceObjectName which satisfies the where condition
+	 * @throws DAOException : DAOException
+	 */
+	List retrieve(String sourceObjectName,ColumnValueBean columnValueBean)
+			throws DAOException;
 
 	/**
 	 * Returns the list of all source objects available in database.

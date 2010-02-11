@@ -1,7 +1,7 @@
 package edu.wustl.common.audit.util;
 
 /**
- * @author kunal_kamble
+ * @author kunal_kamble.
  *
  */
 public class AuditXMLConstants

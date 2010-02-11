@@ -20,9 +20,7 @@ import edu.wustl.common.domain.LoginDetails;
 import edu.wustl.common.domain.LoginEvent;
 import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.logger.Logger;
-import edu.wustl.dao.HibernateDAO;
 import edu.wustl.dao.exception.AuditException;
-import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.DAOConstants;
 import edu.wustl.dao.util.HibernateMetaData;
 
@@ -44,6 +42,30 @@ public class AuditManager // NOPMD
 	 *
 	 */
 	private AuditEvent auditEvent;
+
+	/**
+	 * Instance of login event.
+	 * Login event changes.
+	 *
+	 */
+	private LoginEvent loginEvent;
+
+	/**
+	 * @return the loginEvent
+	 */
+	public LoginEvent getLoginEvent()
+	{
+		return loginEvent;
+	}
+
+
+	/**
+	 * @param loginEvent the loginEvent to set
+	 */
+	public void setLoginEvent(LoginEvent loginEvent)
+	{
+		this.loginEvent = loginEvent;
+	}
 
 
 	/**
@@ -73,29 +95,30 @@ public class AuditManager // NOPMD
 	/**
 	 * Collection of all the Object classes.
 	 */
-	private static Collection<AuditableClass>  auditableClasses;
+	private static Collection<AuditableClass>  auditableClasses = new ArrayList<AuditableClass>();
 
 	/**
 	 * Initializes the auditable Metadata.
+	 * @param metadataCfg : metadataCfg.
 	 * @throws AuditException throws if auditablemetadata.xml not found or unable to read.
 	 */
 	public static void init(String... metadataCfg) throws AuditException
 	{
 		//Get the instance of AuditableMetaData to read the
 		//auditable properties of the domain objects
-		auditableClasses  = new ArrayList<AuditableClass>();
 		MetadataParser parser = null;
 		if(metadataCfg.length > 0)
 		{
 			parser = new MetadataParser(metadataCfg[0]);
-		}else
+		}
+		else
 		{
 			parser = new MetadataParser();
 		}
 
 		AuditableMetaData metadata = parser.getAuditableMetaData();
 
-		auditableClasses = metadata.getAuditableClass();
+		auditableClasses.addAll(metadata.getAuditableClass());
 	}
 
 	/**
@@ -816,15 +839,13 @@ public class AuditManager // NOPMD
 	/**
 	 * Sets the LoginDetails.
 	 * @param loginDetails LoginDetails object to set.
-	 * @return LoginEvent LoginEvent.
 	 */
-	private LoginEvent setLoginDetails(LoginDetails loginDetails)
+	public void setLoginDetails(LoginDetails loginDetails)
 	{
-		LoginEvent loginEvent = new LoginEvent();
+		loginEvent = new LoginEvent();
 		loginEvent.setIpAddress(loginDetails.getIpAddress());
 		loginEvent.setSourceId(loginDetails.getSourceId());
 		loginEvent.setUserLoginId(loginDetails.getUserLoginId());
-		return loginEvent ;
 	}
 	/**
 	 * Sets the status of LoginAttempt to loginStatus provided as an argument.
@@ -833,11 +854,11 @@ public class AuditManager // NOPMD
 	 * @param dao Hibernate DAO instance.
 	 * @throws AuditException AuditException
 	 * @throws DAOException Database exception.
-	 */
+	 *//*
 	public void loginAudit(HibernateDAO dao,boolean loginStatus,
 			LoginDetails loginDetails)throws AuditException, DAOException
 	{
-		LoginEvent loginEvent = setLoginDetails(loginDetails);
+		setLoginDetails(loginDetails);
 		try
 		{
 			if(dao == null)
@@ -858,7 +879,7 @@ public class AuditManager // NOPMD
 		}
 
 	}
-
+*/
 	/**
 	 * This method will be called to return the Audit manager.
 	 * @param sessionDataBean SessionDataBean sessionDataBean object
