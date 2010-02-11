@@ -857,7 +857,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		while(columValueBeansItr.hasNext())
 		{
 			LinkedList<ColumnValueBean> beans = columValueBeansItr.next();
-			checkforInvalidData(sql, beans);
+			DAOUtility.checkforInvalidData(sql, beans);
 		}
 	}
 
@@ -866,7 +866,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * @param sql : Query having '?' as parameters
 	 * @param beans : having column name, value and column type.
 	 * @throws DAOException : database exception.
-	 */
+	 *//*
 	private void checkforInvalidData(String sql,
 			List<ColumnValueBean> beans) throws DAOException
 	{
@@ -892,7 +892,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 				}
 			}
 		}
-	}
+	}*/
 
 	/**
 	 * @param stmt statement instance.
@@ -1248,6 +1248,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * @return The ResultSet containing all the rows from the table represented
 	 * in sourceObjectName which satisfies the where condition
 	 * @throws DAOException : DAOException
+	 * @deprecated
 	 */
 	public List retrieve(String sourceObjectName, String whereColumnName, Object whereColumnValue)
 			throws DAOException
@@ -1259,6 +1260,24 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		queryWhereClause.addCondition(new EqualClause(whereColumnName,whereColumnValue,sourceObjectName));
 
 		return retrieve(sourceObjectName, selectColumnName,queryWhereClause,null,false);
+	}
+
+	public List retrieve(String sourceObjectName,
+			ColumnValueBean columnValueBean) throws DAOException
+	{
+		logger.debug("Inside retrieve method");
+		String[] selectColumnName = null;
+
+		QueryWhereClause queryWhereClause = new QueryWhereClause(sourceObjectName);
+		queryWhereClause.addCondition(new EqualClause(columnValueBean.getColumnName(),
+				"?",sourceObjectName));
+
+		List<ColumnValueBean> columnValueBeans = new ArrayList<ColumnValueBean>();
+		columnValueBeans.add(columnValueBean);
+
+		return retrieve(sourceObjectName, selectColumnName,
+				queryWhereClause, columnValueBeans,
+				false);
 	}
 
 
@@ -1313,6 +1332,20 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 			"AbstractJDBCDAOImpl.java "+query);
 		}
 
+	}
+
+	/**
+	 * Executes the HQL query. for given startIndex and max
+	 * records to retrieve.
+	 * @param query  HQL query to execute
+	 * @param columnValueBeans columnValueBeans
+	 * @return List of data.
+	 * @throws DAOException database exception.
+	  */
+	public List executeQuery(String query,
+			List<ColumnValueBean> columnValueBeans) throws DAOException
+	{
+		return executeQuery(query,null,columnValueBeans);
 	}
 
 	/**
@@ -1392,7 +1425,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 					throw DAOUtility.getInstance().getDAOException(null,
 							"db.prepstmt.param.error",sql);
 				}
-				checkforInvalidData(sql, columnValueBeans);
+				DAOUtility.checkforInvalidData(sql, columnValueBeans);
 			}
 
 			//Initialize Statement.
