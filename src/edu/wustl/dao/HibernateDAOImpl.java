@@ -485,7 +485,7 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 	public List executeQuery(String query,List<ColumnValueBean> columnValueBeans)
 	throws DAOException
 	{
-		logger.info("Execute query  %%% query !!! "+query+"+columnValueBeans.size() !! "+columnValueBeans.size());
+		logger.info("Execute query  %%% query !!! "+query);
 		try
 		{
 	    	Query hibernateQuery = session.createQuery(query);
@@ -498,10 +498,8 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 				while(colValItr.hasNext())
 				{
 					ColumnValueBean colValueBean = colValItr.next();
-					logger.info("colValueBean.getColumnValue() !!!!"+colValueBean.getColumnValue());
 					hibernateQuery.setParameter(index,
 							colValueBean.getColumnValue());
-					logger.info("parameter set !!! "+colValueBean.getColumnValue());
 					index++;
 				}
 	    	}
