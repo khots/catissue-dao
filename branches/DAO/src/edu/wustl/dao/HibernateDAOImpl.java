@@ -722,7 +722,6 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 			{
 				queryStrBuff.append(queryWhereClause.toWhereClause());
 			}
-			logger.info("before executing q !!"+columnValueBeans.size());
 			return executeQuery(queryStrBuff.toString(),columnValueBeans);
 
 		}
