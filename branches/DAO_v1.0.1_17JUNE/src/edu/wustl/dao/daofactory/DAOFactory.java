@@ -111,15 +111,15 @@ public class DAOFactory implements IDAOFactory
 	{
 		try
 		{
-			DAO dao = (DAO) Class.forName(defaultDAOClassName).newInstance();
-			IConnectionManager connManager = getDefaultConnManager(sessionFactory, configuration);
+			final DAO dao = (DAO) Class.forName(defaultDAOClassName).newInstance();
+			final IConnectionManager connManager = getDefaultConnManager(sessionFactory, configuration);
 			dao.setConnectionManager(connManager);
 			dao.setApplicationName(applicationName);
 			HibernateMetaDataFactory.setHibernateMetaData(applicationName, connManager
 					.getConfiguration());
 			return dao;
 		}
-		catch (Exception excp)
+		catch (final Exception excp)
 		{
 			throw DAOUtility.getInstance().getDAOException(excp, "db.dao.init.error",
 					"DAOFactory.java ");
@@ -139,8 +139,8 @@ public class DAOFactory implements IDAOFactory
 
 		try
 		{
-			JDBCDAO jdbcDAO = (JDBCDAO) Class.forName(jdbcDAOClassName).newInstance();
-			IConnectionManager connManager = getJDBCConnManager(sessionFactory, configuration);
+			final JDBCDAO jdbcDAO = (JDBCDAO) Class.forName(jdbcDAOClassName).newInstance();
+			final IConnectionManager connManager = getJDBCConnManager(sessionFactory, configuration);
 			jdbcDAO.setConnectionManager(connManager);
 			jdbcDAO.setApplicationName(applicationName);
 			((AbstractJDBCDAOImpl) jdbcDAO).setDatabaseProperties(databaseProperties);
@@ -149,7 +149,7 @@ public class DAOFactory implements IDAOFactory
 					.getConfiguration());
 			return jdbcDAO;
 		}
-		catch (Exception excp)
+		catch (final Exception excp)
 		{
 			throw DAOUtility.getInstance().getDAOException(excp, "db.jdbcdao.init.error",
 					"DAOFactory.java ");
@@ -170,7 +170,7 @@ public class DAOFactory implements IDAOFactory
 			configuration = setConfiguration(configurationFile);
 			sessionFactory = configuration.buildSessionFactory();
 		}
-		catch (Exception exp)
+		catch (final Exception exp)
 		{
 
 			throw DAOUtility.getInstance().getDAOException(exp, "db.sessionfactory.init.error",
@@ -185,10 +185,10 @@ public class DAOFactory implements IDAOFactory
 	 * @throws Exception : exception
 	 * @return IConnectionManager : connection manager.
 	 */
-	private IConnectionManager getDefaultConnManager(SessionFactory sessionFactory,
-			Configuration configuration) throws Exception
+	private IConnectionManager getDefaultConnManager(final SessionFactory sessionFactory,
+			final Configuration configuration) throws Exception
 	{
-		IConnectionManager connectionManager = (IConnectionManager) Class.forName(
+		final IConnectionManager connectionManager = (IConnectionManager) Class.forName(
 				defaultConnMangrName).newInstance();
 		connectionManager.setApplicationName(applicationName);
 		connectionManager.setSessionFactory(sessionFactory);
@@ -203,13 +203,13 @@ public class DAOFactory implements IDAOFactory
 	 * @throws Exception exception
 	 * @return IConnectionManager : connection manager.
 	 */
-	private IConnectionManager getJDBCConnManager(SessionFactory sessionFactory,
-			Configuration configuration) throws Exception
+	private IConnectionManager getJDBCConnManager(final SessionFactory sessionFactory,
+			final Configuration configuration) throws Exception
 	{
-		IConnectionManager connectionManager = (IConnectionManager) Class
+		final IConnectionManager connectionManager = (IConnectionManager) Class
 				.forName(jdbcConnMangrName).newInstance();
 		connectionManager.setApplicationName(applicationName);
-		connectionManager.setDataSource(dataSource);
+		connectionManager.setDataSource(databaseProperties.getDataSource());
 		connectionManager.setSessionFactory(sessionFactory);
 		connectionManager.setConfiguration(configuration);
 		return connectionManager;
@@ -222,30 +222,30 @@ public class DAOFactory implements IDAOFactory
 	* @return Configuration :Configuration object.
 	* @throws DAOException :Generic DAOException.
 	*/
-	private Configuration setConfiguration(String configurationfile) throws DAOException
+	private Configuration setConfiguration(final String configurationfile) throws DAOException
 	{
 		try
 		{
 
-			Configuration configuration = new Configuration();
+			final Configuration configuration = new Configuration();
 			//InputStream inputStream = DAOFactory.class.getClassLoader().getResourceAsStream(configurationfile);
-			InputStream inputStream = Thread.currentThread().getContextClassLoader()
+			final InputStream inputStream = Thread.currentThread().getContextClassLoader()
 					.getResourceAsStream(configurationfile);
-			List<Object> errors = new ArrayList<Object>();
+			final List<Object> errors = new ArrayList<Object>();
 			// hibernate api to read configuration file and convert it to
 			// Document(dom4j) object.
-			XMLHelper xmlHelper = new XMLHelper();
-			Document document = xmlHelper
+			final XMLHelper xmlHelper = new XMLHelper();
+			final Document document = xmlHelper
 					.createSAXReader(configurationfile, errors, entityResolver).read(
 							new InputSource(inputStream));
 			// convert to w3c Document object.
-			DOMWriter writer = new DOMWriter();
-			org.w3c.dom.Document doc = writer.write(document);
+			final DOMWriter writer = new DOMWriter();
+			final org.w3c.dom.Document doc = writer.write(document);
 			// configure
 			configuration.configure(doc);
 			return configuration;
 		}
-		catch (Exception exp)
+		catch (final Exception exp)
 		{
 			throw DAOUtility.getInstance().getDAOException(exp, "db.conf.file.parse.error",
 					"DAOFactory.java ");
@@ -257,16 +257,16 @@ public class DAOFactory implements IDAOFactory
 	 * This method will be called to set Connection Manager name.
 	 * @param connectionManagerName : Connection Manager.
 	 */
-	public void setDefaultConnMangrName(String connectionManagerName)
+	public void setDefaultConnMangrName(final String connectionManagerName)
 	{
-		this.defaultConnMangrName = connectionManagerName;
+		defaultConnMangrName = connectionManagerName;
 	}
 
 	/**
 	 * This method will be called to set defaultDAOClassName.
 	 * @param defaultDAOClassName : defaultDAOClassName.
 	 */
-	public void setDefaultDAOClassName(String defaultDAOClassName)
+	public void setDefaultDAOClassName(final String defaultDAOClassName)
 	{
 		this.defaultDAOClassName = defaultDAOClassName;
 	}
@@ -275,7 +275,7 @@ public class DAOFactory implements IDAOFactory
 	 * This method will be called to set applicationName.
 	 * @param applicationName : Name of the application.
 	 */
-	public void setApplicationName(String applicationName)
+	public void setApplicationName(final String applicationName)
 	{
 		this.applicationName = applicationName;
 	}
@@ -293,7 +293,7 @@ public class DAOFactory implements IDAOFactory
 	 * This method will be called to set jdbcDAOClassName.
 	 * @param jdbcDAOClassName : jdbcDAOClassName.
 	 */
-	public void setJdbcDAOClassName(String jdbcDAOClassName)
+	public void setJdbcDAOClassName(final String jdbcDAOClassName)
 	{
 		this.jdbcDAOClassName = jdbcDAOClassName;
 	}
@@ -338,7 +338,7 @@ public class DAOFactory implements IDAOFactory
 	 *This method will be called to set the configuration file name.
 	 *@param configurationFile : Name of configuration file.
 	 */
-	public void setConfigurationFile(String configurationFile)
+	public void setConfigurationFile(final String configurationFile)
 	{
 		this.configurationFile = configurationFile;
 	}
@@ -356,7 +356,7 @@ public class DAOFactory implements IDAOFactory
 	 * This will be set to true if DAO factory is default.
 	 * @param isDefaultDAOFactory :
 	 */
-	public void setIsDefaultDAOFactory(Boolean isDefaultDAOFactory)
+	public void setIsDefaultDAOFactory(final Boolean isDefaultDAOFactory)
 	{
 		this.isDefaultDAOFactory = isDefaultDAOFactory;
 	}
@@ -374,7 +374,7 @@ public class DAOFactory implements IDAOFactory
 	 * This method will be called to set connection manager name.
 	 * @param jdbcConnMangrName : JDBC connection manager name.
 	 */
-	public void setJdbcConnMangrName(String jdbcConnMangrName)
+	public void setJdbcConnMangrName(final String jdbcConnMangrName)
 	{
 		this.jdbcConnMangrName = jdbcConnMangrName;
 	}
@@ -392,7 +392,7 @@ public class DAOFactory implements IDAOFactory
 	 * This method will be called to set the data source.
 	 * @param dataSource : JDBC connection name.
 	 */
-	public void setDataSource(String dataSource)
+	public void setDataSource(final String dataSource)
 	{
 		this.dataSource = dataSource;
 	}
@@ -401,7 +401,7 @@ public class DAOFactory implements IDAOFactory
 	  * This method will be called to set all database properties.
 	  * @param databaseProperties :database properties.
 	  */
-	public void setDatabaseProperties(DatabaseProperties databaseProperties)
+	public void setDatabaseProperties(final DatabaseProperties databaseProperties)
 	{
 		this.databaseProperties = databaseProperties;
 	}
