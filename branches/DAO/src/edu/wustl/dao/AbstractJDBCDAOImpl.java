@@ -12,6 +12,8 @@ package edu.wustl.dao;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Blob;
 import java.sql.Clob;
 import java.sql.Connection;
@@ -27,6 +29,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.SortedSet;
+
+import org.hibernate.Hibernate;
 
 import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.exception.ErrorKey;
@@ -715,6 +719,12 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 			throw DAOUtility.getInstance().getDAOException(exp, "db.file.not.found.error",
 			sql);
 		}
+		catch (IOException exp)
+		{
+			logger.info(exp.getMessage(),exp);
+			throw DAOUtility.getInstance().getDAOException(exp, "db.file.not.found.error",
+			sql);
+		}
 		finally
 		{
 			closeStatementInstance(stmt);
@@ -791,11 +801,11 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * @param stmt statement instance.
 	 * @throws SQLException SQLException
 	 * @throws DAOException DAOException
-	 * @throws FileNotFoundException  File not found issue.
+	 * @throws IOException
 	 */
 	private void populateStatement(
 			List<ColumnValueBean> columnValueBeans,
-			PreparedStatement stmt) throws SQLException, DAOException, FileNotFoundException
+			PreparedStatement stmt) throws SQLException, DAOException, IOException
 	{
 		if(columnValueBeans != null)
 		{
@@ -827,6 +837,13 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 				else if (colValueBean.getColumnValue() instanceof Clob)
 				{
 					 stmt.setClob(index,(Clob)colValueBean.getColumnValue());
+				}
+				else if(colValueBean.getColumnValue() instanceof InputStream)
+				{
+					InputStream is = (InputStream)colValueBean.getColumnValue();
+					Blob blobFile = Hibernate.createBlob(is);
+					int length = (int)blobFile.length();
+					stmt.setBinaryStream(index, (InputStream)colValueBean.getColumnValue(), length);
 				}
 				else
 				{
@@ -923,7 +940,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	{
 		try
 		{
-			Statement statement = (Statement)connection.createStatement();
+			Statement statement = connection.createStatement();
 			openedStmts.add(statement);
 			return statement;
 		}
@@ -946,7 +963,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	{
 		try
 		{
-			preparedStatement = (PreparedStatement) connection.prepareStatement
+			preparedStatement = connection.prepareStatement
 			(query);//,Statement.RETURN_GENERATED_KEYS);
 			openedStmts.add(preparedStatement);
 			return preparedStatement;
@@ -1451,6 +1468,12 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		catch (FileNotFoundException exp)
 		{
 			logger.error(exp.getMessage(),exp);
+			throw DAOUtility.getInstance().getDAOException(exp, "db.file.not.found.error",
+			sql);
+		}
+		catch (IOException exp)
+		{
+			logger.info(exp.getMessage(),exp);
 			throw DAOUtility.getInstance().getDAOException(exp, "db.file.not.found.error",
 			sql);
 		}
