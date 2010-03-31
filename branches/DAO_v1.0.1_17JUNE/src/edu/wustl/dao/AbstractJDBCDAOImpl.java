@@ -70,7 +70,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	/**
 	 * This will maintain the list of all statements.
 	 */
-	private List<Statement> openedStmts = new ArrayList<Statement>();
+	private final List<Statement> openedStmts = new ArrayList<Statement>();
 
 	private String applicationName;
 
@@ -79,9 +79,9 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		return applicationName;
 	}
 
-	public void setApplicationName(String appName)
+	public void setApplicationName(final String appName)
 	{
-		this.applicationName = appName;
+		applicationName = appName;
 	}
 
 	/**
@@ -90,13 +90,14 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * @param sessionDataBean : holds the data associated to the session.
 	 * @throws DAOException :It will throw DAOException
 	 */
-	public void openSession(SessionDataBean sessionDataBean) throws DAOException
+	@Override
+    public void openSession(final SessionDataBean sessionDataBean) throws DAOException
 	{
 		try
 		{
 			connection = connectionManager.getConnection();
 		}
-		catch (Exception sqlExp)
+		catch (final Exception sqlExp)
 		{
 			throw DAOUtility.getInstance().getDAOException(sqlExp, "db.open.session.error",
 					"AbstractJDBCDAOImpl.java ");
@@ -108,7 +109,8 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * Declared in DAO class.
 	 * @throws DAOException : It will throw DAOException.
 	 */
-	public void closeSession() throws DAOException
+	@Override
+    public void closeSession() throws DAOException
 	{
 		try
 		{
@@ -116,7 +118,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 			batchClose();
 			closeConnectionParams();
 		}
-		catch (Exception dbex)
+		catch (final Exception dbex)
 		{
 			throw DAOUtility.getInstance().getDAOException(dbex, "db.close.conn.error",
 					"AbstractJDBCDAOImpl.java ");
@@ -129,7 +131,8 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * @throws DAOException : It will throw DAOException
 	 * @throws SMException
 	 */
-	public void commit() throws DAOException
+	@Override
+    public void commit() throws DAOException
 	{
 		logger.debug("Session commit");
 		try
@@ -137,7 +140,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 			batchCommit();
 			connectionManager.commit();
 		}
-		catch (DAOException exp)
+		catch (final DAOException exp)
 		{
 			throw DAOUtility.getInstance().getDAOException(exp, "db.commit.error",
 					"AbstractJDBCDAOImpl.java");
@@ -180,14 +183,15 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * Declared in DAO class.
 	 * @throws DAOException : It will throw DAOException.
 	 */
-	public void rollback() throws DAOException
+	@Override
+    public void rollback() throws DAOException
 	{
 		try
 		{
 			logger.debug("Session rollback");
 			connectionManager.rollback();
 		}
-		catch (Exception exp)
+		catch (final Exception exp)
 		{
 			throw DAOUtility.getInstance().getDAOException(exp, "db.rollback.error",
 					"AbstractJDBCDAOImpl.java");
@@ -201,7 +205,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * @param columnSet : columns
 	 * @throws DAOException : database exception
 	 */
-	public void batchInitialize(int batchSize, String tableName, SortedSet<String> columnSet)
+	public void batchInitialize(final int batchSize, final String tableName, final SortedSet<String> columnSet)
 			throws DAOException
 	{
 		logger.debug("Initialize batch");
@@ -210,10 +214,10 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 			validateBatchParams(batchSize, tableName, columnSet);
 			batchCounter = 0;
 			setBatchSize(batchSize);
-			String sql = generateQuery(tableName, columnSet);
+			final String sql = generateQuery(tableName, columnSet);
 			prepBatchStatement = connection.prepareStatement(sql);
 		}
-		catch (SQLException exp)
+		catch (final SQLException exp)
 		{
 			throw DAOUtility.getInstance().getDAOException(exp, "db.batch.initialization.error",
 					"AbstractJDBCDAOImpl.java");
@@ -226,10 +230,10 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * @param columnSet : set of columns
 	 * @throws DAOException : database exception.
 	 */
-	private void validateBatchParams(int batchSize, String tableName, SortedSet<String> columnSet)
+	private void validateBatchParams(final int batchSize, final String tableName, final SortedSet<String> columnSet)
 			throws DAOException
 	{
-		Validator validator = new Validator();
+		final Validator validator = new Validator();
 		if (batchSize == 0 || !validator.isNumeric(String.valueOf(batchSize)))
 		{
 			throw DAOUtility.getInstance().getDAOException(null, "db.batch.size.issue",
@@ -252,23 +256,23 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * @param dataMap Map holding the column value data.
 	 * @throws DAOException : database exception.
 	 */
-	public void batchInsert(SortedMap<String, ColumnValueBean> dataMap) throws DAOException
+	public void batchInsert(final SortedMap<String, ColumnValueBean> dataMap) throws DAOException
 	{
 		logger.debug("insert batch");
 		try
 		{
 			if (prepBatchStatement == null)
 			{
-				ErrorKey errorKey = ErrorKey.getErrorKey("db.batch.initialization.error");
+				final ErrorKey errorKey = ErrorKey.getErrorKey("db.batch.initialization.error");
 				throw new DAOException(errorKey, null, "AbstractJDBCDAOImpl.java :");
 			}
 
-			Iterator<String> columns = dataMap.keySet().iterator();
+			final Iterator<String> columns = dataMap.keySet().iterator();
 			int columnIndex = 1;
 			while (columns.hasNext())
 			{
-				String column = columns.next();
-				ColumnValueBean colValueBean = dataMap.get(column);
+				final String column = columns.next();
+				final ColumnValueBean colValueBean = dataMap.get(column);
 				if (colValueBean.getColumnType() == DBTypes.DATE)
 				{
 					prepBatchStatement.setDate(columnIndex, setDateToPrepStmt(colValueBean));
@@ -294,7 +298,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 			}
 
 		}
-		catch (Exception exp)
+		catch (final Exception exp)
 		{
 			throw DAOUtility.getInstance().getDAOException(exp, "db.batch.insert.error",
 					"AbstractJDBCDAOImpl.java");
@@ -308,7 +312,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * @throws DAOException database exception.
 	 * @return Timestamp date time value.
 	 */
-	private Timestamp setTimeStampToPrepStmt(ColumnValueBean colValueBean) throws SQLException,
+	private Timestamp setTimeStampToPrepStmt(final ColumnValueBean colValueBean) throws SQLException,
 			DAOException
 	{
 
@@ -317,7 +321,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 			throw DAOUtility.getInstance().getDAOException(null, "db.dataType.invalid",
 					"AbstractJDBCDAOImpl.java");
 		}
-		Timestamp dateTime = (Timestamp) colValueBean.getColumnValue();
+		final Timestamp dateTime = (Timestamp) colValueBean.getColumnValue();
 		return dateTime;
 
 	}
@@ -328,7 +332,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * @throws DAOException database exception.
 	 * @return Date date value
 	 */
-	private java.sql.Date setDateToPrepStmt(ColumnValueBean colValueBean) throws SQLException,
+	private java.sql.Date setDateToPrepStmt(final ColumnValueBean colValueBean) throws SQLException,
 			DAOException
 	{
 		if (!(colValueBean.getColumnValue() instanceof Date))
@@ -336,8 +340,8 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 			throw DAOUtility.getInstance().getDAOException(null, "db.dataType.invalid",
 					"AbstractJDBCDAOImpl.java");
 		}
-		Date date = (Date) colValueBean.getColumnValue();
-		java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+		final Date date = (Date) colValueBean.getColumnValue();
+		final java.sql.Date sqlDate = new java.sql.Date(date.getTime());
 		return sqlDate;
 	}
 
@@ -360,7 +364,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 			}
 
 		}
-		catch (SQLException exp)
+		catch (final SQLException exp)
 		{
 			throw DAOUtility.getInstance().getDAOException(exp, "db.batch.commit.error",
 					"AbstractJDBCDAOImpl.java");
@@ -382,7 +386,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 				preparedStatement = null;
 			}
 		}
-		catch (SQLException exp)
+		catch (final SQLException exp)
 		{
 			throw DAOUtility.getInstance().getDAOException(exp, "db.batch.close.error",
 					"AbstractJDBCDAOImpl.java");
@@ -396,16 +400,16 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * @param columnSet set of column names
 	 * @return String SQL
 	 */
-	private String generateQuery(String tableName, SortedSet<String> columnSet)
+	private String generateQuery(final String tableName, final SortedSet<String> columnSet)
 	{
 		logger.debug("Generate String");
 
-		StringBuffer insertSql = new StringBuffer(DAOConstants.TRAILING_SPACES);
-		StringBuffer valuePart = new StringBuffer(DAOConstants.TRAILING_SPACES);
+		final StringBuffer insertSql = new StringBuffer(DAOConstants.TRAILING_SPACES);
+		final StringBuffer valuePart = new StringBuffer(DAOConstants.TRAILING_SPACES);
 		insertSql.append("insert into").append(DAOConstants.TRAILING_SPACES).append(tableName)
 				.append(" (");
 		valuePart.append("values (");
-		Iterator<String> columns = columnSet.iterator();
+		final Iterator<String> columns = columnSet.iterator();
 
 		while (columns.hasNext())
 		{
@@ -442,16 +446,16 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * in sourceObjectName which satisfies the where condition
 	 * @throws DAOException : DAOException
 	 */
-	public ResultSet retrieveResultSet(String sourceObjectName, String[] selectColumnName,
-			QueryWhereClause queryWhereClause, boolean onlyDistinctRows) throws DAOException
+	public ResultSet retrieveResultSet(final String sourceObjectName, final String[] selectColumnName,
+			final QueryWhereClause queryWhereClause, final boolean onlyDistinctRows) throws DAOException
 	{
 		try
 		{
-			StringBuffer queryStrBuff = generateSQL(sourceObjectName, selectColumnName,
+			final StringBuffer queryStrBuff = generateSQL(sourceObjectName, selectColumnName,
 					queryWhereClause, onlyDistinctRows);
 			return getQueryResultSet(queryStrBuff.toString());
 		}
-		catch (Exception exp)
+		catch (final Exception exp)
 		{
 			throw DAOUtility.getInstance().getDAOException(exp, "db.retrieve.data.error",
 					"AbstractJDBCDAOImpl.java ");
@@ -471,18 +475,18 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * in sourceObjectName which satisfies the where condition
 	 * @throws DAOException : DAOException
 	 */
-	public List retrieve(String sourceObjectName, String[] selectColumnName,
-			QueryWhereClause queryWhereClause, boolean onlyDistinctRows) throws DAOException
+	public List retrieve(final String sourceObjectName, final String[] selectColumnName,
+			final QueryWhereClause queryWhereClause, final boolean onlyDistinctRows) throws DAOException
 	{
 		logger.debug("Inside retrieve method");
 		try
 		{
-			StringBuffer queryStrBuff = generateSQL(sourceObjectName, selectColumnName,
+			final StringBuffer queryStrBuff = generateSQL(sourceObjectName, selectColumnName,
 					queryWhereClause, onlyDistinctRows);
-			List list = executeQuery(queryStrBuff.toString());
+			final List list = executeQuery(queryStrBuff.toString());
 			return list;
 		}
-		catch (Exception exp)
+		catch (final Exception exp)
 		{
 			throw DAOUtility.getInstance().getDAOException(exp, "db.retrieve.data.error",
 					"AbstractJDBCDAOImpl.java ");
@@ -505,10 +509,10 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * @return The ResultSet containing all the rows from the table represented
 	 * in sourceObjectName which satisfies the where condition
 	 */
-	private StringBuffer generateSQL(String sourceObjectName, String[] selectColumnName,
-			QueryWhereClause queryWhereClause, boolean onlyDistinctRows)
+	private StringBuffer generateSQL(final String sourceObjectName, final String[] selectColumnName,
+			final QueryWhereClause queryWhereClause, final boolean onlyDistinctRows)
 	{
-		StringBuffer queryStrBuff = getSelectPartOfQuery(selectColumnName, onlyDistinctRows);
+		final StringBuffer queryStrBuff = getSelectPartOfQuery(selectColumnName, onlyDistinctRows);
 		logger.debug("Prepare from part of the query");
 		queryStrBuff.append("FROM ").append(sourceObjectName);
 
@@ -527,10 +531,10 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * @param onlyDistinctRows true if only distinct rows should be selected
 	 * @return It will return the select clause of Query.
 	 */
-	private StringBuffer getSelectPartOfQuery(String[] selectColumnName, boolean onlyDistinctRows)
+	private StringBuffer getSelectPartOfQuery(final String[] selectColumnName, final boolean onlyDistinctRows)
 	{
 		logger.debug("Prepare select part of query");
-		StringBuffer query = new StringBuffer("SELECT ");
+		final StringBuffer query = new StringBuffer("SELECT ");
 		if ((selectColumnName != null) && (selectColumnName.length > 0))
 		{
 			if (onlyDistinctRows)
@@ -559,11 +563,11 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * @param query :Holds the query string.
 	 * @throws DAOException : DAOException.
 	 */
-	public StatementData executeUpdate(String query) throws DAOException
+	public StatementData executeUpdate(final String query) throws DAOException
 	{
 		logger.debug("Execute query.");
 		Statement statement = null;
-		StatementData statementData = new StatementData();
+		final StatementData statementData = new StatementData();
 		try
 		{
 			statement = createStatement();
@@ -572,7 +576,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 			setStatementData(statement, statementData, query);
 			return statementData;
 		}
-		catch (SQLException sqlExp)
+		catch (final SQLException sqlExp)
 		{
 			throw DAOUtility.getInstance().getDAOException(sqlExp, "db.update.data.error",
 					"AbstractJDBCDAOImpl.java :   " + query);
@@ -580,19 +584,49 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 
 	}
 
+
+	/**
+     * This method will be called for executing a static SQL statement.
+     * @see edu.wustl.dao.JDBCDAO#executeUpdate(java.lang.String)
+     * @return (1) the row count for INSERT,UPDATE or DELETE statements
+     * or (2) 0 for SQL statements that return nothing
+     * @param query :Holds the query string.
+     * @throws DAOException : DAOException.
+     */
+    public StatementData executeUpdateWithoutGeneratedKeys(final String query) throws DAOException
+    {
+        logger.debug("Execute query.");
+        Statement statement = null;
+        final StatementData statementData = new StatementData();
+        try
+        {
+            statement = createStatement();
+            statementData.setRowCount(statement.executeUpdate(query));
+            setStatementDataWithoutGeneratedKeys(statement, statementData, query);
+            return statementData;
+        }
+        catch (final SQLException sqlExp)
+        {
+            throw DAOUtility.getInstance().getDAOException(sqlExp, "db.update.data.error",
+                    "AbstractJDBCDAOImpl.java :   " + query);
+        }
+
+    }
+
+
 	/**
 	 * Remove statement from opened statements list.
 	 * @param statement statement instance
 	 * @throws DAOException database exception.
 	 */
-	private void removeStmts(Statement statement) throws DAOException
+	private void removeStmts(final Statement statement) throws DAOException
 	{
 		try
 		{
 			statement.close();
 			openedStmts.remove(statement);
 		}
-		catch (SQLException exp)
+		catch (final SQLException exp)
 		{
 			throw DAOUtility.getInstance().getDAOException(exp, "db.stmt.close.error",
 					"AbstractJDBCDAOImpl.java ");
@@ -605,18 +639,18 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * @throws DAOException generic DAOException.
 	 * @return ResultSet : ResultSet
 	 */
-	public ResultSet getQueryResultSet(String sql) throws DAOException
+	public ResultSet getQueryResultSet(final String sql) throws DAOException
 	{
 
 		logger.debug("Get Query RS");
 		try
 		{
 
-			Statement statement = createStatement();
-			ResultSet resultSet = statement.executeQuery(sql);
+			final Statement statement = createStatement();
+			final ResultSet resultSet = statement.executeQuery(sql);
 			return resultSet;
 		}
-		catch (SQLException exp)
+		catch (final SQLException exp)
 		{
 			throw DAOUtility.getInstance().getDAOException(exp, "db.retrieve.data.error",
 					"AbstractJDBCDAOImpl.java  " + sql);
@@ -630,19 +664,19 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 *@throws DAOException :Generic DAOException.
 	 *@return list
 	 */
-	public List executeQuery(String query) throws DAOException
+	public List executeQuery(final String query) throws DAOException
 	{
 
 		logger.debug("get list from RS");
 		try
 		{
-			ResultSet resultSet = getQueryResultSet(query);
+			final ResultSet resultSet = getQueryResultSet(query);
 			logger.debug("RS" + resultSet);
-			List resultData = DAOUtility.getInstance().getListFromRS(resultSet);
+			final List resultData = DAOUtility.getInstance().getListFromRS(resultSet);
 			closeStatement(resultSet);
 			return resultData;
 		}
-		catch (SQLException exp)
+		catch (final SQLException exp)
 		{
 			throw DAOUtility.getInstance().getDAOException(exp, "db.retrieve.data.error",
 					"AbstractJDBCDAOImpl.java " + query);
@@ -659,7 +693,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * or (2) 0 for SQL statements that return nothing
 	 * @throws DAOException :Generic Exception
 	 */
-	public StatementData executeUpdate(String sql, LinkedList<ColumnValueBean> columnValueBeanSet)
+	public StatementData executeUpdate(final String sql, final LinkedList<ColumnValueBean> columnValueBeanSet)
 			throws DAOException
 	{
 		try
@@ -670,13 +704,13 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 						"AbstractJDBCDAOImpl.java  " + sql);
 			}
 
-			PreparedStatement stmt = getPreparedStatement(sql);
+			final PreparedStatement stmt = getPreparedStatement(sql);
 
-			Iterator<ColumnValueBean> colValItr = columnValueBeanSet.iterator();
+			final Iterator<ColumnValueBean> colValItr = columnValueBeanSet.iterator();
 			int index = 1;
 			while (colValItr.hasNext())
 			{
-				ColumnValueBean colValueBean = colValItr.next();
+				final ColumnValueBean colValueBean = colValItr.next();
 
 				if (colValueBean.getColumnType() == DBTypes.DATE)
 				{
@@ -693,12 +727,12 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 
 				index += 1;
 			}
-			StatementData statementData = new StatementData();
+			final StatementData statementData = new StatementData();
 			statementData.setRowCount(stmt.executeUpdate());
 			setStatementData(stmt, statementData, sql);
 			return statementData;
 		}
-		catch (SQLException sqlExp)
+		catch (final SQLException sqlExp)
 		{
 			throw DAOUtility.getInstance().getDAOException(sqlExp, "db.update.data.error",
 					"AbstractJDBCDAOImpl.java   " + sql);
@@ -715,10 +749,10 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * @param sql query string
 	 * @throws SQLException SQL exception
 	 */
-	private void setStatementData(Statement stmt, StatementData statementData, String sql)
+	private void setStatementData(final Statement stmt, final StatementData statementData, final String sql)
 			throws SQLException
 	{
-		String token = DAOUtility.getInstance().getToken(sql, "insert".length());
+		final String token = DAOUtility.getInstance().getToken(sql, "insert".length());
 		if (token.compareToIgnoreCase("insert") == 0)
 		{
 			statementData.setGeneratedKeys(stmt.getGeneratedKeys());
@@ -729,6 +763,25 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	}
 
 	/**
+     * @param stmt statement instance.
+     * @param statementData statement data
+     * @param sql query string
+     * @throws SQLException SQL exception
+     */
+    private void setStatementDataWithoutGeneratedKeys(final Statement stmt, final StatementData statementData, final String sql)
+            throws SQLException
+    {
+        final String token = DAOUtility.getInstance().getToken(sql, "insert".length());
+//        if (token.compareToIgnoreCase("insert") == 0)
+//        {
+//            statementData.setGeneratedKeys(stmt.getGeneratedKeys());
+//        }
+        statementData.setFetchSize(stmt.getFetchSize());
+        statementData.setMaxFieldSize(stmt.getMaxFieldSize());
+        statementData.setMaxRows(stmt.getMaxRows());
+    }
+
+	/**
 	 * This method will return the Query prepared statement.
 	 * @return Statement statement.
 	 * @throws DAOException :Generic Exception
@@ -737,11 +790,11 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	{
 		try
 		{
-			Statement statement = (Statement) connection.createStatement();
+			final Statement statement = connection.createStatement();
 			openedStmts.add(statement);
 			return statement;
 		}
-		catch (SQLException sqlExp)
+		catch (final SQLException sqlExp)
 		{
 			throw DAOUtility.getInstance().getDAOException(sqlExp, "db.stmt.creation.error",
 					"AbstractJDBCDAOImpl.java ");
@@ -756,16 +809,17 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * @throws DAOException :Generic Exception
 	 * @deprecated Do not use this method.
 	 */
-	public PreparedStatement getPreparedStatement(String query) throws DAOException
+	@Deprecated
+    public PreparedStatement getPreparedStatement(final String query) throws DAOException
 	{
 		try
 		{
 			// closePreparedStmt();
-			preparedStatement = (PreparedStatement) connection.prepareStatement(query,
+			preparedStatement = connection.prepareStatement(query,
 					Statement.RETURN_GENERATED_KEYS);
 			return preparedStatement;
 		}
-		catch (SQLException sqlExp)
+		catch (final SQLException sqlExp)
 		{
 			throw DAOUtility.getInstance().getDAOException(sqlExp, "db.stmt.creation.error",
 					"AbstractJDBCDAOImpl.java ");
@@ -785,15 +839,15 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 *          Connection  object
 	 * @exception DAOException if a database access error occurs
 	 */
-	public ResultSet getDBMetaDataResultSet(String tableName) throws DAOException
+	public ResultSet getDBMetaDataResultSet(final String tableName) throws DAOException
 	{
 		try
 		{
-			ResultSet resultSet = connection.getMetaData().getIndexInfo(connection.getCatalog(),
+			final ResultSet resultSet = connection.getMetaData().getIndexInfo(connection.getCatalog(),
 					null, tableName, true, false);
 			return resultSet;
 		}
-		catch (SQLException sqlExp)
+		catch (final SQLException sqlExp)
 		{
 			throw DAOUtility.getInstance().getDAOException(sqlExp, "db.retrieve.data.error",
 					"AbstractJDBCDAOImpl.java ");
@@ -825,7 +879,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 				preparedStatement = null;
 			}
 		}
-		catch (SQLException sqlExp)
+		catch (final SQLException sqlExp)
 		{
 			throw DAOUtility.getInstance().getDAOException(sqlExp, "db.stmt.close.error",
 					"AbstractJDBCDAOImpl.java ");
@@ -840,10 +894,10 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	{
 		try
 		{
-			Iterator<Statement> stmtIterator = openedStmts.iterator();
+			final Iterator<Statement> stmtIterator = openedStmts.iterator();
 			while (stmtIterator.hasNext())
 			{
-				Statement stmt = stmtIterator.next();
+				final Statement stmt = stmtIterator.next();
 				/*do
 				{
 					ResultSet resultSet = stmt.getResultSet();
@@ -857,7 +911,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 			}
 
 		}
-		catch (SQLException sqlExp)
+		catch (final SQLException sqlExp)
 		{
 			throw DAOUtility.getInstance().getDAOException(sqlExp, "db.stmt.close.error",
 					"AbstractJDBCDAOImpl.java ");
@@ -887,7 +941,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * This method will be called to set all the database specific properties.
 	 * @param databaseProperties : database properties.
 	 */
-	public void setDatabaseProperties(DatabaseProperties databaseProperties)
+	public void setDatabaseProperties(final DatabaseProperties databaseProperties)
 	{
 		this.databaseProperties = databaseProperties;
 	}
@@ -948,7 +1002,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * @throws ClassNotFoundException
 	 * @throws DAOException generic DAOException
 	 */
-	public List retrieve(String sourceObjectName) throws DAOException
+	public List retrieve(final String sourceObjectName) throws DAOException
 	{
 		logger.debug("Inside retrieve method");
 		return retrieve(sourceObjectName, null, null, false);
@@ -963,7 +1017,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * from the table represented in sourceObjectName.
 	 * @throws DAOException : DAOException
 	*/
-	public List retrieve(String sourceObjectName, String[] selectColumnName) throws DAOException
+	public List retrieve(final String sourceObjectName, final String[] selectColumnName) throws DAOException
 	{
 		logger.debug("Inside retrieve method");
 		return retrieve(sourceObjectName, selectColumnName, null, false);
@@ -979,8 +1033,8 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * from the table represented in sourceObjectName.
 	 * @throws DAOException DAOException.
 	 */
-	public List retrieve(String sourceObjectName, String[] selectColumnName,
-			boolean onlyDistinctRows) throws DAOException
+	public List retrieve(final String sourceObjectName, final String[] selectColumnName,
+			final boolean onlyDistinctRows) throws DAOException
 	{
 		logger.debug("Inside retrieve method");
 		return retrieve(sourceObjectName, selectColumnName, null, onlyDistinctRows);
@@ -997,8 +1051,8 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * from the table represented in sourceObjectName which satisfies the where condition
 	 * @throws DAOException : DAOException
 	 */
-	public List retrieve(String sourceObjectName, String[] selectColumnName,
-			QueryWhereClause queryWhereClause) throws DAOException
+	public List retrieve(final String sourceObjectName, final String[] selectColumnName,
+			final QueryWhereClause queryWhereClause) throws DAOException
 	{
 		logger.debug("Inside retrieve method");
 		return retrieve(sourceObjectName, selectColumnName, queryWhereClause, false);
@@ -1015,13 +1069,13 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * in sourceObjectName which satisfies the where condition
 	 * @throws DAOException : DAOException
 	 */
-	public List retrieve(String sourceObjectName, String whereColumnName, Object whereColumnValue)
+	public List retrieve(final String sourceObjectName, final String whereColumnName, final Object whereColumnValue)
 			throws DAOException
 	{
 		logger.debug("Inside retrieve method");
-		String[] selectColumnName = null;
+		final String[] selectColumnName = null;
 
-		QueryWhereClause queryWhereClause = new QueryWhereClause(sourceObjectName);
+		final QueryWhereClause queryWhereClause = new QueryWhereClause(sourceObjectName);
 		queryWhereClause.addCondition(new EqualClause(whereColumnName, whereColumnValue,
 				sourceObjectName));
 
@@ -1033,14 +1087,14 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * @param resultSet ResultSet
 	 * @throws DAOException : database exception
 	 */
-	public void closeStatement(ResultSet resultSet) throws DAOException
+	public void closeStatement(final ResultSet resultSet) throws DAOException
 	{
 		try
 		{
-			Statement stmt = resultSet.getStatement();
+			final Statement stmt = resultSet.getStatement();
 			removeStmts(stmt);
 		}
-		catch (SQLException sqlExp)
+		catch (final SQLException sqlExp)
 		{
 			throw DAOUtility.getInstance().getDAOException(sqlExp, "db.stmt.close.error",
 					"AbstractJDBCDAOImpl.java ");
@@ -1051,13 +1105,14 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * This method added only for CIDER, next releases handles this issue.(Quick/Patch fix)
 	 * * @deprecated
 	 */
-	public void commitConnection() throws DAOException
+	@Deprecated
+    public void commitConnection() throws DAOException
 	{
 		try
 		{
 			connection.commit();
 		}
-		catch (SQLException sqlExp)
+		catch (final SQLException sqlExp)
 		{
 			throw DAOUtility.getInstance().getDAOException(sqlExp, "db.stmt.close.error",
 					"AbstractJDBCDAOImpl.java ");
