@@ -41,7 +41,7 @@
 
         <property
             name="userLoginId"
-            type="long"
+            type="string"
             update="true"
             insert="true"
             column="USER_LOGIN_ID"
