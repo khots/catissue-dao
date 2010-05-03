@@ -24,7 +24,7 @@ public class LoginEvent implements Serializable
 	/**
      * User's login id.
      */
-	protected Long userLoginId;
+	protected String userLoginId;
 	/**
      * User's source or domain he belongs to.
      */
@@ -61,7 +61,7 @@ public class LoginEvent implements Serializable
      * @hibernate.property name="userLoginId" type="string"
      * column="USER_LOGIN_ID" length="50"
      */
-	public Long getUserLoginId()
+	public String getUserLoginId()
 	{
 		return userLoginId;
 	}
@@ -69,7 +69,7 @@ public class LoginEvent implements Serializable
 	 *
 	 * @param userLoginId sets the userLoginId.
 	 */
-	public void setUserLoginId(Long userLoginId)
+	public void setUserLoginId(String userLoginId)
 	{
 		this.userLoginId = userLoginId;
 	}
