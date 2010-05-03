@@ -741,12 +741,12 @@ public class AuditManager // NOPMD
 		if (prevObject == null && currentObject != null)
 		{
 			auditEventDetails = new AuditEventDetails();
-			auditEventDetails.setCurrentValue(Hibernate.createClob(getObjectValue(currentObject)));
+			auditEventDetails.setCurrentValue(getObjectValue(currentObject));
 		}
 		else if(currentObject == null && prevObject != null)
 		{
 			auditEventDetails = new AuditEventDetails();
-			auditEventDetails.setPreviousValue(Hibernate.createClob(getObjectValue(prevObject)));
+			auditEventDetails.setPreviousValue(getObjectValue(prevObject));
 		}
 		else if(prevObject != null && currentObject != null)
 		{
@@ -755,8 +755,8 @@ public class AuditManager // NOPMD
 			if(!previousVal.equals(currentVal))
 			{
 				auditEventDetails = new AuditEventDetails();
-				auditEventDetails.setPreviousValue(Hibernate.createClob(previousVal));
-				auditEventDetails.setCurrentValue(Hibernate.createClob(currentVal));
+				auditEventDetails.setPreviousValue(previousVal);
+				auditEventDetails.setCurrentValue(currentVal);
 			}
 		}
 
@@ -778,19 +778,19 @@ public class AuditManager // NOPMD
 		auditEventDetails.setElementName(attributeName+"_PREV_CURR_IDS_LIST");
 		if(currentCollectionIds == null)
 		{
-			auditEventDetails.setCurrentValue(Hibernate.createClob(""));
+			auditEventDetails.setCurrentValue("");
 		}
 		else
 		{
-			auditEventDetails.setCurrentValue(Hibernate.createClob(currentCollectionIds));
+			auditEventDetails.setCurrentValue(currentCollectionIds);
 		}
 		if(prevCollectionIds == null)
 		{
-			auditEventDetails.setPreviousValue(Hibernate.createClob(""));
+			auditEventDetails.setPreviousValue("");
 		}
 		else
 		{
-			auditEventDetails.setPreviousValue(Hibernate.createClob(prevCollectionIds));
+			auditEventDetails.setPreviousValue(prevCollectionIds);
 		}
 
 
