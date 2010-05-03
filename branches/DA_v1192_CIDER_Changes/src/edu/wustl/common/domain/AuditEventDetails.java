@@ -27,12 +27,12 @@ public class AuditEventDetails implements java.io.Serializable
 	/**
 	 * Specifies previous Value.
 	 */
-	private Clob previousValue;
+	private String previousValue;
 
 	/**
 	 * Specifies current Value.
 	 */
-	private Clob currentValue;
+	private String currentValue;
 
 	/**
 	 * Specifies AuditEventLog instance.
@@ -90,7 +90,7 @@ public class AuditEventDetails implements java.io.Serializable
 	 * @hibernate.property name="previousValue" type="string"
 	 * column="PREVIOUS_VALUE" length="150"
 	 **/
-	public Clob getPreviousValue()
+	public String getPreviousValue()
 	{
 		return previousValue;
 	}
@@ -102,7 +102,7 @@ public class AuditEventDetails implements java.io.Serializable
 	 * column="PREVIOUS_VALUE" length="150"
 	 **/
 
-	public void setPreviousValue(Clob previousValue)
+	public void setPreviousValue(String previousValue)
 	{
 		this.previousValue = previousValue;
 	}
@@ -113,7 +113,7 @@ public class AuditEventDetails implements java.io.Serializable
 	 * @hibernate.property name="currentValue" type="string"
 	 * column="CURRENT_VALUE" length="500"
 	 **/
-	public Clob getCurrentValue()
+	public String getCurrentValue()
 	{
 		return currentValue;
 	}
@@ -125,7 +125,7 @@ public class AuditEventDetails implements java.io.Serializable
 	 * column="CURRENT_VALUE" length="500"
 	 **/
 
-	public void setCurrentValue(Clob currentValue)
+	public void setCurrentValue(String currentValue)
 	{
 		this.currentValue = currentValue;
 	}
