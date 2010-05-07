@@ -8,11 +8,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.hibernate.Hibernate;
-
 import edu.wustl.common.audit.util.AuditUtil;
 import edu.wustl.common.audit.util.MetadataParser;
 import edu.wustl.common.beans.SessionDataBean;
+import edu.wustl.common.domain.AbstractDomainObject;
 import edu.wustl.common.domain.AuditDataEventLog;
 import edu.wustl.common.domain.AuditEvent;
 import edu.wustl.common.domain.AuditEventDetails;
@@ -20,9 +19,7 @@ import edu.wustl.common.domain.LoginDetails;
 import edu.wustl.common.domain.LoginEvent;
 import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.logger.Logger;
-import edu.wustl.dao.HibernateDAO;
 import edu.wustl.dao.exception.AuditException;
-import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.DAOConstants;
 import edu.wustl.dao.util.HibernateMetaData;
 
@@ -64,7 +61,7 @@ public class AuditManager // NOPMD
 	/**
 	 * @param loginEvent the loginEvent to set.
 	 */
-	public void setLoginEvent(LoginEvent loginEvent)
+	public void setLoginEvent(final LoginEvent loginEvent)
 	{
 		this.loginEvent = loginEvent;
 	}
@@ -72,7 +69,7 @@ public class AuditManager // NOPMD
 	/**
 	 * @param auditEvent the auditEvent to set
 	 */
-	public void setAuditEvent(AuditEvent auditEvent)
+	public void setAuditEvent(final AuditEvent auditEvent)
 	{
 		this.auditEvent = auditEvent;
 	}
@@ -103,7 +100,7 @@ public class AuditManager // NOPMD
 	 * @param metadataCfg : metadataCfg.
 	 * @throws AuditException throws if auditablemetadata.xml not found or unable to read.
 	 */
-	public static void init(String... metadataCfg) throws AuditException
+	public static void init(final String... metadataCfg) throws AuditException
 	{
 		//Get the instance of AuditableMetaData to read the
 		//auditable properties of the domain objects
@@ -117,7 +114,7 @@ public class AuditManager // NOPMD
 			parser = new MetadataParser();
 		}
 
-		AuditableMetaData metadata = parser.getAuditableMetaData();
+		final AuditableMetaData metadata = parser.getAuditableMetaData();
 
 		auditableClasses.addAll(metadata.getAuditableClass());
 	}
@@ -136,8 +133,8 @@ public class AuditManager // NOPMD
 	 * @param sessionDataBean Bean holding session details like IP address,
 	 * user Id, application name.
 	 * */
-	public AuditManager(SessionDataBean sessionDataBean,
-			HibernateMetaData hibernateMetaData)
+	public AuditManager(final SessionDataBean sessionDataBean,
+			final HibernateMetaData hibernateMetaData)
 	{
 		this();
 		this.hibernateMetaData = hibernateMetaData;
@@ -149,7 +146,7 @@ public class AuditManager // NOPMD
 	 * Set the id of the logged-in user who performed the changes.
 	 * @param userId System identifier of logged-in user who performed the changes.
 	 * */
-	public void setUserId(Long userId)
+	public void setUserId(final Long userId)
 	{
 		auditEvent.setUserId(userId);
 	}
@@ -157,7 +154,7 @@ public class AuditManager // NOPMD
 	 * Set the IP address of the machine from which the event was performed.
 	 * @param iPAddress IP address of the machine to set.
 	 * */
-	public void setIpAddress(String iPAddress)
+	public void setIpAddress(final String iPAddress)
 	{
 		auditEvent.setIpAddress(iPAddress);
 	}
@@ -168,7 +165,7 @@ public class AuditManager // NOPMD
 	 * @return Object returns the value of the object.
 	 * @throws AuditException Exception occurred while auditing.
 	 */
-	private String getObjectValue(Object obj) throws AuditException
+	private String getObjectValue(final Object obj) throws AuditException
 	{
 		Object reqValue = null;
 		if (AuditUtil.isVariable(obj))
@@ -190,7 +187,7 @@ public class AuditManager // NOPMD
 	 * @param eventType This method is called to set the event Type.
 	 * @throws AuditException Audit Exception.
 	 */
-	public void audit(Object currentObj, Object previousObj,String eventType)
+	public void audit(final Object currentObj, final Object previousObj,final String eventType)
 	throws AuditException
 	{
 			auditEvent.setEventType(eventType);
@@ -202,8 +199,8 @@ public class AuditManager // NOPMD
 
 			}
 			// Set the table name of the current class.
-			Object currentAuditableObject  =
-				(Object)HibernateMetaData.getProxyObjectImpl(currentObj);
+			final Object currentAuditableObject  =
+				HibernateMetaData.getProxyObjectImpl(currentObj);
 
 			if (previousObj != null &&
 					!currentAuditableObject.getClass().equals(previousObj.getClass()))
@@ -225,12 +222,12 @@ public class AuditManager // NOPMD
 	 * @return audit Event Details Collection.
 	 * @throws AuditException Audit Exception.
 	 */
-	private AuditDataEventLog obtainAuditableEventLog(Object obj,
-			Object previousObj) throws AuditException
+	private AuditDataEventLog obtainAuditableEventLog(final Object obj,
+			final Object previousObj) throws AuditException
 	{
 		LOGGER.debug("Inside obtainAuditableEventLog method.");
 		// An audit event will contain many logs.
-		AuditDataEventLog auditEventLog = new AuditDataEventLog();
+		final AuditDataEventLog auditEventLog = new AuditDataEventLog();
 
 		// Get instance of the Castor class of the object being audited
 		//AuditableClass auditableClass = null;
@@ -239,7 +236,7 @@ public class AuditManager // NOPMD
 		AuditableClass auditableClass = null;
 		if (auditableClasses != null)
 		{
-			Iterator<AuditableClass> classListIterator = auditableClasses.iterator();
+			final Iterator<AuditableClass> classListIterator = auditableClasses.iterator();
 			while (classListIterator.hasNext())
 			{
 				auditableClass = classListIterator.next();
@@ -287,7 +284,7 @@ public class AuditManager // NOPMD
 	 * @return AuditableClass.
 	 * @throws AuditException AuditException.
 	 */
-	public Long getObjectId(Object obj) throws AuditException
+	public Long getObjectId(final Object obj) throws AuditException
 	{
 		LOGGER.info("obj.getClass().getName() :"+obj.getClass().getName());
 		boolean isClassFound = false;
@@ -296,10 +293,10 @@ public class AuditManager // NOPMD
 		{
 			if (auditableClasses != null)
 			{
-				Iterator<AuditableClass> classListIterator = auditableClasses.iterator();
+				final Iterator<AuditableClass> classListIterator = auditableClasses.iterator();
 				while (classListIterator.hasNext())
 				{
-					AuditableClass auditableClass = classListIterator.next();
+					final AuditableClass auditableClass = classListIterator.next();
 					if (obj.getClass().getName()
 							.equals(auditableClass.getClassName()))
 					{
@@ -337,15 +334,21 @@ public class AuditManager // NOPMD
 	 * @param auditableClass AuditableClass object.
 	 * @throws AuditException throw AuditException.
 	 */
-	private void startAuditing(Object obj, Object previousObj,
-			AuditDataEventLog auditEventLog, AuditableClass auditableClass) throws AuditException
+	private void startAuditing(final Object obj, final Object previousObj,
+			final AuditDataEventLog auditEventLog, final AuditableClass auditableClass) throws AuditException
 	{
 		LOGGER.debug("Inside startAuditing method.");
+
+		if(obj instanceof AbstractDomainObject)
+		{
+		    final AbstractDomainObject domainObject=(AbstractDomainObject)obj;
+		    auditEventLog.setObjectIdentifier(domainObject.getId());
+		}
 
 		auditEventLog.setObjectName(hibernateMetaData
 				.getTableName(obj.getClass()));
 
-		Object currentObj = HibernateMetaData
+		final Object currentObj = HibernateMetaData
 				.getProxyObjectImpl(obj);
 
 		//Audit simple attributes of the object
@@ -370,21 +373,21 @@ public class AuditManager // NOPMD
 	 * @param currentObj Object.
 	 * @throws AuditException throw AuditException.
 	 */
-	private void auditContainmentAssociation(Object previousObj, AuditDataEventLog auditEventLog,
-			AuditableClass auditableClass, Object currentObj) throws AuditException
+	private void auditContainmentAssociation(final Object previousObj, final AuditDataEventLog auditEventLog,
+			final AuditableClass auditableClass, final Object currentObj) throws AuditException
 	{
 		LOGGER.debug("Inside auditContainmentAssociation method.");
 		if (auditableClass.getContainmentAssociationCollection() != null
 				&& !auditableClass.getContainmentAssociationCollection().isEmpty())
 		{
-			Iterator<AuditableClass> containmentItert =
+			final Iterator<AuditableClass> containmentItert =
 				auditableClass.getContainmentAssociationCollection()
 			.iterator();
 
 			while (containmentItert.hasNext())
 			{
-				AuditableClass containmentClass = containmentItert.next();
-				Object currentAuditableObject = auditableClass.invokeGetterMethod(
+				final AuditableClass containmentClass = containmentItert.next();
+				final Object currentAuditableObject = auditableClass.invokeGetterMethod(
 						containmentClass.getRoleName(), currentObj);
 
 				//Case of Insert : when previous object is null.
@@ -400,7 +403,7 @@ public class AuditManager // NOPMD
 				else if(currentAuditableObject != null)
 				{
 					//case of update
-					Object previousAuditableObject = auditableClass.
+					final Object previousAuditableObject = auditableClass.
 					invokeGetterMethod(containmentClass.getRoleName(),previousObj);
 					//To audit the ids.
 					auditRefrenceAssociationforExistingEntries(auditEventLog,
@@ -421,8 +424,8 @@ public class AuditManager // NOPMD
 	 * @throws AuditException Throws audit Exception.
 	 */
 	private void auditContainmentsforExistingEntries(
-			AuditDataEventLog auditEventLog, Object currentAuditableObject,
-			Object previousAuditableObject) throws AuditException
+			final AuditDataEventLog auditEventLog, final Object currentAuditableObject,
+			final Object previousAuditableObject) throws AuditException
 			{
 		LOGGER.debug("Inside auditContainmentsforExistingEntries method.");
 		//for one to many containment Associations.
@@ -438,7 +441,7 @@ public class AuditManager // NOPMD
 		else
 		{
 
-			AuditDataEventLog childAuditEventLog = obtainAuditableEventLog(
+			final AuditDataEventLog childAuditEventLog = obtainAuditableEventLog(
 					currentAuditableObject, previousAuditableObject);
 			auditEventLog.getAuditDataEventLogs().add(
 					childAuditEventLog);
@@ -451,18 +454,18 @@ public class AuditManager // NOPMD
 	 * @param currentAuditableObject  currentAuditableObject
 	 * @throws AuditException Throws audit Exception.
 	 */
-	private void auditContainmentsforNewEntry(AuditDataEventLog auditEventLog,
-			Object currentAuditableObject) throws AuditException
+	private void auditContainmentsforNewEntry(final AuditDataEventLog auditEventLog,
+			final Object currentAuditableObject) throws AuditException
 	{
 		LOGGER.debug("Inside auditContainmentsforNewEntry method.");
 		//for one to many containment Associations.
 		if (currentAuditableObject instanceof Collection)
 		{
-			for (Object object : (Collection) currentAuditableObject)
+			for (final Object object : (Collection) currentAuditableObject)
 			{
 
 					//Call to obtainAuditableEventLog to audit the object of collection.
-					AuditDataEventLog childAuditEventLog = obtainAuditableEventLog(
+					final AuditDataEventLog childAuditEventLog = obtainAuditableEventLog(
 							object, null);
 					auditEventLog.getAuditDataEventLogs().add(
 							childAuditEventLog);
@@ -473,7 +476,7 @@ public class AuditManager // NOPMD
 		{
 
 			//Call to obtainAuditableEventLog to audit the object of collection.
-			AuditDataEventLog childAuditEventLog = obtainAuditableEventLog(
+			final AuditDataEventLog childAuditEventLog = obtainAuditableEventLog(
 					 currentAuditableObject, null);
 			auditEventLog.getAuditDataEventLogs().add(
 					childAuditEventLog);
@@ -488,15 +491,15 @@ public class AuditManager // NOPMD
 	 * @return List of String values.
 	 * @throws AuditException AuditException.
 	 */
-	private String getColonSeparatedIds(Collection<Object> currentContainedObj)
+	private String getColonSeparatedIds(final Collection<Object> currentContainedObj)
 	throws AuditException
 	{
-		StringBuffer colonSeparatedIds = new StringBuffer("");
-		Iterator<Object> itr = currentContainedObj.iterator();
+		final StringBuffer colonSeparatedIds = new StringBuffer("");
+		final Iterator<Object> itr = currentContainedObj.iterator();
 		while(itr.hasNext())
 		{
-			Object auditableObject = itr.next();
-			Object objectId = getObjectId(auditableObject);
+			final Object auditableObject = itr.next();
+			final Object objectId = getObjectId(auditableObject);
 			if(objectId != null)
 			{
 				colonSeparatedIds.append(objectId.toString());
@@ -522,21 +525,21 @@ public class AuditManager // NOPMD
 	 * @param currentObj Object.
 	 * @throws AuditException throw AuditException.
 	 */
-	private void auditReferenceAssociations(Object previousObj, AuditDataEventLog auditEventLog,
-			AuditableClass auditableClass, Object currentObj) throws AuditException
+	private void auditReferenceAssociations(final Object previousObj, final AuditDataEventLog auditEventLog,
+			final AuditableClass auditableClass, final Object currentObj) throws AuditException
 	{
 		LOGGER.debug("Inside auditReferenceAssociations method.");
 		if (auditableClass.getReferenceAssociationCollection() != null
 				&& !auditableClass.getReferenceAssociationCollection().isEmpty())
 		{
 
-			Iterator<AuditableClass> associationItert =
+			final Iterator<AuditableClass> associationItert =
 				auditableClass.getReferenceAssociationCollection().iterator();
 			while (associationItert.hasNext())
 			{
-				AuditableClass refrenceAssociation = associationItert.next();
+				final AuditableClass refrenceAssociation = associationItert.next();
 
-				Object currentAuditableObject = auditableClass.invokeGetterMethod(
+				final Object currentAuditableObject = auditableClass.invokeGetterMethod(
 						refrenceAssociation.getRoleName(), currentObj);
 
 	            //Case of Insert : when previous object is null.
@@ -549,7 +552,7 @@ public class AuditManager // NOPMD
 				else if(currentAuditableObject != null)
 					// Case of update : having both current and previous objects:
 				{
-					Object prevAuditableObject = auditableClass.
+					final Object prevAuditableObject = auditableClass.
 					invokeGetterMethod(refrenceAssociation.getRoleName(),previousObj);
 
 					auditRefrenceAssociationforExistingEntries(auditEventLog,
@@ -567,8 +570,8 @@ public class AuditManager // NOPMD
 	 * @throws AuditException AuditException
 	 */
 	private void auditRefrenceAssociationforExistingEntries(
-			AuditDataEventLog auditEventLog, Object currentAuditableObject,
-			Object prevAuditableObject) throws AuditException
+			final AuditDataEventLog auditEventLog, final Object currentAuditableObject,
+			final Object prevAuditableObject) throws AuditException
 	{
 		//for one to many reference association.
 		if ((currentAuditableObject instanceof Collection) &&(prevAuditableObject instanceof Collection))
@@ -577,12 +580,12 @@ public class AuditManager // NOPMD
 					((Collection)prevAuditableObject).isEmpty()))
 			{
 				//Audit identifiers of current and previous objects of collections.
-				String containmentCollectionObjectName =
+				final String containmentCollectionObjectName =
 					AuditUtil.getAssociationCollectionObjectName(
 						(Collection)currentAuditableObject,
 						(Collection)prevAuditableObject);
 
-				AuditEventDetails auditEventDetails =
+				final AuditEventDetails auditEventDetails =
 					auditRefrenceAssociationsIds(getColonSeparatedIds
 							((Collection)currentAuditableObject),
 						getColonSeparatedIds((Collection)prevAuditableObject),
@@ -602,7 +605,7 @@ public class AuditManager // NOPMD
 			{
 				previousAuditableObjectId = getObjectId(prevAuditableObject).toString();
 			}
-			AuditEventDetails auditEventDetails =
+			final AuditEventDetails auditEventDetails =
 			auditRefrenceAssociationsIds((getObjectId(currentAuditableObject)).toString(),
 				previousAuditableObjectId,currentAuditableObject.getClass().getName());
 			auditEventDetails.setAuditEventLog(auditEventLog);
@@ -617,17 +620,17 @@ public class AuditManager // NOPMD
 	 * @throws AuditException AuditException;
 	  */
 	private void auditRefrenceAssociationforNewEntry(
-			AuditDataEventLog auditEventLog, Object currentAuditableObject) throws AuditException
+			final AuditDataEventLog auditEventLog, final Object currentAuditableObject) throws AuditException
 	{
 		//for one to many Reference Associations.
 		if (currentAuditableObject instanceof Collection)
 		{
-			String associationObjectName = AuditUtil.getAssociationCollectionObjectName(
+			final String associationObjectName = AuditUtil.getAssociationCollectionObjectName(
 					(Collection)currentAuditableObject,null);
 			if(!(((Collection)currentAuditableObject).isEmpty()))
 			{
 				//Audit identifiers of current and previous objects of collections.
-				AuditEventDetails auditEventDetails =
+				final AuditEventDetails auditEventDetails =
 					auditRefrenceAssociationsIds(getColonSeparatedIds
 						((Collection)currentAuditableObject),null,associationObjectName);
 				auditEventDetails.setAuditEventLog(auditEventLog);
@@ -639,7 +642,7 @@ public class AuditManager // NOPMD
 			//Audit identifiers of current and previous objects.
 			LOGGER.info("currentAuditableObject.getClass().getName()"
 					+currentAuditableObject.getClass().getName());
-			AuditEventDetails auditEventDetails =
+			final AuditEventDetails auditEventDetails =
 			auditRefrenceAssociationsIds((getObjectId(currentAuditableObject))
 				.toString(),	null,
 				currentAuditableObject.getClass().getName());
@@ -659,24 +662,24 @@ public class AuditManager // NOPMD
 	 * @param currentObj Object.
 	 * @throws AuditException throw AuditException.
 	 */
-	private void auditSimpleAttributes(Object previousObj, AuditDataEventLog auditEventLog,
-			AuditableClass auditableClass, Object currentObj) throws AuditException
+	private void auditSimpleAttributes(final Object previousObj, final AuditDataEventLog auditEventLog,
+			final AuditableClass auditableClass, final Object currentObj) throws AuditException
 	{
 		if (auditableClass.getAttributeCollection() != null
 				&& !auditableClass.getAttributeCollection().isEmpty())
 		{
-			for (Attribute attribute : auditableClass.getAttributeCollection())
+			for (final Attribute attribute : auditableClass.getAttributeCollection())
 			{
 				// Get the old value of the attribute from previousObject
-				Object prevVal = auditableClass.invokeGetterMethod(
+				final Object prevVal = auditableClass.invokeGetterMethod(
 						attribute.getName(), previousObj);
 				//prevVal = getObjectValue(null, prevVal);
 				// Get the current value of the attribute from currentObject
-				Object currVal = auditableClass.invokeGetterMethod(
+				final Object currVal = auditableClass.invokeGetterMethod(
 						attribute.getName(), currentObj);
 				//currVal = getObjectValue(null, currVal);
 
-				String columnName = getColumnName(previousObj, currentObj,
+				final String columnName = getColumnName(previousObj, currentObj,
 						attribute);
 
 				// Case of transient object
@@ -687,7 +690,7 @@ public class AuditManager // NOPMD
 					 auditEventLog.setObjectIdentifier(Long.valueOf(currVal.toString()));
 					}
 					// Compare the old and current value
-					AuditEventDetails auditEventDetails = compareValue(prevVal, currVal);
+					final AuditEventDetails auditEventDetails = compareValue(prevVal, currVal);
 					if (auditEventDetails != null)
 					{
 					  auditEventDetails.setElementName(columnName);
@@ -706,8 +709,8 @@ public class AuditManager // NOPMD
 	 * @param attribute column name and value.
 	 * @return the column name.
 	 */
-	private String getColumnName(Object previousObj, Object currentObj,
-			Attribute attribute)
+	private String getColumnName(final Object previousObj, final Object currentObj,
+			final Attribute attribute)
 	{
 		// Find the corresponding column in the database
 		String columnName = "";
@@ -734,7 +737,7 @@ public class AuditManager // NOPMD
 	 * @return AuditEventDetails. Audit event details.
 	 * @throws AuditException  Exception while auditing.
 	 */
-	private AuditEventDetails compareValue(Object prevObject, Object currentObject) throws AuditException
+	private AuditEventDetails compareValue(final Object prevObject, final Object currentObject) throws AuditException
 	{
 		//here is the problem.
 		AuditEventDetails auditEventDetails = null;
@@ -750,8 +753,8 @@ public class AuditManager // NOPMD
 		}
 		else if(prevObject != null && currentObject != null)
 		{
-			String previousVal = getObjectValue(prevObject);
-			String currentVal = getObjectValue(currentObject);
+			final String previousVal = getObjectValue(prevObject);
+			final String currentVal = getObjectValue(currentObject);
 			if(!previousVal.equals(currentVal))
 			{
 				auditEventDetails = new AuditEventDetails();
@@ -772,9 +775,9 @@ public class AuditManager // NOPMD
 	 * @return AuditEventDetails Object.
 	 */
 	private AuditEventDetails auditRefrenceAssociationsIds
-		(String currentCollectionIds,String prevCollectionIds, String attributeName)
+		(final String currentCollectionIds,final String prevCollectionIds, final String attributeName)
 	{
-		AuditEventDetails auditEventDetails = new AuditEventDetails();
+		final AuditEventDetails auditEventDetails = new AuditEventDetails();
 		auditEventDetails.setElementName(attributeName+"_PREV_CURR_IDS_LIST");
 		if(currentCollectionIds == null)
 		{
@@ -803,18 +806,18 @@ public class AuditManager // NOPMD
 	 * @return AuditDataEventLog object which represents current values and previous values.
 	 * @throws AuditException throw AuditException.
 	 */
-	private Collection<AuditDataEventLog> auditContainment(Object currentObjColl,
-			Object prevObjColl) throws AuditException
+	private Collection<AuditDataEventLog> auditContainment(final Object currentObjColl,
+			final Object prevObjColl) throws AuditException
 	{
-		AuditDataEventLog auditEventLog = new AuditDataEventLog();
+		final AuditDataEventLog auditEventLog = new AuditDataEventLog();
 
-		for (Object currentObject : (Collection) currentObjColl)
+		for (final Object currentObject : (Collection) currentObjColl)
 		{
 			boolean isExists = false ;
-			for(Object previousObject : (Collection)prevObjColl)
+			for(final Object previousObject : (Collection)prevObjColl)
 			{
 				//Call to obtainAuditableEventLog to audit the object of collection.
-				Object currentObjectId = getObjectId(currentObject);
+				final Object currentObjectId = getObjectId(currentObject);
 			 if(currentObjectId != null && currentObjectId.equals(getObjectId(previousObject)))
 			 {
 
@@ -841,7 +844,7 @@ public class AuditManager // NOPMD
 	 * Sets the LoginDetails.
 	 * @param loginDetails LoginDetails object to set.
 	 */
-	public void setLoginDetails(LoginDetails loginDetails)
+	public void setLoginDetails(final LoginDetails loginDetails)
 	{
 		loginEvent = new LoginEvent();
 		loginEvent.setIpAddress(loginDetails.getIpAddress());
@@ -852,7 +855,7 @@ public class AuditManager // NOPMD
 	 * This method will be called to return the Audit manager.
 	 * @param sessionDataBean SessionDataBean sessionDataBean object
 	 */
-	public void initializeAuditManager(SessionDataBean sessionDataBean)
+	public void initializeAuditManager(final SessionDataBean sessionDataBean)
 	{
 		if (sessionDataBean != null)
 		{
@@ -866,15 +869,15 @@ public class AuditManager // NOPMD
 	 * @param obj object.
 	 * @throws AuditException exception thrown while auditing.
 	 */
-	public void isObjectAuditable(Object obj) throws AuditException
+	public void isObjectAuditable(final Object obj) throws AuditException
 	{
 
 		if (auditableClasses != null)
 		{
-			Iterator<AuditableClass> classListIterator = auditableClasses.iterator();
+			final Iterator<AuditableClass> classListIterator = auditableClasses.iterator();
 			while (classListIterator.hasNext())
 			{
-				AuditableClass auditableClass = classListIterator.next();
+				final AuditableClass auditableClass = classListIterator.next();
 				//System.out.println("auditableClass :"+ auditableClass.getClassName());
 				if (obj.getClass().getName()
 					.equals(auditableClass.getClassName()) && auditableClass.getIsAuditable())
