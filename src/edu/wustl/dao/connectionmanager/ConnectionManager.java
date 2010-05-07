@@ -20,7 +20,6 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
 import edu.wustl.common.util.logger.Logger;
-import edu.wustl.dao.daofactory.DAOConfigFactory;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.DAOUtility;
 
@@ -130,11 +129,20 @@ public class ConnectionManager implements IConnectionManager
 		{
 			if(session != null)
 			{
+			    if(transaction!=null)
+                {
+                    if(!transaction.wasCommitted() && !transaction.wasRolledBack())
+                    {
+                        logger.debug("In Connection Manager's close(). Rolling back transation");
+                        transaction.rollback();
+                    }
+                }
+			    logger.debug("In Connection Manager's close(). Closing session");
 				session.close();
 				session=null;
 			}
 		}
-		catch(HibernateException hiberExp)
+		catch(final HibernateException hiberExp)
 		{
 			logger.error(hiberExp.getMessage(), hiberExp);
 			throw DAOUtility.getInstance().getDAOException(hiberExp,
@@ -157,7 +165,7 @@ public class ConnectionManager implements IConnectionManager
 			}
 			transaction = null;
 		}
-		catch(HibernateException hiberExp)
+		catch(final HibernateException hiberExp)
 		{
 			logger.error(hiberExp.getMessage(), hiberExp);
 			throw DAOUtility.getInstance().getDAOException(hiberExp,
@@ -181,7 +189,7 @@ public class ConnectionManager implements IConnectionManager
 				transaction.rollback();
 			}
 		}
-		catch(HibernateException hiberExp)
+		catch(final HibernateException hiberExp)
 		{
 			logger.error(hiberExp.getMessage(), hiberExp);
 			throw DAOUtility.getInstance().getDAOException(hiberExp,
@@ -202,7 +210,7 @@ public class ConnectionManager implements IConnectionManager
 			session.setFlushMode(FlushMode.COMMIT);
 			session.connection().setAutoCommit(false);
 		}
-		catch (Exception excp)
+		catch (final Exception excp)
 		{
 			logger.error(excp.getMessage(), excp);
 			throw DAOUtility.getInstance().getDAOException(excp,
@@ -244,9 +252,9 @@ public class ConnectionManager implements IConnectionManager
 	 * This will called to set the configuration object.
 	 * @param cfg configuration
 	 */
-	public void setConfiguration(Configuration cfg)
+	public void setConfiguration(final Configuration cfg)
 	{
-		this.configuration = cfg;
+		configuration = cfg;
 	}
 
 	/**
@@ -262,7 +270,7 @@ public class ConnectionManager implements IConnectionManager
 	 * This will called to set session factory object.
 	 * @param sessionFactory : session factory.
 	 */
-	public void setSessionFactory(SessionFactory sessionFactory)
+	public void setSessionFactory(final SessionFactory sessionFactory)
 	{
 		this.sessionFactory = sessionFactory;
 	}
@@ -272,7 +280,7 @@ public class ConnectionManager implements IConnectionManager
 	 * This method will be called to set applicationName.
 	 * @param applicationName : Name of the application.
 	 */
-	public void setApplicationName(String applicationName)
+	public void setApplicationName(final String applicationName)
 	{
 		this.applicationName = applicationName;
 	}
@@ -299,7 +307,7 @@ public class ConnectionManager implements IConnectionManager
 	 * This method will be called to set the data source.
 	 * @param dataSource : JDBC connection name.
 	 */
-	public void setDataSource(String dataSource)
+	public void setDataSource(final String dataSource)
 	{
 		this.dataSource = dataSource;
 	}
