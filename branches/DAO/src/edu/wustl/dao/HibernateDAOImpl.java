@@ -151,7 +151,8 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		catch (AuditException exp)
 		{
 
-			logger.info(exp.getMessage(),exp);
+			logger.warn(exp.getMessage());
+			logger.debug(exp.getMessage(),exp);
 			//throw DAOUtility.getInstance().getDAOException(exp, exp.getErrorKeyName(),
 				//	exp.getMsgValues());
 		}
@@ -172,7 +173,7 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		}
 		catch (HibernateException hibExp)
 		{
-			logger.info(hibExp.getMessage(),hibExp);
+			logger.error(hibExp.getMessage(),hibExp);
 			throw DAOUtility.getInstance().getDAOException(hibExp, "db.update.data.error",
 			"HibernateDAOImpl.java ");
 		}
@@ -195,21 +196,22 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		}
 		catch (AuditException exp)
 		{
-			logger.info(exp.getMessage(),exp);
+			logger.warn(exp.getMessage());
+			logger.debug(exp.getMessage(),exp);
 			return null;
 			/*throw DAOUtility.getInstance().getDAOException(exp, exp.getErrorKeyName(),
 					exp.getMsgValues());*/
 		}
 		catch (HibernateException hibExp)
 		{
-			logger.info(hibExp.getMessage(),hibExp);
+			logger.error(hibExp.getMessage(),hibExp);
 			return null;
 		//	throw DAOUtility.getInstance().getDAOException(hibExp, "db.update.data.error",
 			//"HibernateDAOImpl.java ");
 		}
 		catch (ClassNotFoundException exp)
 		{
-			logger.info(exp.getMessage(),exp);
+			logger.error(exp.getMessage(),exp);
 			return null;
 			//throw DAOUtility.getInstance().getDAOException(exp, "class.not.found.error",
 			//currentObj.getClass().getName());
@@ -241,13 +243,14 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		}
 		catch (HibernateException hibExp)
 		{
-			logger.info(hibExp.getMessage(),hibExp);
+			logger.error(hibExp.getMessage(),hibExp);
 			throw DAOUtility.getInstance().getDAOException(hibExp, "db.update.data.error",
 			"HibernateDAOImpl.java ");
 		}
 		catch (AuditException exp)
 		{
-			logger.info(exp.getMessage(),exp);
+			logger.warn(exp.getMessage());
+			logger.debug(exp.getMessage(),exp);
 			//throw DAOUtility.getInstance().getDAOException(exp, exp.getErrorKeyName(),
 				//	exp.getMsgValues());
 		}
@@ -449,7 +452,7 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 	public List executeParamHQL(String query,List<ColumnValueBean> columnValueBeans)
 	throws DAOException
 	{
-		logger.info("Execute hql param query");
+		logger.debug("Execute hql param query");
 		try
 		{
 	    	Query hibernateQuery = session.createQuery(query);
@@ -485,11 +488,11 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 	public List executeQuery(String query,List<ColumnValueBean> columnValueBeans)
 	throws DAOException
 	{
-		logger.info("Execute query  %%% query !!! "+query);
+		logger.debug("Execute query  %%% query !!! ");
 		try
 		{
 	    	Query hibernateQuery = session.createQuery(query);
-	    	logger.info("created hibernate query instance .");
+	    	logger.debug("created hibernate query instance .");
 
 	    	if(columnValueBeans!=null)
 	    	{
@@ -508,8 +511,7 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		}
 		catch(HibernateException hiberExp)
 		{
-			logger.info("Hibernate Exception occurred . "+hiberExp.getMessage());
-			logger.error(hiberExp.getMessage(),hiberExp);
+			logger.error("Hibernate Exception occurred . ",hiberExp);
 			throw DAOUtility.getInstance().getDAOException(hiberExp, "db.retrieve.data.error",
 					"HibernateDAOImpl.java "+query);
 		}
@@ -709,7 +711,7 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 			QueryWhereClause queryWhereClause, boolean onlyDistinctRows,
 			List<ColumnValueBean> columnValueBeans) throws DAOException
 	{
-		logger.info("Inside retrieve method !!");
+		logger.debug("Inside retrieve method !!");
 		try
 		{
 			StringBuffer queryStrBuff = new StringBuffer();
