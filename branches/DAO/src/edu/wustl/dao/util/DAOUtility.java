@@ -22,6 +22,7 @@ import java.util.Map;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 
+import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.global.CommonServiceLocator;
 import edu.wustl.common.util.logger.Logger;
@@ -421,4 +422,49 @@ public final class DAOUtility
 		}
 	}
 
+	/**
+	 *
+	 * @return
+	 * @throws DAOException
+	 */
+	public HibernateDAO getHibernateDAO(SessionDataBean sessionDataBean) throws DAOException
+	{
+		String appName = CommonServiceLocator.getInstance().getAppName();
+		HibernateDAO hibernateDao = (HibernateDAO) DAOConfigFactory.getInstance().getDAOFactory(
+				appName).getDAO();
+		hibernateDao.openSession(sessionDataBean);
+		return hibernateDao;
+	}
+
+	/**
+	 * Close hibernate dao.
+	 *
+	 * @param hibernateDao the hibernate dao
+	 *
+	 * @throws DAOException the DAO exception
+	 */
+	public void closeHibernateDAO(HibernateDAO hibernateDao) throws DAOException
+	{
+		if (hibernateDao != null)
+		{
+			hibernateDao.closeSession();
+		}
+	}
+
+	/**
+	 * Gets the column value bean list.
+	 *
+	 * @param valueObjects the value objects
+	 *
+	 * @return the column value bean list
+	 */
+	public List<ColumnValueBean> getColumnValueBeanList(Object[] valueObjects)
+	{
+		List<ColumnValueBean> columnValueBeans = new ArrayList<ColumnValueBean>();
+		for (Object valueObject : valueObjects)
+		{
+			columnValueBeans.add(new ColumnValueBean(valueObject));
+		}
+		return columnValueBeans;
+	}
 }

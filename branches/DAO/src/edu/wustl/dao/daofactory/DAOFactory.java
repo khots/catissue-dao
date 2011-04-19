@@ -31,6 +31,7 @@ import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.DAOUtility;
 import edu.wustl.dao.util.HibernateMetaData;
 import edu.wustl.dao.util.HibernateMetaDataFactory;
+import java.sql.Connection;
 
 
 /**
@@ -452,5 +453,44 @@ public class DAOFactory implements IDAOFactory
 	{
 		return databaseProperties.getDataBaseType();
 	}
+	/**
+	 * Client's responsible for closing the connection...
+	 * 
+	 * @return a new connection
+	 * @throws DAOException
+	 */
+	public Connection getConnection() throws DAOException
+	{
+		try
+		{
+			return getJDBCConnManager().getConnection();
+		}
+		catch (Exception excp)
+		{
+			logger.error(excp.getMessage(), excp);
+			throw DAOUtility.getInstance().getDAOException(excp, "FOOO...", "DAOFactory.java ");
+		}
+	}
+
+	/**
+	 * Client's responsible for closing the connection...
+	 * 
+	 * @return a new connection
+	 * @throws DAOException
+	 */
+	public void closeConnection(Connection connObj) throws DAOException
+	{
+		try
+		{
+			connObj.close();
+		}
+		catch (Exception excp)
+		{
+			logger.error(excp.getMessage(), excp);
+			throw DAOUtility.getInstance().getDAOException(excp, "FOOO...", "DAOFactory.java ");
+		}
+	}
+	
+	
 
 }
