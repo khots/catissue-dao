@@ -121,6 +121,13 @@ public final class DAOConstants extends CommonConstants
 	public static final String DATE_PATTERN_MM_DD_YYYY = "MM-dd-yyyy";
 
 	/**
+	 * Date pattern.
+	 */
+	public static final String TIMESTAMP_PATTERN = "MM-dd-yyyy HH:mm:ss";
+
+	public static final String EMPTY_STRING = "";
+
+	/**
 	 * Opening bracket.
 	 *//*
 	public static final String OPENING_BRACKET_OPERATOR = "(";

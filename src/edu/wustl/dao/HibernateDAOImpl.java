@@ -117,6 +117,16 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		connectionManager.rollback();
 	}
 
+	/**
+	 * Merge. This method merges the object passed as parameter with the same object present in
+	 * database. If no old object is present in db then new object is inserted in db.
+	 * @param objectToBeMerged the object to be merged
+	 */
+	public void merge(Object objectToBeMerged)
+	{
+		session.merge(objectToBeMerged);
+	}
+
 	 /**
 	 * This method will be called to begin new transaction.
 	 * @throws DAOException : It will throw DAOException.
@@ -488,6 +498,23 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 	public List executeQuery(String query,List<ColumnValueBean> columnValueBeans)
 	throws DAOException
 	{
+		return executeQuery(query, columnValueBeans, 0);
+	}
+
+	/**
+	 * Executes the HQL query.
+	 *
+	 * @param query HQL query to execute.
+	 * @param columnValueBeans column data beans.
+	 * @param maxResults the max number of results, the query should return
+	 * if 0 is passed, all results will be shown.
+	 * @return list of data.
+	 *
+	 * @throws DAOException Database exception.
+	 */
+	public List executeQuery(String query,List<ColumnValueBean> columnValueBeans, int maxResults)
+	throws DAOException
+	{
 		logger.debug("Execute query  %%% query !!! ");
 		try
 		{
@@ -505,6 +532,10 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 							colValueBean.getColumnValue());
 					index++;
 				}
+	    	}
+	    	if(maxResults > 0)
+	    	{
+	    		hibernateQuery.setMaxResults(maxResults);
 	    	}
 		    return hibernateQuery.list();
 
