@@ -4,8 +4,10 @@
 
 package edu.wustl.common.audit;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 
 import org.hibernate.Hibernate;
@@ -19,6 +21,7 @@ import edu.wustl.common.domain.AuditEventDetails;
 import edu.wustl.common.domain.LoginDetails;
 import edu.wustl.common.domain.LoginEvent;
 import edu.wustl.common.exception.ErrorKey;
+import edu.wustl.common.util.global.CommonServiceLocator;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.exception.AuditException;
 import edu.wustl.dao.util.DAOConstants;
@@ -172,7 +175,17 @@ public class AuditManager // NOPMD
 		Object reqValue = null;
 		if (AuditUtil.isVariable(obj))
 		{
-			reqValue = obj;
+			if (obj instanceof Date)
+			{
+				SimpleDateFormat dateFormat = new SimpleDateFormat(DAOConstants.TIMESTAMP_PATTERN,
+						CommonServiceLocator.getInstance()
+								.getDefaultLocale());
+				reqValue = dateFormat.format(obj);
+			}
+			else
+			{
+				reqValue = obj;
+			}
 		}
 		else
 		{
@@ -737,12 +750,12 @@ public class AuditManager // NOPMD
 	{
 		//here is the problem.
 		AuditEventDetails auditEventDetails = null;
-		if (prevObject == null && currentObject != null)
+		if (prevObject == null && currentObject != null && !DAOConstants.EMPTY_STRING.equals(currentObject))
 		{
 			auditEventDetails = new AuditEventDetails();
 			auditEventDetails.setCurrentValue(Hibernate.createClob(getObjectValue(currentObject)));
 		}
-		else if(currentObject == null && prevObject != null)
+		else if(currentObject == null && prevObject != null  && !DAOConstants.EMPTY_STRING.equals(currentObject))
 		{
 			auditEventDetails = new AuditEventDetails();
 			auditEventDetails.setPreviousValue(Hibernate.createClob(getObjectValue(prevObject)));
@@ -846,6 +859,7 @@ public class AuditManager // NOPMD
 		loginEvent.setIpAddress(loginDetails.getIpAddress());
 		loginEvent.setSourceId(loginDetails.getSourceId());
 		loginEvent.setUserLoginId(loginDetails.getUserLoginId());
+		loginEvent.setLoginName(loginDetails.getLoginName());
 	}
 	/**
 	 * Sets the status of LoginAttempt to loginStatus provided as an argument.
