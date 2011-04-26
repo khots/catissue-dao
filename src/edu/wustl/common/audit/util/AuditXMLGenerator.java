@@ -22,12 +22,38 @@ import edu.wustl.dao.exception.AuditException;
 public class AuditXMLGenerator
 {
 
+	/** The exclude association. */
 	public static boolean excludeAssociation;
 
+	/** The audit xml tag generator. */
+	private AuditXMLTagGenerator auditXMLTagGenerator;
+
+	/**
+	 * Instantiates a new audit xml generator.
+	 */
+	public AuditXMLGenerator()
+	{
+		setAuditXMLTagGenerator(new AuditXMLTagGenerator());
+	}
+
+	/**
+	 * Instantiates a new audit xml generator.
+	 *
+	 * @param xmlTagGenerator the xml tag generator
+	 */
+	public AuditXMLGenerator(AuditXMLTagGenerator xmlTagGenerator)
+	{
+		setAuditXMLTagGenerator(xmlTagGenerator);
+	}
+
+	/**
+	 * @param args
+	 * @throws AuditException
+	 */
 	public static void main(String[] args) throws AuditException
 	{
 		int classCounter = generateAuditXML(args);
-		System.out.println("Totatl number of clsses:" + classCounter);
+		System.out.println("Total number of classes:" + classCounter);
 	}
 
 	/**
@@ -40,14 +66,27 @@ public class AuditXMLGenerator
 	 */
 	public static int generateAuditXML(String[] args) throws AuditException
 	{
+		AuditXMLGenerator auditXMLGenerator = new AuditXMLGenerator();
+		return auditXMLGenerator.generateAuditMetadataXML(args);
+	}
 
+	/**
+	 * Generate audit metadata xml.
+	 *
+	 * @param args the args
+	 *
+	 * @return the int
+	 *
+	 * @throws AuditException the audit exception
+	 */
+	public int generateAuditMetadataXML(String[] args) throws AuditException
+	{
 		int classCounter = 0;
 		try
 		{
 			PrintWriter auditableXmlWriter = new PrintWriter(args[1]);
 			auditableXmlWriter.println("<?xml version='1.0' encoding='utf-8'?>");
 			auditableXmlWriter.println("<AuditableMetaData>");
-			AuditXMLTagGenerator auditXMLGenerator = new AuditXMLTagGenerator();
 			if (args.length > 2)
 			{
 				excludeAssociation = Boolean.valueOf(args[2]);
@@ -58,7 +97,7 @@ public class AuditXMLGenerator
 				if (!class1.isInterface() && !class1.isEnum()
 						&& !Modifier.isAbstract(class1.getModifiers()))
 				{
-					auditableXmlWriter.println(auditXMLGenerator
+					auditableXmlWriter.println(getAuditXMLTagGenerator()
 							.getAuditableMetatdataXMLString(class1.getName()));
 					classCounter++;
 				}
@@ -82,7 +121,7 @@ public class AuditXMLGenerator
 	 * @throws ClassNotFoundException
 	 * @throws IOException
 	 */
-	private static Class[] getClasses(String packageName) throws AuditException
+	private Class[] getClasses(String packageName) throws AuditException
 	{
 		ArrayList<Class> classes = new ArrayList<Class>();
 		try
@@ -121,7 +160,7 @@ public class AuditXMLGenerator
 	 * @return The classes
 	 * @throws ClassNotFoundException
 	 */
-	private static List<Class> findClasses(File directory, String packageName)
+	private List<Class> findClasses(File directory, String packageName)
 			throws ClassNotFoundException
 	{
 		List<Class> classes = new ArrayList<Class>();
@@ -144,6 +183,22 @@ public class AuditXMLGenerator
 			}
 		}
 		return classes;
+	}
+
+	/**
+	 * @return the auditXMLTagGenerator
+	 */
+	public AuditXMLTagGenerator getAuditXMLTagGenerator()
+	{
+		return auditXMLTagGenerator;
+	}
+
+	/**
+	 * @param auditXMLTagGenerator the auditXMLTagGenerator to set
+	 */
+	public void setAuditXMLTagGenerator(AuditXMLTagGenerator auditXMLTagGenerator)
+	{
+		this.auditXMLTagGenerator = auditXMLTagGenerator;
 	}
 
 }
