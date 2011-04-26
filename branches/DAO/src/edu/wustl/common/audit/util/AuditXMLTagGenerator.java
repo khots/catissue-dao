@@ -31,10 +31,11 @@ public class AuditXMLTagGenerator
 			populateAllFields(newObjectClass, fieldList);
 			for (Field field : fieldList.values())
 			{
-				if (!"serialVersionUID".equalsIgnoreCase(field.getName()) && validateAttribute(field,newObjectClass))
+				if (!"serialVersionUID".equalsIgnoreCase(field.getName())
+						&& validateAttribute(field, newObjectClass))
 				{
 					auditableMetatdataXML.append('\t');
-					updateAttributeTag(auditableMetatdataXML,field);
+					updateAttributeTag(auditableMetatdataXML, field);
 				}
 
 			}
@@ -56,15 +57,15 @@ public class AuditXMLTagGenerator
 	 * @param newObjectClass
 	 * @return
 	 */
-	private boolean validateAttribute(Field field, Class newObjectClass)
+	protected boolean validateAttribute(Field field, Class newObjectClass)
 	{
 		boolean validAttribute = false;
 		String fieldName = field.getName();
 		List<Method> methlist = new ArrayList<Method>();
 		populateAllMethods(newObjectClass, methlist);
-		for(Method method: methlist)
+		for (Method method : methlist)
 		{
-			if(method.getName().equalsIgnoreCase("get"+fieldName))
+			if (method.getName().equalsIgnoreCase("get" + fieldName))
 			{
 				validAttribute = true;
 			}
@@ -101,7 +102,7 @@ public class AuditXMLTagGenerator
 			populateAllMethods(klass.getSuperclass(), fieldList);
 		}
 		klass.getDeclaredFields();
-		for(Method method: klass.getDeclaredMethods())
+		for (Method method : klass.getDeclaredMethods())
 		{
 			fieldList.add(method);
 		}
@@ -129,33 +130,50 @@ public class AuditXMLTagGenerator
 	 * @param field
 	 * @return attribute tag
 	 */
-	private void updateAttributeTag(StringBuffer auditableMetatdataXML,Field field)
+	protected void updateAttributeTag(StringBuffer auditableMetatdataXML, Field field)
 	{
-
-		if (!AuditXMLGenerator.excludeAssociation && field.getType().getName().startsWith("java.util.")
+		if (!AuditXMLGenerator.excludeAssociation
+				&& field.getType().getName().startsWith("java.util.")
 				&& !field.getType().getName().startsWith("java.util.Date"))
 		{
-			auditableMetatdataXML.append(getContainmentAssociationCollection(field));
-			auditableMetatdataXML.append('\n');
+			generateAssociationTag(auditableMetatdataXML, field);
 		}
-		else if(!field.getType().getName().startsWith("java.util.Collection"))
+		else if (!field.getType().getName().startsWith("java.util.Collection"))
 		{
-
-			String fieldName = field.getName();
-			String fieldType = field.getType().getName();
-			String attributeTag = AuditXMLConstants.ATTRIBUTE_TAG;
-			attributeTag = attributeTag.replace(AuditXMLConstants.NAME_TOKEN, fieldName);
-			attributeTag = attributeTag.replace(AuditXMLConstants.DATA_TYPE_TOKEN, fieldType);
-			auditableMetatdataXML.append(attributeTag);
-			auditableMetatdataXML.append('\n');
+			generateAttributeTag(auditableMetatdataXML, field);
 		}
+	}
+
+	/**
+	 * @param auditableMetatdataXML
+	 * @param field
+	 */
+	protected void generateAssociationTag(StringBuffer auditableMetatdataXML, Field field)
+	{
+		auditableMetatdataXML.append(this.getContainmentAssociationCollection(field));
+		auditableMetatdataXML.append('\n');
+	}
+
+	/**
+	 * @param auditableMetatdataXML
+	 * @param field
+	 */
+	protected void generateAttributeTag(StringBuffer auditableMetatdataXML, Field field)
+	{
+		String fieldName = field.getName();
+		String fieldType = field.getType().getName();
+		String attributeTag = AuditXMLConstants.ATTRIBUTE_TAG;
+		attributeTag = attributeTag.replace(AuditXMLConstants.NAME_TOKEN, fieldName);
+		attributeTag = attributeTag.replace(AuditXMLConstants.DATA_TYPE_TOKEN, fieldType);
+		auditableMetatdataXML.append(attributeTag);
+		auditableMetatdataXML.append('\n');
 	}
 
 	/**
 	 * @param field
 	 * @return Containment association collection tag
 	 */
-	private String getContainmentAssociationCollection(Field field)
+	protected String getContainmentAssociationCollection(Field field)
 	{
 		String containmentAssociationTag = AuditXMLConstants.CONTAINMENT_ASSOCIATION_COLLECTION_TAG;
 		String relationshipType = "containment";
