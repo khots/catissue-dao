@@ -1,3 +1,4 @@
+
 package edu.wustl.common.audit.util;
 
 import java.io.File;
@@ -20,7 +21,9 @@ import edu.wustl.dao.exception.AuditException;
  */
 public class AuditXMLGenerator
 {
+
 	public static boolean excludeAssociation;
+
 	public static void main(String[] args) throws AuditException
 	{
 		int classCounter = generateAuditXML(args);
@@ -45,7 +48,7 @@ public class AuditXMLGenerator
 			auditableXmlWriter.println("<?xml version='1.0' encoding='utf-8'?>");
 			auditableXmlWriter.println("<AuditableMetaData>");
 			AuditXMLTagGenerator auditXMLGenerator = new AuditXMLTagGenerator();
-			if(args.length >2)
+			if (args.length > 2)
 			{
 				excludeAssociation = Boolean.valueOf(args[2]);
 			}
@@ -65,70 +68,82 @@ public class AuditXMLGenerator
 		}
 		catch (FileNotFoundException e)
 		{
-			throw new AuditException(ErrorKey.getErrorKey("audit.xml.generation.error"),e,"");
+			throw new AuditException(ErrorKey.getErrorKey("audit.xml.generation.error"), e, "");
 		}
-
 
 		return classCounter;
 	}
-	/**
-     * Scans all classes accessible from the context class loader which belong to the given package and subpackages.
-     * @param packageName The base package
-     * @return The classes
-	 * @throws AuditException
-     * @throws ClassNotFoundException
-     * @throws IOException
-     */
-    private static Class[] getClasses(String packageName) throws AuditException{
-    	ArrayList<Class> classes = new ArrayList<Class>();
-    	try{
-		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        assert classLoader != null;
-		String path = packageName.replace('.', '/');
-		Enumeration<URL> resources = classLoader.getResources(path);
-        List<File> dirs = new ArrayList<File>();
-        while (resources.hasMoreElements()) {
-            URL resource = resources.nextElement();
-            dirs.add(new File(resource.getFile()));
-        }
 
-        for (File directory : dirs) {
-            classes.addAll(findClasses(directory, packageName));
-        }
-    	}
+	/**
+	 * Scans all classes accessible from the context class loader which belong to the given package and subpackages.
+	 * @param packageName The base package
+	 * @return The classes
+	 * @throws AuditException
+	 * @throws ClassNotFoundException
+	 * @throws IOException
+	 */
+	private static Class[] getClasses(String packageName) throws AuditException
+	{
+		ArrayList<Class> classes = new ArrayList<Class>();
+		try
+		{
+			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+			assert classLoader != null;
+			String path = packageName.replace('.', '/');
+			Enumeration<URL> resources = classLoader.getResources(path);
+			List<File> dirs = new ArrayList<File>();
+			while (resources.hasMoreElements())
+			{
+				URL resource = resources.nextElement();
+				dirs.add(new File(resource.getFile()));
+			}
+
+			for (File directory : dirs)
+			{
+				classes.addAll(findClasses(directory, packageName));
+			}
+		}
 		catch (ClassNotFoundException e)
 		{
-			throw new AuditException(ErrorKey.getErrorKey("audit.xml.generation.error"),e,"");
+			throw new AuditException(ErrorKey.getErrorKey("audit.xml.generation.error"), e, "");
 		}
 		catch (IOException e)
 		{
-			throw new AuditException(ErrorKey.getErrorKey("audit.xml.generation.error"),e,"");
+			throw new AuditException(ErrorKey.getErrorKey("audit.xml.generation.error"), e, "");
 		}
-        return classes.toArray(new Class[classes.size()]);
-    }
+		return classes.toArray(new Class[classes.size()]);
+	}
 
-    /**
-     * Recursive method used to find all classes in a given directory and subdirs.
-     * @param directory   The base directory
-     * @param packageName The package name for classes found inside the base directory
-     * @return The classes
-     * @throws ClassNotFoundException
-     */
-    private static List<Class> findClasses(File directory, String packageName) throws ClassNotFoundException {
-        List<Class> classes = new ArrayList<Class>();
-        if (!directory.exists()) {
-            return classes;
-        }
-        File[] files = directory.listFiles();
-        for (File file : files) {
-            if (file.isDirectory()) {
-                assert !file.getName().contains(".");
-                classes.addAll(findClasses(file, packageName + "." + file.getName()));
-            } else if (file.getName().endsWith(".class")) {
-                classes.add(Class.forName(packageName + '.' + file.getName().substring(0, file.getName().length() - 6)));
-            }
-        }
-        return classes;
-    }
+	/**
+	 * Recursive method used to find all classes in a given directory and subdirs.
+	 * @param directory   The base directory
+	 * @param packageName The package name for classes found inside the base directory
+	 * @return The classes
+	 * @throws ClassNotFoundException
+	 */
+	private static List<Class> findClasses(File directory, String packageName)
+			throws ClassNotFoundException
+	{
+		List<Class> classes = new ArrayList<Class>();
+		if (!directory.exists())
+		{
+			return classes;
+		}
+		File[] files = directory.listFiles();
+		for (File file : files)
+		{
+			if (file.isDirectory())
+			{
+				assert !file.getName().contains(".");
+				classes.addAll(findClasses(file, packageName + "." + file.getName()));
+			}
+			else if (file.getName().endsWith(".class"))
+			{
+				classes.add(Class.forName(packageName + '.'
+						+ file.getName().substring(0, file.getName().length() - 6)));
+			}
+		}
+		return classes;
+	}
 
 }
