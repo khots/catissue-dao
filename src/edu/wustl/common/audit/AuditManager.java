@@ -345,7 +345,7 @@ public class AuditManager // NOPMD
 	{
 		LOGGER.debug("Inside startAuditing method.");
 
-		auditEventLog.setObjectName(hibernateMetaData.getTableName(obj.getClass()));
+		auditEventLog.setObjectName(getTableName(obj));
 
 		Object currentObj = HibernateMetaData.getProxyObjectImpl(obj);
 
@@ -357,6 +357,27 @@ public class AuditManager // NOPMD
 
 		//Audit containment associations of the object
 		auditContainmentAssociation(previousObj, auditEventLog, auditableClass, currentObj);
+	}
+
+	/**
+	 * Gets the table name.
+	 *
+	 * @param obj the obj
+	 *
+	 * @return the table name
+	 */
+	private String getTableName(Object currentObject)
+	{
+		String tableName = "";
+		if (currentObject instanceof AuditableObject)
+		{
+			tableName = ((AuditableObject) currentObject).getTableName();
+		}
+		else
+		{
+			tableName = hibernateMetaData.getTableName(currentObject.getClass());
+		}
+		return tableName;
 	}
 
 	/**
@@ -701,7 +722,11 @@ public class AuditManager // NOPMD
 	{
 		// Find the corresponding column in the database
 		String columnName = "";
-		if (currentObj == null)
+		if (currentObj instanceof AuditableObject)
+		{
+			columnName = ((AuditableObject) currentObj).getColumnName(attribute.getName());
+		}
+		else if (currentObj == null)
 		{
 			columnName = hibernateMetaData.getColumnName(previousObj.getClass(), attribute
 					.getName());
