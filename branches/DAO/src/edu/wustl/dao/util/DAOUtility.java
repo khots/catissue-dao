@@ -377,24 +377,75 @@ public final class DAOUtility
 		while(beansIter.hasNext())
 		{
 			ColumnValueBean bean = beansIter.next();
-			for(int counter =0; counter < DAOConstants.INVALID_DATA.length;counter++)
+			for (int counter = 0; counter < DAOConstants.INVALID_DATA.length; counter++)
 			{
-				if(bean.getColumnValue() instanceof String &&
-					(bean.getColumnValue().toString()).trim()
-					.toLowerCase()
-					.contains(DAOConstants.INVALID_DATA[counter].trim().toLowerCase()))
+				if (bean.getColumnValue() instanceof String
+						&& (bean.getColumnValue().toString()).trim().toLowerCase().contains(
+								DAOConstants.INVALID_DATA[counter].trim().toLowerCase()))
 				{
+					boolean isExtraCheckRequired = isExtraCheckRequired(DAOConstants.INVALID_DATA[counter]);
 
-					logger.error("SQl : "+sql+
-						"  Invalid data : "+ bean.getColumnValue().toString()+
-				    	" Encountered invalid character:" +
-				    	DAOConstants.INVALID_DATA[counter]);
-					throw DAOUtility.getInstance().getDAOException(null,
-					"db.malicious.data.encountered",bean.getColumnValue().toString()+
-					":"+DAOConstants.INVALID_DATA[counter]);
+					if (!isExtraCheckRequired
+							|| (isExtraCheckRequired && hasSQLKeyword(bean.getColumnValue()
+									.toString().trim().toLowerCase(),
+									DAOConstants.INVALID_DATA[counter])))
+					{
+						logger.error("SQl : " + sql + "  Invalid data : "
+								+ bean.getColumnValue().toString()
+								+ " Encountered invalid character:"
+								+ DAOConstants.INVALID_DATA[counter]);
+						throw DAOUtility.getInstance().getDAOException(
+								null,
+								"db.malicious.data.encountered",
+								bean.getColumnValue().toString() + ":"
+										+ DAOConstants.INVALID_DATA[counter]);
+					}
 				}
 			}
 		}
+	}
+
+	/**
+	 * This method will check if the given SQL keyword is one of the keywords that
+	 * needs extra check before invalidating the input data.
+	 * Extra check is required for: execute, exec, sp_executesql, delete, drop
+	 * @param sqlKeyword
+	 * @return isExtraCheckRequired
+	 */
+	private static boolean isExtraCheckRequired(String sqlKeyword)
+	{
+		boolean isExtraCheckRequired = false;
+		for (int counter = 0; counter < DAOConstants.EXTRA_CHECK_DATA.length; counter++)
+		{
+			if (sqlKeyword.equals(DAOConstants.EXTRA_CHECK_DATA[counter]))
+			{
+				isExtraCheckRequired = true;
+				break;
+			}
+		}
+		return isExtraCheckRequired;
+	}
+
+	/**
+	 * This method splits the value using 'space' delimiter and checks if
+	 * the sqlKeyword is present in the data.
+	 * @param value
+	 * @param sqlKeyword
+	 * @return hasSQLKeyword
+	 */
+	private static boolean hasSQLKeyword(String value, String sqlKeyword)
+	{
+		boolean hasSQLKeyword = false;
+		String[] splitValue = value.split(" ");
+		for (int i = 0; i < splitValue.length; i++)
+		{
+			if(sqlKeyword.equals(splitValue[i]))
+			{
+				hasSQLKeyword = true;
+				break;
+			}
+		}
+		return hasSQLKeyword;
 	}
 
 	/**
