@@ -151,4 +151,7 @@ public final class DAOConstants extends CommonConstants
 	 public static final String[] INVALID_DATA = {"execute", "exec","sp_executesql",
 		 "delete","drop",";","xp_","/*","*/"};
 
+	 public static final String[] EXTRA_CHECK_DATA = {"execute", "exec","sp_executesql",
+		 "delete","drop"};
+
 }
