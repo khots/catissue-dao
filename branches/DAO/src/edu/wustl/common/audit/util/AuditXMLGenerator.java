@@ -121,7 +121,7 @@ public class AuditXMLGenerator
 	 * @throws ClassNotFoundException
 	 * @throws IOException
 	 */
-	private Class[] getClasses(String packageName) throws AuditException
+	protected Class[] getClasses(String packageName) throws AuditException
 	{
 		ArrayList<Class> classes = new ArrayList<Class>();
 		try
@@ -160,7 +160,7 @@ public class AuditXMLGenerator
 	 * @return The classes
 	 * @throws ClassNotFoundException
 	 */
-	private List<Class> findClasses(File directory, String packageName)
+	protected List<Class> findClasses(File directory, String packageName)
 			throws ClassNotFoundException
 	{
 		List<Class> classes = new ArrayList<Class>();
