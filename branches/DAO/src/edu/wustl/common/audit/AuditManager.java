@@ -304,7 +304,7 @@ public class AuditManager // NOPMD
 				while (classListIterator.hasNext())
 				{
 					AuditableClass auditableClass = classListIterator.next();
-					if (obj.getClass().getName().equals(auditableClass.getClassName()))
+					if (Hibernate.getClass(obj).getName().equals(auditableClass.getClassName()))
 					{
 						isClassFound = true;
 						auditableClassId = (Long) auditableClass.invokeGetterForId(obj);
