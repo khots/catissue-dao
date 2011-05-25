@@ -7,8 +7,11 @@ package edu.wustl.dao.daofactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -25,6 +28,9 @@ import org.xml.sax.SAXException;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.DatabaseProperties;
 import edu.wustl.dao.exception.DAOException;
+import edu.wustl.dao.interceptor.InterceptorErrorRecoveryThread;
+import edu.wustl.dao.interceptor.SaveUpdateInterceptThread;
+import edu.wustl.dao.util.DAOConstants;
 import edu.wustl.dao.util.DAOUtility;
 
 /**
@@ -52,7 +58,7 @@ public class ApplicationDAOPropertiesParser
 	 *Class Logger.
 	 */
 	private static final Logger logger = Logger.getCommonLogger(ApplicationDAOPropertiesParser.class);
-	
+
 	/**
 	 * This method gets DAO Factory Map.
 	 * @return DAO Factory Map.
@@ -117,6 +123,7 @@ public class ApplicationDAOPropertiesParser
 	{
 		//get the root element
 		Element root = doc.getDocumentElement();
+		initHibernateInterceptor(root);
 		NodeList rootChildren = root.getElementsByTagName("Application");
 		for (int i = 0; i < rootChildren.getLength(); i++)
 		{
@@ -151,6 +158,41 @@ public class ApplicationDAOPropertiesParser
 
 		}
 
+	}
+
+	private void initHibernateInterceptor(Element root) throws DAOException
+	{
+		//start the error recovery thread for interceptor Object.
+		Timer errorRecovery = new Timer(true);
+		errorRecovery.scheduleAtFixedRate(new InterceptorErrorRecoveryThread(), getStartTime("23:00"),(24*60*60*1000) );
+
+		// start the save update intereceptor thread.
+		SaveUpdateInterceptThread interceptorThread = SaveUpdateInterceptThread.getInstance();
+		interceptorThread.populateInterceptorObjectList(root);
+
+		/*Calendar date = Calendar.getInstance();
+		date.add(Calendar.MINUTE, 3);
+		errorRecovery.scheduleAtFixedRate(new InterceptorErrorRecoveryThread(),date.getTime() ,(10000) );*/
+	}
+	private static Date getStartTime(String startTime)
+	{
+		int hours = 0, minutes = 0;
+		if (startTime != null && startTime.length() == 5
+		&& startTime.matches("([0-1][0-9]|2[0-3]):([0-5][0-9])"))
+		{
+			String timeTokens[] = startTime.split(DAOConstants.COLON);
+			hours = Integer.parseInt(timeTokens[0]);
+			minutes = Integer.parseInt(timeTokens[1]);
+		}
+
+		Calendar startDate = Calendar.getInstance();
+		Calendar today = Calendar.getInstance();
+		today.set(startDate.get(Calendar.YEAR),startDate.get(Calendar.MONTH), startDate.get(Calendar.DATE),	hours, minutes);
+		if (today.before(startDate))
+		{
+			today.add(Calendar.DATE, 1);
+		}
+		return today.getTime();
 	}
 
 
@@ -211,7 +253,7 @@ public class ApplicationDAOPropertiesParser
 	ParserConfigurationException, SAXException, IOException
 	{
 		NamedNodeMap attributeMap = applicationChild.getAttributes();
-		applicationName = ((Node) attributeMap.item(0)).getNodeValue();
+		applicationName = (attributeMap.item(0)).getNodeValue();
 
 		NodeList applicationChildList = applicationChild.getChildNodes();
 

@@ -42,6 +42,8 @@ public final class DAOConstants extends CommonConstants
 	 */
 	public static final String DOT_OPERATOR = ".";
 
+
+
 	/**
 	 * Space .
 	 */
@@ -143,5 +145,23 @@ public final class DAOConstants extends CommonConstants
 	    */
 	 public static final String[] INVALID_DATA = {"execute", "exec","sp_executesql",
 		 "delete","drop",";","xp_","/*","*/"};
+
+	 /**
+	 * colon
+	 */
+	public static final String COLON =":";
+
+	/**
+	 *
+	 */
+	public static final String NODE_NAME_CLASS="class";
+	public static final String NODE_NAME_INTERCEPTOROBJECT="InterceptorObject";
+
+	public static final String NODE_ATTRIBUTE_NAME="name";
+	public static final String NODE_ATTRIBUTE_PROCESSINGPERIOD="objectProcessingPeriod";
+	public static final String NODE_ATTRIBUTE_ONINSERT="onInsert";
+	public static final String NODE_ATTRIBUTE_ONUPDATE="onUpdate";
+	public static final String INTERCEPT_PROCESS_METHOD="process";
+	public static final String INTERCEPT_ONERROR_METHOD="onError";
 
 }

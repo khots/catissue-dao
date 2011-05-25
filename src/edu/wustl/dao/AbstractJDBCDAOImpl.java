@@ -814,14 +814,13 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 			while(colValItr.hasNext())
 			{
 				ColumnValueBean colValueBean = colValItr.next();
-
-				if((colValueBean.getColumnValue() instanceof Date))
-				{
-					stmt.setDate(index,setDateToPrepStmt(colValueBean));
-				}
-				else if(colValueBean.getColumnValue() instanceof Timestamp)
+				if(colValueBean.getColumnValue() instanceof Timestamp)
 				{
 					stmt.setTimestamp(index,(Timestamp)colValueBean.getColumnValue());
+				}
+				else if((colValueBean.getColumnValue() instanceof Date))
+				{
+					stmt.setDate(index,setDateToPrepStmt(colValueBean));
 				}
 				else if (colValueBean.getColumnValue() instanceof File)
 				{
