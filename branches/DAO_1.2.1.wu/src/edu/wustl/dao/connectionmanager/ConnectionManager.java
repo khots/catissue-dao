@@ -20,8 +20,8 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
 import edu.wustl.common.util.logger.Logger;
-import edu.wustl.dao.daofactory.DAOConfigFactory;
 import edu.wustl.dao.exception.DAOException;
+import edu.wustl.dao.interceptor.SaveUpdateHibernateInterceptor;
 import edu.wustl.dao.util.DAOUtility;
 
 /**
@@ -198,7 +198,7 @@ public class ConnectionManager implements IConnectionManager
 	{
 		try
 		{
-			session = sessionFactory.openSession();
+			session = sessionFactory.openSession(new SaveUpdateHibernateInterceptor());
 			session.setFlushMode(FlushMode.COMMIT);
 			session.connection().setAutoCommit(false);
 		}
@@ -246,7 +246,7 @@ public class ConnectionManager implements IConnectionManager
 	 */
 	public void setConfiguration(Configuration cfg)
 	{
-		this.configuration = cfg;
+		configuration = cfg;
 	}
 
 	/**

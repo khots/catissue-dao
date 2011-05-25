@@ -32,4 +32,8 @@
 			
 		</DAOFactory>
 	 </Application>
+	 <InterceptorObject objectProcessingPeriod="1">
+		<class name="test.User"  onInsert="edu.wustl.dao.test.interceptor.UserInterceptProcessor" onupdate="edu.wustl.dao.test.interceptor.UserInterceptProcessor" />
+	</InterceptorObject> 
+				
 </Applications>
