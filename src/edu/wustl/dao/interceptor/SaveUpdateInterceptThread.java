@@ -493,8 +493,10 @@ public class SaveUpdateInterceptThread implements Runnable
 	private void createErrorObject(Object object, Exception e, eventType type,
 			String processorClassName) throws DAOException
 	{
-		String query = "insert into CATISSUE_INTERCEPTOR_ERROR_OBJ (ERROR_TIMESTAMP,OBJECT_TYPE,ERROR_CODE,OBJECT_ID,RECOVERY_DONE,EVENT_CODE,NUMBER_OF_TRY,PROCESSOR_CLASS) values(?,?,?,?,?,?,?,?)";
+		String query = "insert into INTERCEPTOR_ERROR_OBJ (IDENTIFIER,ERROR_TIMESTAMP,OBJECT_TYPE,ERROR_CODE,OBJECT_ID,RECOVERY_DONE,EVENT_CODE,NUMBER_OF_TRY,PROCESSOR_CLASS) values(?,?,?,?,?,?,?,?,?)";
+		Long identifier = getNextIdentifierForErrorObject();
 		LinkedList<ColumnValueBean> columnValueBean = new LinkedList<ColumnValueBean>();
+		columnValueBean.add(new ColumnValueBean("IDENTIFIER", identifier));
 		columnValueBean.add(new ColumnValueBean("ERROR_TIMESTAMP", new Timestamp(new Date()
 				.getTime())));
 		columnValueBean.add(new ColumnValueBean("OBJECT_TYPE", object.getClass().getName()));
@@ -512,6 +514,7 @@ public class SaveUpdateInterceptThread implements Runnable
 			columnValueBean.add(new ColumnValueBean("ERROR_CODE", "0000"));
 		}
 		Long objId = getObjectIdentifier(object);
+
 		columnValueBean.add(new ColumnValueBean("OBJECT_ID", objId));
 		columnValueBean.add(new ColumnValueBean("RECOVERY_DONE", new Boolean(false)));
 		columnValueBean.add(new ColumnValueBean("EVENT_CODE", type.getEventCode()));
@@ -524,6 +527,38 @@ public class SaveUpdateInterceptThread implements Runnable
 
 			saveErrorObject(query, columnValueBean);
 		}
+	}
+
+	private Long getNextIdentifierForErrorObject() throws DAOException
+	{
+		JDBCDAO dao = null;
+		Long identifier = 1l;
+		try
+		{
+			dao = DAOConfigFactory.getInstance().getDAOFactory().getJDBCDAO();
+			dao.openSession(null);
+			List recordList =  dao.executeQuery("select max(IDENTIFIER)+1 from INTERCEPTOR_ERROR_OBJ",new ArrayList<ColumnValueBean>());
+			List result = (List)recordList.get(0);
+			Object id = result.get(0);
+			if(id==null || "".equals(id))
+			{
+				identifier = 1l;
+			}
+			else
+			{
+				identifier = Long.valueOf(id.toString());
+			}
+		}
+		catch (DAOException e)
+		{
+			LOGGER.error("Error while retrieving max identifier for error object in Interceptor thread", e);
+		}
+		finally
+		{
+			dao.closeSession();
+		}
+		return identifier;
+
 	}
 
 	/**
