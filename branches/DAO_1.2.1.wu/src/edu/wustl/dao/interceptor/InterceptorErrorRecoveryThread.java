@@ -21,8 +21,8 @@ import edu.wustl.dao.util.DAOConstants;
 public class InterceptorErrorRecoveryThread extends TimerTask
 {
 
-	private static final String ALL_ERROR_OBJ_QUERY = "select IDENTIFIER, ERROR_TIMESTAMP,OBJECT_TYPE,ERROR_CODE,OBJECT_ID,EVENT_CODE,NUMBER_OF_TRY,PROCESSOR_CLASS from CATISSUE_INTERCEPTOR_ERROR_OBJ where RECOVERY_DONE is false";
-	private static final String UPDATE_ERROR_OBJ_QUERY="update CATISSUE_INTERCEPTOR_ERROR_OBJ set RECOVERY_DONE = ? , NUMBER_OF_TRY=? where identifier =?";
+	private static final String ALL_ERROR_OBJ_QUERY = "select IDENTIFIER, ERROR_TIMESTAMP,OBJECT_TYPE,ERROR_CODE,OBJECT_ID,EVENT_CODE,NUMBER_OF_TRY,PROCESSOR_CLASS from INTERCEPTOR_ERROR_OBJ where RECOVERY_DONE is false";
+	private static final String UPDATE_ERROR_OBJ_QUERY="update INTERCEPTOR_ERROR_OBJ set RECOVERY_DONE = ? , NUMBER_OF_TRY=? where identifier =?";
 	/**
 	 * logger Logger - Generic logger.
 	 */
