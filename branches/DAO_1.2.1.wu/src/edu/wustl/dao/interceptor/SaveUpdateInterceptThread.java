@@ -74,8 +74,24 @@ public class SaveUpdateInterceptThread implements Runnable
 	 *
 	 */
 	public enum eventType {
-		onInsert(1), OnUpdate(2);
-
+		onInsert(1)
+		{
+			public String getTypeString()
+			{
+				return "insert";
+			}
+		}
+		, OnUpdate(2)
+		{
+			public String getTypeString()
+			{
+				return "insert";
+			}
+		};
+		public String getTypeString()
+		{
+			return "";
+		}
 		private long eventCode;
 
 		/**
