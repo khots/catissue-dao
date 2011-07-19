@@ -15,7 +15,7 @@ import edu.wustl.dao.DatabaseProperties;
 import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.HibernateMetaData;
-
+import java.sql.Connection;
 
 
 /**
@@ -158,5 +158,21 @@ public interface IDAOFactory
 	 * @return the hibernateMetaData
 	 */
 	HibernateMetaData getHibernateMetaData();
+
+	/**
+	 * Gets the connectiontion.
+	 * 
+	 * @return the connectiontion
+	 * @throws DAOException the dAO exception
+	 */
+	Connection getConnection() throws DAOException;
+
+	/**
+	 * Close connection.
+	 * 
+	 * @param connObj the conn obj
+	 * @throws DAOException the dAO exception
+	 */
+	void closeConnection(Connection connObj) throws DAOException;
 
 }
