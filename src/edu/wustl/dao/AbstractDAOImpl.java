@@ -91,7 +91,7 @@ public abstract class AbstractDAOImpl implements DAO
 	 * @see edu.wustl.dao.DAO#getConnectionManager()
 	 * @return : It returns the Connection Manager
 	 */
-	protected IConnectionManager getConnectionManager()
+	public IConnectionManager getConnectionManager()
 	{
 		logger.debug("Get the connection manager");
 		return connectionManager;

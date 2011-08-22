@@ -212,6 +212,9 @@ public interface DAO
 	 * @param connectionManager : Connection Manager.
 	 */
 	void setConnectionManager(IConnectionManager connectionManager);
+	
+	 IConnectionManager  getConnectionManager();
+
 
 	 /**
 	 * This method will be called to begin new transaction.
