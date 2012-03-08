@@ -3,36 +3,41 @@ package edu.wustl.dao.newdao;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.criterion.Criterion;
 
 import edu.wustl.common.audit.AuditManager;
 import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.domain.AuditEvent;
 import edu.wustl.common.util.logger.Logger;
+import edu.wustl.dao.QueryWhereClause;
+import edu.wustl.dao.condition.EqualClause;
 import edu.wustl.dao.exception.AuditException;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.query.generator.ColumnValueBean;
 import edu.wustl.dao.util.DAOUtility;
 import edu.wustl.dao.util.NamedQueryParam;
 
-public abstract class GenericHibernateDAO<T, ID extends Serializable> implements DAO<T,ID>
+public class GenericHibernateDAO<T, ID extends Serializable> implements DAO<T, ID>
 {
 
 	/**
 	* LOGGER Logger - class logger.
 	*/
 	private static final Logger logger = Logger.getCommonLogger(GenericHibernateDAO.class);
-	
+
 	private String applicationName;
-	
+
 	private SessionDataBean sessionDataBean;
-	
+
 	private Class<T> persistentClass;
 
 	/**
@@ -40,7 +45,7 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable> implements
 	*/
 	private AuditManager auditManager;
 
-	public GenericHibernateDAO(String applicationName,SessionDataBean sessionDataBean)
+	public GenericHibernateDAO(String applicationName, SessionDataBean sessionDataBean)
 	{
 		this.persistentClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass())
 				.getActualTypeArguments()[0];
@@ -55,13 +60,15 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable> implements
 
 	protected Session getSession()
 	{
-		return SessionFactoryHolder.getInstance().getSessionFactory(applicationName).getCurrentSession();
+		return SessionFactoryHolder.getInstance().getSessionFactory(applicationName)
+				.getCurrentSession();
 	}
-	
+
 	protected Session getNewSession()
 	{
 		return SessionFactoryHolder.getInstance().getSessionFactory(applicationName).openSession();
 	}
+
 	/**
 	 * Insert the Object to the database.
 	 * @param obj Object to be inserted in database
@@ -118,41 +125,28 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable> implements
 	 */
 	private Object retrieveOldObject(Object currentObj) throws DAOException
 	{
-		Session session = null;
+		Session session = getSession();
 		try
 		{
 			Long objectId = auditManager.getObjectId(currentObj);
-			return getNewSession().get(Class.forName(currentObj.getClass().getName()), objectId);
+			session.evict(currentObj);
+			return getSession().get(Class.forName(currentObj.getClass().getName()), objectId);
 		}
 		catch (AuditException exp)
 		{
 			logger.warn(exp.getMessage());
 			logger.debug(exp.getMessage(), exp);
 			return null;
-			/*throw DAOUtility.getInstance().getDAOException(exp, exp.getErrorKeyName(),
-					exp.getMsgValues());*/
 		}
 		catch (HibernateException hibExp)
 		{
 			logger.error(hibExp.getMessage(), hibExp);
 			return null;
-			//	throw DAOUtility.getInstance().getDAOException(hibExp, "db.update.data.error",
-			//"HibernateDAOImpl.java ");
 		}
 		catch (ClassNotFoundException exp)
 		{
 			logger.error(exp.getMessage(), exp);
 			return null;
-			//throw DAOUtility.getInstance().getDAOException(exp, "class.not.found.error",
-			//currentObj.getClass().getName());
-		}
-		finally
-		{
-			if (session != null)
-			{
-				session.close();
-				session = null;
-			}
 		}
 	}
 
@@ -198,9 +192,9 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable> implements
 		}
 		catch (HibernateException hibExp)
 		{
-			logger.error(hibExp.getMessage(),hibExp);
+			logger.error(hibExp.getMessage(), hibExp);
 			throw DAOUtility.getInstance().getDAOException(hibExp, "db.delete.data.error",
-			"GenericHibernateDAO.java ");
+					"GenericHibernateDAO.java ");
 
 		}
 	}
@@ -212,6 +206,22 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable> implements
 		return entity;
 	}
 
+	public List<T> findAll()
+	{
+		return findByCriteria();
+	}
+
+	@SuppressWarnings("unchecked")
+	protected List<T> findByCriteria(Criterion... criterion)
+	{
+		Criteria crit = getSession().createCriteria(getPersistentClass());
+		for (Criterion c : criterion)
+		{
+			crit.add(c);
+		}
+		return crit.list();
+	}
+
 	/**
 	 * Create a new instance of Query for the given HQL query string.
 	 * Execute the Query and returns the list of data.
@@ -221,9 +231,8 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable> implements
 	 */
 	public List<T> executeQuery(String query) throws DAOException
 	{
-		return executeQuery(query,null, null,null);
+		return executeQuery(query, null, null, null);
 	}
-	
 
 	/**
 	 * Executes the HQL query.
@@ -232,45 +241,36 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable> implements
 	 * @return list of data.
 	 * @throws DAOException Database exception.
 	 */
-	public List<T> executeQuery(String query, List<ColumnValueBean> columnValueBeans) throws DAOException
+	public List<T> executeQuery(String query, List<ColumnValueBean> columnValueBeans)
+			throws DAOException
 	{
-		return executeQuery(query,null, null,columnValueBeans);
+		return executeQuery(query, null, null, columnValueBeans);
 	}
 
-	
-	public List executeQuery(String query,Integer startIndex,Integer maxRecords,List<ColumnValueBean> columnValueBeans) throws DAOException
+	public List executeQuery(String query, Integer startIndex, Integer maxRecords,
+			List<ColumnValueBean> columnValueBeans) throws DAOException
 	{
 		logger.debug("Execute query");
 		try
 		{
-	    	Query hibernateQuery = getSession().createQuery(query);
-	    	if(startIndex != null && maxRecords !=null )
-	    	{
-	    		hibernateQuery.setFirstResult(startIndex.intValue());
-	    		hibernateQuery.setMaxResults(maxRecords.intValue());
-	    	}
-	    	if(columnValueBeans != null)
+			Query hibernateQuery = getSession().createQuery(query);
+			if (startIndex != null && maxRecords != null)
 			{
-				Iterator<ColumnValueBean> colValItr =  columnValueBeans.iterator();
-				while(colValItr.hasNext())
-				{
-					ColumnValueBean colValueBean = colValItr.next();
-					hibernateQuery.setParameter(colValueBean.getColumnName(),
-							colValueBean.getColumnValue());
-				}
+				hibernateQuery.setFirstResult(startIndex.intValue());
+				hibernateQuery.setMaxResults(maxRecords.intValue());
 			}
-		    return hibernateQuery.list();
+			setQueryParametes(hibernateQuery, columnValueBeans);
+			return hibernateQuery.list();
 
 		}
-		catch(HibernateException hiberExp)
+		catch (HibernateException hiberExp)
 		{
-			logger.error(hiberExp.getMessage(),hiberExp);
+			logger.error(hiberExp.getMessage(), hiberExp);
 			throw DAOUtility.getInstance().getDAOException(hiberExp, "db.retrieve.data.error",
-					"GenericHibernateDAO.java "+query);
+					"GenericHibernateDAO.java " + query);
 		}
 	}
-	
-	
+
 	/**
 	 * This method returns named query.
 	 * @param queryName : handle for named query.
@@ -278,24 +278,36 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable> implements
 	 * @return the list of data.
 	 * @throws DAOException : database exception.
 	 */
-	public List executeNamedQuery(String queryName,Map<String, NamedQueryParam> namedQueryParams)
-	throws DAOException
+	public List executeNamedQuery(String queryName, List<ColumnValueBean> columnValueBeans)
+			throws DAOException
 	{
 		logger.debug("Execute named query");
 		try
 		{
 			Query query = getSession().getNamedQuery(queryName);
-			DAOUtility.getInstance().substitutionParameterForQuery(query, namedQueryParams);
+			setQueryParametes(query, columnValueBeans);
 			return query.list();
 		}
-		catch(HibernateException hiberExp)
+		catch (HibernateException hiberExp)
 		{
-			logger.error(hiberExp.getMessage(),hiberExp);
+			logger.error(hiberExp.getMessage(), hiberExp);
 			throw DAOUtility.getInstance().getDAOException(hiberExp, "db.retrieve.data.error",
-					"GenericHibernateDAO.java "+queryName);
+					"GenericHibernateDAO.java " + queryName);
 		}
 	}
-	
+
+	private void setQueryParametes(Query query, List<ColumnValueBean> columnValueBeans)
+	{
+		if (columnValueBeans != null)
+		{
+			Iterator<ColumnValueBean> colValItr = columnValueBeans.iterator();
+			while (colValItr.hasNext())
+			{
+				ColumnValueBean colValueBean = colValItr.next();
+				query.setParameter(colValueBean.getColumnName(), colValueBean.getColumnValue());
+			}
+		}
+	}
 
 	/**
 	 * This method inserts audit Event details in database.
@@ -310,5 +322,220 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable> implements
 		}
 		auditManager.setAuditEvent(new AuditEvent());
 		auditManager.initializeAuditManager(sessionDataBean);
+	}
+
+	/**
+	 * Retrieves the records for class name in sourceObjectName according
+	 * to field values passed in the passed session.
+	 * @param sourceObjectName source Object Name.
+	 * @param selectColumnName select Column Name.
+	 * @param queryWhereClause where column conditions
+	 * @param onlyDistinctRows true if only distinct rows should be selected.
+	 * @return List.
+	 * @deprecated
+	 * @throws DAOException generic DAOException.
+	 */
+	public List retrieve(String sourceObjectName, String[] selectColumnName,
+			QueryWhereClause queryWhereClause, boolean onlyDistinctRows) throws DAOException
+	{
+		logger.debug("Inside retrieve method");
+		List list;
+		try
+		{
+			StringBuffer queryStrBuff = new StringBuffer();
+			String className = DAOUtility.getInstance().parseClassName(sourceObjectName);
+			Query query;
+
+			generateSelectPartOfQuery(selectColumnName, queryStrBuff, className);
+			generateFromPartOfQuery(sourceObjectName, queryStrBuff, className);
+
+			if (queryWhereClause != null)
+			{
+				queryStrBuff.append(queryWhereClause.toWhereClause());
+			}
+			query = getSession().createQuery(queryStrBuff.toString());
+
+			list = query.list();
+
+		}
+		catch (HibernateException hibExp)
+		{
+			logger.error(hibExp.getMessage(), hibExp);
+			throw DAOUtility.getInstance().getDAOException(hibExp, "db.retrieve.data.error",
+					"HibernateDAOImpl.java ");
+
+		}
+		return list;
+	}
+
+	/**
+	 * Generate Select Block.
+	 * @param selectColumnName select Column Name.
+	 * @param sqlBuff sqlBuff
+	 * @param className class Name.
+	 */
+	private void generateSelectPartOfQuery(String[] selectColumnName, StringBuffer sqlBuff,
+			String className)
+	{
+		logger.debug("Prepare select part of query.");
+		if (selectColumnName != null && selectColumnName.length > 0)
+		{
+			sqlBuff.append("Select ");
+			for (int i = 0; i < selectColumnName.length; i++)
+			{
+				sqlBuff.append(DAOUtility.getInstance().createAttributeNameForHQL(className,
+						selectColumnName[i]));
+				if (i != selectColumnName.length - 1)
+				{
+					sqlBuff.append(", ");
+				}
+			}
+			sqlBuff.append("   ");
+		}
+	}
+
+	/**
+	 * @param sourceObjectName source Object Name.
+	 * @param sqlBuff query buffer
+	 * @param className gives the class name
+	 */
+	private void generateFromPartOfQuery(String sourceObjectName, StringBuffer sqlBuff,
+			String className)
+	{
+		logger.debug("Prepare from part of query");
+		sqlBuff.append("from " + sourceObjectName + " " + className);
+	}
+
+	/**
+	 * Retrieves the records for class name in sourceObjectName according
+	 * to field values passed in the passed session.
+	 * @param sourceObjectName source Object Name.
+	 * @param selectColumnName select Column Name.
+	 * @param queryWhereClause where column conditions
+	 * @return List.
+	 * @deprecated
+	 * @throws DAOException generic DAOException.
+	 */
+	public List retrieve(String sourceObjectName, String[] selectColumnName,
+			QueryWhereClause queryWhereClause) throws DAOException
+	{
+		return retrieve(sourceObjectName, selectColumnName, queryWhereClause, false);
+	}
+
+	/**
+	 * Retrieves all the records for class name in sourceObjectName.
+	 * @param sourceObjectName Contains the class Name whose records are to be retrieved.
+	 * @return List.
+	 * @throws DAOException generic DAOException.
+	 */
+	public List retrieve(String sourceObjectName) throws DAOException
+	{
+		logger.debug("Inside retrieve method");
+		String[] selectColumnName = null;
+		return retrieve(sourceObjectName, selectColumnName, null, false);
+	}
+
+	/**
+	 * Retrieves all the records for class name in sourceObjectName.
+	 * @param sourceObjectName Contains the class Name whose records are to be retrieved.
+	 * @param whereColumnName Column name to be included in where clause.
+	 * @param whereColumnValue Value of the Column name that included in where clause.
+	 * @return List.
+	 * @deprecated
+	 * @throws DAOException generic DAOException.
+	 */
+	public List retrieve(String sourceObjectName, String whereColumnName, Object whereColumnValue)
+			throws DAOException
+	{
+		logger.debug("Inside retrieve method");
+		String[] selectColumnName = null;
+
+		QueryWhereClause queryWhereClause = new QueryWhereClause(sourceObjectName);
+		queryWhereClause.addCondition(new EqualClause(whereColumnName, whereColumnValue));
+
+		return retrieve(sourceObjectName, selectColumnName, queryWhereClause, false);
+	}
+
+	/**
+	 * @param sourceObjectName Contains the class Name whose records are to be retrieved.
+	 * @param selectColumnName select Column Name.
+	 * @return List.
+	 * @throws DAOException generic DAOException.
+	 */
+	public List retrieve(String sourceObjectName, String[] selectColumnName) throws DAOException
+	{
+		logger.debug("Inside retrieve method");
+		return retrieve(sourceObjectName, selectColumnName, null, false);
+	}
+
+	/**
+	 * Returns the ResultSet containing all the rows from the table represented in sourceObjectName
+	 * according to the where clause.It will create the where condition clause which holds where column name,
+	 * value and conditions applied.
+	 * @param sourceObjectName The table name.
+	 * @param columnValueBean columnValueBean
+	 * @return The ResultSet containing all the rows from the table represented
+	 * in sourceObjectName which satisfies the where condition
+	 * @throws DAOException : DAOException
+	 */
+	public List retrieve(String sourceObjectName, ColumnValueBean columnValueBean)
+			throws DAOException
+	{
+		logger.debug("Inside retrieve method");
+		String[] selectColumnName = null;
+
+		QueryWhereClause queryWhereClause = new QueryWhereClause(sourceObjectName);
+		queryWhereClause.addCondition(new EqualClause(columnValueBean.getColumnName(), '?'));
+
+		List<ColumnValueBean> columnValueBeans = new ArrayList<ColumnValueBean>();
+		columnValueBeans.add(columnValueBean);
+		return retrieve(sourceObjectName, selectColumnName, queryWhereClause, false,
+				columnValueBeans);
+	}
+
+	/**
+	 * Retrieve and returns the list of all source objects that satisfy the
+	 * for given conditions on a various columns.
+	 * @param sourceObjectName Source object's name to be retrieved from database.
+	 * @param selectColumnName Column names in SELECT clause of the query.
+	 * @param queryWhereClause : This will hold following:
+	 * 1.whereColumnName Array of column name to be included in where clause.
+	 * 2.whereColumnCondition condition to be satisfy between column and its value.
+	 * e.g. "=", "!=", "<", ">", "in", "null" etc
+	 * 3. whereColumnValue Value of the column name that included in where clause.
+	 * 4.joinCondition join condition between two columns. (AND, OR)
+	 * @param onlyDistinctRows true if only distinct rows should be selected.
+	 * @param columnValueBeans columnValueBeans
+	 * @return the list of all source objects that satisfy the search conditions.
+	 * @throws DAOException generic DAOException.
+	 *  */
+	public List retrieve(String sourceObjectName, String[] selectColumnName,
+			QueryWhereClause queryWhereClause, boolean onlyDistinctRows,
+			List<ColumnValueBean> columnValueBeans) throws DAOException
+	{
+		logger.debug("Inside retrieve method !!");
+		try
+		{
+			StringBuffer queryStrBuff = new StringBuffer();
+			String className = DAOUtility.getInstance().parseClassName(sourceObjectName);
+
+			generateSelectPartOfQuery(selectColumnName, queryStrBuff, className);
+			generateFromPartOfQuery(sourceObjectName, queryStrBuff, className);
+
+			if (queryWhereClause != null)
+			{
+				queryStrBuff.append(queryWhereClause.toWhereClause());
+			}
+			return executeQuery(queryStrBuff.toString(), columnValueBeans);
+
+		}
+		catch (HibernateException hibExp)
+		{
+			logger.error(hibExp.getMessage(), hibExp);
+			throw DAOUtility.getInstance().getDAOException(hibExp, "db.retrieve.data.error",
+					"HibernateDAOImpl.java ");
+
+		}
+
 	}
 }
