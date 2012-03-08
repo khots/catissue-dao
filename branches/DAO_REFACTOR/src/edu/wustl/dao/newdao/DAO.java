@@ -67,24 +67,6 @@ public interface DAO<T, ID extends Serializable>
 	 */
 	T findById(ID id) throws DAOException;
 
-	/**
-	 * Create a new instance of Query for the given HQL query string.
-	 * Execute the Query and returns the list of data.
-	 * @param query query
-	 * @return List.
-	 * @throws DAOException generic DAOException.
-	 */
-	List executeQuery(String query) throws DAOException;
-
-	/**
-	 * Executes the HQL query.
-	 * @param query HQL query to execute.
-	 * @param columnValueBeans column data beans.
-	 * @return list of data.
-	 * @throws DAOException Database exception.
-	 */
-	List executeQuery(String query, List<ColumnValueBean> columnValueBeans) throws DAOException;
-
 	List executeQuery(String query, Integer startIndex, Integer maxRecords,
 			List<ColumnValueBean> columnValueBeans) throws DAOException;
 

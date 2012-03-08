@@ -222,30 +222,7 @@ public class GenericHibernateDAO<T, ID extends Serializable> implements DAO<T, I
 		return crit.list();
 	}
 
-	/**
-	 * Create a new instance of Query for the given HQL query string.
-	 * Execute the Query and returns the list of data.
-	 * @param query query
-	 * @return List.
-	 *  API exposed to support this issue.
-	 */
-	public List<T> executeQuery(String query) throws DAOException
-	{
-		return executeQuery(query, null, null, null);
-	}
 
-	/**
-	 * Executes the HQL query.
-	 * @param query HQL query to execute.
-	 * @param columnValueBeans column data beans.
-	 * @return list of data.
-	 * @throws DAOException Database exception.
-	 */
-	public List<T> executeQuery(String query, List<ColumnValueBean> columnValueBeans)
-			throws DAOException
-	{
-		return executeQuery(query, null, null, columnValueBeans);
-	}
 
 	public List executeQuery(String query, Integer startIndex, Integer maxRecords,
 			List<ColumnValueBean> columnValueBeans) throws DAOException
@@ -526,7 +503,7 @@ public class GenericHibernateDAO<T, ID extends Serializable> implements DAO<T, I
 			{
 				queryStrBuff.append(queryWhereClause.toWhereClause());
 			}
-			return executeQuery(queryStrBuff.toString(), columnValueBeans);
+			return executeQuery(queryStrBuff.toString(), null,null,columnValueBeans);
 
 		}
 		catch (HibernateException hibExp)
