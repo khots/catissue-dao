@@ -34,14 +34,7 @@ public class SessionFactoryHolder
 	
 	private SessionFactoryHolder()
 	{
-		try
-		{
-			initialize(initializeConfigurationMap());
-		}
-		catch (Exception expc)
-		{
-			logger.error(expc.getMessage(), expc);
-		}
+	
 	}
 
 	public static synchronized SessionFactoryHolder getInstance()
@@ -51,6 +44,19 @@ public class SessionFactoryHolder
 			sessionFactoryHolderInstance = new SessionFactoryHolder();
 		}
 		return sessionFactoryHolderInstance;
+	}
+	
+	public void load(String daoConfigurationFileName) throws Exception
+	{
+		load(initializeConfigurationMap(daoConfigurationFileName));
+	}
+	
+	public void load(Map<String, String> hbmCfgsMap) throws Exception
+	{
+		for (Map.Entry<String, String> entry : hbmCfgsMap.entrySet())
+		{
+			createSessionFactory(entry.getKey(), entry.getValue());
+		}
 	}
 	
 //	public SessionFactoryHolder(Map<String, String> hbmCfgsMap) throws DAOException
@@ -63,13 +69,6 @@ public class SessionFactoryHolder
 		return sessionFactoryMap.get(name);
 	}
 
-	private void initialize(Map<String, String> hbmCfgsMap) throws Exception
-	{
-		for (Map.Entry<String, String> entry : hbmCfgsMap.entrySet())
-		{
-			createSessionFactory(entry.getKey(), entry.getValue());
-		}
-	}
 
 	private void createSessionFactory(String applicationName, String hbmCfg) throws Exception
 	{
@@ -84,28 +83,16 @@ public class SessionFactoryHolder
 	{
 
 		Configuration configuration = new Configuration();
-		InputStream inputStream = Thread.currentThread().getContextClassLoader().
-		getResourceAsStream(configurationfile);
-	    List<Object> errors = new ArrayList<Object>();
-	    // hibernate api to read configuration file and convert it to
-	    // Document(dom4j) object.
-	    XMLHelper xmlHelper = new XMLHelper();
-	    Document document = xmlHelper.createSAXReader(configurationfile, errors, XMLHelper.DEFAULT_DTD_RESOLVER).read(
-	            new InputSource(inputStream));
-	    // convert to w3c Document object.
-	    DOMWriter writer = new DOMWriter();
-	    org.w3c.dom.Document doc = writer.write(document);
-	    // configure
-	    configuration.configure(doc);
+	    configuration.configure(SessionFactoryHolder.class.getResource(configurationfile));
 	    return configuration;
   
 	}
 	
-	private Map<String, String> initializeConfigurationMap() throws Exception
+	private Map<String, String> initializeConfigurationMap(String daoConfigurationFileName) throws Exception
 	{
 		Map<String, String> configurationMap = new HashMap<String, String>();
 		ApplicationDAOPropertiesParser applicationPropertiesParser =
-			new ApplicationDAOPropertiesParser();
+			new ApplicationDAOPropertiesParser(daoConfigurationFileName);
 		Map<String, IDAOFactory> daoFactoryMap = applicationPropertiesParser.getDaoFactoryMap();
 		
 		Iterator<String> mapKeySetIterator = daoFactoryMap.keySet().iterator();

@@ -48,10 +48,20 @@ public class ApplicationDAOPropertiesParser
 	dateFormatFunction,timeFormatFunction,dateTostrFunction,strTodateFunction,
 	queryGeneratorName;
 
+	private String daoConfigurationFileName;
 	/**
 	 *Class Logger.
 	 */
 	private static final Logger logger = Logger.getCommonLogger(ApplicationDAOPropertiesParser.class);
+	
+	public ApplicationDAOPropertiesParser()
+	{
+	
+	}
+	public ApplicationDAOPropertiesParser(String daoConfigurationFileName)
+	{
+		this.daoConfigurationFileName = daoConfigurationFileName;
+	}
 	
 	/**
 	 * This method gets DAO Factory Map.
@@ -63,7 +73,12 @@ public class ApplicationDAOPropertiesParser
 		Map<String, IDAOFactory> daoFactoryMap = new HashMap<String, IDAOFactory>();
 		try
 		{
-			Document doc = readFile("ApplicationDAOProperties.xml");
+			String defaultDaoConfigFile = "ApplicationDAOProperties.xml";
+			if(daoConfigurationFileName!=null)
+			{
+				defaultDaoConfigFile = daoConfigurationFileName; 
+			}
+			Document doc = readFile(defaultDaoConfigFile);
 			parseDocument(daoFactoryMap,doc);
 		}
 		catch (Exception exception)
