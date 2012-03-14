@@ -14,7 +14,9 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -307,7 +309,7 @@ public final class DAOUtility
 		{
 			for (int counter = 0; counter < namedQueryParams.size(); counter++)
 			{
-				NamedQueryParam queryParam = (NamedQueryParam) namedQueryParams.get(counter+"");
+				NamedQueryParam queryParam = namedQueryParams.get(counter+"");
 
 				int objectType = queryParam.getType();
 				if ( DBTypes.STRING == objectType)
@@ -419,6 +421,27 @@ public final class DAOUtility
 				":"+DAOConstants.INVALID_DATA[counter]);
 			}
 		}
+	}
+
+	public static Date getStartTimeForTodaysDate(String startTime)
+	{
+		int hours = 0, minutes = 0;
+		if (startTime != null && startTime.length() == 5
+		&& startTime.matches("([0-1][0-9]|2[0-3]):([0-5][0-9])"))
+		{
+			String timeTokens[] = startTime.split(DAOConstants.COLON);
+			hours = Integer.parseInt(timeTokens[0]);
+			minutes = Integer.parseInt(timeTokens[1]);
+		}
+
+		Calendar startDate = Calendar.getInstance();
+		Calendar today = Calendar.getInstance();
+		today.set(startDate.get(Calendar.YEAR),startDate.get(Calendar.MONTH), startDate.get(Calendar.DATE),	hours, minutes);
+		if (today.before(startDate))
+		{
+			today.add(Calendar.DATE, 1);
+		}
+		return today.getTime();
 	}
 
 }
