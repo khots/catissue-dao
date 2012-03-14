@@ -7,8 +7,6 @@ package edu.wustl.dao.daofactory;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
@@ -30,7 +28,6 @@ import edu.wustl.dao.DatabaseProperties;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.interceptor.InterceptorErrorRecoveryThread;
 import edu.wustl.dao.interceptor.SaveUpdateInterceptThread;
-import edu.wustl.dao.util.DAOConstants;
 import edu.wustl.dao.util.DAOUtility;
 
 /**
@@ -164,36 +161,19 @@ public class ApplicationDAOPropertiesParser
 	{
 		//start the error recovery thread for interceptor Object.
 		Timer errorRecovery = new Timer(true);
-		errorRecovery.scheduleAtFixedRate(new InterceptorErrorRecoveryThread(), getStartTime("23:00"),(24*60*60*1000) );
+		errorRecovery.scheduleAtFixedRate(new InterceptorErrorRecoveryThread(), DAOUtility.getStartTimeForTodaysDate("23:00"),(24*60*60*1000) );
+
+		/*final InterceptorErrorRecoveryThread timerTask = new InterceptorErrorRecoveryThread();
+		final Timer scheduleTime = new Timer();
+		scheduleTime.schedule(timerTask, 0x1d4c0L,60000L);*/
 
 		// start the save update intereceptor thread.
 		SaveUpdateInterceptThread interceptorThread = SaveUpdateInterceptThread.getInstance();
 		interceptorThread.populateInterceptorObjectList(root);
 
-		/*Calendar date = Calendar.getInstance();
-		date.add(Calendar.MINUTE, 3);
-		errorRecovery.scheduleAtFixedRate(new InterceptorErrorRecoveryThread(),date.getTime() ,(10000) );*/
-	}
-	private static Date getStartTime(String startTime)
-	{
-		int hours = 0, minutes = 0;
-		if (startTime != null && startTime.length() == 5
-		&& startTime.matches("([0-1][0-9]|2[0-3]):([0-5][0-9])"))
-		{
-			String timeTokens[] = startTime.split(DAOConstants.COLON);
-			hours = Integer.parseInt(timeTokens[0]);
-			minutes = Integer.parseInt(timeTokens[1]);
-		}
 
-		Calendar startDate = Calendar.getInstance();
-		Calendar today = Calendar.getInstance();
-		today.set(startDate.get(Calendar.YEAR),startDate.get(Calendar.MONTH), startDate.get(Calendar.DATE),	hours, minutes);
-		if (today.before(startDate))
-		{
-			today.add(Calendar.DATE, 1);
-		}
-		return today.getTime();
 	}
+
 
 
 	/**
