@@ -1,19 +1,12 @@
 
 package edu.wustl.dao.newdao;
 
-import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
-import org.dom4j.Document;
-import org.dom4j.io.DOMWriter;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.util.XMLHelper;
-import org.xml.sax.InputSource;
 
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.daofactory.ApplicationDAOPropertiesParser;
