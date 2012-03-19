@@ -200,7 +200,7 @@ public class ConnectionManager implements IConnectionManager
 		{
 			session = sessionFactory.openSession();
 			session.setFlushMode(FlushMode.COMMIT);
-			session.connection().setAutoCommit(false);
+			//session.connection().setAutoCommit(false);
 		}
 		catch (Exception excp)
 		{

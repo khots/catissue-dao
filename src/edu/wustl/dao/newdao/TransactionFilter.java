@@ -37,9 +37,17 @@ public class TransactionFilter implements Filter
 					.lookup(userTransactionJndiName);
 			transaction.begin();
 			chain.doFilter(request, response);
-			transaction.commit();
+			if(getActionStatus(request)!=null)
+			{
+				transaction.commit();
+			}
+			else
+			{
+				logger.error("Transaction is getting rollback due to no actionstatus found. PLEASE CHECK!!!");
+				transaction.rollback();
+			}
 		}
-		catch (final Exception errorInServlet)
+		catch (final Throwable errorInServlet)
 		{
 			try
 			{
@@ -54,13 +62,9 @@ public class TransactionFilter implements Filter
 		}
 	}
 
-	private ActionStatus actionStatus(ServletRequest request) 
+	private ActionStatus getActionStatus(ServletRequest request) 
 	{
         ActionStatus actionStatus = (ActionStatus) request.getAttribute("actionStatus");
-        if (actionStatus == null) 
-        {
-            actionStatus = ActionStatus.SUCCESSFUL;
-        } 
         return actionStatus;
     }
 	
