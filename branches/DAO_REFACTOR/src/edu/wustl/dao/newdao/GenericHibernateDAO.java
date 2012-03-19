@@ -59,10 +59,6 @@ public class GenericHibernateDAO<T, ID extends Serializable> implements DAO<T, I
 				.getCurrentSession();
 	}
 
-	protected Session getNewSession()
-	{
-		return SessionFactoryHolder.getInstance().getSessionFactory(applicationName).openSession();
-	}
 
 	/**
 	 * Insert the Object to the database.
@@ -77,16 +73,17 @@ public class GenericHibernateDAO<T, ID extends Serializable> implements DAO<T, I
 			auditManager.audit(obj, null, "INSERT");
 			insertAudit();
 		}
+		catch (AuditException exp)
+		{
+			logger.warn("Error encountered during audit of insert event "+exp.getMessage());
+		}
 		catch (HibernateException hibExp)
 		{
 			logger.error(hibExp.getMessage(), hibExp);
 			throw DAOUtility.getInstance().getDAOException(hibExp, "db.insert.data.error",
 					"GenericHibernateDAO.java ");
 		}
-		catch (AuditException exp)
-		{
-			logger.warn(exp.getMessage());
-		}
+		
 	}
 
 	/**
@@ -100,13 +97,13 @@ public class GenericHibernateDAO<T, ID extends Serializable> implements DAO<T, I
 		try
 		{
 			Long objectId = auditManager.getObjectId(currentObj);
+			getSession().evict(currentObj);
 			T previousObj = findById((ID)objectId);
-			getSession().evict(previousObj);
 			update(currentObj, previousObj);
 		}
 		catch (AuditException exp)
 		{
-			logger.warn(exp.getMessage());
+			logger.warn("Error encountered during audit of update event"+exp.getMessage());
 		}
 		catch (HibernateException hibExp)
 		{
@@ -129,8 +126,8 @@ public class GenericHibernateDAO<T, ID extends Serializable> implements DAO<T, I
 		try
 		{
 			auditManager.audit(currentObj, previousObj, "UPDATE");
-			getSession().merge(currentObj);
 			insertAudit();
+			getSession().merge(currentObj);
 		}
 		catch (HibernateException hibExp)
 		{
@@ -167,7 +164,7 @@ public class GenericHibernateDAO<T, ID extends Serializable> implements DAO<T, I
 
 	public T findById(ID id)
 	{
-		T entity = (T) getSession().load(getPersistentClass(), id);
+		T entity = (T) getSession().get(getPersistentClass(), id);
 		return entity;
 	}
 
@@ -254,7 +251,7 @@ public class GenericHibernateDAO<T, ID extends Serializable> implements DAO<T, I
 	 * This method inserts audit Event details in database.
 	 * @throws DAOException generic DAOException.
 	 */
-	public void insertAudit() throws DAOException
+	private void insertAudit() throws DAOException
 	{
 		if (auditManager.getAuditEvent() != null
 				&& !auditManager.getAuditEvent().getAuditEventLogCollection().isEmpty())

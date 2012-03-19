@@ -30,7 +30,7 @@ public class SessionFactoryHolder
 	
 	}
 
-	public static synchronized SessionFactoryHolder getInstance()
+	public static SessionFactoryHolder getInstance()
 	{
 		if(sessionFactoryHolderInstance==null)
 		{
@@ -39,17 +39,34 @@ public class SessionFactoryHolder
 		return sessionFactoryHolderInstance;
 	}
 	
-	public void load(String daoConfigurationFileName) throws Exception
+	public void load(String daoConfigurationFileName)
 	{
-		load(initializeConfigurationMap(daoConfigurationFileName));
+		try
+		{
+			load(initializeConfigurationMap(daoConfigurationFileName));
+		}
+		catch(Exception exp)
+		{
+			logger.error("Exception encountered in loading configuration. "+exp.getMessage());
+			throw new RuntimeException("Exception encountered in loading configuration file "+daoConfigurationFileName,exp);
+		}
 	}
 	
-	public void load(Map<String, String> hbmCfgsMap) throws Exception
+	public void load(Map<String, String> hbmCfgsMap)
 	{
-		for (Map.Entry<String, String> entry : hbmCfgsMap.entrySet())
+		try
 		{
-			createSessionFactory(entry.getKey(), entry.getValue());
+			for (Map.Entry<String, String> entry : hbmCfgsMap.entrySet())
+			{
+				createSessionFactory(entry.getKey(), entry.getValue());
+			}
 		}
+		catch(Exception exp)
+		{
+			logger.error("Exception encountered in loading configuration. "+exp.getMessage());
+			throw new RuntimeException("Exception encountered in loading configuration",exp);
+		}
+		
 	}
 	
 //	public SessionFactoryHolder(Map<String, String> hbmCfgsMap) throws DAOException
