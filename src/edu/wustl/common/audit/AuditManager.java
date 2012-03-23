@@ -26,8 +26,10 @@ import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.global.CommonServiceLocator;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.exception.AuditException;
+import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.DAOConstants;
 import edu.wustl.dao.util.HibernateMetaData;
+import edu.wustl.dao.util.HibernateMetaDataFactory;
 
 /**
  * AuditManager is an algorithm to figure out the changes with respect to database due to
@@ -141,6 +143,20 @@ public class AuditManager // NOPMD
 		this();
 		this.hibernateMetaData = hibernateMetaData;
 		initializeAuditManager(sessionDataBean);
+
+	}
+	public AuditManager(SessionDataBean sessionDataBean, String applicationName)
+	{
+		this();
+		try
+		{
+			this.hibernateMetaData = HibernateMetaDataFactory.getHibernateMetaData(applicationName);
+			initializeAuditManager(sessionDataBean);
+		}
+		catch(DAOException exp)
+		{
+			throw new RuntimeException("Exception occurred while intializing AuditManager"+exp.getMessage(),exp);
+		}
 
 	}
 

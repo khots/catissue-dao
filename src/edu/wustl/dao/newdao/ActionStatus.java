@@ -3,6 +3,11 @@ package edu.wustl.dao.newdao;
 
 public enum ActionStatus 
 {
-	SUCCESSFUL;
+	SUCCESSFUL,FAIL;
+	
+	public boolean isSuccessful()
+	{
+		return this == SUCCESSFUL;
+	}
 	
 }

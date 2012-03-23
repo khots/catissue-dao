@@ -21,7 +21,7 @@ public class SessionFactoryHolder
 	*/
 	private static final Logger logger = Logger.getCommonLogger(SessionFactoryHolder.class);
 	
-	private Map<String, SessionFactory> sessionFactoryMap;
+	private Map<String, SessionFactory> sessionFactoryMap = new HashMap<String, SessionFactory>();
 
 	private static SessionFactoryHolder sessionFactoryHolderInstance = new SessionFactoryHolder();
 	
@@ -93,7 +93,7 @@ public class SessionFactoryHolder
 	{
 
 		Configuration configuration = new Configuration();
-	    configuration.configure(SessionFactoryHolder.class.getResource(configurationfile));
+	    configuration.configure(configurationfile);
 	    return configuration;
   
 	}

@@ -37,8 +37,10 @@ public class TransactionFilter implements Filter
 					.lookup(userTransactionJndiName);
 			transaction.begin();
 			chain.doFilter(request, response);
-			if(getActionStatus(request)!=null)
+			ActionStatus actionStatus = getActionStatus(request);
+			if(actionStatus!=null&&actionStatus.isSuccessful())
 			{
+				logger.info("Commiting Transaction");
 				transaction.commit();
 			}
 			else

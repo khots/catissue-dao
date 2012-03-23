@@ -29,11 +29,11 @@ public class GenericHibernateDAO<T, ID extends Serializable> implements DAO<T, I
 	*/
 	private static final Logger logger = Logger.getCommonLogger(GenericHibernateDAO.class);
 
-	private String applicationName;
+	protected String applicationName;
 
-	private SessionDataBean sessionDataBean;
+	protected SessionDataBean sessionDataBean;
 
-	private Class<T> persistentClass;
+	protected Class<T> persistentClass;
 
 	/**
 	* AuditManager for auditing.
@@ -46,6 +46,7 @@ public class GenericHibernateDAO<T, ID extends Serializable> implements DAO<T, I
 				.getActualTypeArguments()[0];
 		this.applicationName = applicationName;
 		this.sessionDataBean = sessionDataBean;
+		auditManager = new AuditManager(sessionDataBean,applicationName);
 	}
 
 	public Class<T> getPersistentClass()
@@ -69,7 +70,8 @@ public class GenericHibernateDAO<T, ID extends Serializable> implements DAO<T, I
 	{
 		try
 		{
-			getSession().save(obj);
+			Session session = getSession();
+			session.save(obj);
 			auditManager.audit(obj, null, "INSERT");
 			insertAudit();
 		}
@@ -191,7 +193,8 @@ public class GenericHibernateDAO<T, ID extends Serializable> implements DAO<T, I
 		logger.debug("Execute query");
 		try
 		{
-			Query hibernateQuery = getSession().createQuery(query);
+			Session session = getSession();
+			Query hibernateQuery = session.createQuery(query);
 			if (startIndex != null && maxRecords != null)
 			{
 				hibernateQuery.setFirstResult(startIndex.intValue());
@@ -261,4 +264,11 @@ public class GenericHibernateDAO<T, ID extends Serializable> implements DAO<T, I
 		auditManager.setAuditEvent(new AuditEvent());
 		auditManager.initializeAuditManager(sessionDataBean);
 	}
+	
+	public void setSessionDataBean(SessionDataBean sessionDataBean)
+	{
+		this.sessionDataBean = sessionDataBean;
+	}
+	
+	
 }
