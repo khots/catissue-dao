@@ -10,6 +10,7 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.transaction.Status;
 import javax.transaction.UserTransaction;
 
 import edu.wustl.common.util.logger.Logger;
@@ -37,8 +38,7 @@ public class TransactionFilter implements Filter
 					.lookup(userTransactionJndiName);
 			transaction.begin();
 			chain.doFilter(request, response);
-			ActionStatus actionStatus = getActionStatus(request);
-			if(actionStatus!=null&&actionStatus.isSuccessful())
+			if(transaction.getStatus() == Status.STATUS_ACTIVE)
 			{
 				logger.info("Commiting Transaction");
 				transaction.commit();
@@ -60,16 +60,10 @@ public class TransactionFilter implements Filter
 			{
 				logger.error("Transaction failed !", rollbackFailed);
 			}
-			throw new ServletException(errorInServlet);
+			//throw new ServletException(errorInServlet);
 		}
 	}
 
-	private ActionStatus getActionStatus(ServletRequest request) 
-	{
-        ActionStatus actionStatus = (ActionStatus) request.getAttribute("actionStatus");
-        return actionStatus;
-    }
-	
 	public void init(FilterConfig filterConfig) throws ServletException
 	{
 		userTransactionJndiName = filterConfig.getInitParameter("userTransactionJndiName");
