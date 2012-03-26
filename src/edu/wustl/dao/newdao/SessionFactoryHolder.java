@@ -12,7 +12,11 @@ import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.daofactory.ApplicationDAOPropertiesParser;
 import edu.wustl.dao.daofactory.IDAOFactory;
 import edu.wustl.dao.util.HibernateMetaDataFactory;
-
+/**
+ * 
+ * @author sachin
+ *
+ */
 public class SessionFactoryHolder
 {
 
