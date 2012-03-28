@@ -247,15 +247,8 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		logger.debug("Update Object");
 		try
 		{
-			session.update(currentObj);
 			auditManager.audit(currentObj, previousObj,"UPDATE");
 			insertAudit();
-		}
-		catch (HibernateException hibExp)
-		{
-			logger.error(hibExp.getMessage(),hibExp);
-			throw DAOUtility.getInstance().getDAOException(hibExp, "db.update.data.error",
-			"HibernateDAOImpl.java ");
 		}
 		catch (AuditException exp)
 		{
@@ -264,6 +257,17 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 			//throw DAOUtility.getInstance().getDAOException(exp, exp.getErrorKeyName(),
 				//	exp.getMsgValues());
 		}
+		try
+		{
+			currentObj = session.merge(currentObj);
+		}
+		catch (HibernateException hibExp)
+		{
+			logger.error(hibExp.getMessage(),hibExp);
+			throw DAOUtility.getInstance().getDAOException(hibExp, "db.update.data.error",
+			"HibernateDAOImpl.java ");
+		}
+		
 	}
 
 

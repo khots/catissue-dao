@@ -115,17 +115,17 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	public void commit() throws DAOException
 	{
 		logger.debug("connection commit");
-		try
-		{
+		//try
+		//{
 			batchCommit();
-			connection.commit();
-		}
-		catch (SQLException sqlExp)
+			//connection.commit();
+		//}
+		/*catch (SQLException sqlExp)
 		{
 			logger.error(sqlExp.getMessage(),sqlExp);
 			throw DAOUtility.getInstance().getDAOException(sqlExp, "db.commit.error",
 					"AbstractJDBCDAOImpl.java");
-		}
+		}*/
 	}
 
 	/**
@@ -135,7 +135,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 */
 	public void rollback() throws DAOException
 	{
-		try
+		/*try
 		{
 			logger.debug("Session rollback");
 			connection.rollback();
@@ -145,7 +145,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 			logger.error(sqlExp.getMessage(),sqlExp);
 			throw DAOUtility.getInstance().getDAOException(sqlExp, "db.rollback.error",
 					"AbstractJDBCDAOImpl.java");
-		}
+		}*/
 
 	}
 
@@ -294,7 +294,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 					 prepBatchStatement.executeBatch();
 				 }
 				batchCounter = 0;
-				connection.commit();
+				//connection.commit();
 			}
 
 		}

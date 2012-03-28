@@ -8,9 +8,15 @@
  * @author kalpana_thakur
  * @version 1.0
  */
+
 package edu.wustl.dao.connectionmanager;
 
 import java.sql.Connection;
+
+import javax.naming.InitialContext;
+import javax.transaction.RollbackException;
+import javax.transaction.Status;
+import javax.transaction.UserTransaction;
 
 import org.hibernate.FlushMode;
 import org.hibernate.HibernateException;
@@ -20,6 +26,7 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
 import edu.wustl.common.util.logger.Logger;
+import edu.wustl.dao.daofactory.DAOConfigFactory;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.DAOUtility;
 
@@ -27,30 +34,28 @@ import edu.wustl.dao.util.DAOUtility;
  * @author kalpana_thakur
  *
  */
-public class ConnectionManager implements IConnectionManager
+public class JTAConnectionManager implements IConnectionManager
 {
+
 	/**
 	 *Class Logger.
 	 */
-	private static final Logger logger = Logger.getCommonLogger(ConnectionManager.class);
+	private static final Logger logger = Logger.getCommonLogger(JTAConnectionManager.class);
 
 	/**
 	 * This member will store the name of the application.
 	 */
 	protected String applicationName;
 
-
 	/**
 	 * This member will store the configuration instance.
 	 */
 	protected Configuration configuration;
 
-
 	/**
 	 * This member will store the sessionFactory instance.
 	 */
 	protected SessionFactory sessionFactory;
-
 
 	/**
 	 * This member will store data source for JDBC connection.
@@ -60,12 +65,12 @@ public class ConnectionManager implements IConnectionManager
 	/**
 	* specify Session instance.
 	*/
-    private Session session = null;
+	private Session session = null;
 
-    /**
-  	* specify Transaction instance.
-  	*/
-    private Transaction transaction = null;
+	//    /**
+	//  	* specify Transaction instance.
+	//  	*/
+	//    private Transaction transaction = null;
 
 	/**
 	 * It will instantiate applicationSessionMap.
@@ -82,26 +87,46 @@ public class ConnectionManager implements IConnectionManager
 	public Session getSession() throws DAOException
 	{
 		newSession();
-		beginTransaction();
-        //transaction = session.beginTransaction();
-        return session;
+		//beginTransaction();
+		//transaction = session.beginTransaction();
+		return session;
 	}
 
-	 /**
-	 * This method will be called to begin new transaction.
-	 * @throws DAOException : It will throw DAOException.
-	 */
+	/**
+	* This method will be called to begin new transaction.
+	* @throws DAOException : It will throw DAOException.
+	*/
 	public void beginTransaction() throws DAOException
 	{
 
-		if(transaction != null)
+		beginTxn();
+		/*if(transaction != null)
 		{
 			logger.debug("Transaction already opened, only one transaction can be opened at a time.");
 			throw DAOUtility.getInstance().getDAOException(null,
 					"db.mult.transaction.open.error", "");
 		}
-    	transaction = session.beginTransaction();
+		transaction = session.beginTransaction();*/
 
+	}
+
+	private void beginTxn()
+	{
+		UserTransaction txn = null;
+		try
+		{
+			txn = (UserTransaction) new InitialContext().lookup("java:comp/UserTransaction");
+			if (txn.getStatus() == Status.STATUS_NO_TRANSACTION)
+			{
+				logger.info("=========== Starting a new Transaction ================");
+				txn.begin();
+			}
+
+		}
+		catch (Exception e)
+		{
+			throw new RuntimeException("Error beginning txn: ", e);
+		}
 	}
 
 	/**
@@ -112,7 +137,7 @@ public class ConnectionManager implements IConnectionManager
 	 */
 	public void closeSession() throws DAOException
 	{
-		close();
+		//close();
 		//transaction = null;
 
 	}
@@ -123,9 +148,9 @@ public class ConnectionManager implements IConnectionManager
 	 * if present it will remove it from the Map.
 	 *@throws DAOException :Generic DAOException.
 	 */
-	private void close()throws DAOException
+	private void close() throws DAOException
 	{
-		try
+		/*try
 		{
 			if(session != null)
 			{
@@ -138,17 +163,36 @@ public class ConnectionManager implements IConnectionManager
 			logger.error(hiberExp.getMessage(), hiberExp);
 			throw DAOUtility.getInstance().getDAOException(hiberExp,
 					"db.close.conn.error", "ConnectionManager.java ");
-		}
+		}*/
 	}
 
-
-	 /**
-	 * Commit the database level changes.
-	 * @throws DAOException : It will throw DAOException.
-	 */
+	/**
+	* Commit the database level changes.
+	* @throws DAOException : It will throw DAOException.
+	*/
 	public void commit() throws DAOException
 	{
-		try
+		UserTransaction txn = null;
+		try 
+		{
+			txn = (UserTransaction) new InitialContext().lookup("java:comp/UserTransaction");
+		    try 
+		    {
+		    	txn.commit();
+		    } 
+		    catch (RollbackException re) 
+		    {
+		    // transaction got rolled back rather being commited
+		    }
+		    txn.begin();                 
+		} 
+		catch (Exception exp) 
+		{
+			logger.error(exp.getMessage(), exp);
+			throw DAOUtility.getInstance().getDAOException(exp,"db.commit.error", "JTAConnectionManager.java ");
+		}
+		
+		/*try
 		{
 			if (transaction != null)
 			{
@@ -162,18 +206,31 @@ public class ConnectionManager implements IConnectionManager
 			throw DAOUtility.getInstance().getDAOException(hiberExp,
         			"db.commit.error", "ConnectionManager.java ");
 
-		}
+		}*/
 	}
 
-
-	 /**
-	 * RollBack all the changes after last commit.
-	 * Declared in DAO class.
-	 * @throws DAOException : It will throw DAOException.
-	 */
+	/**
+	* RollBack all the changes after last commit.
+	* Declared in DAO class.
+	* @throws DAOException : It will throw DAOException.
+	*/
 	public void rollback() throws DAOException
 	{
+		UserTransaction txn = null;
 		try
+		{
+			txn = (UserTransaction) new InitialContext().lookup("java:comp/UserTransaction");
+			if (txn.getStatus() == Status.STATUS_ACTIVE)
+			{
+				logger.error("========= Doing rollback =======");
+				txn.setRollbackOnly();
+			}
+		}
+		catch (Exception e)
+		{
+			throw new RuntimeException("Error committing txn: ", e);
+		}
+		/*try
 		{
 			if (transaction != null)
 			{
@@ -184,28 +241,29 @@ public class ConnectionManager implements IConnectionManager
 		{
 			logger.error(hiberExp.getMessage(), hiberExp);
 			throw DAOUtility.getInstance().getDAOException(hiberExp,
-        			"db.rollback.error", "ConnectionManager.java ");
-		}
+					"db.rollback.error", "ConnectionManager.java ");
+		}*/
 	}
-
 
 	/**
 	 * This will established new session.
 	 * @throws DAOException :Generic DAOException.
 	 */
-	private void newSession()throws DAOException
+	private void newSession() throws DAOException
 	{
 		try
 		{
-			session = sessionFactory.openSession();
+			//session = sessionFactory.openSession();
+			beginTxn();
+			session = sessionFactory.getCurrentSession();
 			session.setFlushMode(FlushMode.COMMIT);
 			//session.connection().setAutoCommit(false);
 		}
 		catch (Exception excp)
 		{
 			logger.error(excp.getMessage(), excp);
-			throw DAOUtility.getInstance().getDAOException(excp,
-					"db.open.session.error", "ConnectionManager.java ");
+			throw DAOUtility.getInstance().getDAOException(excp, "db.open.session.error",
+					"ConnectionManager.java ");
 		}
 	}
 
@@ -220,11 +278,10 @@ public class ConnectionManager implements IConnectionManager
 		return session.connection();
 	}
 
-
-   	/**
-	 *This method will be called to close current connection.
-	 *@throws DAOException :Generic DAOException.
-	 */
+	/**
+	*This method will be called to close current connection.
+	*@throws DAOException :Generic DAOException.
+	*/
 	public void closeConnection() throws DAOException
 	{
 		close();
@@ -265,7 +322,6 @@ public class ConnectionManager implements IConnectionManager
 	{
 		this.sessionFactory = sessionFactory;
 	}
-
 
 	/**
 	 * This method will be called to set applicationName.
