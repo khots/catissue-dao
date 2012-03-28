@@ -184,7 +184,7 @@ public class JTAConnectionManager implements IConnectionManager
 		    {
 		    // transaction got rolled back rather being commited
 		    }
-		    txn.begin();                 
+		    txn.begin();
 		} 
 		catch (Exception exp) 
 		{
@@ -223,7 +223,18 @@ public class JTAConnectionManager implements IConnectionManager
 			if (txn.getStatus() == Status.STATUS_ACTIVE)
 			{
 				logger.error("========= Doing rollback =======");
-				txn.setRollbackOnly();
+				txn.rollback();
+				txn.begin();
+//				try
+//				{
+//					logger.error("========= Doing rollback =======");
+//					txn.rollback();
+//				}
+//				catch(Exception e)
+//				{
+//					// transaction got rolled back rather being commited
+//				}
+//				txn.begin();
 			}
 		}
 		catch (Exception e)
