@@ -1,0 +1,119 @@
+package edu.wustl.dao.newdao;
+
+import java.util.Iterator;
+import java.util.List;
+
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
+
+import edu.wustl.common.util.logger.Logger;
+import edu.wustl.dao.exception.DAOException;
+import edu.wustl.dao.query.generator.ColumnValueBean;
+import edu.wustl.dao.util.DAOUtility;
+import edu.wustl.dao.util.HibernateMetaData;
+
+
+public class CleanDAO
+{
+
+	/**
+  	* LOGGER Logger - class logger.
+  	*/
+  	private static final Logger logger =
+  		Logger.getCommonLogger(CleanDAO.class);
+
+	
+	private String applicationName;
+	
+	private Session session;
+	
+	private static CleanDAO cleanDAO;
+	
+	private CleanDAO(String applicationName)
+	{
+		this.applicationName = applicationName;
+		session = SessionFactoryHolder.getInstance().getSessionFactory(applicationName).openSession();
+	}
+	
+	public synchronized static CleanDAO getInstance(String applicationName)
+	{
+		if(cleanDAO==null)
+		{
+			cleanDAO = new CleanDAO(applicationName);
+		}
+		return cleanDAO;
+	}
+	
+	/**
+	 * Retrieve Object.
+	 * @param sourceObjectName source Object Name.
+	 * @param identifier identifier.
+	 * @return object.
+	 * @throws DAOException generic DAOException.
+	 */
+	public Object retrieveById(String sourceObjectName, Long identifier)
+	 throws DAOException
+	 {
+		logger.debug("Inside retrieve method");
+		try
+		{
+			Object object = session.load(Class.forName(sourceObjectName), identifier);
+            return HibernateMetaData.getProxyObjectImpl(object);
+
+			/*Object object = session.get(Class.forName(sourceObjectName), identifier);
+			return object;*/
+		}
+		catch (Exception exp)
+		{
+			logger.error(exp.getMessage(),exp);
+			throw DAOUtility.getInstance().getDAOException(exp, "db.retrieve.data.error",
+			"HibernateDAOImpl.java ");
+		}
+
+	}
+	
+	public void closeSession()
+	{
+		session.close();
+		session = null;
+		cleanDAO = null;
+	}
+	
+	public List executeQuery(String query,Integer startIndex,Integer maxRecords,List paramValues) throws DAOException
+	{
+		logger.debug("Execute query");
+		try
+		{
+			
+			Query hibernateQuery = session.createQuery(query);
+			if(startIndex != null && maxRecords !=null )
+			{
+				hibernateQuery.setFirstResult(startIndex.intValue());
+				hibernateQuery.setMaxResults(maxRecords.intValue());
+			}
+			setQueryParametes(hibernateQuery, paramValues);
+		    return hibernateQuery.list();
+		
+		}
+		catch(HibernateException hiberExp)
+		{
+			logger.error(hiberExp.getMessage(),hiberExp);
+			throw DAOUtility.getInstance().getDAOException(hiberExp, "db.retrieve.data.error",
+					"HibernateDAOImpl.java "+query);
+		}
+	}
+	
+	private void setQueryParametes(Query query, List<ColumnValueBean> columnValueBeans)
+	{
+		if (columnValueBeans != null)
+		{
+			Iterator<ColumnValueBean> colValItr = columnValueBeans.iterator();
+			while (colValItr.hasNext())
+			{
+				ColumnValueBean colValueBean = colValItr.next();
+				query.setParameter(colValueBean.getColumnName(), colValueBean.getColumnValue());
+			}
+		}
+	}
+}
