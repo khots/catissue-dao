@@ -176,14 +176,7 @@ public class JTAConnectionManager implements IConnectionManager
 		try 
 		{
 			txn = (UserTransaction) new InitialContext().lookup("java:comp/UserTransaction");
-		    try 
-		    {
-		    	txn.commit();
-		    } 
-		    catch (RollbackException re) 
-		    {
-		    // transaction got rolled back rather being commited
-		    }
+		    txn.commit();
 		    txn.begin();
 		} 
 		catch (Exception exp) 
