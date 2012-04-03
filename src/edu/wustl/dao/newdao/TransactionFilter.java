@@ -24,7 +24,7 @@ public class TransactionFilter implements Filter
 	public void destroy()
 	{
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -38,14 +38,14 @@ public class TransactionFilter implements Filter
 					.lookup(userTransactionJndiName);
 			transaction.begin();
 			chain.doFilter(request, response);
-			if(transaction.getStatus() == Status.STATUS_ACTIVE)
+			if(!isToRollback(request))
 			{
 				logger.info("Commiting Transaction");
 				transaction.commit();
 			}
 			else
 			{
-				logger.error("Transaction is getting rollback due to no actionstatus found. PLEASE CHECK!!!");
+				logger.error("Transaction is getting rollback due to no actionstatus found.");
 				transaction.rollback();
 			}
 		}
@@ -64,6 +64,16 @@ public class TransactionFilter implements Filter
 		}
 	}
 
+	private boolean isToRollback(ServletRequest request)
+	{
+		boolean isToRollBack = false;
+		ActionStatus actionStatus = (ActionStatus)request.getAttribute(ActionStatus.ACTIONSTAUS);
+		if(actionStatus!=null&&actionStatus.isFailureAction())
+		{
+			isToRollBack = true;
+		}
+		return isToRollBack;
+	}
 	public void init(FilterConfig filterConfig) throws ServletException
 	{
 		userTransactionJndiName = filterConfig.getInitParameter("userTransactionJndiName");

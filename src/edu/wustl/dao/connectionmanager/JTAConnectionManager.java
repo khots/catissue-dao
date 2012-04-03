@@ -182,6 +182,10 @@ public class JTAConnectionManager implements IConnectionManager
 		catch (Exception exp) 
 		{
 			logger.error(exp.getMessage(), exp);
+			if(exp.getCause() instanceof HibernateException)
+			{
+				exp = (Exception)exp.getCause();
+			}
 			throw DAOUtility.getInstance().getDAOException(exp,"db.commit.error", "JTAConnectionManager.java ");
 		}
 		
