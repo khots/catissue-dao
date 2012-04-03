@@ -38,7 +38,7 @@ public class TransactionFilter implements Filter
 					.lookup(userTransactionJndiName);
 			transaction.begin();
 			chain.doFilter(request, response);
-			if(!isToRollback(request))
+			if(isSuccessFulAction(request))
 			{
 				logger.info("Commiting Transaction");
 				transaction.commit();
@@ -64,15 +64,15 @@ public class TransactionFilter implements Filter
 		}
 	}
 
-	private boolean isToRollback(ServletRequest request)
+	private boolean isSuccessFulAction(ServletRequest request)
 	{
-		boolean isToRollBack = false;
+		boolean isSuccessFulAction = false;
 		ActionStatus actionStatus = (ActionStatus)request.getAttribute(ActionStatus.ACTIONSTAUS);
-		if(actionStatus!=null&&actionStatus.isFailureAction())
+		if(actionStatus!=null&&actionStatus.isSuccessAction())
 		{
-			isToRollBack = true;
+			isSuccessFulAction = true;
 		}
-		return isToRollBack;
+		return isSuccessFulAction;
 	}
 	public void init(FilterConfig filterConfig) throws ServletException
 	{
