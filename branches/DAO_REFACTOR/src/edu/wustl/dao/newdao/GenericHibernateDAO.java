@@ -79,7 +79,7 @@ public class GenericHibernateDAO<T, ID extends Serializable> implements DAO<T, I
 		{
 			logger.warn("Error encountered during audit of insert event "+exp.getMessage());
 		}
-		catch (HibernateException hibExp)
+		catch (Exception hibExp)
 		{
 			logger.error(hibExp.getMessage(), hibExp);
 			throw DAOUtility.getInstance().getDAOException(hibExp, "db.insert.data.error",
@@ -107,7 +107,7 @@ public class GenericHibernateDAO<T, ID extends Serializable> implements DAO<T, I
 		{
 			logger.warn("Error encountered during audit of update event"+exp.getMessage());
 		}
-		catch (HibernateException hibExp)
+		catch (Exception hibExp)
 		{
 			logger.error(hibExp.getMessage(), hibExp);
 			throw DAOUtility.getInstance().getDAOException(hibExp, "db.update.data.error",
@@ -131,16 +131,17 @@ public class GenericHibernateDAO<T, ID extends Serializable> implements DAO<T, I
 			insertAudit();
 			getSession().merge(currentObj);
 		}
-		catch (HibernateException hibExp)
+		catch (AuditException exp)
+		{
+			logger.warn(exp.getMessage());
+		}
+		catch (Exception hibExp)
 		{
 			logger.error(hibExp.getMessage(), hibExp);
 			throw DAOUtility.getInstance().getDAOException(hibExp, "db.update.data.error",
 					"GenericHibernateDAO.java ");
 		}
-		catch (AuditException exp)
-		{
-			logger.warn(exp.getMessage());
-		}
+
 	}
 
 	/**
@@ -155,7 +156,7 @@ public class GenericHibernateDAO<T, ID extends Serializable> implements DAO<T, I
 		{
 			getSession().delete(obj);
 		}
-		catch (HibernateException hibExp)
+		catch (Exception hibExp)
 		{
 			logger.error(hibExp.getMessage(), hibExp);
 			throw DAOUtility.getInstance().getDAOException(hibExp, "db.delete.data.error",
@@ -204,7 +205,7 @@ public class GenericHibernateDAO<T, ID extends Serializable> implements DAO<T, I
 			return hibernateQuery.list();
 
 		}
-		catch (HibernateException hiberExp)
+		catch (Exception hiberExp)
 		{
 			logger.error(hiberExp.getMessage(), hiberExp);
 			throw DAOUtility.getInstance().getDAOException(hiberExp, "db.retrieve.data.error",
@@ -229,7 +230,7 @@ public class GenericHibernateDAO<T, ID extends Serializable> implements DAO<T, I
 			setQueryParametes(query, columnValueBeans);
 			return query.list();
 		}
-		catch (HibernateException hiberExp)
+		catch (Exception hiberExp)
 		{
 			logger.error(hiberExp.getMessage(), hiberExp);
 			throw DAOUtility.getInstance().getDAOException(hiberExp, "db.retrieve.data.error",
