@@ -60,7 +60,7 @@ public class TransactionFilter implements Filter
 			{
 				logger.error("Transaction failed !", rollbackFailed);
 			}
-			//throw new ServletException(errorInServlet);
+			throw new ServletException(errorInServlet);
 		}
 	}
 

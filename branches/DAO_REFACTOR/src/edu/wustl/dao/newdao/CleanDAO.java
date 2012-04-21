@@ -3,11 +3,15 @@ package edu.wustl.dao.newdao;
 import java.util.Iterator;
 import java.util.List;
 
+import org.hibernate.FlushMode;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
 import edu.wustl.common.util.logger.Logger;
+import edu.wustl.dao.connectionmanager.IConnectionManager;
+import edu.wustl.dao.daofactory.DAOConfigFactory;
+import edu.wustl.dao.daofactory.IDAOFactory;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.query.generator.ColumnValueBean;
 import edu.wustl.dao.util.DAOUtility;
@@ -33,8 +37,28 @@ public class CleanDAO
 	private CleanDAO(String applicationName)
 	{
 		this.applicationName = applicationName;
-		session = SessionFactoryHolder.getInstance().getSessionFactory(applicationName).openSession();
+		//session = SessionFactoryHolder.getInstance().getSessionFactory(applicationName).openSession();//getNewSessionFromConnectionManager();
+		session = getNewSessionFromConnectionManager();
 	}
+	
+	private Session getNewSessionFromConnectionManager()
+	{
+		Session session = null;
+		try
+		{
+			IDAOFactory daoFactory = DAOConfigFactory.getInstance().getDAOFactory(applicationName);
+			IConnectionManager conMgnr = daoFactory.getDAO().getConnectionManager();
+			session = conMgnr.getSessionFactory().openSession();
+			session.setFlushMode(FlushMode.NEVER);
+		}
+		catch(DAOException daoExp)
+		{
+			logger.error("Error inititializing hibernate session: ", daoExp);
+			throw new RuntimeException("Error inititializing hibernate session: ", daoExp);
+		}
+		return session;
+	}
+
 	
 	public synchronized static CleanDAO getInstance(String applicationName)
 	{

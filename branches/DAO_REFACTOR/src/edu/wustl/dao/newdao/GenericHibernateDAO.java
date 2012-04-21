@@ -3,12 +3,15 @@ package edu.wustl.dao.newdao;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.hibernate.Criteria;
-import org.hibernate.HibernateException;
 import org.hibernate.Query;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 
@@ -16,6 +19,10 @@ import edu.wustl.common.audit.AuditManager;
 import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.domain.AuditEvent;
 import edu.wustl.common.util.logger.Logger;
+import edu.wustl.dao.JDBCDAO;
+import edu.wustl.dao.connectionmanager.IConnectionManager;
+import edu.wustl.dao.daofactory.DAOConfigFactory;
+import edu.wustl.dao.daofactory.IDAOFactory;
 import edu.wustl.dao.exception.AuditException;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.query.generator.ColumnValueBean;
@@ -28,7 +35,11 @@ public class GenericHibernateDAO<T, ID extends Serializable> implements DAO<T, I
 	* LOGGER Logger - class logger.
 	*/
 	private static final Logger logger = Logger.getCommonLogger(GenericHibernateDAO.class);
+	
+	private static final String ACTIVITY_STATUS_HQL = "select activityStatus from %s where id =:id";
 
+	//private static final String GET_RELATED_OBJECTS_HQL  = "select id from %s where %s.id in (:ids)";
+	
 	protected String applicationName;
 
 	protected SessionDataBean sessionDataBean;
@@ -56,10 +67,43 @@ public class GenericHibernateDAO<T, ID extends Serializable> implements DAO<T, I
 
 	protected Session getSession()
 	{
-		return SessionFactoryHolder.getInstance().getSessionFactory(applicationName)
-				.getCurrentSession();
+		//return SessionFactoryHolder.getInstance().getSessionFactory(applicationName).getCurrentSession();//getSessionFromConnectionManager();
+		return getSessionFromConnectionManager();
+	}
+	
+	private Session getSessionFromConnectionManager()
+	{
+		Session session = null;
+		try
+		{
+			IDAOFactory daoFactory = DAOConfigFactory.getInstance().getDAOFactory(applicationName);
+			IConnectionManager conMgnr = daoFactory.getDAO().getConnectionManager();
+			session = conMgnr.getSession();
+		}
+		catch(DAOException daoExp)
+		{
+			logger.error("Error inititializing hibernate session: ", daoExp);
+			throw new RuntimeException("Error inititializing hibernate session: ", daoExp);
+		}
+		return session;
 	}
 
+	private JDBCDAO getJDBCDAO()
+	{
+		JDBCDAO jdbcDao = null;
+		try
+		{
+			IDAOFactory daoFactory = DAOConfigFactory.getInstance().getDAOFactory(applicationName);
+			jdbcDao = daoFactory.getJDBCDAO();
+			jdbcDao.openSession(sessionDataBean);
+		}
+		catch(DAOException daoExp)
+		{
+			logger.error("Error inititializing hibernate session: ", daoExp);
+			throw new RuntimeException("Error inititializing hibernate session: ", daoExp);
+		}
+		return jdbcDao;
+	}
 
 	/**
 	 * Insert the Object to the database.
@@ -129,7 +173,7 @@ public class GenericHibernateDAO<T, ID extends Serializable> implements DAO<T, I
 		{
 			auditManager.audit(currentObj, previousObj, "UPDATE");
 			insertAudit();
-			getSession().merge(currentObj);
+			currentObj = (T)getSession().merge(currentObj);
 		}
 		catch (AuditException exp)
 		{
@@ -170,7 +214,7 @@ public class GenericHibernateDAO<T, ID extends Serializable> implements DAO<T, I
 		T entity = (T) getSession().get(getPersistentClass(), id);
 		return entity;
 	}
-
+	
 	public List<T> findAll()
 	{
 		return findByCriteria();
@@ -186,8 +230,7 @@ public class GenericHibernateDAO<T, ID extends Serializable> implements DAO<T, I
 		}
 		return crit.list();
 	}
-
-
+	
 	public List executeQuery(String query, Integer startIndex, Integer maxRecords,
 			List<ColumnValueBean> columnValueBeans) throws DAOException
 	{
@@ -238,6 +281,43 @@ public class GenericHibernateDAO<T, ID extends Serializable> implements DAO<T, I
 		}
 	}
 
+	public List executeSQLQuery(String sql,List<ColumnValueBean> columnValueBeans) throws DAOException
+	{
+		logger.debug("Execute executeSQLUpdate");
+		try
+		{
+			SQLQuery sqlquery = getSession().createSQLQuery(sql);
+			setQueryParametes(sqlquery, columnValueBeans);
+			return sqlquery.list();
+		}
+		catch (Exception hiberExp)
+		{
+			logger.error(hiberExp.getMessage(), hiberExp);
+			throw DAOUtility.getInstance().getDAOException(hiberExp, "db.retrieve.data.error",
+					"GenericHibernateDAO.java ");
+		}
+	}
+	
+	public void executeSQLUpdate(String sql,List<LinkedList<ColumnValueBean>> columnValueBeans) throws DAOException
+	{
+		logger.debug("Execute executeSQLUpdate");
+		JDBCDAO jdbcDao = null;
+		try
+		{
+			jdbcDao = getJDBCDAO();
+			jdbcDao.executeUpdate(sql, columnValueBeans);
+		}
+		catch (Exception hiberExp)
+		{
+			logger.error(hiberExp.getMessage(), hiberExp);
+			throw DAOUtility.getInstance().getDAOException(hiberExp, "db.retrieve.data.error",
+					"GenericHibernateDAO.java ");
+		}
+		finally
+		{
+			jdbcDao.closeSession();
+		}
+	}
 	private void setQueryParametes(Query query, List<ColumnValueBean> columnValueBeans)
 	{
 		if (columnValueBeans != null)
@@ -246,7 +326,18 @@ public class GenericHibernateDAO<T, ID extends Serializable> implements DAO<T, I
 			while (colValItr.hasNext())
 			{
 				ColumnValueBean colValueBean = colValItr.next();
-				query.setParameter(colValueBean.getColumnName(), colValueBean.getColumnValue());
+				if(colValueBean.getColumnValue() instanceof Collection)
+				{
+					query.setParameterList(colValueBean.getColumnName(), (Collection)colValueBean.getColumnValue());
+				}
+				else if(colValueBean.getColumnValue() instanceof Object[])
+				{
+					query.setParameterList(colValueBean.getColumnName(), (Object[])colValueBean.getColumnValue());
+				}
+				else
+				{
+					query.setParameter(colValueBean.getColumnName(), colValueBean.getColumnValue());
+				}	
 			}
 		}
 	}
@@ -271,5 +362,37 @@ public class GenericHibernateDAO<T, ID extends Serializable> implements DAO<T, I
 		this.sessionDataBean = sessionDataBean;
 	}
 	
+	public String getActivityStatus(Long id) throws DAOException
+	{
+		String hql = String.format(ACTIVITY_STATUS_HQL, getPersistentClass().getName());
+		List<ColumnValueBean> valueList = new ArrayList<ColumnValueBean>();
+		valueList.add(new ColumnValueBean("id", id));
+		List<String> list = executeQuery(hql, null, null, valueList);
+		String activityStatus = "";
+		if (!list.isEmpty())
+		{
+			activityStatus = list.get(0);
+		}
+		return activityStatus;
+	}
+	
+//	public List<Long> getRelatedObjectsId(String sourceClassName,String classIdentifier,Long[] objIDArr) throws DAOException
+//	{
+//		logger.debug("Execute getRelatedObjectsId");
+//		try
+//		{
+//			String hql = String.format(GET_RELATED_OBJECTS_HQL, sourceClassName,classIdentifier);
+//			Session session = getSession();
+//			Query hibernateQuery = session.createQuery(hql);
+//			hibernateQuery.setParameter("ids", objIDArr);
+//			return hibernateQuery.list();
+//		}
+//		catch (Exception hiberExp)
+//		{
+//			logger.error(hiberExp.getMessage(), hiberExp);
+//			throw DAOUtility.getInstance().getDAOException(hiberExp, "db.retrieve.data.error",
+//					"GenericHibernateDAO.java ");
+//		}
+//	}
 	
 }
