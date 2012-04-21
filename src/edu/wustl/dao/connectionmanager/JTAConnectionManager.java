@@ -14,7 +14,6 @@ package edu.wustl.dao.connectionmanager;
 import java.sql.Connection;
 
 import javax.naming.InitialContext;
-import javax.transaction.RollbackException;
 import javax.transaction.Status;
 import javax.transaction.UserTransaction;
 
@@ -22,11 +21,9 @@ import org.hibernate.FlushMode;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
 import edu.wustl.common.util.logger.Logger;
-import edu.wustl.dao.daofactory.DAOConfigFactory;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.DAOUtility;
 
