@@ -281,12 +281,17 @@ public class GenericHibernateDAO<T, ID extends Serializable> implements DAO<T, I
 		}
 	}
 
-	public List executeSQLQuery(String sql,List<ColumnValueBean> columnValueBeans) throws DAOException
+	public List executeSQLQuery(String sql,Integer startIndex, Integer maxRecords,List<ColumnValueBean> columnValueBeans) throws DAOException
 	{
 		logger.debug("Execute executeSQLUpdate");
 		try
 		{
 			SQLQuery sqlquery = getSession().createSQLQuery(sql);
+			if (startIndex != null && maxRecords != null)
+			{
+				sqlquery.setFirstResult(startIndex.intValue());
+				sqlquery.setMaxResults(maxRecords.intValue());
+			}
 			setQueryParametes(sqlquery, columnValueBeans);
 			return sqlquery.list();
 		}
