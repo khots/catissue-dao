@@ -9,6 +9,7 @@
 package edu.wustl.dao.newdao;
 
 import java.io.Serializable;
+import java.util.LinkedList;
 import java.util.List;
 
 import edu.wustl.dao.exception.DAOException;
@@ -69,5 +70,13 @@ public interface DAO<T, ID extends Serializable>
 	List executeQuery(String query, Integer startIndex, Integer maxRecords,
 			List<ColumnValueBean> columnValueBeans) throws DAOException;
 
-	List executeNamedQuery(String queryName,List<ColumnValueBean> columnValueBeans) throws DAOException;
+	List executeNamedQuery(String queryName,Integer startIndex, Integer maxRecords,List<ColumnValueBean> columnValueBeans) throws DAOException;
+	
+	List executeQuery(String query, Integer startIndex, Integer maxRecords,ColumnValueBean columnValueBean) throws DAOException;
+
+	List executeNamedQuery(String queryName,Integer startIndex, Integer maxRecords,ColumnValueBean columnValueBean) throws DAOException;
+	
+	public List executeSQLQuery(String sql,Integer startIndex, Integer maxRecords,List<ColumnValueBean> columnValueBeans) throws DAOException;
+	
+	public void executeSQLUpdate(String sql,List<LinkedList<ColumnValueBean>> columnValueBeans) throws DAOException;
 }

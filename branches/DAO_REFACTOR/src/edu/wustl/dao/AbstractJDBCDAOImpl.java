@@ -38,6 +38,7 @@ import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.global.Validator;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.condition.EqualClause;
+import edu.wustl.dao.connectionmanager.ConnectionManager;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.query.generator.ColumnValueBean;
 import edu.wustl.dao.util.DAOConstants;
@@ -115,17 +116,21 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	public void commit() throws DAOException
 	{
 		logger.debug("connection commit");
-		//try
-		//{
+		try
+		{
 			batchCommit();
-			//connection.commit();
-		//}
-		/*catch (SQLException sqlExp)
+			if(connectionManager instanceof ConnectionManager)
+			{
+				connection.commit();
+			}	
+			
+		}
+		catch (SQLException sqlExp)
 		{
 			logger.error(sqlExp.getMessage(),sqlExp);
 			throw DAOUtility.getInstance().getDAOException(sqlExp, "db.commit.error",
 					"AbstractJDBCDAOImpl.java");
-		}*/
+		}
 	}
 
 	/**
@@ -294,7 +299,11 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 					 prepBatchStatement.executeBatch();
 				 }
 				batchCounter = 0;
-				//connection.commit();
+				if(connectionManager instanceof ConnectionManager)
+				{
+					connection.commit();
+				}	
+				
 			}
 
 		}

@@ -10,6 +10,7 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Status;
 import javax.transaction.UserTransaction;
 
@@ -66,12 +67,23 @@ public class TransactionFilter implements Filter
 
 	private boolean isSuccessFulAction(ServletRequest request)
 	{
+
 		boolean isSuccessFulAction = false;
 		ActionStatus actionStatus = (ActionStatus)request.getAttribute(ActionStatus.ACTIONSTAUS);
 		if(actionStatus!=null&&actionStatus.isSuccessAction())
 		{
 			isSuccessFulAction = true;
 		}
+		else if (request instanceof HttpServletRequest) 
+		{
+			 String url = ((HttpServletRequest)request).getRequestURL().toString();
+			 if(url.contains("SimpleSearch.do")||url.contains("SearchCategory.do"))
+			 {
+				 isSuccessFulAction = true;
+			 }
+		}
+
+			
 		return isSuccessFulAction;
 	}
 	public void init(FilterConfig filterConfig) throws ServletException
