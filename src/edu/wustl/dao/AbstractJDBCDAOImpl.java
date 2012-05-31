@@ -32,6 +32,7 @@ import java.util.SortedMap;
 import java.util.SortedSet;
 
 import org.hibernate.Hibernate;
+import org.hibernate.HibernateException;
 
 import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.exception.ErrorKey;
@@ -121,6 +122,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 			batchCommit();
 			if(connectionManager instanceof ConnectionManager)
 			{
+				//Not using the getConnection method, since we don't to get a new Connection if its closed. 
 				connection.commit();
 			}	
 			
@@ -180,7 +182,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 			batchCounter = 0;
 			setBatchSize(batchSize);
 			String sql = generateQuery(tableName,columnSet);
-			prepBatchStatement = connection.prepareStatement(sql);
+			prepBatchStatement = getConnection().prepareStatement(sql);
 		}
 		catch (SQLException exp)
 		{
@@ -301,6 +303,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 				batchCounter = 0;
 				if(connectionManager instanceof ConnectionManager)
 				{
+					//Not using the getConnection method, since we don't to get a new Connection if its closed. 
 					connection.commit();
 				}	
 				
@@ -559,7 +562,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		StatementData statementData = new StatementData();
 		try
 		{
-			statement = connection.createStatement();
+			statement = getConnection().createStatement();
 			statementData.setRowCount(statement.executeUpdate(query));
 			setStatementData(statement, statementData,query,false);
 			return statementData ;
@@ -961,7 +964,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	{
 		try
 		{
-			Statement statement = connection.createStatement();
+			Statement statement = getConnection().createStatement();
 			openedStmts.add(statement);
 			return statement;
 		}
@@ -984,7 +987,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	{
 		try
 		{
-			preparedStatement = connection.prepareStatement
+			preparedStatement = getConnection().prepareStatement
 			(query);//,Statement.RETURN_GENERATED_KEYS);
 			openedStmts.add(preparedStatement);
 			return preparedStatement;
@@ -1014,8 +1017,8 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
    {
 	   try
 		{
-		   ResultSet resultSet = connection.getMetaData().
-		   getIndexInfo(connection.getCatalog(), null,tableName, true, false);
+		   ResultSet resultSet = getConnection().getMetaData().
+		   getIndexInfo(getConnection().getCatalog(), null,tableName, true, false);
 		   return resultSet;
 		}
 	    catch (SQLException sqlExp)
@@ -1118,12 +1121,36 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	/**
 	 * This method will be called to get connection Manager object.
 	 * @return IConnectionManager: Connection Manager.
+	 * @throws DAOException 
 	 */
-	protected Connection getConnection()
+	protected Connection getConnection() throws DAOException
 	{
 		logger.debug("Get the connection");
+			if(isClosed())
+			{
+				openedStmts.clear();
+				connection = connectionManager.getConnection();
+			}
+		
 		return connection;
 	}
+	private boolean isClosed() throws DAOException
+	{
+		boolean isClosed = false;
+		try{
+			isClosed = connection.isClosed();
+		}catch(HibernateException exception)
+		{
+			isClosed = true;
+		}
+		catch (SQLException e)
+		{
+			ErrorKey errorKey = ErrorKey.getErrorKey("dao.close.or.not.initialized");
+			throw new DAOException(errorKey,null,"AbstractJDBCDAOImpl.java :");
+		}
+		return isClosed;
+	}
+
 	/**
 	 *This method will be called to get all database properties.
 	 * @return database properties.
