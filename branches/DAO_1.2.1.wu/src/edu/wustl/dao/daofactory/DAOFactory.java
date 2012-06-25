@@ -10,6 +10,7 @@
 package edu.wustl.dao.daofactory;
 
 import java.io.InputStream;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -152,6 +153,25 @@ public class DAOFactory implements IDAOFactory
 
 	}
 
+	/**
+	 * Client's responsible for closing the connection...
+	 * 
+	 * @return a new connection
+	 * @throws DAOException
+	 */
+	public Connection getConnection() throws DAOException
+	{
+		try
+		{
+			return getJDBCConnManager().getConnection();
+		}
+		catch (Exception excp)
+		{
+			logger.error(excp.getMessage(), excp);
+			throw DAOUtility.getInstance().getDAOException(excp, "FOOO...", "DAOFactory.java ");
+		}
+	}
+	
 	/**
 	 * This method will be called to retrieved the JDBC DAO instance.
 	 * It will read the concrete class for DAO and instantiate it
@@ -451,6 +471,25 @@ public class DAOFactory implements IDAOFactory
 	public String getDataBaseType()
 	{
 		return databaseProperties.getDataBaseType();
+	}
+	
+	/**
+	 * Client's responsible for closing the connection...
+	 * 
+	 * @return a new connection
+	 * @throws DAOException
+	 */
+	public void closeConnection(Connection connObj) throws DAOException
+	{
+		try
+		{
+			connObj.close();
+		}
+		catch (Exception excp)
+		{
+			logger.error(excp.getMessage(), excp);
+			throw DAOUtility.getInstance().getDAOException(excp, "FOOO...", "DAOFactory.java ");
+		}
 	}
 
 }
