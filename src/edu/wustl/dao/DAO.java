@@ -95,7 +95,7 @@ public interface DAO
 	 * @return object
 	 * @throws DAOException generic DAOException.
 	 */
-	public Object retrieveByIdAndEntityName(String entityName, Long identifier) throws DAOException;
+	 Object retrieveByIdAndEntityName(String entityName, Long identifier) throws DAOException;
 
 	/**
 	 * Create a new instance of Query for the given HQL query string.
