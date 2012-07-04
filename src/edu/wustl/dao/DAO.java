@@ -29,6 +29,13 @@ public interface DAO
 	 * @throws DAOException generic DAOException
 	 */
 	void insert(Object obj) throws DAOException;//,boolean isAuditable)
+	/**
+	 * Insert the object into the database.
+	 * @param entityName from hbm file.
+	 * @param obj Object to be inserted in database.
+	 * @throws DAOException : generic DAOException
+	 */
+	void insert(String entityName,Object obj) throws DAOException;
 
 	/**
 	 * updates the object into the database.
@@ -44,6 +51,13 @@ public interface DAO
 	 * @throws DAOException generic DAOException.
 	 */
 	void delete(Object obj) throws DAOException;
+	/**
+	 * Deletes the persistent object from the database.
+	 * @param entityName from hbm file.
+	 * @param obj The object to be deleted.
+	 * @throws DAOException generic DAOException.
+	 */
+	void delete(String entityName,Object obj) throws DAOException;
 
 	/**
 	 * Retrieve and returns the list of all source objects that satisfy the
@@ -74,6 +88,14 @@ public interface DAO
 	 * @throws DAOException generic DAOException.
 	 */
 	Object retrieveById(String sourceObjectName, Long identifier) throws DAOException;
+	/**
+	 * Retrieve and returns the source object for given id.
+	 * @param entityName from hbm file.
+	 * @param identifier identifier of source object.
+	 * @return object
+	 * @throws DAOException generic DAOException.
+	 */
+	public Object retrieveByIdAndEntityName(String entityName, Long identifier) throws DAOException;
 
 	/**
 	 * Create a new instance of Query for the given HQL query string.
