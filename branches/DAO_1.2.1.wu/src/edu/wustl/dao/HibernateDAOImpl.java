@@ -158,6 +158,37 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 	}
 
 	/**
+	 * Saves the persistent object in the database.
+	 * @param entityName from hbm.
+	 * @param obj The object to be saved.
+	 * @throws DAOException generic DAOException.
+	 */
+	public void insert(String entityName,Object obj) throws DAOException
+	{
+		logger.debug("Insert Object");
+		try
+		{
+			session.saveOrUpdate(entityName, obj);
+			auditManager.audit(obj,null,"INSERT");
+			insertAudit();
+		}
+		catch (HibernateException hibExp)
+		{
+			logger.error(hibExp.getMessage(),hibExp);
+			throw DAOUtility.getInstance().getDAOException(hibExp, "db.insert.data.error",
+			"HibernateDAOImpl.java ");
+
+		}
+		catch (AuditException exp)
+		{
+
+			logger.info(exp.getMessage(),exp);
+			//throw DAOUtility.getInstance().getDAOException(exp, exp.getErrorKeyName(),
+				//	exp.getMsgValues());
+		}
+	}
+
+	/**
 	 * updates the object into the database.
 	 * @param currentObj Object to be updated in database
 	 * @throws DAOException : generic DAOException
@@ -294,6 +325,27 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		}
 
 	}
+	/**
+	 * Deletes the persistent object from the database.
+	 * @param entityName from hbm file.
+	 * @param obj The object to be deleted.
+	 * @throws DAOException generic DAOException.
+	 */
+	public void delete(String entityName,Object obj) throws DAOException
+	{
+		logger.debug("Delete Object");
+		try
+		{
+			session.delete(entityName, obj);
+		}
+		catch (HibernateException hibExp)
+		{
+			logger.error(hibExp.getMessage(),hibExp);
+			throw DAOUtility.getInstance().getDAOException(hibExp, "db.delete.data.error",
+			"HibernateDAOImpl.java ");
+
+		}
+	}
 
 	/**
 	 * Deletes the persistent object from the database.
@@ -416,6 +468,30 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 
 			/*Object object = session.get(Class.forName(sourceObjectName), identifier);
 			return object;*/
+		}
+		catch (Exception exp)
+		{
+			logger.error(exp.getMessage(),exp);
+			throw DAOUtility.getInstance().getDAOException(exp, "db.retrieve.data.error",
+			"HibernateDAOImpl.java ");
+		}
+
+	}
+	/**
+	 * Retrieve Object.
+	 * @param entityName from hbm.
+	 * @param identifier identifier.
+	 * @return object.
+	 * @throws DAOException generic DAOException.
+	 */
+	public Object retrieveByIdAndEntityName(String entityName, Long identifier)
+	 throws DAOException
+	 {
+		logger.debug("Inside retrieve method");
+		try
+		{
+			Object object = session.get(entityName, identifier);
+			return object;
 		}
 		catch (Exception exp)
 		{

@@ -109,7 +109,17 @@ public abstract class AbstractDAOImpl implements DAO
 		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
 		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
 	}
-
+	/**
+	 * @param entityName :
+	 * @param identifier :
+	 * @return Object :
+	 * @throws DAOException :
+	 */
+	public Object retrieveByIdAndEntityName(String entityName, Long identifier) throws DAOException
+	{
+		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
+		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
+	}
 	/**
 	 * @param sourceObjectName :
 	 * @param identifier :
@@ -132,6 +142,16 @@ public abstract class AbstractDAOImpl implements DAO
 		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
 		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
 	}
+	/**
+	 * @param entityName :entity Name from hbm.
+	 * @param obj : object to be deleted
+	 * @throws DAOException : daoExp
+	 */
+	public void delete(String entityName,Object obj) throws DAOException
+	{
+		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
+		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
+	}
 
 	/**
 	 * Insert the Object in the database.
@@ -144,6 +164,18 @@ public abstract class AbstractDAOImpl implements DAO
 		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
 	}
 
+
+	/**
+	 * Insert the Object in the database.
+	 * @param entityName :entity Name from hbm.
+	 * @param obj Object to be inserted in database
+	 * @throws DAOException generic DAOException
+	 */
+	public void insert(String entityName,Object obj) throws DAOException
+	{
+		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
+		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
+	}
 	/**
 	 * @see edu.wustl.common.dao.DAO#retrieveAttribute(java.lang.Class, java.lang.Long, java.lang.String)
 	 * @param objClass : Class name
