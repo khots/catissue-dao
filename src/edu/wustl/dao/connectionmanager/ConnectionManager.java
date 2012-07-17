@@ -129,15 +129,16 @@ public class ConnectionManager implements IConnectionManager
 		{
 			if(session != null)
 			{
+				session.connection().close();
 				session.close();
 				session=null;
 			}
 		}
-		catch(HibernateException hiberExp)
+		catch(Exception e)
 		{
-			logger.error(hiberExp.getMessage(), hiberExp);
-			throw DAOUtility.getInstance().getDAOException(hiberExp,
-					"db.close.conn.error", "ConnectionManager.java ");
+			logger.error(e.getMessage(), e);
+			throw DAOUtility.getInstance().getDAOException(e,
+					"db.close.conn.error", "ConnectionManager.java ");	
 		}
 	}
 
