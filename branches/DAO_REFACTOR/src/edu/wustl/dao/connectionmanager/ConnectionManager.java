@@ -39,7 +39,9 @@ public class ConnectionManager implements IConnectionManager
 	 */
 	protected String applicationName;
 
-
+  	private static Long Scounter = new Long(0);
+	private static Long Ccounter = new Long(0);
+  	
 	/**
 	 * This member will store the configuration instance.
 	 */
@@ -129,8 +131,10 @@ public class ConnectionManager implements IConnectionManager
 		{
 			if(session != null)
 			{
-				session.connection().close();
+			//	session.connection().close();
 				session.close();
+				System.out.println("**************************Session is closed and counter=**************************************************"+Scounter);
+				Scounter--;
 				session=null;
 			}
 		}
@@ -200,6 +204,8 @@ public class ConnectionManager implements IConnectionManager
 		{
 			session = sessionFactory.openSession();
 			session.setFlushMode(FlushMode.COMMIT);
+			Scounter++;
+			System.out.println("*&*&*&*&*&*&*&*&**&*&*&&**&*&**&**&**Open Session and Counter::"+Scounter);
 			//session.connection().setAutoCommit(false);
 		}
 		catch (Exception excp)
@@ -218,6 +224,8 @@ public class ConnectionManager implements IConnectionManager
 	public Connection getConnection() throws DAOException
 	{
 		newSession();
+		Ccounter++;
+		System.out.println("*&*&*&*&*&*&*&*&**&*&*&&**&*&**&**&**Open Connection and counter::"+Ccounter);
 		return session.connection();
 	}
 
@@ -228,7 +236,27 @@ public class ConnectionManager implements IConnectionManager
 	 */
 	public void closeConnection() throws DAOException
 	{
+		sessionClose();
 		close();
+	}
+
+	private void sessionClose() throws DAOException
+	{
+		if(session != null)
+		{
+			try
+			{
+				session.connection().close();
+				System.out.println("**************************close connection and counter**************************************************"+Ccounter);
+				Ccounter--;
+			}
+			catch (Exception e)
+			{
+				logger.error(e.getMessage(), e);
+				throw DAOUtility.getInstance().getDAOException(e, "db.close.conn.error",
+						"ConnectionManager.java ");
+			}
+		}
 	}
 
 	/**

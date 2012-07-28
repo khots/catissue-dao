@@ -430,7 +430,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 		StringBuffer queryStrBuff = generateSQL(sourceObjectName,
 		selectColumnName, queryWhereClause, onlyDistinctRows);
 		ResultSet resultSet =  getResultSet(queryStrBuff.toString(), columnValueBeans, null);
-		closeStatement(resultSet);
+	//	closeStatement(resultSet);
 		return resultSet;
 
 	}
@@ -1105,7 +1105,6 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 						resultSet.close();
 					}
 				}while(stmt.getMoreResults());*/
-
 				stmt.close();
 			}
 
