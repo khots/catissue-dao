@@ -15,12 +15,13 @@ import javax.transaction.Status;
 import javax.transaction.UserTransaction;
 
 import edu.wustl.common.util.logger.Logger;
+import edu.wustl.dao.util.DAOUtility;
 
 public class TransactionFilter implements Filter
 {
 
 	private static final Logger logger = Logger.getCommonLogger(TransactionFilter.class);
-	private String userTransactionJndiName;
+	//private String userTransactionJndiName;
 	
 	public void destroy()
 	{
@@ -32,22 +33,21 @@ public class TransactionFilter implements Filter
 			throws IOException, ServletException
 	{
 		UserTransaction transaction = null;
+		DAOUtility daoUtil = DAOUtility.getInstance();
 
 		try
 		{
-			transaction = (UserTransaction) new InitialContext()
-					.lookup(userTransactionJndiName);
-			transaction.begin();
+			daoUtil.beginTransaction();
 			chain.doFilter(request, response);
 			if(isSuccessFulAction(request))
 			{
 				logger.info("Commiting Transaction");
-				transaction.commit();
+				daoUtil.commitTransaction();
 			}
 			else
 			{
 				logger.error("Transaction is getting rollback due to no actionstatus found.");
-				transaction.rollback();
+				daoUtil.rollbackTransaction();
 			}
 		}
 		catch (final Throwable errorInServlet)
@@ -86,10 +86,16 @@ public class TransactionFilter implements Filter
 			
 		return isSuccessFulAction;
 	}
-	public void init(FilterConfig filterConfig) throws ServletException
+	/*public void init(FilterConfig filterConfig) throws ServletException
 	{
 		userTransactionJndiName = filterConfig.getInitParameter("userTransactionJndiName");
 
+	}*/
+
+	public void init(FilterConfig arg0) throws ServletException
+	{
+		// TODO Auto-generated method stub
+		
 	}
 
 }
