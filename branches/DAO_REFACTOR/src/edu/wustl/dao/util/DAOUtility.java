@@ -19,6 +19,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.naming.InitialContext;
+import javax.transaction.Status;
+import javax.transaction.UserTransaction;
+
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 
@@ -518,4 +522,72 @@ public final class DAOUtility
 		}
 		return columnValueBeans;
 	}
+	
+
+	/**
+	 * @throws NamingException 
+	 * @throws NotSupportedException 
+	 * @throws SystemException 
+	 * 
+	 */
+	public void beginTransaction()
+	{
+		UserTransaction txn = null;
+		try
+		{
+			txn = (UserTransaction) new InitialContext().lookup("java:comp/UserTransaction");
+			if (txn.getStatus() == Status.STATUS_NO_TRANSACTION)
+			{
+				txn.begin();
+			}
+		}
+		catch (Exception e)
+		{
+			throw new RuntimeException("Error beginning txn: ", e);
+		}
+	}
+
+	/**
+	 * @throws DAOException
+	 */
+	public void commitTransaction() throws DAOException
+	{
+		UserTransaction txn = null;
+		try
+		{
+			txn = (UserTransaction) new InitialContext().lookup("java:comp/UserTransaction");
+			txn.commit();
+		}
+		catch (Exception exp)
+		{
+			logger.error(exp.getMessage(), exp);
+			if (exp.getCause() instanceof HibernateException)
+			{
+				exp = (Exception) exp.getCause();
+			}
+			throw DAOUtility.getInstance().getDAOException(exp, "db.commit.error",
+					"JTAConnectionManager.java ");
+		}
+	}
+
+	/**
+	 * 
+	 */
+	public void rollbackTransaction()
+	{
+		UserTransaction txn = null;
+		try
+		{
+			txn = (UserTransaction) new InitialContext().lookup("java:comp/UserTransaction");
+			if (txn.getStatus() == Status.STATUS_ACTIVE)
+			{
+				txn.rollback();
+			}
+		}
+		catch (Exception e)
+		{
+			throw new RuntimeException("Error committing txn: ", e);
+		}
+	}
+
 }
