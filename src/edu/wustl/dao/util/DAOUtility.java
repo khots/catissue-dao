@@ -20,7 +20,12 @@ import java.util.List;
 import java.util.Map;
 
 import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.transaction.InvalidTransactionException;
 import javax.transaction.Status;
+import javax.transaction.SystemException;
+import javax.transaction.Transaction;
+import javax.transaction.TransactionManager;
 import javax.transaction.UserTransaction;
 
 import org.hibernate.HibernateException;
@@ -589,5 +594,34 @@ public final class DAOUtility
 			throw new RuntimeException("Error committing txn: ", e);
 		}
 	}
+	
+	/**
+	 * @return
+	 * @throws NamingException
+	 * @throws SystemException
+	 */
+	public Transaction suspendTransaction() throws NamingException, SystemException
+	{
+		TransactionManager tm = (TransactionManager) new InitialContext()
+				.lookup("java:/TransactionManager");
+		Transaction txn = tm.suspend();
+		return txn;
+	}
+
+	/**
+	 * @param txn
+	 * @throws NamingException
+	 * @throws InvalidTransactionException
+	 * @throws IllegalStateException
+	 * @throws SystemException
+	 */
+	public void resumeTransaction(Transaction txn) throws NamingException,
+			InvalidTransactionException, IllegalStateException, SystemException
+	{
+		TransactionManager tm = (TransactionManager) new InitialContext()
+				.lookup("java:/TransactionManager");
+		tm.resume(txn);
+	}
+
 
 }
