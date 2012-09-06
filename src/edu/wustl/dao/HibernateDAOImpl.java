@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.hibernate.HibernateException;
+import org.hibernate.NonUniqueObjectException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
@@ -259,7 +260,15 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		}
 		try
 		{
-			currentObj = session.merge(currentObj);
+			try {
+				session.saveOrUpdate(currentObj);
+			} catch (NonUniqueObjectException nuk) {
+				//
+				// There is already another object with same identifier associated with
+				// the session. Let's merge our object with theirs.
+				//
+				currentObj = session.merge(currentObj);
+			}
 		}
 		catch (HibernateException hibExp)
 		{
