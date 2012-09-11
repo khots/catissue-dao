@@ -280,6 +280,11 @@ public class JTAConnectionManager implements IConnectionManager
 	public Connection getConnection() throws DAOException
 	{
 		newSession();
+		// Perhaps we need to synchronize session state with
+		// underlying database connection so that changes made
+		// through session are visible through connection as well
+		// in same transaction context
+		session.flush();
 		return session.connection();
 	}
 
