@@ -260,15 +260,16 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		}
 		try
 		{
-			try {
+//			try {
+				currentObj = session.merge(currentObj);
 				session.saveOrUpdate(currentObj);
-			} catch (NonUniqueObjectException nuk) {
+	//		} catch (NonUniqueObjectException nuk) {
 				//
 				// There is already another object with same identifier associated with
 				// the session. Let's merge our object with theirs.
 				//
-				currentObj = session.merge(currentObj);
-			}
+				//currentObj = session.merge(currentObj);
+		//	}
 		}
 		catch (HibernateException hibExp)
 		{
