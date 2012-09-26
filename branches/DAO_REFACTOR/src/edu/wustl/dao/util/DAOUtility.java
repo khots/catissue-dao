@@ -549,6 +549,8 @@ public final class DAOUtility
 			{
 				if (seconds > 0) {
 					txn.setTransactionTimeout(seconds);
+				} else {
+					txn.setTransactionTimeout(0); // restore default value
 				}
 				txn.begin();
 			}
