@@ -537,20 +537,28 @@ public final class DAOUtility
 	 */
 	public void beginTransaction()
 	{
+		beginTransaction(0);
+	}
+	
+	public void beginTransaction(int seconds) 
+	{
 		UserTransaction txn = null;
-		try
-		{
+		try {
 			txn = (UserTransaction) new InitialContext().lookup("java:comp/UserTransaction");
 			if (txn.getStatus() == Status.STATUS_NO_TRANSACTION)
 			{
+				if (seconds > 0) {
+					txn.setTransactionTimeout(seconds);
+				}
 				txn.begin();
 			}
 		}
-		catch (Exception e)
+		catch (Exception e) 
 		{
-			throw new RuntimeException("Error beginning txn: ", e);
+			throw new RuntimeException("Error beginning a user transaction", e);
 		}
 	}
+	 
 
 	/**
 	 * @throws DAOException
