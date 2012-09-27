@@ -123,9 +123,9 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 	 * database. If no old object is present in db then new object is inserted in db.
 	 * @param objectToBeMerged the object to be merged
 	 */
-	public void merge(Object objectToBeMerged)
+	public Object merge(Object objectToBeMerged)
 	{
-		session.merge(objectToBeMerged);
+		return session.merge(objectToBeMerged);
 	}
 
 	 /**
