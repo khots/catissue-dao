@@ -201,4 +201,15 @@ public abstract class AbstractDAOImpl implements DAO
 		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
 		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
 	}
+	
+		/**
+	 * Merge. This method merges the object passed as parameter with the same object present in
+	 * database. If no old object is present in db then new object is inserted in database.
+	 * @param objectToBeMerged the object to be merged
+	 */
+	public Object merge(Object objectToBeMerged) {
+		throw new RuntimeException("Unsupported Operation");
+	}
+
+
 }
