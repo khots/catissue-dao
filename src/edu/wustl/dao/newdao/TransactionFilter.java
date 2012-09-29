@@ -77,7 +77,7 @@ public class TransactionFilter implements Filter
 		else if (request instanceof HttpServletRequest) 
 		{
 			 String url = ((HttpServletRequest)request).getRequestURL().toString();
-			 if(url.contains("SimpleSearch.do")||url.contains("SearchCategory.do"))
+			 if(url.contains("SimpleSearch.do")||url.contains("SearchCategory.do") || url.contains("UploadFile"))
 			 {
 				 isSuccessFulAction = true;
 			 }
