@@ -8,9 +8,11 @@
  */
 package edu.wustl.dao.util;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Types;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -30,6 +32,7 @@ import javax.transaction.UserTransaction;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
+import org.hibernate.Session;
 
 import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.exception.ErrorKey;
@@ -37,10 +40,13 @@ import edu.wustl.common.util.global.CommonServiceLocator;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.DAO;
 import edu.wustl.dao.HibernateDAO;
+import edu.wustl.dao.connectionmanager.IConnectionManager;
 import edu.wustl.dao.daofactory.DAOConfigFactory;
+import edu.wustl.dao.daofactory.IDAOFactory;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.query.generator.ColumnValueBean;
 import edu.wustl.dao.query.generator.DBTypes;
+
 
 
 /**
@@ -632,6 +638,44 @@ public final class DAOUtility
 				.lookup("java:/TransactionManager");
 		tm.resume(txn);
 	}
+	
+	public void executeDDL(String appName, String ddl) {
+		executeDDL(appName, ddl, true);
+	}
+	
+	public void executeDDL(String appName, String ddl, boolean useNewConnection) {
+		Session session = null;
+		Connection conn = null;
+		Statement stmt = null;
+		
+		try {
+			IDAOFactory df = DAOConfigFactory.getInstance().getDAOFactory(appName);
+			IConnectionManager connMgr = df.getDAO().getConnectionManager();
+			
+			if (useNewConnection) {
+				session = connMgr.getSessionFactory().openSession();
+			} else {
+				session = connMgr.getSessionFactory().getCurrentSession();
+			}
 
-
+			conn = session.connection();
+			stmt = conn.createStatement();
+			stmt.execute(ddl);
+		} catch (Exception e) {
+			throw new RuntimeException("Error executing DDL " + ddl, e);
+		} finally {
+			if (stmt != null) {
+				try { 
+					stmt.close();
+				} catch (Exception e) { }
+			}
+			
+			if (useNewConnection && conn != null) {
+				try {
+					conn.close();
+					session.close();
+				} catch (Exception e) { }
+			}
+		}
+	}
 }
