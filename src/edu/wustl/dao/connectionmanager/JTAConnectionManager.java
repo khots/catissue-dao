@@ -284,11 +284,7 @@ public class JTAConnectionManager implements IConnectionManager
 		// underlying database connection so that changes made
 		// through session are visible through connection as well
 		// in same transaction context
-		try {
-			session.flush();
-		} catch (HibernateException e) {
-			e.printStackTrace();
-		}
+		session.flush();
 		return session.connection();
 	}
 
