@@ -890,5 +890,33 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		columnValueBeans.add(columnValueBean);
 		return retrieve(sourceObjectName, selectColumnName,queryWhereClause,false,columnValueBeans);
 	}
+	public Iterator executeParamHQLIterator(String query,List<ColumnValueBean> columnValueBeans)
+	throws DAOException
+	{
+		logger.info("Execute hql param query");
+		try
+		{
+	    	Query hibernateQuery = session.createQuery(query);
+	    	if(columnValueBeans != null)
+			{
+				Iterator<ColumnValueBean> colValItr =  columnValueBeans.iterator();
+				while(colValItr.hasNext())
+				{
+					ColumnValueBean colValueBean = colValItr.next();
+					hibernateQuery.setParameter(colValueBean.getColumnName(),
+							colValueBean.getColumnValue());
+				}
+			}
+	   
+		    return hibernateQuery.iterate();
+
+		}
+		catch(HibernateException hiberExp)
+		{
+			logger.error(hiberExp.getMessage(),hiberExp);
+			throw DAOUtility.getInstance().getDAOException(hiberExp, "db.retrieve.data.error",
+					"HibernateDAOImpl.java "+query);
+		}
+	}
 
 }

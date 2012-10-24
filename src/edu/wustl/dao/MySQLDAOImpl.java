@@ -4,7 +4,11 @@
 
 package edu.wustl.dao;
 
+import java.util.Iterator;
+import java.util.List;
+
 import edu.wustl.dao.exception.DAOException;
+import edu.wustl.dao.query.generator.ColumnValueBean;
 
 
 /**
@@ -24,5 +28,11 @@ public class MySQLDAOImpl extends AbstractJDBCDAOImpl
 		query = new StringBuffer("DROP TABLE IF EXISTS ").append(tableName);
 		executeUpdate(query.toString());
 
+	}
+
+	public Iterator executeParamHQLIterator(String query,
+			List<ColumnValueBean> columnValueBeans) throws DAOException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

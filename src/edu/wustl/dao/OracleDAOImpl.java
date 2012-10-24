@@ -5,9 +5,12 @@
 package edu.wustl.dao;
 
 import java.sql.ResultSet;
+import java.util.Iterator;
+import java.util.List;
 
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.exception.DAOException;
+import edu.wustl.dao.query.generator.ColumnValueBean;
 import edu.wustl.dao.util.DAOUtility;
 
 
@@ -57,6 +60,12 @@ public class OracleDAOImpl extends AbstractJDBCDAOImpl
 		{
 			closeStatement(resultSet);
 		}
+	}
+
+	public Iterator executeParamHQLIterator(String query,
+			List<ColumnValueBean> columnValueBeans) throws DAOException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

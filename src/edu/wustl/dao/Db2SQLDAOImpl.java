@@ -1,7 +1,11 @@
 package edu.wustl.dao;
 
+import java.util.Iterator;
+import java.util.List;
+
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.exception.DAOException;
+import edu.wustl.dao.query.generator.ColumnValueBean;
 /**
  * DB2DAO.
  * @author kalpana_thakur
@@ -27,5 +31,12 @@ public class Db2SQLDAOImpl  extends AbstractJDBCDAOImpl
 		executeUpdate("DROP TABLE " +
 				tableName+ " cascade constraints");
 
+	}
+
+
+	public Iterator executeParamHQLIterator(String query,
+			List<ColumnValueBean> columnValueBeans) throws DAOException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

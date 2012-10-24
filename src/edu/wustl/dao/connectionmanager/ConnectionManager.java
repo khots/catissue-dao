@@ -155,7 +155,7 @@ public class ConnectionManager implements IConnectionManager
 			{
 				transaction.commit();
 			}
-			transaction = null;
+			
 		}
 		catch(HibernateException hiberExp)
 		{
