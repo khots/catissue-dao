@@ -1,4 +1,6 @@
 /**
+
+
  * <p>Title: DAO Interface>
  * <p>Description:	DAO provides methods to manipulate the domain objects.
  * It provides methods like insert ,update etc .</p>
@@ -8,6 +10,7 @@
 
 package edu.wustl.dao;
 
+import java.util.Iterator;
 import java.util.List;
 
 import edu.wustl.common.beans.SessionDataBean;
@@ -234,6 +237,8 @@ public interface DAO
 	 */
 	void setConnectionManager(IConnectionManager connectionManager);
 
+	IConnectionManager  getConnectionManager();
+
 	 /**
 	 * This method will be called to begin new transaction.
 	 * @throws DAOException : It will throw DAOException.
@@ -248,5 +253,6 @@ public interface DAO
 	 */
 	void update(Object currentObj,Object previousObj) throws DAOException;
 
-
+	public Iterator executeParamHQLIterator(String query,List<ColumnValueBean> columnValueBeans)
+	throws DAOException;
 }
