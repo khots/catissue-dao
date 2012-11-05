@@ -32,7 +32,7 @@ public class CleanDAO
 	
 	private Session session;
 	
-	private static CleanDAO cleanDAO;
+	private static ThreadLocal<CleanDAO> cleanDAO = new ThreadLocal<CleanDAO>();
 	
 	private CleanDAO(String applicationName)
 	{
@@ -60,13 +60,13 @@ public class CleanDAO
 	}
 
 	
-	public synchronized static CleanDAO getInstance(String applicationName)
+	public static CleanDAO getInstance(String applicationName)
 	{
-		if(cleanDAO==null)
-		{
-			cleanDAO = new CleanDAO(applicationName);
+		if (cleanDAO.get() == null) {
+			cleanDAO.set(new CleanDAO(applicationName));
 		}
-		return cleanDAO;
+		
+		return cleanDAO.get();
 	}
 	
 	/**
@@ -99,9 +99,12 @@ public class CleanDAO
 	
 	public void closeSession()
 	{
-		session.close();
-		session = null;
-		cleanDAO = null;
+		try {
+			session.close();
+		} finally {
+			session = null;
+			cleanDAO.remove();
+		}
 	}
 	
 	public List executeQuery(String query,Integer startIndex,Integer maxRecords,List paramValues) throws DAOException
