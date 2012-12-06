@@ -894,12 +894,13 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 			throw DAOUtility.getInstance().getDAOException(null, "db.prepstmt.param.error",
 			sql);
 		}
-		Iterator<LinkedList<ColumnValueBean>> columValueBeansItr = columnValueBeans.iterator();
-		while(columValueBeansItr.hasNext())
-		{
-			LinkedList<ColumnValueBean> beans = columValueBeansItr.next();
-			DAOUtility.checkforInvalidData(sql, beans);
-		}
+		
+		//
+		// We do not need to perform data validations as the underlying JDBC driver escapes
+		// strings when prepared statement along with bind variables are used as in
+		// INSERT INTO catissue_participant (first_name, last_name) values (?, ?)
+		//
+		
 	}
 
 	/**
