@@ -154,4 +154,6 @@ public interface HibernateDAO extends DAO
 	 * @return
 	 */
 	public Filter enableFilter(String filterName);
+	
+	public void clearSession();
 }

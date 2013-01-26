@@ -938,6 +938,10 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		return session.enableFilter(filterName);
 	}
 	
+	public void clearSession()
+	{
+		session.clear();
+	}
 	
 	
 
