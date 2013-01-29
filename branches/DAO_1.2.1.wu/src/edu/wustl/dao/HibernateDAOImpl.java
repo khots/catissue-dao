@@ -12,6 +12,7 @@ package edu.wustl.dao;
 
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -188,6 +189,27 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		}
 	}
 
+	/**
+	 * updates the object into the database.
+	 * @param entityName from hbm.
+	 * @param currentObj Object to be updated in database
+	 * @throws DAOException : generic DAOException
+	 */
+	public void update(String entityName, Object currentObj) throws DAOException
+	{
+		logger.debug("Update Object");
+		try
+		{
+			session.update(entityName, currentObj); 
+		}
+		catch (HibernateException hibExp)
+		{
+			logger.info(hibExp.getMessage(),hibExp);
+			throw DAOUtility.getInstance().getDAOException(hibExp, "db.update.data.error",
+			"HibernateDAOImpl.java ");
+		} 
+	}
+	
 	/**
 	 * updates the object into the database.
 	 * @param currentObj Object to be updated in database
@@ -535,8 +557,15 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 				while(colValItr.hasNext())
 				{
 					ColumnValueBean colValueBean = colValItr.next();
-					hibernateQuery.setParameter(colValueBean.getColumnName(),
-							colValueBean.getColumnValue());
+					
+					if (colValueBean.getColumnValue() instanceof Collection)
+					{
+						hibernateQuery.setParameterList(colValueBean.getColumnName(),
+												(Collection) colValueBean.getColumnValue());	
+					} else {
+						hibernateQuery.setParameter(colValueBean.getColumnName(),
+												colValueBean.getColumnValue());
+					}
 				}
 			}
 		    return hibernateQuery.list();

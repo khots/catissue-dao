@@ -38,6 +38,14 @@ public interface DAO
 	 * @throws DAOException : generic DAOException
 	 */
 	void update(Object obj) throws DAOException;
+	
+	/**
+	 * updates the object into the database.
+	 * @param entityName from hbm file.
+	 * @param obj Object to be updated in database
+	 * @throws DAOException : generic DAOException
+	 */
+	void update(String entityName, Object obj) throws DAOException;
 	/**
 	 * Insert the object into the database.
 	 * @param entityName from hbm file.
