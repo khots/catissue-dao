@@ -202,4 +202,16 @@ public abstract class AbstractDAOImpl implements DAO
 		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
 		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
 	}
+	
+	/**
+	 * updates the object into the database.
+	 * @param entityName :entity Name from hbm.
+	 * @param obj Object to be updated in database
+	 * @throws DAOException : generic DAOException
+	 */
+	public void update(String entityName, Object obj) throws DAOException
+	{
+		ErrorKey errorKey = ErrorKey.getErrorKey("dao.method.without.implementation");
+		throw new DAOException(errorKey,new Exception(),"AbstractJDBCDAOImpl.java :");
+	}
 }
