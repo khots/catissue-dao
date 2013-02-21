@@ -536,6 +536,33 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 	{
 		return executeQuery(query,null, null,null);
 	}
+	
+	/**
+	 * Updates the HQL query.
+	 * @param query HQL query to update.
+	 * @param columnValueBeans column data beans.
+	 * @throws DAOException Database exception.
+	 */
+	public int executeUpdateHQL(String updateHql, List<ColumnValueBean> columnValueBeans)
+	throws DAOException
+	{
+		logger.info("Execute hql param query");
+		try
+		{
+	    	Query hibernateQuery = session.createQuery(updateHql);
+	    	if(columnValueBeans != null)
+			{
+				 populateParameters(hibernateQuery, columnValueBeans);
+			}
+		return hibernateQuery.executeUpdate();
+		}
+		catch(HibernateException hiberExp)
+		{
+			logger.error(hiberExp.getMessage(),hiberExp);
+			throw DAOUtility.getInstance().getDAOException(hiberExp, "db.retrieve.data.error",
+					"HibernateDAOImpl.java "+updateHql);
+		}
+	}
 
 	/**
 	 * Executes the HQL query.
@@ -553,20 +580,7 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 	    	Query hibernateQuery = session.createQuery(query);
 	    	if(columnValueBeans != null)
 			{
-				Iterator<ColumnValueBean> colValItr =  columnValueBeans.iterator();
-				while(colValItr.hasNext())
-				{
-					ColumnValueBean colValueBean = colValItr.next();
-					
-					if (colValueBean.getColumnValue() instanceof Collection)
-					{
-						hibernateQuery.setParameterList(colValueBean.getColumnName(),
-												(Collection) colValueBean.getColumnValue());	
-					} else {
-						hibernateQuery.setParameter(colValueBean.getColumnName(),
-												colValueBean.getColumnValue());
-					}
-				}
+				 populateParameters(hibernateQuery, columnValueBeans);
 			}
 		    return hibernateQuery.list();
 
@@ -578,8 +592,30 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 					"HibernateDAOImpl.java "+query);
 		}
 	}
-
-
+	
+	/**
+	 * pouplate the parameters from columnValueBeans.
+	 * @param query hibernateQuery.
+	 * @param columnValueBeans column data beans
+	 */
+    
+	public void populateParameters(Query hibernateQuery, List<ColumnValueBean> columnValueBeans)
+	{
+		Iterator<ColumnValueBean> colValItr =  columnValueBeans.iterator();
+		while(colValItr.hasNext())
+		{
+			ColumnValueBean colValueBean = colValItr.next(); 
+		
+			if (colValueBean.getColumnValue() instanceof Collection)
+			{
+				hibernateQuery.setParameterList(colValueBean.getColumnName(),
+									(Collection) colValueBean.getColumnValue());	
+			} else {
+				hibernateQuery.setParameter(colValueBean.getColumnName(),
+									colValueBean.getColumnValue());
+			}
+		}
+	}
 	/**
 	 * Executes the HQL query.
 	 * @param query HQL query to execute.
