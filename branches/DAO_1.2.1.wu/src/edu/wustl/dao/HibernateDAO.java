@@ -132,5 +132,14 @@ public interface HibernateDAO extends DAO
 	 */
 	void auditLoginEvents(boolean loginStatus,
 			LoginDetails loginDetails)throws AuditException;
+	
+	/**
+	 * Updates the HQL query.
+	 * @param query HQL query to update.
+	 * @param columnValueBeans column data beans.
+	 * @throws DAOException Database exception.
+	 */
+	int executeUpdateHQL(String updateHql,List<ColumnValueBean> columnValueBeans)
+	throws DAOException;
 
 }
