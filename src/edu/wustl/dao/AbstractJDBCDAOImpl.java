@@ -122,10 +122,10 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 			batchCommit();
 			if(connectionManager instanceof ConnectionManager)
 			{
-				//Not using the getConnection method, since we don't to get a new Connection if its closed. 
+				//Not using the getConnection method, since we don't to get a new Connection if its closed.
 				connection.commit();
-			}	
-			
+			}
+
 		}
 		catch (SQLException sqlExp)
 		{
@@ -303,10 +303,10 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 				batchCounter = 0;
 				if(connectionManager instanceof ConnectionManager)
 				{
-					//Not using the getConnection method, since we don't to get a new Connection if its closed. 
+					//Not using the getConnection method, since we don't to get a new Connection if its closed.
 					connection.commit();
-				}	
-				
+				}
+
 			}
 
 		}
@@ -869,6 +869,14 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 					int length = (int)blobFile.length();
 					stmt.setBinaryStream(index, (InputStream)colValueBean.getColumnValue(), length);
 				}
+				else if (colValueBean.getColumnValue() instanceof Float)
+				{
+					stmt.setFloat(index, (Float)colValueBean.getColumnValue());
+				}
+				else if (colValueBean.getColumnValue() instanceof Double)
+				{
+					stmt.setDouble(index, (Double)colValueBean.getColumnValue());
+				}
 				else
 				{
 					stmt.setObject(index, colValueBean.getColumnValue());
@@ -894,13 +902,13 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 			throw DAOUtility.getInstance().getDAOException(null, "db.prepstmt.param.error",
 			sql);
 		}
-		
+
 		//
 		// We do not need to perform data validations as the underlying JDBC driver escapes
 		// strings when prepared statement along with bind variables are used as in
 		// INSERT INTO catissue_participant (first_name, last_name) values (?, ?)
 		//
-		
+
 	}
 
 	/**
@@ -1121,7 +1129,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	/**
 	 * This method will be called to get connection Manager object.
 	 * @return IConnectionManager: Connection Manager.
-	 * @throws DAOException 
+	 * @throws DAOException
 	 */
 	protected Connection getConnection() throws DAOException
 	{
@@ -1131,7 +1139,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 				openedStmts.clear();
 				connection = connectionManager.getConnection();
 			}
-		
+
 		return connection;
 	}
 	private boolean isClosed() throws DAOException
