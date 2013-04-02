@@ -983,5 +983,20 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 					"HibernateDAOImpl.java "+query);
 		}
 	}
+	public void executeUpdateWithNamedQuery(String hqlQuery,Map<String, NamedQueryParam> namedQueryParams)
+			throws DAOException
+	 {
+		logger.info("Execute executeUpdate query");
+		try {
+			Query query = session.getNamedQuery(hqlQuery);
+			DAOUtility.getInstance().substitutionParameterForQuery(query, namedQueryParams);
+			query.executeUpdate();
+
+		} catch (HibernateException hiberExp) {
+			logger.error(hiberExp.getMessage(), hiberExp);
+			throw DAOUtility.getInstance().getDAOException(hiberExp,
+					"db.retrieve.data.error", "HibernateDAOImpl.java " + hqlQuery);
+		}
+	}
 
 }

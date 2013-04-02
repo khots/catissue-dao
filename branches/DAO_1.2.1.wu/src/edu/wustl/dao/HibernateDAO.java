@@ -141,5 +141,6 @@ public interface HibernateDAO extends DAO
 	 */
 	int executeUpdateHQL(String updateHql,List<ColumnValueBean> columnValueBeans)
 	throws DAOException;
-
+	
+	void executeUpdateWithNamedQuery(String hqlQuery,Map<String, NamedQueryParam> namedQueryParams)throws DAOException;
 }

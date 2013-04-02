@@ -330,6 +330,11 @@ public final class DAOUtility
 					query.setBoolean(counter,
 							Boolean.parseBoolean(queryParam.getValue().toString()));
 				}
+				else if (DBTypes.DOUBLE == objectType)
+				{
+					query.setDouble(counter,
+							Double.parseDouble(queryParam.getValue().toString()));
+				}
 			}
 		}
 	}
