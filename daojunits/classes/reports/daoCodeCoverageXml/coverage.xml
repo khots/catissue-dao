@@ -1,4 +1,12 @@
 <?xml version="1.0"?>
+
+<!--L
+  Copyright Washington University in St. Louis, SemanticBits, Persistent Systems, Krishagni.
+
+  Distributed under the OSI-approved BSD 3-Clause License.
+  See http://ncip.github.com/catissue-dao/LICENSE.txt for details.
+L-->
+
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-03.dtd">
 
 <coverage line-rate="0.7132784958871915" branch-rate="0.6385542168674698" version="1.9" timestamp="1228316251818">
