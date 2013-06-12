@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+
+<!--L
+  Copyright Washington University in St. Louis, SemanticBits, Persistent Systems, Krishagni.
+
+  Distributed under the OSI-approved BSD 3-Clause License.
+  See http://ncip.github.com/catissue-dao/LICENSE.txt for details.
+L-->
+
 <testsuite errors="0" failures="0" name="edu.wustl.dao.test.DAOTestSuite" tests="48" time="2.374">
   <properties>
     <property name="java.vendor" value="Sun Microsystems Inc." />
