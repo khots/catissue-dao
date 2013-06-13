@@ -1,0 +1,39 @@
+Buildfile: C:\Users\narra\Documents\GitHub\catissue-git\catissue-dao\catissue-dao\build.xml
+
+init:
+     [echo] Initializing necessary parameters : 
+   [delete] Deleting directory C:\Users\narra\Documents\GitHub\catissue-git\catissue-dao\catissue-dao\classes
+    [mkdir] Created dir: C:\Users\narra\Documents\GitHub\catissue-git\catissue-dao\catissue-dao\classes
+
+compile:
+     [echo]  Compiling DAO source code : 
+    [javac] Compiling 67 source files to C:\Users\narra\Documents\GitHub\catissue-git\catissue-dao\catissue-dao\classes
+    [javac] C:\Users\narra\Documents\GitHub\catissue-git\catissue-dao\catissue-dao\src\edu\wustl\common\audit\AuditableClass.java:239: warning: non-varargs call of varargs method with inexact argument type for last parameter;
+    [javac] cast to java.lang.Class<?> for a varargs call
+    [javac] cast to java.lang.Class<?>[] for a non-varargs call and to suppress this warning
+    [javac] 				returnObject = Class.forName(className).getMethod(functionName, null)
+    [javac] 				                                                                ^
+    [javac] C:\Users\narra\Documents\GitHub\catissue-git\catissue-dao\catissue-dao\src\edu\wustl\common\audit\AuditableClass.java:240: warning: non-varargs call of varargs method with inexact argument type for last parameter;
+    [javac] cast to java.lang.Object for a varargs call
+    [javac] cast to java.lang.Object[] for a non-varargs call and to suppress this warning
+    [javac] 								.invoke(objectOnWhichMethodToInvoke, null);
+    [javac] 								                                     ^
+    [javac] C:\Users\narra\Documents\GitHub\catissue-git\catissue-dao\catissue-dao\src\edu\wustl\common\audit\AuditableClass.java:266: warning: non-varargs call of varargs method with inexact argument type for last parameter;
+    [javac] cast to java.lang.Class<?> for a varargs call
+    [javac] cast to java.lang.Class<?>[] for a non-varargs call and to suppress this warning
+    [javac] 				returnObject = Class.forName(className).getMethod(functionName, null)
+    [javac] 				                                                                ^
+    [javac] C:\Users\narra\Documents\GitHub\catissue-git\catissue-dao\catissue-dao\src\edu\wustl\common\audit\AuditableClass.java:267: warning: non-varargs call of varargs method with inexact argument type for last parameter;
+    [javac] cast to java.lang.Object for a varargs call
+    [javac] cast to java.lang.Object[] for a non-varargs call and to suppress this warning
+    [javac] 								.invoke(objectOnWhichMethodToInvoke, null);
+    [javac] 								                                     ^
+    [javac] Note: Some input files use or override a deprecated API.
+    [javac] Note: Recompile with -Xlint:deprecation for details.
+    [javac] Note: Some input files use unchecked or unsafe operations.
+    [javac] Note: Recompile with -Xlint:unchecked for details.
+    [javac] 4 warnings
+     [copy] Copying 5 files to C:\Users\narra\Documents\GitHub\catissue-git\catissue-dao\catissue-dao\classes
+
+BUILD SUCCESSFUL
+Total time: 4 seconds
