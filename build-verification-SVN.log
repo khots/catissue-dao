@@ -1,0 +1,21 @@
+Buildfile: C:\dev\cabig\catissue-svn\catissue_dao\trunk\build.xml
+
+init:
+     [echo] Initializing necessary parameters : 
+   [delete] Deleting directory C:\dev\cabig\catissue-svn\catissue_dao\trunk\classes
+    [mkdir] Created dir: C:\dev\cabig\catissue-svn\catissue_dao\trunk\classes
+
+compile:
+     [echo]  Compiling DAO source code : 
+    [javac] Compiling 41 source files to C:\dev\cabig\catissue-svn\catissue_dao\trunk\classes
+    [javac] C:\dev\cabig\catissue-svn\catissue_dao\trunk\src\edu\wustl\dao\MySQLDAOImpl.java:15: edu.wustl.dao.MySQLDAOImpl is not abstract and does not override abstract method update(java.lang.Object) in edu.wustl.dao.DAO
+    [javac] public class MySQLDAOImpl extends AbstractJDBCDAOImpl
+    [javac]        ^
+    [javac] C:\dev\cabig\catissue-svn\catissue_dao\trunk\src\edu\wustl\dao\OracleDAOImpl.java:18: edu.wustl.dao.OracleDAOImpl is not abstract and does not override abstract method update(java.lang.Object) in edu.wustl.dao.DAO
+    [javac] public class OracleDAOImpl extends AbstractJDBCDAOImpl
+    [javac]        ^
+    [javac] Note: C:\dev\cabig\catissue-svn\catissue_dao\trunk\src\edu\wustl\dao\HashedDataHandler.java uses or overrides a deprecated API.
+    [javac] Note: Recompile with -Xlint:deprecation for details.
+    [javac] Note: Some input files use unchecked or unsafe operations.
+    [javac] Note: Recompile with -Xlint:unchecked for details.
+    [javac] 2 errors
