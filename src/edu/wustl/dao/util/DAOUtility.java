@@ -15,6 +15,7 @@
  */
 package edu.wustl.dao.util;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -346,6 +347,52 @@ public final class DAOUtility
 		}
 	}
 
+    /**
+     * @param query queryObject
+     * @param namedQueryParams : Query parameters to set
+     * @throws SQLException 
+     */
+    public void substitutionParameterForQuery(PreparedStatement query, Map<String, NamedQueryParam> namedQueryParams)
+            throws SQLException
+    {
+        if (namedQueryParams != null && !namedQueryParams.isEmpty())
+        {
+            for (int counter = 1; counter <= namedQueryParams.size(); counter++)
+            {
+                NamedQueryParam queryParam = namedQueryParams.get(counter + "");
+
+                int objectType = queryParam.getType();
+                if (DBTypes.STRING == objectType)
+                {
+                    query.setString(counter, queryParam.getValue().toString());
+                }
+                else if (DBTypes.INTEGER == objectType)
+                {
+                    query.setInt(counter, Integer.parseInt(queryParam.getValue().toString()));
+                }
+                else if (DBTypes.LONG == objectType)
+                {
+                    query.setLong(counter, Long.parseLong(queryParam.getValue().toString()));
+                }
+                else if (DBTypes.BOOLEAN == objectType)
+                {
+                    query.setBoolean(counter, Boolean.parseBoolean(queryParam.getValue().toString()));
+                }
+                else if (DBTypes.DOUBLE == objectType)
+                {
+                    query.setDouble(counter, Double.parseDouble(queryParam.getValue().toString()));
+                }
+                else if (DBTypes.DATE == objectType)
+                {
+                    query.setDate(counter, (java.sql.Date) queryParam.getValue());
+                }
+                else
+                {
+                    query.setObject(counter, queryParam.getValue());
+                }
+            }
+        }
+    }
 
 	/**
 	 * @param exception : DAOException thrown

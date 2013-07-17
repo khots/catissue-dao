@@ -18,6 +18,9 @@
 package edu.wustl.dao;
 
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -1006,4 +1009,56 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
 		}
 	}
 
+    /**
+        * Executes update SQL query
+        * @param sqlQueryName SQL update query name
+        * @param namedQueryParams map of parameter values
+        * @throws DAOException : DAOException
+        * @throws SQLException 
+        */
+    public void executeUpdateWithNamedSQLQuery(String sqlQueryName, Map<String, NamedQueryParam> namedQueryParams)
+            throws DAOException, SQLException
+    {
+        logger.info("Execute executeUpdate query");
+        try
+        {
+            PreparedStatement query = session.connection().prepareStatement(
+                    session.getNamedQuery(sqlQueryName).getQueryString());
+            DAOUtility.getInstance().substitutionParameterForQuery(query, namedQueryParams);
+            query.executeUpdate();
+        }
+        catch (HibernateException hiberExp)
+        {
+            logger.error(hiberExp.getMessage(), hiberExp);
+            throw DAOUtility.getInstance().getDAOException(hiberExp, "db.update.data.error",
+                    "HibernateDAOImpl.java " + sqlQueryName);
+        }
+    }
+
+    /**
+    * Executes  SQL query
+    * @param sqlQueryName SQL query name
+    * @param namedQueryParams map of parameter values
+    * @return 
+    * @throws DAOException : DAOException
+    * @throws SQLException 
+    */
+    public ResultSet executeNamedSQLQuery(String sqlQueryName, Map<String, NamedQueryParam> namedQueryParams)
+            throws DAOException, SQLException
+    {
+        logger.info("Execute executeUpdate query");
+        try
+        {
+            PreparedStatement query = session.connection().prepareStatement(
+                    session.getNamedQuery(sqlQueryName).getQueryString());
+            DAOUtility.getInstance().substitutionParameterForQuery(query, namedQueryParams);
+            return query.executeQuery();
+        }
+        catch (HibernateException hiberExp)
+        {
+            logger.error(hiberExp.getMessage(), hiberExp);
+            throw DAOUtility.getInstance().getDAOException(hiberExp, "db.retrieve.data.error",
+                    "HibernateDAOImpl.java " + sqlQueryName);
+        }
+    }
 }

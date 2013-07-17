@@ -13,6 +13,8 @@
  */
 package edu.wustl.dao;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -150,4 +152,25 @@ public interface HibernateDAO extends DAO
 	throws DAOException;
 	
 	void executeUpdateWithNamedQuery(String hqlQuery,Map<String, NamedQueryParam> namedQueryParams)throws DAOException;
+
+    /**
+     * Executes  SQL query
+     * @param sqlQueryName SQL query name
+     * @param namedQueryParams map of parameter values
+     * @return 
+     * @throws DAOException : DAOException
+     * @throws SQLException 
+     */
+    public ResultSet executeNamedSQLQuery(String sqlQueryName, Map<String, NamedQueryParam> namedQueryParams)
+            throws DAOException, SQLException;
+
+    /**
+     * Executes update SQL query
+     * @param sqlQueryName SQL update query name
+     * @param namedQueryParams map of parameter values
+     * @throws DAOException : DAOException
+     * @throws SQLException 
+     */
+    public void executeUpdateWithNamedSQLQuery(String sqlQueryName, Map<String, NamedQueryParam> namedQueryParams)
+            throws DAOException, SQLException;
 }
