@@ -35,6 +35,7 @@ import edu.wustl.dao.DatabaseProperties;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.interceptor.InterceptorErrorRecoveryThread;
 import edu.wustl.dao.interceptor.SaveUpdateInterceptThread;
+import edu.wustl.dao.util.DAOConstants;
 import edu.wustl.dao.util.DAOUtility;
 
 /**
@@ -166,21 +167,62 @@ public class ApplicationDAOPropertiesParser
 
 	private void initHibernateInterceptor(Element root) throws DAOException
 	{
-		//start the error recovery thread for interceptor Object.
-		Timer errorRecovery = new Timer(true);
-		errorRecovery.scheduleAtFixedRate(new InterceptorErrorRecoveryThread(), DAOUtility.getStartTimeForTodaysDate("23:00"),(24*60*60*1000) );
-
-		/*final InterceptorErrorRecoveryThread timerTask = new InterceptorErrorRecoveryThread();
-		final Timer scheduleTime = new Timer();
-		scheduleTime.schedule(timerTask, 0x1d4c0L,60000L);*/
-
-		// start the save update intereceptor thread.
-		SaveUpdateInterceptThread interceptorThread = SaveUpdateInterceptThread.getInstance();
-		interceptorThread.populateInterceptorObjectList(root);
+		if(isInterceptorFound(root))
+		{
+			//start the error recovery thread for interceptor Object.
+			Timer errorRecovery = new Timer(true);
+			errorRecovery.scheduleAtFixedRate(new InterceptorErrorRecoveryThread(), DAOUtility.getStartTimeForTodaysDate("23:00"),(24*60*60*1000) );
+	
+			/*final InterceptorErrorRecoveryThread timerTask = new InterceptorErrorRecoveryThread();
+			final Timer scheduleTime = new Timer();
+			scheduleTime.schedule(timerTask, 0x1d4c0L,60000L);*/
+	
+			// start the save update intereceptor thread.
+			SaveUpdateInterceptThread interceptorThread = SaveUpdateInterceptThread.getInstance();
+			interceptorThread.populateInterceptorObjectList(root);
+		}
 
 
 	}
 
+
+	private boolean isInterceptorFound(Element root) {
+		NodeList rootChildren = root.getElementsByTagName(DAOConstants.NODE_NAME_CLASS);
+		for (int i = 0; i < rootChildren.getLength(); i++)
+		{
+			Node applicationChild = rootChildren.item(i);
+
+			if (applicationChild.getNodeName().equals(DAOConstants.NODE_NAME_CLASS))
+			{
+				String className = null;
+				String insertProcessor = null;
+				String updateProcessor = null;
+				NamedNodeMap attributeMap = applicationChild.getAttributes();
+				for (int j = 0; j < attributeMap.getLength(); j++)
+				{
+					Node attribute = attributeMap.item(j);
+
+					if (attribute.getNodeName().equalsIgnoreCase(DAOConstants.NODE_ATTRIBUTE_NAME))
+					{
+						//object which is to be monitored
+						className = attribute.getNodeValue();
+					}
+					if (attribute.getNodeName().equalsIgnoreCase(DAOConstants.NODE_ATTRIBUTE_ONINSERT))
+					{
+						//processor class for insert case
+						insertProcessor = attribute.getNodeValue();
+					}
+					if (attribute.getNodeName().equalsIgnoreCase(DAOConstants.NODE_ATTRIBUTE_ONUPDATE))
+					{
+						//processor class for update scenario
+						updateProcessor = attribute.getNodeValue();
+					}
+				}
+				return className != null && (insertProcessor != null || updateProcessor != null);
+			}
+		}
+		return false;
+	}
 
 
 	/**
