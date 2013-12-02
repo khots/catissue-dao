@@ -1020,9 +1020,10 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
             throws DAOException, SQLException
     {
         logger.info("Execute executeUpdate query");
+        PreparedStatement query = null;
         try
         {
-            PreparedStatement query = session.connection().prepareStatement(
+            query = session.connection().prepareStatement(
                     session.getNamedQuery(sqlQueryName).getQueryString());
             DAOUtility.getInstance().substitutionParameterForQuery(query, namedQueryParams);
             query.executeUpdate();
@@ -1032,6 +1033,13 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
             logger.error(hiberExp.getMessage(), hiberExp);
             throw DAOUtility.getInstance().getDAOException(hiberExp, "db.update.data.error",
                     "HibernateDAOImpl.java " + sqlQueryName);
+        }
+        finally
+        {
+        	if(query != null)
+        	{
+        		query.close();
+        	}
         }
     }
 
