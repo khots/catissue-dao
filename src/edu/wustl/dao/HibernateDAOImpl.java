@@ -1069,4 +1069,58 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
                     "HibernateDAOImpl.java " + sqlQueryName);
         }
     }
+    
+    /**
+     * Executes  SQL query
+     * @param sqlQuery SQL query name
+     * @param namedQueryParams map of parameter values
+     * @return 
+     * @throws DAOException : DAOException
+     * @throws SQLException 
+     */
+     public ResultSet executeSQLQuery(String sqlQuery, Map<String, NamedQueryParam> queryParams)
+             throws DAOException, SQLException
+     {
+         logger.info("Execute executeUpdate query");
+         try
+         {
+             PreparedStatement query = session.connection().prepareStatement(
+                     sqlQuery);
+             DAOUtility.getInstance().substitutionParameterForQuery(query, queryParams);
+             return query.executeQuery();
+         }
+         catch (HibernateException hiberExp)
+         {
+             logger.error(hiberExp.getMessage(), hiberExp);
+             throw DAOUtility.getInstance().getDAOException(hiberExp, "db.retrieve.data.error",
+                     "HibernateDAOImpl.java ");
+         }
+     }
+ 
+     /**
+      * Executes update SQL query
+      * @param sqlQuery SQL update query name
+      * @param namedQueryParams map of parameter values
+      * @throws DAOException : DAOException
+      * @throws SQLException 
+      */
+   
+     public void executeUpdateWithSQLQuery(String sqlQuery, Map<String, NamedQueryParam> queryParams)
+             throws DAOException, SQLException
+     {
+         logger.info("Execute executeUpdate query");
+         try
+         {
+             PreparedStatement query = session.connection().prepareStatement(
+                     sqlQuery);
+             DAOUtility.getInstance().substitutionParameterForQuery(query, queryParams);
+             query.executeUpdate();
+         }
+         catch (HibernateException hiberExp)
+         {
+             logger.error(hiberExp.getMessage(), hiberExp);
+             throw DAOUtility.getInstance().getDAOException(hiberExp, "db.update.data.error",
+                     "HibernateDAOImpl.java " );
+         }
+     }
 }
