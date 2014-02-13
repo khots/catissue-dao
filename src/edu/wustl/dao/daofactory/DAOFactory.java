@@ -499,4 +499,10 @@ public class DAOFactory implements IDAOFactory
 		}
 	}
 
+	@Override
+	public SessionFactory getSessionFactory() throws DAOException
+	{
+		return sessionFactory;
+	}
+
 }
