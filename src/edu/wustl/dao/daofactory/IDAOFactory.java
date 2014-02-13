@@ -19,6 +19,8 @@ package edu.wustl.dao.daofactory;
 
 import java.sql.Connection;
 
+import org.hibernate.SessionFactory;
+
 import edu.wustl.dao.DAO;
 import edu.wustl.dao.DatabaseProperties;
 import edu.wustl.dao.JDBCDAO;
@@ -183,5 +185,7 @@ public interface IDAOFactory
 	 * @throws DAOException the dAO exception
 	 */
 	void closeConnection(Connection connObj) throws DAOException;
+	
+	SessionFactory getSessionFactory() throws DAOException;
 
 }
