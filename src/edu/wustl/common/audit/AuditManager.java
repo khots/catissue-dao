@@ -11,11 +11,15 @@
 
 package edu.wustl.common.audit;
 
+import java.sql.Clob;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import javax.sql.rowset.serial.SerialClob;
+
 import org.hibernate.Hibernate;
+import org.hibernate.engine.jdbc.NonContextualLobCreator;
 
 import edu.wustl.common.audit.util.AuditUtil;
 import edu.wustl.common.audit.util.MetadataParser;
@@ -747,12 +751,13 @@ public class AuditManager // NOPMD
 		if (prevObject == null && currentObject != null)
 		{
 			auditEventDetails = new AuditEventDetails();
-			auditEventDetails.setCurrentValue(Hibernate.createClob(getObjectValue(currentObject)));
+			Clob clob = NonContextualLobCreator.INSTANCE.wrap(NonContextualLobCreator.INSTANCE.createClob(getObjectValue(currentObject)));
+			auditEventDetails.setCurrentValue(clob);
 		}
 		else if(currentObject == null && prevObject != null)
 		{
 			auditEventDetails = new AuditEventDetails();
-			auditEventDetails.setPreviousValue(Hibernate.createClob(getObjectValue(prevObject)));
+			auditEventDetails.setPreviousValue(NonContextualLobCreator.INSTANCE.wrap(NonContextualLobCreator.INSTANCE.createClob(getObjectValue(prevObject))));
 		}
 		else if(prevObject != null && currentObject != null)
 		{
@@ -761,8 +766,10 @@ public class AuditManager // NOPMD
 			if(!previousVal.equals(currentVal))
 			{
 				auditEventDetails = new AuditEventDetails();
-				auditEventDetails.setPreviousValue(Hibernate.createClob(previousVal));
-				auditEventDetails.setCurrentValue(Hibernate.createClob(currentVal));
+				Clob curentValclob = NonContextualLobCreator.INSTANCE.wrap(NonContextualLobCreator.INSTANCE.createClob(currentVal));
+				auditEventDetails.setCurrentValue(curentValclob);
+				Clob prevValclob = NonContextualLobCreator.INSTANCE.wrap(NonContextualLobCreator.INSTANCE.createClob(currentVal));
+				auditEventDetails.setPreviousValue(prevValclob);
 			}
 		}
 
@@ -784,19 +791,19 @@ public class AuditManager // NOPMD
 		auditEventDetails.setElementName(attributeName+"_PREV_CURR_IDS_LIST");
 		if(currentCollectionIds == null)
 		{
-			auditEventDetails.setCurrentValue(Hibernate.createClob(""));
+			auditEventDetails.setCurrentValue(NonContextualLobCreator.INSTANCE.wrap(NonContextualLobCreator.INSTANCE.createClob("")));
 		}
 		else
 		{
-			auditEventDetails.setCurrentValue(Hibernate.createClob(currentCollectionIds));
+			auditEventDetails.setCurrentValue(NonContextualLobCreator.INSTANCE.wrap(NonContextualLobCreator.INSTANCE.createClob(currentCollectionIds)));
 		}
 		if(prevCollectionIds == null)
 		{
-			auditEventDetails.setPreviousValue(Hibernate.createClob(""));
+			auditEventDetails.setPreviousValue(NonContextualLobCreator.INSTANCE.wrap(NonContextualLobCreator.INSTANCE.createClob("")));
 		}
 		else
 		{
-			auditEventDetails.setPreviousValue(Hibernate.createClob(prevCollectionIds));
+			auditEventDetails.setPreviousValue(NonContextualLobCreator.INSTANCE.wrap(NonContextualLobCreator.INSTANCE.createClob(prevCollectionIds)));
 		}
 
 

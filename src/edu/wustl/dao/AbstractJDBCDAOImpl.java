@@ -38,6 +38,7 @@ import java.util.SortedMap;
 import java.util.SortedSet;
 
 import org.hibernate.Hibernate;
+import org.hibernate.engine.jdbc.NonContextualLobCreator;
 
 import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.exception.ErrorKey;
@@ -750,7 +751,7 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 	 * use public void executeUpdate(String sql,List<LinkedList<ColumnValueBean>> columnValueBeans)
 	 * throws DAOException
 	 */
-	public StatementData executeUpdate(String sql,List<ColumnValueBean> columnValueBeans)
+	public StatementData executeUpdate(List<ColumnValueBean> columnValueBeans, String sql)
 	throws DAOException
 	{
 		try
@@ -847,7 +848,9 @@ public abstract class AbstractJDBCDAOImpl extends AbstractDAOImpl implements JDB
 				else if(colValueBean.getColumnValue() instanceof InputStream)
 				{
 					InputStream is = (InputStream)colValueBean.getColumnValue();
-					Blob blobFile = Hibernate.createBlob(is);
+					//TODO CREATE BLOB
+					Blob blobFile = NonContextualLobCreator.INSTANCE.wrap(NonContextualLobCreator.INSTANCE.createBlob(is, is.available()));
+					//Blob blobFile1 = Hibernate.getLobCreator(connectionManager.getSession()).createBlob(is, is.available());// Hibernate.createBlob(is);
 					int length = (int)blobFile.length();
 					stmt.setBinaryStream(index, (InputStream)colValueBean.getColumnValue(), length);
 				}

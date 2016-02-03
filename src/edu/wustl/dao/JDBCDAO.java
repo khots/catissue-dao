@@ -138,7 +138,7 @@ public interface JDBCDAO extends DAO
 	 * use public void executeUpdate(String sql,List<LinkedList<ColumnValueBean>> columnValueBeans)
 	 * throws DAOException
 	 */
-	StatementData executeUpdate(String sql,List<ColumnValueBean> columnValueBeans)
+	StatementData executeUpdate(List<ColumnValueBean> columnValueBeans, String sql)
 	throws DAOException;
 
 

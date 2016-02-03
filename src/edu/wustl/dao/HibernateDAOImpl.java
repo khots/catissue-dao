@@ -27,9 +27,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import java.sql.Connection;
+
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.jdbc.ReturningWork;
 
 import edu.wustl.common.audit.AuditManager;
 import edu.wustl.common.beans.SessionDataBean;
@@ -1023,7 +1026,14 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
         PreparedStatement query = null;
         try
         {
-            query = session.connection().prepareStatement(
+          Connection connection=session.doReturningWork(new ReturningWork<Connection>() {
+              @Override
+              public Connection execute(Connection conn) throws SQLException {
+                return conn;
+              }
+            });
+
+            query = connection.prepareStatement(
                     session.getNamedQuery(sqlQueryName).getQueryString());
             DAOUtility.getInstance().substitutionParameterForQuery(query, namedQueryParams);
             query.executeUpdate();
@@ -1057,7 +1067,14 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
         logger.info("Execute executeUpdate query");
         try
         {
-            PreparedStatement query = session.connection().prepareStatement(
+            Connection connection=session.doReturningWork(new ReturningWork<Connection>() {
+              @Override
+              public Connection execute(Connection conn) throws SQLException {
+                return conn;
+              }
+            });
+          
+            PreparedStatement query = connection.prepareStatement(
                     session.getNamedQuery(sqlQueryName).getQueryString());
             DAOUtility.getInstance().substitutionParameterForQuery(query, namedQueryParams);
             return query.executeQuery();
@@ -1084,7 +1101,14 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
          logger.info("Execute executeUpdate query");
          try
          {
-             PreparedStatement query = session.connection().prepareStatement(
+           
+             Connection connection=session.doReturningWork(new ReturningWork<Connection>() {
+               @Override
+               public Connection execute(Connection conn) throws SQLException {
+                 return conn;
+               }
+             });
+             PreparedStatement query = connection.prepareStatement(
                      sqlQuery);
              DAOUtility.getInstance().substitutionParameterForQuery(query, queryParams);
              return query.executeQuery();
@@ -1111,7 +1135,13 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
          logger.info("Execute executeUpdate query");
          try
          {
-             PreparedStatement query = session.connection().prepareStatement(
+             Connection connection=session.doReturningWork(new ReturningWork<Connection>() {
+               @Override
+               public Connection execute(Connection conn) throws SQLException {
+                 return conn;
+               }
+             });
+             PreparedStatement query = connection.prepareStatement(
                      sqlQuery);
              DAOUtility.getInstance().substitutionParameterForQuery(query, queryParams);
              query.executeUpdate();
@@ -1123,4 +1153,32 @@ public class HibernateDAOImpl extends AbstractDAOImpl implements HibernateDAO
                      "HibernateDAOImpl.java " );
          }
      }
+     
+     
+     /**
+      * Executes update hql query
+      * @param sqlQuery SQL update query name
+      * @param namedQueryParams map of parameter values
+      * @throws DAOException : DAOException
+      * @throws SQLException 
+      */
+    public List executeNameQueryParamHQL(String query, List<ColumnValueBean> columnValueBeans)
+         throws DAOException
+       {
+         logger.info("executeNameQueryParamHQL.");
+         try
+         {
+           Query hibernateQuery = this.session.getNamedQuery(query);
+           if (columnValueBeans != null)
+           {
+             populateParameters(hibernateQuery, columnValueBeans);
+           }
+           return hibernateQuery.list();
+         }
+         catch (HibernateException hiberExp)
+         {
+           logger.error(hiberExp.getMessage(), hiberExp);
+           throw DAOUtility.getInstance().getDAOException(hiberExp, "db.retrieve.data.error", "HibernateDAOImpl.java " + query);
+         }
+       }
 }

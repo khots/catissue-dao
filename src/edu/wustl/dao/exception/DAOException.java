@@ -20,7 +20,6 @@ import org.hibernate.HibernateException;
 
 import edu.wustl.common.exception.ApplicationException;
 import edu.wustl.common.exception.ErrorKey;
-import edu.wustl.dao.util.DAOConstants;
 
 
 /**
@@ -92,16 +91,6 @@ public class DAOException extends ApplicationException
 	 */
 	private String generateErrorMessage(HibernateException hibernateException)
 	{
-		StringBuffer message = new StringBuffer();
-		if(hibernateException != null)
-		{
-			String [] str = hibernateException.getMessages();
-
-			for (int i = 0; i < str.length; i++)
-			{
-				message.append(str[i]).append(DAOConstants.TRAILING_SPACES);
-			}
-		}
-		return message.toString();
+		return hibernateException.getMessage();
 	}
 }

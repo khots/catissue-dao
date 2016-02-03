@@ -18,6 +18,7 @@
 package edu.wustl.dao.connectionmanager;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 
 import org.hibernate.FlushMode;
 import org.hibernate.HibernateException;
@@ -25,6 +26,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.jdbc.ReturningWork;
 
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.exception.DAOException;
@@ -205,9 +207,18 @@ public class ConnectionManager implements IConnectionManager
 	{
 		try
 		{
-			session = sessionFactory.openSession(new SaveUpdateHibernateInterceptor());
+		  
+		   session = sessionFactory.withOptions()
+              .interceptor(new SaveUpdateHibernateInterceptor())
+              .openSession();
 			session.setFlushMode(FlushMode.COMMIT);
-			session.connection().setAutoCommit(false);
+			Connection connection=session.doReturningWork(new ReturningWork<Connection>() {
+	          @Override
+	          public Connection execute(Connection conn) throws SQLException {
+	            return conn;
+	          }
+	        });
+			connection.setAutoCommit(false);
 		}
 		catch (Exception excp)
 		{
@@ -225,7 +236,13 @@ public class ConnectionManager implements IConnectionManager
 	public Connection getConnection() throws DAOException
 	{
 		newSession();
-		return session.connection();
+		Connection connection=session.doReturningWork(new ReturningWork<Connection>() {
+          @Override
+          public Connection execute(Connection conn) throws SQLException {
+            return conn;
+          }
+        });
+		return connection;
 	}
 
 

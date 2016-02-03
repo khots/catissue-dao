@@ -193,4 +193,13 @@ public interface HibernateDAO extends DAO
      */
     public void executeUpdateWithSQLQuery(String sqlQueryName, Map<String, NamedQueryParam> queryParams)
             throws DAOException, SQLException;
+    
+    /**
+     * @param paramString
+     * @param paramList
+     * @return
+     * @throws DAOException
+     */
+    public abstract List executeNameQueryParamHQL(String paramString, List<ColumnValueBean> paramList)
+        throws DAOException;
 }

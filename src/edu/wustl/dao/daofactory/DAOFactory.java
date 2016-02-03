@@ -17,6 +17,7 @@
 package edu.wustl.dao.daofactory;
 
 import java.io.InputStream;
+import java.io.PrintStream;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,8 +26,9 @@ import org.dom4j.Document;
 import org.dom4j.io.DOMWriter;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.util.XMLHelper;
+import org.hibernate.internal.util.xml.XMLHelper;
 import org.xml.sax.EntityResolver;
+import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 
 import edu.wustl.common.util.logger.Logger;
@@ -37,6 +39,7 @@ import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.connectionmanager.IConnectionManager;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.DAOUtility;
+import edu.wustl.dao.util.DaoErrorHandler;
 import edu.wustl.dao.util.HibernateMetaData;
 import edu.wustl.dao.util.HibernateMetaDataFactory;
 
@@ -295,7 +298,10 @@ public class DAOFactory implements IDAOFactory
             // hibernate api to read configuration file and convert it to
             // Document(dom4j) object.
             XMLHelper xmlHelper = new XMLHelper();
-            Document document = xmlHelper.createSAXReader(configurationfile, errors, entityResolver).read(
+            PrintStream printStream = new PrintStream(System.err);
+            ErrorHandler  handler = new DaoErrorHandler(printStream);
+
+            Document document = xmlHelper.createSAXReader(handler, entityResolver).read(
                     new InputSource(inputStream));
             // convert to w3c Document object.
             DOMWriter writer = new DOMWriter();

@@ -24,7 +24,7 @@ L-->
 	-->
 	<target name="compile" depends="init">
 		<echo> Compiling DAO source code : </echo>
-			<javac destdir="${target.dir}" includes="**/*.*" debug="on" includeAntRuntime="false" target="1.5">
+			<javac destdir="${target.dir}" includes="**/*.*" debug="on" includeAntRuntime="false" target="1.8">
 				<src path="${src.dir}" />
 				<classpath>
 					<fileset dir="${lib.dir}">
