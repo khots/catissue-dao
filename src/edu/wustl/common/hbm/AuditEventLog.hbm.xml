@@ -72,7 +72,7 @@ L-->
             name="auditEventDetailsCollection"
             table="CATISSUE_AUDIT_EVENT_DETAILS"
             lazy="false"
-            inverse="false"
+            inverse="true"
             cascade="save-update"
             sort="unsorted"
         >

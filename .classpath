@@ -19,7 +19,7 @@
 	<classpathentry kind="lib" path="lib/mmtxProject.jar"/>
 	<classpathentry kind="lib" path="lib/mysql-connector-java-5.0.8-bin.jar"/>
 	<classpathentry kind="lib" path="lib/ojdbc14.jar"/>
-	<classpathentry kind="lib" path="lib/washu-commons-1.1.7.jar"/>
-	<classpathentry kind="lib" path="/OPS_TS/WEB-INF/lib/hibernate-core-4.3.10.Final.jar"/>
+	<classpathentry kind="lib" path="lib/washu-commons-1.2.w1.jar"/>
+	<classpathentry kind="lib" path="lib/hibernate-core-4.3.11.Final.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

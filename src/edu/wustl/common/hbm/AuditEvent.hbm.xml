@@ -78,7 +78,7 @@ L-->
             name="auditEventLogCollection"
             table="CATISSUE_AUDIT_EVENT_LOG"
             lazy="false"
-            inverse="false"
+            inverse="true"
             cascade="save-update"
             sort="unsorted"
         >
